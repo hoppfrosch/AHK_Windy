@@ -7,6 +7,7 @@ SET WORK=MKDOC_TEMP
 mkdir %WORK%
 copy MultiMonitorEnv.ahk %WORK%
 copy Rectangle.ahk %WORK%
+copy WindowHandler.ahk %WORK%
 
 ::path to the natural doc folder
 SET NDPATH=D:\Portable\PortableApps\AutoHotkey\App\Tools\NaturalDocs\NaturalDocs
