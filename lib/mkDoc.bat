@@ -37,9 +37,8 @@ echo.
 
 popd
 
-rmdir /S /Q ./%DOC%
-mkdir %DOC%
-pushd %DOC%
-xcopy /E ..\%WORK%\%DOC% .
+.. Publish documentation to gh-page branch ...
+pushd ..\..\AHK_EDE_gh-pages
+xcopy /E /Y %ROOT%\%DOC% .
 popd
 rmdir /S /Q %WORK%
