@@ -19,7 +19,7 @@
 ; ******************************************************************************************************************************************
 class Rectangle {
 	
-	_version := "0.1.0"
+	_version := "0.1.1"
 	_debug := 0 ; _DBG_	
 	x := 0
 	y := 0
@@ -49,26 +49,6 @@ class Rectangle {
 			OutputDebug % "|[" A_ThisFunc "] -> x,y,w,h: " this.Dump() ; _DBG_
 	}
 
-/*
-===============================================================================
-Function:   Version
-	Returns the current version of the library
-
-	Versioning scheme according to http://semver.org
-
-Returns:
-	current version number of the module
-
-Author(s):
-	20120621 - hoppfrosch - Original
-===============================================================================
-*/
-	Version() {
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "() -> (" this._version ")]" ; _DBG_
-		return this._version
-	}
-	
 	__debug(value="") { ; _DBG_
 		if % (value="") ; _DBG_
 			return this._debug ; _DBG_
