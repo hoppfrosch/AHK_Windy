@@ -9,7 +9,7 @@
 #Warn All
 #Warn LocalSameAsGlobal, Off
 
-ReferenceVersion := "0.1.0"
+ReferenceVersion := "0.1.1"
 
 Yunit.Use(YunitStdOut, YunitWindow).Test(RectangleTestSuite)
 Return
@@ -25,7 +25,7 @@ class RectangleTestSuite
 	Version()
     {
 		Global ReferenceVersion
-		Yunit.assert(this.r.Version() == ReferenceVersion)
+		Yunit.assert(this.r._version == ReferenceVersion)
     }
 		
 	Constructor() {
