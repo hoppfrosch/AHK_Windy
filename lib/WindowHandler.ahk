@@ -6,27 +6,36 @@
 		hoppfrosch@ahk4.me
 		
 	License: 
-		WTFPL (http://sam.zoy.org/wtfpl/)
+		This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See http://www.wtfpl.net/ for more details.
 		
 	Changelog:
 
+		0.2.0 - [+] Event-Handling
 		0.1.0 - [+] Initial
+		
 */
 	
 ; ****** HINT: Documentation can be extracted to HTML using NaturalDocs ************** */
 
 #include <Rectangle>
 #include <MultiMonitorEnv>
+#include <_WindowHandlerEvent>
 
 
 ; ******************************************************************************************************************************************
 class WindowHandler {
 	
-	_version := "0.1.0"
+	_version := "0.2.0"
 	debug := 0
 	_hWnd := 0
+	
+	_hWinEventHook1 := 0
+	_hWinEventHook2 := 0
+	_HookProcAdr := 0
+		
+	_bManualMovement := false
 
-	_hUnrolled := 0
+	_posStack := 0
 /*
 ===============================================================================
 Function: alwaysOnTop
@@ -166,6 +175,63 @@ Author(s):
 		if (this.debug) ; _DBG_
 			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "])(X=" X " ,Y=" Y " ,W=" W " ,H=" H ")]" ; _DBG_		
 		WinMove % "ahk_id" this._hWnd, , X, Y, W, H
+	}
+
+/*
+===============================================================================
+Function: rollup
+	Toogles "rollup" for window
+
+Parameters:
+	mode - "on", "off", "toggle" (Default)
+
+See also:  
+	<__isRolledUp>
+
+Author(s):
+	20130312 - hoppfrosch - Initial
+===============================================================================
+*/
+	rollup(mode="toggle") {
+		if (this.debug) ; _DBG_
+			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> CurrentState:" this.rolledUp ; _DBG_
+		foundpos := RegExMatch(mode, "i)on|off|toggle")
+		if (foundpos = 0)
+			mode := "toggle"
+
+		StringLower mode,mode
+
+		roll := 1
+		if (mode = "on") 		
+			roll := 1
+		else if (mode = "off") 
+			if (this.rolledUp == true)
+				roll := 0 ; Only rolled window can be unrolled
+			else
+				roll := -1 ; As window is not rolled up, you cannot unroll it as requested ....
+		else {
+			if (this.rolledUp == true)
+				roll := 0
+			else
+				roll := 1
+		}
+		
+		; Determine the minmal height of a window
+		MinWinHeight := this.rolledUpHeight
+		; Get size of current window
+		hwnd := this._hWnd
+		currPos := this.pos
+	
+		if (roll == 1) { ; Roll
+            this.move(currPos.x, currPos.y, currPos.w, MinWinHeight)
+		}
+		else if (roll = 0) { ; Unroll
+			this.__posRestore()			
+		}
+		
+		if (this.debug) ; _DBG_
+			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> NewState:" this.rolledUp ; _DBG_
+
 	}
 
 /*
@@ -347,6 +413,41 @@ Author(s):
 
 /*
 ===============================================================================
+Function:   __isRolledUp
+	Checks whether the window is rolled up
+
+Returns:
+	true (window is rolled up), false (window is not rolled up) or -1 (window does not exist at all)
+
+Author(s):
+	20130312 - hoppfrosch - Original
+	
+See also:
+	<rollup>
+===============================================================================
+*/
+	__isRolledUp() {
+		ret := 0
+		if !this.exist {
+			; the window does not exist at all ...
+			ret := -1
+		}
+		else {
+			currPos := this.pos
+			if (currPos.h <= this.rolledUpHeight) {
+				ret := 1
+			}
+		}
+			
+		if (this.debug) ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
+		
+		return ret
+	}
+
+
+/*
+===============================================================================
 Function:  __ monitorID
     Determines ID of monitor the window currently is on (i.e center of window) (*INTERNAL*)
 
@@ -383,10 +484,59 @@ Author(s):
 		currPos := new Rectangle(0,0,0,0,this.debug)
 		currPos.fromHWnd(this._hWnd)
 		if (this.debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> (" currPos.dump() ")" ; _DBG_
+			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "])] -> (" currPos.dump() ")" ; _DBG_
 		return currPos
 	}
-			
+
+/*
+===============================================================================
+Function: __posPush
+	Pushes current position of the window on position stack (*INTERNAL*)
+
+Author(s):
+	20130311 - hoppfrosch@ahk4.me - Original
+===============================================================================
+*/
+	__posPush() {
+		this._posStack.Insert(1, this.pos)
+		if (this.debug) { ; _DBG_ 
+			this.__posStackDump() ; _DBG_ 
+			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "])] -> (" this._posStack[1].dump() ")" ; _DBG_
+		}
+	}
+	
+	__posStackDump() {
+		For key,value in this._posStack	; loops through all elements in Stack
+		
+			OutputDebug % "|[" A_ThisFunc "()] -> (" key "): (" Value.dump() ")" ; _DBG_
+		return
+	}
+	
+/*
+===============================================================================
+Function: __posRestore
+	Restores position of the window  from Stack(*INTERNAL*)
+
+Parameters:
+	index - Index of position to restore (Default = 2) (1 is the current position)
+
+Author(s):
+	20130308 - hoppfrosch@ahk4.me - Original
+===============================================================================
+*/
+	__posRestore(index="2") {
+		if (this.debug) ; _DBG_
+			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], index=" index ")]" ; _DBG_
+		restorePos := this._posStack[index]
+		currPos := this.pos
+		
+		this.__posStackDump()
+		
+		this.move(restorePos.x, restorePos.y, restorePos.w, restorePos.h)
+		if (this.debug) ; _DBG_
+			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "])] LastPos: " currPos.Dump() " - RestoredPos: " restorePos.Dump() ; _DBG_
+	}
+
 
 /*
 ===============================================================================
@@ -470,6 +620,74 @@ Author(s):
 		this.debug := value ; _DBG_
 		return this.debug ; _DBG_
 	} ; _DBG_
+
+/*
+===============================================================================
+Function: __SetWinEventHook
+	Set the hook for certain win-events (*INTERNAL*)
+
+Parameters:
+	see siehe http://msdn.microsoft.com/en-us/library/windows/desktop/dd373885(v=vs.85).aspx
+
+Returns:
+	true or false, depending on result of dllcall
+
+Author(s):
+	20130311 - hoppfrosch@ahk4.me - Original
+===============================================================================
+*/  
+	__SetWinEventHook(eventMin, eventMax, hmodWinEventProc, lpfnWinEventProc, idProcess, idThread, dwFlags) {
+		if (this.debug) ; _DBG_ 
+			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])(eventMin=" eventMin ", eventMax=" eventMax ", hmodWinEventProc=" hmodWinEventProc ", lpfnWinEventProc=" lpfnWinEventProc ", idProcess=" idProcess ", idThread=" idThread ", dwFlags=" dwFlags ")"  ; _DBG_
+		
+		ret := DllCall("ole32\CoInitialize", Uint, 0)
+		; This is a WinEventProc (siehe http://msdn.microsoft.com/en-us/library/windows/desktop/dd373885(v=vs.85).aspx) - this determines parameters which can be handled by "HookProc"
+		ret := DllCall("user32\SetWinEventHook"
+			, Uint,eventMin   
+			, Uint,eventMax   
+			, Uint,hmodWinEventProc
+			, Uint,lpfnWinEventProc
+			, Uint,idProcess
+			, Uint,idThread
+			, Uint,dwFlags)   
+		return ret
+	}
+	
+	/*
+===============================================================================
+Function:   __onLocationChange
+	Callback on Object-Event <CONST_EVENT.OBJECT.LOCATIONCHANGE> or on <CONST_EVENT.SYSTEM.MOVESIZEEND>
+	
+	Store windows size/pos on each change
+
+Author(s):
+	20130312 - hoppfrosch@ahk4.me - AutoHotkey-Implementation
+===============================================================================
+*/
+	__onLocationChange() {
+		if this._hWnd = 0
+			return
+		
+		if (this.debug) ; _DBG_
+			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "])" ; _DBG_
+		
+		currPos := this.pos
+		lastPos := this._posStack[1]
+		
+		; current size/position is identical with previous Size/position
+		if (currPos.equal(lastPos)) {
+			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "])] Position has NOT changed!" ; _DBG_
+			return
+		}
+		
+		; size/position has been changed -> store it!
+		this.__posPush()
+				
+		if (this.debug) ; _DBG_
+			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "])] LastPos: " lastPos.Dump() " - NewPos: " currPos.Dump() ; _DBG_
+		return
+	}
+
  
 /*
 ===============================================================================
@@ -481,7 +699,16 @@ Author(s):
 ===============================================================================
 */     
 	__Delete() {
-		; Reset all "dangerous" settings 
+		if (this.__hWinEventHook1)
+			DllCall( "user32\UnhookWinEvent", Uint,this._hWinEventHook1 )
+		if (this.__hWinEventHook2)
+			DllCall( "user32\UnhookWinEvent", Uint,this._hWinEventHook2 )
+		if (this._HookProcAdr)
+			DllCall( "kernel32\GlobalFree", UInt,&this._HookProcAdr ) ; free up allocated memory for RegisterCallback
+		if (this.debug) ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])"  ; _DBG_
+		
+		; Reset all "dangerous" settings (all windows should be left in a user accessable state)
 		if (this.alwaysontop == true) {
 			this.alwaysOnTop("off")
 		}
@@ -490,6 +717,8 @@ Author(s):
 		}
 		if (this.debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])"  ; _DBG_
+		
+		ObjRelease(&this)
 	}
 
 /*
@@ -498,70 +727,111 @@ Function: __Get
 	Custom Getter (*INTERNAL*)
 
 	Supports following attributes:
-	* *alwaysontop* - is windows fixed on top of all other windows?
-			Returns a bool containing the AlwaysOnTop-state of the window (see <__isAlwaysOnTop>)
-	* *centercoords* - current coordinates of the center of the window
-			Returns current coordinates of the center of the window as an object of class <Rectangle> (see <__centercoords>)
-	* *classname* - classename of window
-			Returns a string containing classname (see <__classname>)
-	* *exist* - does window exist?
-			Returns a bool indicating whether the window still exists (see <__exist>)
-	* *hidden* - is window hidden?
-			Returns a bool indicating whether the window is hidden (see <__hidden>)
-	* *monitorID* - ID of monitor the window currently is on (i.e center of window)
-			Returns ID of monitor the window currently is on (i.e center of window) (see <__monitorID>)
-	* *pos* - current position of window
-			Returns an object of class <Rectangle> (see <__pos>)
-	* resizable - is the window resizeable?
-			Returns a bool containig the Resizeble-state of the window (see <_isResizable>)
-	* style - Style of the window
-			Returns a number describing the style (see <__style>)
-	* styleEx - extended style of window
-			Returns a number describing the extended style (see <__styleEx>)
-	* title - title of window
-			Returns a string containing title (see <__title>)
+	* *alwaysontop* - is windows fixed on top of all other windows? (see <__isAlwaysOnTop>)
+	* *centercoords* - current coordinates of the center of the window (see <__centercoords>)
+	* *classname* - classename of window (see <__classname>)
+	* *exist* - does window exist? (see <__exist>)
+	* *hidden* - is window hidden? (see <__hidden>)
+	* *monitorID* - ID of monitor the window currently is on (i.e center of window) (see <__monitorID>)
+	* *pos* - current position of window Returns an object of class <Rectangle> (see <__pos>)
+	* *resizable* - is the window resizeable?  Returns a bool containig the Resizeble-state of the window (see <_isResizable>)
+	* *rolledUpHeight* - Height of a rolled-up window		
+	* *style* - Style of the window (see <__style>)
+	* *styleEx* - extended style of window (see <__styleEx>)
+	* *title* - title of window (see <__title>)
 	
 Author(s):
 	20121030 - hoppfrosch - Original
 ===============================================================================
 */     
 	__Get(aName) {
+		ret := 
 		if (this.debug) ; _DBG_
+			if (aName != "debug")
 				OutputDebug % ">[" A_ThisFunc "(" aName ", [" this._hWnd "])]" ; _DBG_
+			
         if (aName = "alwaysontop") {
-			return this.__isAlwaysOnTop()
+			ret := this.__isAlwaysOnTop()
+			if (this.debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret ; _DBG_
+			return ret
 		}
-        if (aName = "classname") {
-			return this.__classname()
+		else if (aName = "centercoords") { ; center coordinate of the current window
+			ret := this.__centercoords()
+			if (this.debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret.Dump() ; _DBG_
+			return ret
 		}
-		if (aName = "exist") {
-			return this.__exist()
+        else if (aName = "classname") {
+			ret := this.__classname()
+			if (this.debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret ; _DBG_
+			return ret
 		}
-		if (aName = "hidden") {
-			return this.__isHidden()
+		else if (aName = "exist") {
+			ret := this.__exist()
+			if (this.debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret ; _DBG_
+			return ret
 		}
-		if (aName = "monitorID") {
-			return this.__monitorID()
+		else if (aName = "hidden") {
+			ret := this.__isHidden()
+			if (this.debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret ; _DBG_
+			return ret
 		}
-		if (aName = "pos") { ; current position
-			return this.__pos()
+		else if (aName = "monitorID") {
+			ret := this.__monitorID()
+			if (this.debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret ; _DBG_
+			return ret
 		}
-		if (aName = "centercoords") { ; center coordinate of the current window
-			return this.__centercoords()
+		else if (aName = "pos") { ; current position
+			ret := this.__pos()
+			if (this.debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret.Dump() ; _DBG_
+			return ret
 		}
-		if (aName = "resizeable") { 
-			return this.__isResizable()
+		else if (aName = "resizeable") { 
+			ret := this.__isResizable()
+			if (this.debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret ; _DBG_
+			return ret
 		}
-		if (aName = "style") {
-			return this.__style()
+		else if (aName = "rolledUp") {
+			ret := this.__isRolledUp()
+			if (this.debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret ; _DBG_
+			return ret
 		}
-		if (aName = "styleEx") {
-			return this.__styleEx()
+		else if (aName = "rolledUpHeight") {
+			SysGet, ret, 29
+			if (this.debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret ; _DBG_
+			return ret
 		}
-		if (aName = "title") {
-			return this.__title()
+		else if (aName = "style") {
+			ret := this.__style()
+			if (this.debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret ; _DBG_
+			return ret
 		}
-		return
+		else if (aName = "styleEx") {
+			ret := this.__styleEx()
+			if (this.debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret ; _DBG_
+			return ret
+		}
+		else if (aName = "title") {
+			ret :=  this.__title()
+			if (this.debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret ; _DBG_
+			return ret
+		}
+		else {
+			return
+		}
+		return ret
 	}
 
 /*
@@ -583,7 +853,7 @@ Author(s):
 	__New(_hWnd=-1, debug=0, _test=0) {
 		this.debug := debug
 		if (this.debug) ; _DBG_
-			OutputDebug % ">[" A_ThisFunc "(hWnd=(" _hWnd ")] (version: " this._version ")" ; _DBG_
+			OutputDebug % ">[" A_ThisFunc "(hWnd=(" _hWnd "))] (version: " this._version ")" ; _DBG_
 
 		if % (A_AhkVersion < "1.1.08.00" && A_AhkVersion >= "2.0") {
 			MsgBox 16, Error, %A_ThisFunc% :`n This class is only tested with AHK_L later than 1.1.08.00 (and before 2.0)`nAborting...
@@ -606,11 +876,87 @@ Author(s):
 			return
 		}
 		this._hWnd := _hWnd
-
+		this._posStack := Object() ; creates initially empty stack
+		
 		; initially store the position to detect movement of window and allow window restoring
-		WinGetPos, x, y, w, h, ahk_id %_hWnd%
+		this.__posPush()
+		
+		; Registering global callback and storing adress (&this) within A_EventInfo
+		ObjAddRef(&this)
+		this._HookProcAdr := RegisterCallback("ClassWindowHandler_EventHook", "", "", &this)
+		; Setting Callback on Adress <_HookProcAdr> on appearance of any event out of certain range
+		this._hWinEventHook1 := this.__SetWinEventHook( CONST_EVENT.SYSTEM.SOUND, CONST_EVENT.SYSTEM.DESKTOPSWITCH, 0, this._HookProcAdr, 0, 0, 0 )	
+		this._hWinEventHook2 := this.__SetWinEventHook( CONST_EVENT.OBJECT.SHOW, CONST_EVENT.OBJECT.CONTENTSCROLLED, 0, this._HookProcAdr, 0, 0, 0 )	
+		
+		if (this.debug) ; _DBG_
+			OutputDebug % "<[" A_ThisFunc "(hWnd=(" _hWnd "))]" ; _DBG_
+		
 		
 		return this
 	}
 	
+}
+
+
+/*
+===============================================================================
+Function:   ClassWindowHandler_EventHook
+	Callback on System Events. Used as dispatcher to detect window manipulation and calling the appropriate member-function within class <WindowHandler>
+	
+Author(s):
+	20120629 - hoppfrosch - Original
+
+See also:
+	http://www.autohotkey.com/community/viewtopic.php?t=35659
+	http://www.autohotkey.com/community/viewtopic.php?f=1&t=88156
+===============================================================================
+*/
+ClassWindowHandler_EventHook(hWinEventHook, Event, hWnd, idObject, idChild, dwEventThread, dwmsEventTime ) {
+	; ClassWindowHandler_EventHook is used as WindowsEventHook - it's registered as callback within <__SetWinEventHook> of class <WindowHandler>.
+	; ClassWindowHandler_EventHook is a WinEventProc (see http://msdn.microsoft.com/en-us/library/windows/desktop/dd373885(v=vs.85).aspx) and has those Parameter ...	
+
+	; This function is called on the registered event(s) on every window - regardless whether it's an object instance or not
+	; We have to check whether the current call refers to the current instance of the class WindowHandler
+	; HINT: A_EventInfo currently holds the address of the current WindowsHandler object instance (set during RegisterCallback ... see <__New>)
+	
+	; Don't handle any windows, that are not class instances ...
+	if (hWnd != Object(A_EventInfo)._hWnd)
+		return
+	self := Object(A_EventInfo)
+
+	if (Object(A_EventInfo).debug) ; _DBG_
+		OutputDebug % ">[" A_ThisFunc "([" Object(A_EventInfo)._hWnd "])(hWinEventHook=" hWinEventHook ", Event=" Event2Str(Event) ", hWnd=" hWnd ", idObject=" idObject ", idChild=" idChild ", dwEventThread=" dwEventThread ", dwmsEventTime=" dwmsEventTime ") -> A_EventInfo: " A_EventInfo ; _DBG_
+	
+	; ########## START: Handling window movement ##################################################
+	; We want to detect when the window movement has finished finally, as onLocationChanged() has only to be called at the END of the movement
+	;
+	; It has to be detected whether the location change was initiated by user dragging/rezizing ("manual movement") or any other window event ("non-manual movement").
+	; * Manual movement triggers the following sequence: CONST_EVENT.SYSTEM.MOVESIZESTART - N times CONST_EVENT.OBJECT.LOCATIONCHANGE - CONST_EVENT.SYSTEM.MOVESIZEEND
+	; * Non-manual movement by for example AHK WinMove only triggers: 1 time CONST_EVENT.OBJECT.LOCATIONCHANGE
+	
+	; +++ MANUAL MOVEMENT
+	; The window is moved manually - as the movement isn't finished, don't call callback. Just store that we are in middle of manual movement
+	if (Event == CONST_EVENT.SYSTEM.MOVESIZESTART) {
+		Object(A_EventInfo)._bManualMovement := true
+		return
+	}
+	; Manual movement has finished - trigger onLocationChange callback now
+	if (Event == CONST_EVENT.SYSTEM.MOVESIZEEND) {
+		Object(A_EventInfo)._bManualMovement := false
+		Object(A_EventInfo).__onLocationChange()
+		return
+	}
+	
+	; +++ NON-MANUAL MOVEMENT
+	; OutputDebug % "|[" A_ThisFunc "([" Object(A_EventInfo)._hWnd "])] -> Manual Movement " Object(A_EventInfo)._bManualMovement
+	
+	if (Event == CONST_EVENT.OBJECT.LOCATIONCHANGE) {
+		if (Object(A_EventInfo)._bManualMovement == false) {
+			; As its no manual movement, trigger onLocationChange callback now
+			Object(A_EventInfo).__onLocationChange()
+			return
+		}
+	}
+	; ########## END: Handling window movement ####################################################
+	return
 }
