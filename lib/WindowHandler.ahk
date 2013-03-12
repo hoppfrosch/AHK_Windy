@@ -10,7 +10,7 @@
 		
 	Changelog:
 
-		0.2.0 - [+] Event-Handling
+		0.2.0 - [+] Event-Handling, <rollup>, <__isRolledUp>
 		0.1.0 - [+] Initial
 		
 */
@@ -20,7 +20,6 @@
 #include <Rectangle>
 #include <MultiMonitorEnv>
 #include <_WindowHandlerEvent>
-
 
 ; ******************************************************************************************************************************************
 class WindowHandler {
@@ -189,7 +188,7 @@ See also:
 	<__isRolledUp>
 
 Author(s):
-	20130312 - hoppfrosch - Initial
+	20130312 - hoppfrosch@ahk4.me - Original
 ===============================================================================
 */
 	rollup(mode="toggle") {
@@ -414,13 +413,13 @@ Author(s):
 /*
 ===============================================================================
 Function:   __isRolledUp
-	Checks whether the window is rolled up
+	Checks whether the window is rolled up (*INTERNAL*)
 
 Returns:
 	true (window is rolled up), false (window is not rolled up) or -1 (window does not exist at all)
 
 Author(s):
-	20130312 - hoppfrosch - Original
+	20130312 - hoppfrosch@ahk4.me - Original
 	
 See also:
 	<rollup>
@@ -504,7 +503,16 @@ Author(s):
 			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "])] -> (" this._posStack[1].dump() ")" ; _DBG_
 		}
 	}
-	
+
+/*
+===============================================================================
+Function: __posStackDump
+	Dumps the current position stack via OutputDebug (*INTERNAL*)
+
+Author(s):
+	20130312 - hoppfrosch@ahk4.me - Original
+===============================================================================
+*/	
 	__posStackDump() {
 		For key,value in this._posStack	; loops through all elements in Stack
 		
