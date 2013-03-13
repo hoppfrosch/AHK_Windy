@@ -16,7 +16,17 @@ The idea is based on [WindowPad](http://http://www.autohotkey.com/board/topic/19
  - for taking up the development on [Autohotkey](http://l.autohotkey.net/)
  - [WindowPad](http://http://www.autohotkey.com/board/topic/19990-windowpad-window-moving-tool)
 - [Uberi](http://www.autohotkey.com/board/user/12435-uberi/) 
- - for giving [insights in object handling and pointing out errors](https://github.com/Uberi/Yunit/issues/5)
+ - for giving [insights in EventHooks and pointing out errors](https://github.com/Uberi/Yunit/issues/5)
  - [Yunit-Framework](https://github.com/Uberi/Yunit)
-- [Coco](http://www.autohotkey.com/board/user/19316-coco/)
- - [Menu](http://www.autohotkey.com/board/topic/85512-class-menuahk-work-easily-with-custom-menus/)
+- [derRaphael](http://www.autohotkey.com/board/user/4656-derraphael/)
+ - Tab-Library taken from [[stdLib] better Tab control with icons etc](http://www.autohotkey.com/board/topic/49122-stdlib-better-tab-control-with-icons-etc/#entry306046)
+- [Yusuke Kamiyamane](http://p.yusukekamiyamane.com/)
+ - All icons used within EDE originate from his fantastic [Fugue-Iconset](http://p.yusukekamiyamane.com/)
+
+--------
+## Competitors ##
+
+- [WindowPad](http://http://www.autohotkey.com/board/topic/19990-windowpad-window-moving-tool)/[WindowPadX](https://github.com/hoppfrosch/WindowPadX) - free - based on AutoHotkey as well
+- [WindowMenuPlus](http://www.moo0.com/?top=http://www.moo0.com/software/WindowMenuPlus/) - Free  (Non-Commercial Use Only)  
+- [WindowSpace](http://www.ntwind.com/software/windowspace.html) - commercial
+- [Winsplit-Revolution](http://winsplit-revolution.com/) - Freeware
