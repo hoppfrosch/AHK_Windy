@@ -9,6 +9,7 @@
 		This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See http://www.wtfpl.net/ for more details.
 		
 	Changelog:
+	    0.1.1 - [-] removed method <Version>()
 		0.1.0 - [+] Initial
 */
 
@@ -22,8 +23,8 @@
 ; ******************************************************************************************************************************************
 class MultiMonitorEnv {
 	
-	_version := "0.1.0"
-	_debug := 0 ; _DBG_	
+	_debug := 0
+	_version := "0.1.1"
 	
 
 /*
@@ -176,26 +177,6 @@ Author(s):
 
 /*
 ===============================================================================
-Function:   Version
-	Returns the current version of the library
-
-	Versioning scheme according to http://semver.org
-
-Returns:
-	current version number of the module
-
-Author(s):
-	20121031 - hoppfrosch - Original
-===============================================================================
-*/
-	Version() {
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "() -> (" this._version ")]" ; _DBG_
-		return this._version
-	}
-
-/*
-===============================================================================
 Function:  virtualScreenSize
     Get the size of virtual screen in Pixel
 	
@@ -247,15 +228,15 @@ Function: __New
 	Constructor
 
 Parameters:
-	debug - Flag to enable debugging (Optional - Default: 0)
+	_debug - Flag to enable debugging (Optional - Default: 0)
 
 Author(s):
 	20121031 - hoppfrosch - Original
 ===============================================================================
 */     
-	__New(debug=false) {
-		this._debug := debug ; _DBG_
+	__New(_debug=false) {
+		this._debug := _debug ; _DBG_
 		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "(_debug=" debug ")] (version: " this._version ")" ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "(_debug=" _debug ")] (version: " this._version ")" ; _DBG_
 	}
 }
