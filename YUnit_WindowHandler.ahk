@@ -11,15 +11,14 @@
 #SingleInstance force
 
 
-ReferenceVersion := "0.2.0"
+ReferenceVersion := "0.3.0"
 debug := 1
 
-Yunit.Use(YunitStdOut, YunitWindow).Test(PadTestSuite)
-;Yunit.Use(YunitStdOut, YunitWindow).Test(MiscTestSuite, HideShowTestSuite, ExistTestSuite, RollupTestSuite, MoveResizeTestSuite)
+Yunit.Use(YunitStdOut, YunitWindow).Test(MiscTestSuite, HideShowTestSuite, ExistTestSuite, RollupTestSuite, MoveResizeTestSuite, TileTestSuite)
 Return
 
 
-class PadTestSuite 
+class TileTestSuite 
 {
 	Begin()
     {
@@ -27,11 +26,12 @@ class PadTestSuite
 		this.obj := new WindowHandler(0, debug)
     }
 	
-	RollupToggle() {
+	Tile() {
 		Global debug
 
 		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
 		this.obj.pad(25, 25, 50, 50)
+		MsgBox % A_ThisFunc " - To be done ..."
 		OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
 	}
 	
