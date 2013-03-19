@@ -18,8 +18,8 @@ The idea is based on [WindowPad](http://http://www.autohotkey.com/board/topic/19
 - [Uberi](http://www.autohotkey.com/board/user/12435-uberi/) 
  - for giving [insights in EventHooks and pointing out errors](https://github.com/Uberi/Yunit/issues/5)
  - [Yunit-Framework](https://github.com/Uberi/Yunit)
-- [derRaphael](http://www.autohotkey.com/board/user/4656-derraphael/)
- - Tab-Library taken from [[stdLib] better Tab control with icons etc](http://www.autohotkey.com/board/topic/49122-stdlib-better-tab-control-with-icons-etc/#entry306046)
+- [TheGood](http://www.autohotkey.com/board/user/3956-thegood/)
+ - [TaskDialog](http://www.autohotkey.com/board/topic/54555-taskdialog-stdlib-compatible/)
 - [Yusuke Kamiyamane](http://p.yusukekamiyamane.com/)
  - All icons used within EDE originate from his fantastic [Fugue-Iconset](http://p.yusukekamiyamane.com/)
 
