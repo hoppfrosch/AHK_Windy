@@ -14,6 +14,7 @@
 ReferenceVersion := "0.3.0"
 debug := 1
 
+;Yunit.Use(YunitStdOut, YunitWindow).Test(MiscTestSuite)
 Yunit.Use(YunitStdOut, YunitWindow).Test(MiscTestSuite, HideShowTestSuite, ExistTestSuite, RollupTestSuite, MoveResizeTestSuite, TileTestSuite)
 Return
 
@@ -30,7 +31,7 @@ class TileTestSuite
 		Global debug
 
 		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
-		this.obj.pad(25, 25, 50, 50)
+		this.obj.tile(25, 25, 50, 50)
 		MsgBox % A_ThisFunc " - To be done ..."
 		OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
 	}
@@ -334,7 +335,12 @@ class MiscTestSuite
 	Begin()
     {
 		Global debug
-		this.obj := new WindowHandler(0, debug)
+		; Create a Testwindow ...
+		Run, notepad.exe
+		WinWait, ahk_class Notepad, , 2
+		WinMove, ahk_class Notepad,, 10, 10, 300, 300
+		_hWnd := WinExist("ahk_class Notepad")
+		this.obj := new WindowHandler(_hWnd, debug)
     }
         
     Version()
