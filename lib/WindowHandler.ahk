@@ -60,7 +60,7 @@ Author(s):
 		xrel := monSize.w * xFactor/100
 		yrel := monSize.h * yFactor/100
 		w := monSize.w * wFactor/100
-		h := monSize.h * wFactor/100
+		h := monSize.h * hFactor/100
 		
 		x := monBound.x + xrel
 		y := monBound.y + yrel
@@ -920,6 +920,10 @@ Author(s):
 			return
 		}
 		this._hWnd := _hWnd
+		if (this._debug) ; _DBG_
+			OutputDebug % ">[" A_ThisFunc "(hWnd=(" _hWnd "))] (WinTitle: " this.title ")" ; _DBG_
+
+		
 		this._posStack := Object() ; creates initially empty stack
 		
 		; initially store the position to detect movement of window and allow window restoring
