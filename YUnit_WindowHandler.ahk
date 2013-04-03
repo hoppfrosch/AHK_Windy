@@ -11,11 +11,11 @@
 #SingleInstance force
 
 
-ReferenceVersion := "0.3.0"
+ReferenceVersion := "0.3.2"
 debug := 1
 
 ;Yunit.Use(YunitStdOut, YunitWindow).Test(MiscTestSuite)
-Yunit.Use(YunitStdOut, YunitWindow).Test(MiscTestSuite, HideShowTestSuite, ExistTestSuite, RollupTestSuite, MoveResizeTestSuite, TileTestSuite)
+Yunit.Use(YunitStdOut, YunitWindow).Test(MiscTestSuite, NotRealWindowTestSuite, HideShowTestSuite, ExistTestSuite, RollupTestSuite, MoveResizeTestSuite, TileTestSuite)
 Return
 
 
@@ -330,6 +330,16 @@ class HideShowTestSuite
     }
 }
 
+class NotRealWindowTestSuite {
+	Test()
+	{
+		Global debug
+		HDesktop := DllCall("User32.dll\GetDesktopWindow", "UPtr")
+		this.obj := new WindowHandler(HDesktop, debug)
+		Yunit.assert(this.obj==)
+	}
+}
+
 class MiscTestSuite
 {
 	Begin()
@@ -350,6 +360,7 @@ class MiscTestSuite
         Yunit.assert(this.obj._version == ReferenceVersion)
 		OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
     }
+	
 
     Classname()
     {

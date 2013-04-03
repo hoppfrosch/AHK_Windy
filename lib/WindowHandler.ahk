@@ -9,7 +9,10 @@
 		This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See http://www.wtfpl.net/ for more details.
 		
 	Changelog:
-
+		0.3.2 - [+] Check whether window is a real window <__isWindow>
+        0.3.1 - [*] Renamed <tile> to <movePercental>
+				[*] Use of monWorkingArea instead of monSize within <movePercental>
+		0.3.0 - [+] Tiling-Functionality <tile>
 		0.2.0 - [+] Event-Handling, <rollup>, <__isRolledUp>
 		0.1.0 - [+] Initial
 		
@@ -24,7 +27,7 @@
 ; ******************************************************************************************************************************************
 class WindowHandler {
 	
-	_version := "0.3.1"
+	_version := "0.3.2"
 	_debug := 0
 	_hWnd := 0
 	
@@ -482,6 +485,28 @@ See also:
 
 /*
 ===============================================================================
+Function:   __isWindow
+	Checks whether the given hWnd refers to a TRUE window (As opposed to the desktop or a menu, etc.) (*INTERNAL*)
+
+Returns:
+	true (window is a true window), false (window is not a true window)
+
+Author(s):
+	20080121 - ManaUser - Original (http://www.autohotkey.com/board/topic/25393-appskeys-a-suite-of-simple-utility-hotkeys/)
+===============================================================================
+*/
+	__isWindow(hWnd) {
+		WinGet, s, Style, ahk_id %hWnd% 
+		ret := s & 0xC00000 ? (s & 0x80000000 ? 0 : 1) : 0  ;WS_CAPTION AND !WS_POPUP(for tooltips etc) 
+			
+		if (this._debug) ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "([" hWnd "])] -> " ret ; _DBG_		
+	
+		return ret
+	}
+	
+/*
+===============================================================================
 Function:  __ monitorID
     Determines ID of monitor the window currently is on (i.e center of window) (*INTERNAL*)
 
@@ -742,6 +767,14 @@ Author(s):
 ===============================================================================
 */     
 	__Delete() {
+		if (this._hwnd <= 0) {
+			return
+		}
+		
+		if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])"  ; _DBG_
+			
+		
 		if (this.__hWinEventHook1)
 			DllCall( "user32\UnhookWinEvent", Uint,this._hWinEventHook1 )
 		if (this.__hWinEventHook2)
@@ -750,7 +783,7 @@ Author(s):
 			DllCall( "kernel32\GlobalFree", UInt,&this._HookProcAdr ) ; free up allocated memory for RegisterCallback
 		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])"  ; _DBG_
-		
+			
 		; Reset all "dangerous" settings (all windows should be left in a user accessable state)
 		if (this.alwaysontop == true) {
 			this.alwaysOnTop("off")
@@ -758,9 +791,7 @@ Author(s):
 		if (this.__isHidden() == 1) {
 			this.show()
 		}
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])"  ; _DBG_
-		
+			
 		ObjRelease(&this)
 	}
 
@@ -898,13 +929,13 @@ Author(s):
 		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "(hWnd=(" _hWnd "))] (version: " this._version ")" ; _DBG_
 
-		if % (A_AhkVersion < "1.1.08.00" && A_AhkVersion >= "2.0") {
+		if % (A_AhkVersion < "1.1.08.00" || A_AhkVersion >= "2.0") {
 			MsgBox 16, Error, %A_ThisFunc% :`n This class is only tested with AHK_L later than 1.1.08.00 (and before 2.0)`nAborting...
 			if (this._debug) ; _DBG_
 				OutputDebug % "<[" A_ThisFunc "(...) -> ()]: *ERROR* : This class is only tested with AHK_L later than 1.1.08.00 (and before 2.0). Aborting..." ; _DBG_
 			return
 		}
-
+		
 		if  % (_hWnd = 0) {
 			; Create a Testwindow ...
 			Run, notepad.exe
@@ -916,13 +947,21 @@ Author(s):
 			MsgBox  16, Error, %A_ThisFunc% :`n Required parameter is missing`nAborting...
 			if (this._debug) ; _DBG_
 				OutputDebug % "<[" A_ThisFunc "(...) -> ()] *ERROR*: Required parameter is missing. Aborting..." ; _DBG_
+			this._hWnd := -1
 			return
 		}
+		
+		if (!this.__isWindow(_hWnd)) {
+			if (this._debug) ; _DBG_
+				OutputDebug % ">[" A_ThisFunc "(hWnd=(" _hWnd "))] is NOT a true window. Aborting..." ; _DBG_
+			this._hWnd := -1
+			return
+		}
+		
 		this._hWnd := _hWnd
 		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "(hWnd=(" _hWnd "))] (WinTitle: " this.title ")" ; _DBG_
-
-		
+				
 		this._posStack := Object() ; creates initially empty stack
 		
 		; initially store the position to detect movement of window and allow window restoring
