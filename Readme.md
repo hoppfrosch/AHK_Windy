@@ -11,10 +11,12 @@ The idea is based on [WindowPad](http://http://www.autohotkey.com/board/topic/19
 ## Credits  ##
 
 - [Chris](http://www.autohotkey.com/board/user/2-chris/)
- - for [Autohotkey 1.0](http://www.autohotkey.com/)
+ - for [AutoHotkey 1.0](http://www.autohotkey.com/)
 - [Lexikos](http://www.autohotkey.com/board/user/2446-lexikos/)
- - for taking up the development on [Autohotkey](http://l.autohotkey.net/)
- - [WindowPad](http://http://www.autohotkey.com/board/topic/19990-windowpad-window-moving-tool)
+ - for taking up the development on [AutoHotkey](http://l.autohotkey.net/) (aka. AHK_L)
+ - [WindowPad](http://http://www.autohotkey.com/board/topic/19990-windowpad-window-moving-tool) as **main inspiration**
+- [ManaUser](http://www.autohotkey.com/board/user/3558-manauser/)
+ - Function `__isWindow(`) - taken from [AppsKeys](http://www.autohotkey.com/board/topic/25393-appskeys-a-suite-of-simple-utility-hotkeys/)
 - [Uberi](http://www.autohotkey.com/board/user/12435-uberi/) 
  - for giving [insights in EventHooks and pointing out errors](https://github.com/Uberi/Yunit/issues/5)
  - [Yunit-Framework](https://github.com/Uberi/Yunit)
