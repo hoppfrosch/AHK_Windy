@@ -24,7 +24,7 @@
 class MultiMonitorEnv {
 	
 	_debug := 0
-	_version := "0.1.1"
+	_version := "0.1.2"
 	
 
 /*
@@ -175,6 +175,28 @@ Author(s):
 		return rect
 	}
 
+/*
+===============================================================================
+Function:  monWorkArea
+    Same as <monSize>, except the area is reduced to exclude the area occupied by the taskbar and other registered desktop toolbars.
+
+Parameters:
+    mon - Monitor number
+  
+Returns:
+   Rectangle containing monitor working area
+
+Author(s):
+    20130322 - hoppfrosch - Original
+===============================================================================
+*/
+	monWorkArea(mon=1) {
+		SysGet, size, MonitorWorkArea , %mon%
+		rect := new Rectangle(0,0, sizeRight-sizeLeft, sizeBottom-sizeTop, this._debug)
+		if (this._debug) ; _DBG_
+			OutputDebug % "<[" A_ThisFunc "(" mon ")] -> (" rect.dump() ")" ; _DBG_
+		return rect
+	}
 /*
 ===============================================================================
 Function:  virtualScreenSize
