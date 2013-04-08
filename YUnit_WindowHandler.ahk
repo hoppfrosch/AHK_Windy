@@ -27,11 +27,11 @@ class TileTestSuite
 		this.obj := new WindowHandler(0, debug)
     }
 	
-	Tile() {
+	movePercental() {
 		Global debug
 
 		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
-		this.obj.tile(25, 25, 50, 50)
+		this.obj.movePercental(25, 25, 50, 50)
 		MsgBox % A_ThisFunc " - To be done ..."
 		OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
 	}

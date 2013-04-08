@@ -24,7 +24,7 @@
 ; ******************************************************************************************************************************************
 class WindowHandler {
 	
-	_version := "0.3.0"
+	_version := "0.3.1"
 	_debug := 0
 	_hWnd := 0
 	
@@ -36,41 +36,6 @@ class WindowHandler {
 
 	_posStack := 0
 	
-/*
-===============================================================================
-Function: tile
-    move and resize window relative to the screen size.
-
-Parameters:
-	xFactor, yFactor, wFactor, hFactor - Position and Size of the destination relative to current screen
-    
-Author(s):
-    Original idea - Lexikos - http://www.autohotkey.com/forum/topic21703.html
-===============================================================================
-*/
-	tile(xFactor=0, yFactor=0, wFactor=100, hFactor=100) {
-		
-		if (this._debug) ; _DBG_
-			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], xFactor=" xFactor ", yFactor=" yFactor ", wFactor=" wFactor ", hFactor=" hFactor ")]" ; _DBG_
-			
-		monID := this.monitorID
-		mmv := new MultiMonitorEnv(_debug)
-		monSize := mmv.monSize(monID)
-		monBound := mmv.monBoundary(monID)
-		xrel := monSize.w * xFactor/100
-		yrel := monSize.h * yFactor/100
-		w := monSize.w * wFactor/100
-		h := monSize.h * hFactor/100
-		
-		x := monBound.x + xrel
-		y := monBound.y + yrel
-		
-		this.move(x,y,w,h)
-		
-		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], xFactor=" xFactor ", yFactor=" yFactor ", wFactor=" wFactor ", hFactor=" hFactor ")] -> padded to (" this.pos.Dump() ") on Monitor (" monId ")" ; _DBG_
-	}
-
 /*
 ===============================================================================
 Function: alwaysOnTop
@@ -212,6 +177,40 @@ Author(s):
 		WinMove % "ahk_id" this._hWnd, , X, Y, W, H
 	}
 
+/*
+===============================================================================
+Function: movePercental
+    move and resize window relative to the screen size.
+
+Parameters:
+	xFactor, yFactor, wFactor, hFactor - Position and Size of the destination relative to current screen
+    
+Author(s):
+    Original idea - Lexikos - http://www.autohotkey.com/forum/topic21703.html
+===============================================================================
+*/
+	movePercental(xFactor=0, yFactor=0, wFactor=100, hFactor=100) {
+		
+		if (this._debug) ; _DBG_
+			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], xFactor=" xFactor ", yFactor=" yFactor ", wFactor=" wFactor ", hFactor=" hFactor ")]" ; _DBG_
+			
+		monID := this.monitorID
+		mmv := new MultiMonitorEnv(_debug)
+		monWorkArea := mmv.monWorkArea(monID)
+		monBound := mmv.monBoundary(monID)
+		xrel := monWorkArea.w * xFactor/100
+		yrel := monWorkArea.h * yFactor/100
+		w := monWorkArea.w * wFactor/100
+		h := monWorkArea.h * hFactor/100
+		
+		x := monBound.x + xrel
+		y := monBound.y + yrel
+		
+		this.move(x,y,w,h)
+		
+		if (this._debug) ; _DBG_
+			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], xFactor=" xFactor ", yFactor=" yFactor ", wFactor=" wFactor ", hFactor=" hFactor ")] -> padded to (" this.pos.Dump() ") on Monitor (" monId ")" ; _DBG_
+	}
 /*
 ===============================================================================
 Function: rollup
