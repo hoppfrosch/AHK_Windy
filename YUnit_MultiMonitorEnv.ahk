@@ -7,11 +7,11 @@
 #include <Rectangle>
 
 #Warn All
-#Warn LocalSameAsGlobal, Off
+;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
 
-ReferenceVersion := "0.1.0"
+ReferenceVersion := "0.1.1"
 debug := 1
 
 Yunit.Use(YunitStdOut, YunitWindow).Test(MultiMonitorEnvTestSuite)
@@ -19,12 +19,11 @@ Return
 
 ExitApp
 
-
 class MultiMonitorEnvTestSuite
 {
 	Begin()
     {
-		debug := 1
+		Global debug
 		this.obj := new MultiMonitorEnv(debug)
 		this.monCount := 2
 		this.mon1Width := 1920
@@ -40,7 +39,7 @@ class MultiMonitorEnvTestSuite
     Version()
     {
 		Global ReferenceVersion
-		Yunit.assert(this.obj.Version() == ReferenceVersion)
+		Yunit.assert(this.obj._version == ReferenceVersion)
     }
 	
 	VirtualScreenSize() {

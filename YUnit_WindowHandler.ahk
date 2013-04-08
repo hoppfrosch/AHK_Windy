@@ -6,17 +6,43 @@
 #include <Rectangle>
 #include <WindowHandler>
 
-#Warn All
-#Warn LocalSameAsGlobal, Off
+; #Warn All
+;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
 
-ReferenceVersion := "0.2.0"
+ReferenceVersion := "0.3.0"
 debug := 1
 
-Yunit.Use(YunitStdOut, YunitWindow).Test(MoveResizeTestSuite)
-;Yunit.Use(YunitStdOut, YunitWindow).Test(MiscTestSuite, HideShowTestSuite, ExistTestSuite, RollupTestSuite, )
+;Yunit.Use(YunitStdOut, YunitWindow).Test(MiscTestSuite)
+Yunit.Use(YunitStdOut, YunitWindow).Test(MiscTestSuite, HideShowTestSuite, ExistTestSuite, RollupTestSuite, MoveResizeTestSuite, TileTestSuite)
 Return
+
+
+class TileTestSuite 
+{
+	Begin()
+    {
+		Global debug
+		this.obj := new WindowHandler(0, debug)
+    }
+	
+	Tile() {
+		Global debug
+
+		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
+		this.obj.tile(25, 25, 50, 50)
+		MsgBox % A_ThisFunc " - To be done ..."
+		OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
+	}
+	
+	End()
+    {
+		this.obj.kill()
+        this.remove("obj")
+		this.obj := 
+    }
+}
 
 
 class RollupTestSuite 
@@ -59,7 +85,7 @@ class RollupTestSuite
 		this.obj.rollup("toggle") ; as the window was rolled up, it shouldn't be rolled up now
 		val := this.obj.rolledUp
 
-		OutputDebug % "******************************* " A_ThisFunc " 6 ****************************"
+		OutputDebug % "******************************* " A_ThisFunc " 7 ****************************"
 		this.End()
 		val := this.obj.rolledUp
 		Yunit.assert(val == )
@@ -309,7 +335,12 @@ class MiscTestSuite
 	Begin()
     {
 		Global debug
-		this.obj := new WindowHandler(0, debug)
+		; Create a Testwindow ...
+		Run, notepad.exe
+		WinWait, ahk_class Notepad, , 2
+		WinMove, ahk_class Notepad,, 10, 10, 300, 300
+		_hWnd := WinExist("ahk_class Notepad")
+		this.obj := new WindowHandler(_hWnd, debug)
     }
         
     Version()
@@ -425,7 +456,7 @@ class MiscTestSuite
         
 	MonitorID() {
 		this.obj.Move(2,2,300,300)
-		monID := this.obj.monitorID()
+		monID := this.obj.monitorID
 		Yunit.assert(monId == 1)
 		obj := new MultiMonitorEnv(debug)
 		rect2 := obj.monBoundary(2)
