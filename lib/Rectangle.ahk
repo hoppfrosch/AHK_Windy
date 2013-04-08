@@ -224,7 +224,7 @@ Author(s):
 	__New(x=0, y=0, w=0, h=0, debug=false) {
 		this._debug := debug ; _DBG_
 		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "(x=(" x ", y=" y ", w=" w ", h=" h ", _debug=" debug ")] (version: " this._version ")" ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "(x=" x ", y=" y ", w=" w ", h=" h ", _debug=" debug ")] (version: " this._version ")" ; _DBG_
 		this.x := x
 		this.y := y
 		this.w := w
