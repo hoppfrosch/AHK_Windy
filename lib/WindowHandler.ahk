@@ -24,8 +24,8 @@
 ; ******************************************************************************************************************************************
 class WindowHandler {
 	
-	_version := "0.2.0"
-	debug := 0
+	_version := "0.3.0"
+	_debug := 0
 	_hWnd := 0
 	
 	_hWinEventHook1 := 0
@@ -35,6 +35,42 @@ class WindowHandler {
 	_bManualMovement := false
 
 	_posStack := 0
+	
+/*
+===============================================================================
+Function: tile
+    move and resize window relative to the screen size.
+
+Parameters:
+	xFactor, yFactor, wFactor, hFactor - Position and Size of the destination relative to current screen
+    
+Author(s):
+    Original idea - Lexikos - http://www.autohotkey.com/forum/topic21703.html
+===============================================================================
+*/
+	tile(xFactor=0, yFactor=0, wFactor=100, hFactor=100) {
+		
+		if (this._debug) ; _DBG_
+			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], xFactor=" xFactor ", yFactor=" yFactor ", wFactor=" wFactor ", hFactor=" hFactor ")]" ; _DBG_
+			
+		monID := this.monitorID
+		mmv := new MultiMonitorEnv(_debug)
+		monSize := mmv.monSize(monID)
+		monBound := mmv.monBoundary(monID)
+		xrel := monSize.w * xFactor/100
+		yrel := monSize.h * yFactor/100
+		w := monSize.w * wFactor/100
+		h := monSize.h * hFactor/100
+		
+		x := monBound.x + xrel
+		y := monBound.y + yrel
+		
+		this.move(x,y,w,h)
+		
+		if (this._debug) ; _DBG_
+			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], xFactor=" xFactor ", yFactor=" yFactor ", wFactor=" wFactor ", hFactor=" hFactor ")] -> padded to (" this.pos.Dump() ") on Monitor (" monId ")" ; _DBG_
+	}
+
 /*
 ===============================================================================
 Function: alwaysOnTop
@@ -51,7 +87,7 @@ Author(s):
 ===============================================================================
 */
 	alwaysOnTop(mode="toggle") {
-		if (this.debug) ; _DBG_
+		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> CurrentState:" this.alwaysontop ; _DBG_
 		foundpos := RegExMatch(mode, "i)on|off|toggle")
 		if (foundpos = 0)
@@ -61,7 +97,7 @@ Author(s):
 		val := this._hWnd
 		WinSet, AlwaysOnTop, %mode%,  ahk_id %val%
 			
-		if (this.debug) ; _DBG_
+		if (this._debug) ; _DBG_
 			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> NewState:" this.alwaysontop ; _DBG_
 	}
 
@@ -81,7 +117,7 @@ Author(s):
 ===============================================================================
 */
 	hidden(mode="toggle") {
-		if (this.debug) ; _DBG_
+		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> CurrentState:" this.__isHidden() ; _DBG_
 		foundpos := RegExMatch(mode, "i)on|off|toggle")
 		if (foundpos = 0)
@@ -99,7 +135,7 @@ Author(s):
 			else
 				this.hide()
 		}
-		if (this.debug) ; _DBG_
+		if (this._debug) ; _DBG_
 			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> NewState:" this.__isHidden() ; _DBG_
 	}
 	
@@ -117,7 +153,7 @@ Author(s):
 */
 	hide() {
 		val := this._hWnd
-		if (this.debug) ; _DBG_
+		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])]" ; _DBG_		
 		WinHide ahk_id %val%
 	}
@@ -132,7 +168,7 @@ Author(s):
 ===============================================================================
 */
 	kill() {
-		if (this.debug) ; _DBG_
+		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])]" ; _DBG_		
 
 		prevState := A_DetectHiddenWindows
@@ -154,7 +190,7 @@ Author(s):
 ===============================================================================
 */
 	move(X,Y,W="",H="") {
-		if (this.debug) ; _DBG_
+		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "])(X=" X " ,Y=" Y " ,W=" W " ,H=" H ")]" ; _DBG_		
 		if (X = 99999 || Y = 99999 || W = 99999 || H = 9999)
 			currPos := this.pos
@@ -171,7 +207,7 @@ Author(s):
 		if (H = 99999)
 			H := currPos.H
 		
-		if (this.debug) ; _DBG_
+		if (this._debug) ; _DBG_
 			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "])(X=" X " ,Y=" Y " ,W=" W " ,H=" H ")]" ; _DBG_		
 		WinMove % "ahk_id" this._hWnd, , X, Y, W, H
 	}
@@ -192,7 +228,7 @@ Author(s):
 ===============================================================================
 */
 	rollup(mode="toggle") {
-		if (this.debug) ; _DBG_
+		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> CurrentState:" this.rolledUp ; _DBG_
 		foundpos := RegExMatch(mode, "i)on|off|toggle")
 		if (foundpos = 0)
@@ -228,7 +264,7 @@ Author(s):
 			this.__posRestore()			
 		}
 		
-		if (this.debug) ; _DBG_
+		if (this._debug) ; _DBG_
 			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> NewState:" this.rolledUp ; _DBG_
 
 	}
@@ -247,7 +283,7 @@ Author(s):
 */
 	show() {
 		val := this._hWnd
-		if (this.debug) ; _DBG_
+		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])]" ; _DBG_		
 		WinShow ahk_id %val%
 	}
@@ -269,8 +305,8 @@ Author(s):
 		pos := this.Pos
 		x := Round((pos.w)/2 + pos.x)
 		y := Round((pos.h)/2 + pos.y)
-		centerPos := new Rectangle(x,y,0,0,this.debug)
-		if (this.debug) ; _DBG_
+		centerPos := new Rectangle(x,y,0,0,this._debug)
+		if (this._debug) ; _DBG_
 			OutputDebug % "<[" A_ThisFunc "(pos="pos.dump() " [" this._hWnd "])] -> " centerPos.dump() ; _DBG_
 		return centerPos
 	}
@@ -290,7 +326,7 @@ Author(s):
 	__classname() {
 		val := this._hWnd
 		WinGetClass, __classname, ahk_id %val%
-		if (this.debug) ; _DBG_
+		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "]) -> (" __classname ")]" ; _DBG_		
 		return __classname
 	}
@@ -313,7 +349,7 @@ Author(s):
 		ret := true
 		if (_hWnd = 0)
 			ret := false
-		if (this.debug) ; _DBG_
+		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
 		return ret
 	}
@@ -338,7 +374,7 @@ Author(s):
 		ret := (this.styleEx & 0x08) ; WS_EX_TOPMOST
 		ret := ret>0?1:0
 		
-		if (this.debug) ; _DBG_
+		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_
 		return ret
 	}
@@ -379,7 +415,7 @@ See also:
 		}
 		
 		DetectHiddenWindows, %prevState%
-		if (this.debug) ; _DBG_
+		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
 		return ret
 	}
@@ -404,7 +440,7 @@ Author(s):
 		else 
 		    ret := (this.style & 0x40000) ; WS_SIZEBOX
 		
-		if (this.debug) ; _DBG_
+		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
 		
 		return ret
@@ -438,7 +474,7 @@ See also:
 			}
 		}
 			
-		if (this.debug) ; _DBG_
+		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
 		
 		return ret
@@ -460,9 +496,9 @@ Author(s):
 	__monitorID(default=1) {
 		mon := default
 		c := this.centercoords
-		mme := new MultiMonitorEnv(this.debug)
+		mme := new MultiMonitorEnv(this._debug)
 		mon := mme.monGetFromCoord(c.x,c.y,default)
-		if (this.debug) ; _DBG_
+		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " mon ; _DBG_		
 		return mon
 }
@@ -480,9 +516,9 @@ Author(s):
 ===============================================================================
 */
 	__pos() {
-		currPos := new Rectangle(0,0,0,0,this.debug)
+		currPos := new Rectangle(0,0,0,0,this._debug)
 		currPos.fromHWnd(this._hWnd)
-		if (this.debug) ; _DBG_
+		if (this._debug) ; _DBG_
 			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "])] -> (" currPos.dump() ")" ; _DBG_
 		return currPos
 	}
@@ -498,7 +534,7 @@ Author(s):
 */
 	__posPush() {
 		this._posStack.Insert(1, this.pos)
-		if (this.debug) { ; _DBG_ 
+		if (this._debug) { ; _DBG_ 
 			this.__posStackDump() ; _DBG_ 
 			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "])] -> (" this._posStack[1].dump() ")" ; _DBG_
 		}
@@ -533,7 +569,7 @@ Author(s):
 ===============================================================================
 */
 	__posRestore(index="2") {
-		if (this.debug) ; _DBG_
+		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], index=" index ")]" ; _DBG_
 		restorePos := this._posStack[index]
 		currPos := this.pos
@@ -541,7 +577,7 @@ Author(s):
 		this.__posStackDump()
 		
 		this.move(restorePos.x, restorePos.y, restorePos.w, restorePos.h)
-		if (this.debug) ; _DBG_
+		if (this._debug) ; _DBG_
 			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "])] LastPos: " currPos.Dump() " - RestoredPos: " restorePos.Dump() ; _DBG_
 	}
 
@@ -561,7 +597,7 @@ Author(s):
 	__style() {
 		val := this._hWnd
 		WinGet, currStyle, Style, ahk_id %val%
-		if (this.debug) ; _DBG_
+		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> (" currStyle ")" ; _DBG_		
 		return currStyle
 	}
@@ -581,7 +617,7 @@ Author(s):
 	__styleEx() {
 		val := this._hWnd
 		WinGet, currExStyle, ExStyle, ahk_id %val%
-		if (this.debug) ; _DBG_
+		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> (" currExStyle ")" ; _DBG_		
 		return currExStyle
 	}
@@ -601,7 +637,7 @@ Author(s):
 	__title()	{
 		val := this._hWnd
 		WinGetTitle, title, ahk_id %val%
-		if (this.debug) ; _DBG_
+		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "]) -> (" title ")]" ; _DBG_		
 		return title
 	}
@@ -609,10 +645,10 @@ Author(s):
 /*
 ===============================================================================
 Function: __debug
-	Set or get the debug flag (*INTERNAL*)
+	Set or get the _debug flag (*INTERNAL*)
 
 Parameters:
-	value - Value to set the debug flag to (OPTIONAL)
+	value - Value to set the _debug flag to (OPTIONAL)
 
 Returns:
 	true or false, depending on current value
@@ -623,10 +659,10 @@ Author(s):
 */  
 	__debug(value="") { ; _DBG_
 		if % (value="") ; _DBG_
-			return this.debug ; _DBG_
+			return this._debug ; _DBG_
 		value := value<1?0:1 ; _DBG_
-		this.debug := value ; _DBG_
-		return this.debug ; _DBG_
+		this._debug := value ; _DBG_
+		return this._debug ; _DBG_
 	} ; _DBG_
 
 /*
@@ -645,7 +681,7 @@ Author(s):
 ===============================================================================
 */  
 	__SetWinEventHook(eventMin, eventMax, hmodWinEventProc, lpfnWinEventProc, idProcess, idThread, dwFlags) {
-		if (this.debug) ; _DBG_ 
+		if (this._debug) ; _DBG_ 
 			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])(eventMin=" eventMin ", eventMax=" eventMax ", hmodWinEventProc=" hmodWinEventProc ", lpfnWinEventProc=" lpfnWinEventProc ", idProcess=" idProcess ", idThread=" idThread ", dwFlags=" dwFlags ")"  ; _DBG_
 		
 		ret := DllCall("ole32\CoInitialize", Uint, 0)
@@ -676,7 +712,7 @@ Author(s):
 		if this._hWnd = 0
 			return
 		
-		if (this.debug) ; _DBG_
+		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "])" ; _DBG_
 		
 		currPos := this.pos
@@ -691,7 +727,7 @@ Author(s):
 		; size/position has been changed -> store it!
 		this.__posPush()
 				
-		if (this.debug) ; _DBG_
+		if (this._debug) ; _DBG_
 			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "])] LastPos: " lastPos.Dump() " - NewPos: " currPos.Dump() ; _DBG_
 		return
 	}
@@ -713,7 +749,7 @@ Author(s):
 			DllCall( "user32\UnhookWinEvent", Uint,this._hWinEventHook2 )
 		if (this._HookProcAdr)
 			DllCall( "kernel32\GlobalFree", UInt,&this._HookProcAdr ) ; free up allocated memory for RegisterCallback
-		if (this.debug) ; _DBG_
+		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])"  ; _DBG_
 		
 		; Reset all "dangerous" settings (all windows should be left in a user accessable state)
@@ -723,7 +759,7 @@ Author(s):
 		if (this.__isHidden() == 1) {
 			this.show()
 		}
-		if (this.debug) ; _DBG_
+		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])"  ; _DBG_
 		
 		ObjRelease(&this)
@@ -754,85 +790,85 @@ Author(s):
 */     
 	__Get(aName) {
 		ret := 
-		if (this.debug) ; _DBG_
-			if (aName != "debug")
+		if (this._debug) ; _DBG_
+			if (aName != "_debug")
 				OutputDebug % ">[" A_ThisFunc "(" aName ", [" this._hWnd "])]" ; _DBG_
 			
         if (aName = "alwaysontop") {
 			ret := this.__isAlwaysOnTop()
-			if (this.debug) ; _DBG_
+			if (this._debug) ; _DBG_
 				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret ; _DBG_
 			return ret
 		}
 		else if (aName = "centercoords") { ; center coordinate of the current window
 			ret := this.__centercoords()
-			if (this.debug) ; _DBG_
+			if (this._debug) ; _DBG_
 				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret.Dump() ; _DBG_
 			return ret
 		}
         else if (aName = "classname") {
 			ret := this.__classname()
-			if (this.debug) ; _DBG_
+			if (this._debug) ; _DBG_
 				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret ; _DBG_
 			return ret
 		}
 		else if (aName = "exist") {
 			ret := this.__exist()
-			if (this.debug) ; _DBG_
+			if (this._debug) ; _DBG_
 				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret ; _DBG_
 			return ret
 		}
 		else if (aName = "hidden") {
 			ret := this.__isHidden()
-			if (this.debug) ; _DBG_
+			if (this._debug) ; _DBG_
 				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret ; _DBG_
 			return ret
 		}
 		else if (aName = "monitorID") {
 			ret := this.__monitorID()
-			if (this.debug) ; _DBG_
+			if (this._debug) ; _DBG_
 				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret ; _DBG_
 			return ret
 		}
 		else if (aName = "pos") { ; current position
 			ret := this.__pos()
-			if (this.debug) ; _DBG_
+			if (this._debug) ; _DBG_
 				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret.Dump() ; _DBG_
 			return ret
 		}
 		else if (aName = "resizeable") { 
 			ret := this.__isResizable()
-			if (this.debug) ; _DBG_
+			if (this._debug) ; _DBG_
 				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret ; _DBG_
 			return ret
 		}
 		else if (aName = "rolledUp") {
 			ret := this.__isRolledUp()
-			if (this.debug) ; _DBG_
+			if (this._debug) ; _DBG_
 				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret ; _DBG_
 			return ret
 		}
 		else if (aName = "rolledUpHeight") {
 			SysGet, ret, 29
-			if (this.debug) ; _DBG_
+			if (this._debug) ; _DBG_
 				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret ; _DBG_
 			return ret
 		}
 		else if (aName = "style") {
 			ret := this.__style()
-			if (this.debug) ; _DBG_
+			if (this._debug) ; _DBG_
 				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret ; _DBG_
 			return ret
 		}
 		else if (aName = "styleEx") {
 			ret := this.__styleEx()
-			if (this.debug) ; _DBG_
+			if (this._debug) ; _DBG_
 				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret ; _DBG_
 			return ret
 		}
 		else if (aName = "title") {
 			ret :=  this.__title()
-			if (this.debug) ; _DBG_
+			if (this._debug) ; _DBG_
 				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret ; _DBG_
 			return ret
 		}
@@ -849,7 +885,7 @@ Function: __New
 
 Parameters:
 	hWnd - Window handle (*Obligatory*). If hWnd=0 a test window is created ...
-	debug - Flag to enable debugging (Optional - Default: 0)
+	_debug - Flag to enable debugging (Optional - Default: 0)
 
 Returns:
 	true or false, depending on current value
@@ -858,14 +894,14 @@ Author(s):
 	20130308 - hoppfrosch@ahk4.me - Original
 ===============================================================================
 */     
-	__New(_hWnd=-1, debug=0, _test=0) {
-		this.debug := debug
-		if (this.debug) ; _DBG_
+	__New(_hWnd=-1, _debug=0, _test=0) {
+		this._debug := _debug
+		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "(hWnd=(" _hWnd "))] (version: " this._version ")" ; _DBG_
 
 		if % (A_AhkVersion < "1.1.08.00" && A_AhkVersion >= "2.0") {
 			MsgBox 16, Error, %A_ThisFunc% :`n This class is only tested with AHK_L later than 1.1.08.00 (and before 2.0)`nAborting...
-			if (this.debug) ; _DBG_
+			if (this._debug) ; _DBG_
 				OutputDebug % "<[" A_ThisFunc "(...) -> ()]: *ERROR* : This class is only tested with AHK_L later than 1.1.08.00 (and before 2.0). Aborting..." ; _DBG_
 			return
 		}
@@ -879,11 +915,15 @@ Author(s):
 		} else if % (_hWnd = -1) {
 			; hWnd is missing
 			MsgBox  16, Error, %A_ThisFunc% :`n Required parameter is missing`nAborting...
-			if (this.debug) ; _DBG_
+			if (this._debug) ; _DBG_
 				OutputDebug % "<[" A_ThisFunc "(...) -> ()] *ERROR*: Required parameter is missing. Aborting..." ; _DBG_
 			return
 		}
 		this._hWnd := _hWnd
+		if (this._debug) ; _DBG_
+			OutputDebug % ">[" A_ThisFunc "(hWnd=(" _hWnd "))] (WinTitle: " this.title ")" ; _DBG_
+
+		
 		this._posStack := Object() ; creates initially empty stack
 		
 		; initially store the position to detect movement of window and allow window restoring
@@ -896,7 +936,7 @@ Author(s):
 		this._hWinEventHook1 := this.__SetWinEventHook( CONST_EVENT.SYSTEM.SOUND, CONST_EVENT.SYSTEM.DESKTOPSWITCH, 0, this._HookProcAdr, 0, 0, 0 )	
 		this._hWinEventHook2 := this.__SetWinEventHook( CONST_EVENT.OBJECT.SHOW, CONST_EVENT.OBJECT.CONTENTSCROLLED, 0, this._HookProcAdr, 0, 0, 0 )	
 		
-		if (this.debug) ; _DBG_
+		if (this._debug) ; _DBG_
 			OutputDebug % "<[" A_ThisFunc "(hWnd=(" _hWnd "))]" ; _DBG_
 		
 		
@@ -932,7 +972,7 @@ ClassWindowHandler_EventHook(hWinEventHook, Event, hWnd, idObject, idChild, dwEv
 		return
 	self := Object(A_EventInfo)
 
-	if (Object(A_EventInfo).debug) ; _DBG_
+	if (Object(A_EventInfo)._debug) ; _DBG_
 		OutputDebug % ">[" A_ThisFunc "([" Object(A_EventInfo)._hWnd "])(hWinEventHook=" hWinEventHook ", Event=" Event2Str(Event) ", hWnd=" hWnd ", idObject=" idObject ", idChild=" idChild ", dwEventThread=" dwEventThread ", dwmsEventTime=" dwmsEventTime ") -> A_EventInfo: " A_EventInfo ; _DBG_
 	
 	; ########## START: Handling window movement ##################################################
