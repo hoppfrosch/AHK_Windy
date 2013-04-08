@@ -11,13 +11,37 @@
 #SingleInstance force
 
 
-ReferenceVersion := "0.1.1"
+ReferenceVersion := "0.1.3"
 debug := 1
 
 Yunit.Use(YunitStdOut, YunitWindow).Test(MultiMonitorEnvTestSuite)
 Return
 
 ExitApp
+
+class MultiMonitorEnvTestSuite2
+{
+	Begin()
+    {
+		Global debug
+		this.obj := new MultiMonitorEnv(debug)
+		this.monCount := 2
+		this.mon1Width := 1920
+		this.mon1Height := 1080
+		this.mon2Width := 1600
+		this.mon2Height := 1200
+		
+		this.monvirtWidth := this.mon1Width + this.mon2Width
+		this.monvirtHeight := this.mon2Height
+    }
+
+	    		
+	End()
+    {
+        this.remove("obj")
+		this.obj := 
+    }
+}
 
 class MultiMonitorEnvTestSuite
 {
@@ -107,6 +131,22 @@ class MultiMonitorEnvTestSuite
 		Yunit.assert(rect2.y == this.mon2Height/2)		
 		;success := success && (rect2.x = 2720) && (rect2.y = 600)
 
+	}
+	
+	MonNextPrev() {
+		monNxt := this.obj.monNext(1)
+		Yunit.assert(monNxt == 2)
+		monNxt := this.obj.monNext(this.monCount, 0)
+		Yunit.assert(monNxt == this.monCount)
+		monNxt := this.obj.monNext(this.monCount, 1)
+		Yunit.assert(monNxt == 1)
+		
+		monPrv := this.obj.monPrev(2)
+		Yunit.assert(monPrv == 1)
+		monPrv := this.obj.monPrev(1, 0)
+		Yunit.assert(monPrv == 1)
+		monPrv := this.obj.monPrev(1, 1)
+		Yunit.assert(monPrv == this.monCount)
 	}
 
 	    		

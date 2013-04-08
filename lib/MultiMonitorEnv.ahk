@@ -24,7 +24,7 @@
 class MultiMonitorEnv {
 	
 	_debug := 0
-	_version := "0.1.2"
+	_version := "0.1.3"
 	
 
 /*
@@ -150,6 +150,87 @@ Author(s):
 		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "()] -> " mon ; _DBG_
 		return mon
+	}
+
+
+/*
+===============================================================================
+function:	monNext
+    Gets the next monitor starting from given monitor. As default the starting monitor will be taken from current mousepos.
+	
+Parameters:
+    mon - Monitor number, Default 0 (= monitor where mouse is on)
+	cycle - == 1 cycle through monitors; == 0 stop at last monitor (default 1)
+  
+Returns:
+   ID of the next monitor
+
+Author(s):
+    20121101 - hoppfrosch - Original
+===============================================================================
+*/
+	monNext(mon=0, cycle=1) {
+		currMon := mon
+		if (mon == 0)
+			currMon = this.monGetFromMouse()
+		
+		nextMon := currMon + 1
+		
+		if (cycle == 0) {
+			if (nextMon > this.monCount) {
+				nextMon := this.monCount
+			}
+		}
+		else {
+			if (nextMon >  this.monCount) {
+				nextMon := Mod(nextMon, this.monCount)
+			}
+		}
+		
+		if (this._debug) ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "(mon=" mon ",cycle=" cycle ")] -> " nextMon ; _DBG_
+		
+		return nextMon
+	}
+	
+/*
+===============================================================================
+function:	monPrev
+    Gets the previous monitor starting from given monitor. As default the starting monitor will be taken from current mousepos.
+	
+Parameters:
+    mon - Monitor number, Default 0 (= monitor where mouse is on)
+	cycle - = 1 cycle through monitors; = 0 stop at first monitor (default 1)
+  
+Returns:
+   ID of the next monitor
+
+Author(s):
+    20121101 - hoppfrosch - Original
+===============================================================================
+*/
+	monPrev(mon=0, cycle=1) {
+		currMon := mon
+		if (mon == 0)
+			currMon = this.monGetFromMouse()
+		
+		prevMon := currMon - 1
+		
+		if (cycle == 0) {
+			if (prevMon < 1) {
+				prevMon := 1
+			}
+		}
+		else {
+			if (prevMon < 1) {
+				prevMon := this.monCount
+			}
+		}
+		
+		if (this._debug) ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "(mon=" mon ",cycle=" cycle ")] -> " prevMon ; _DBG_
+		
+		return prevMon
 	}
 	
 /*
