@@ -27,7 +27,7 @@
 ; ******************************************************************************************************************************************
 class WindowHandler {
 	
-	_version := "0.3.2"
+	_version := "0.4.0"
 	_debug := 0
 	_hWnd := 0
 	
@@ -45,7 +45,7 @@ Function: alwaysOnTop
 	Toogles "Always On Top" for window
 
 Parameters:
-	mode - "on", "off", "toggle" (Default)
+	mode - true,  false, "toggle" (Default)
 
 See also:  
 	<__isAlwaysOnTop>, <__Get>
@@ -57,16 +57,21 @@ Author(s):
 	alwaysOnTop(mode="toggle") {
 		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> CurrentState:" this.alwaysontop ; _DBG_
-		foundpos := RegExMatch(mode, "i)on|off|toggle")
+		foundpos := RegExMatch(mode, "i)1|0|toggle")
 		if (foundpos = 0)
 			mode := "toggle"
 
 		StringLower mode,mode	
 		val := this._hWnd
+		mode_bak := mode
+		if (mode == true)
+			mode := "on"
+		else if (mode == false)
+			mode := "off"
 		WinSet, AlwaysOnTop, %mode%,  ahk_id %val%
 			
 		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> NewState:" this.alwaysontop ; _DBG_
+			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode_bak ")] -> NewState:" this.alwaysontop ; _DBG_
 	}
 
 /*
@@ -75,7 +80,7 @@ Function: hidden
 	Toogles "Hidden" for window
 
 Parameters:
-	mode - "on", "off", "toggle" (Default)
+	mode - true, false, "toggle" (Default)
 
 See also:  
 	<show>, <hide>, <__isHidden>
@@ -87,15 +92,15 @@ Author(s):
 	hidden(mode="toggle") {
 		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> CurrentState:" this.__isHidden() ; _DBG_
-		foundpos := RegExMatch(mode, "i)on|off|toggle")
+		foundpos := RegExMatch(mode, "i)1|0|toggle")
 		if (foundpos = 0)
 			mode := "toggle"
 
 		StringLower mode,mode
 
-		if (mode = "on")
+		if (mode == 1)
 			this.Hide()
-		else if (mode = "off")
+		else if (mode == 0)
 			this.Show()
 		else {
 			if (this.__isHidden())
@@ -145,6 +150,72 @@ Author(s):
 		DetectHiddenWindows, %prevState%
 	}
 
+/*
+===============================================================================
+Function:   maximize
+	Maximizes the Window
+
+Author(s):
+	20130415 - hoppfrosch@ahk4.me - Original
+===============================================================================
+*/
+	maximize(mode="toggle") {
+		if (this._debug) ; _DBG_
+			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> CurrentState:" this.maximized ; _DBG_
+		foundpos := RegExMatch(mode, "i)0|1|toggle")
+		if (foundpos = 0)
+			mode := "toggle"
+		StringLower mode,mode	
+		newState := 1
+		if (mode == "toggle") {
+			newState := !(this.maximized)
+		}
+		else if (mode == 0) {
+			newState := 0
+		}
+		
+		prevState := A_DetectHiddenWindows
+		DetectHiddenWindows, On
+		if (newState == 1 )
+			WinMaximize % "ahk_id" this._hWnd
+		else 
+			WinRestore % "ahk_id" this._hWnd
+		DetectHiddenWindows, %prevState%
+	}
+	
+/*
+===============================================================================
+Function:   minimize
+	Maximizes the Window
+
+Author(s):
+	20130416 - hoppfrosch@ahk4.me - Original
+===============================================================================
+*/
+	minimize(mode="toggle") {
+		if (this._debug) ; _DBG_
+			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> CurrentState:" this.minimized ; _DBG_
+		foundpos := RegExMatch(mode, "i)1|0|toggle")
+		if (foundpos = 0)
+			mode := "toggle"
+		StringLower mode,mode	
+		newState := 1
+		if (mode == "toggle") {
+			newState := !(this.minimized)
+		}
+		else if (mode == 0) {
+			newState := 0
+		}
+		
+		prevState := A_DetectHiddenWindows
+		DetectHiddenWindows, On
+		if (newState == 1 )
+			WinMinimize % "ahk_id" this._hWnd
+		else 
+			WinRestore % "ahk_id" this._hWnd
+		DetectHiddenWindows, %prevState%
+	}
+	
 /*
 ===============================================================================
 Function: move
@@ -220,7 +291,7 @@ Function: rollup
 	Toogles "rollup" for window
 
 Parameters:
-	mode - "on", "off", "toggle" (Default)
+	mode - 0, 1, "toggle" (Default)
 
 See also:  
 	<__isRolledUp>
@@ -232,16 +303,16 @@ Author(s):
 	rollup(mode="toggle") {
 		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> CurrentState:" this.rolledUp ; _DBG_
-		foundpos := RegExMatch(mode, "i)on|off|toggle")
+		foundpos := RegExMatch(mode, "i)0|1|toggle")
 		if (foundpos = 0)
 			mode := "toggle"
 
 		StringLower mode,mode
 
 		roll := 1
-		if (mode = "on") 		
+		if (mode == 1) 		
 			roll := 1
-		else if (mode = "off") 
+		else if (mode == 0) 
 			if (this.rolledUp == true)
 				roll := 0 ; Only rolled window can be unrolled
 			else
@@ -422,6 +493,55 @@ See also:
 		return ret
 	}
 
+/*
+===============================================================================
+Function:   __isMaximized
+	Checks whether the given hWnd refers to a maximized window (*INTERNAL*)
+
+Returns:
+	true (window is a maximized window), false (window is not a maximized window)
+
+Author(s):
+	20130415 - hoppfrosch@ahk4.me - Original
+===============================================================================
+*/
+	__isMaximized() {
+		val := this._hWnd
+		WinGet, s, MinMax, ahk_id %val% 
+		ret := 0
+		if (s == 1)
+			ret := 1
+			
+		if (this._debug) ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "([" val "])] -> " ret ; _DBG_		
+	
+		return ret
+	}
+
+/*
+===============================================================================
+Function:   __isMinimized
+	Checks whether the given hWnd refers to a Minimized window (*INTERNAL*)
+
+Returns:
+	true (window is a Minimized window), false (window is not a Minimized window)
+
+Author(s):
+	20130415 - hoppfrosch@ahk4.me - Original
+===============================================================================
+*/
+	__isMinimized() {
+		val := this._hWnd
+		WinGet, s, MinMax, ahk_id %val% 
+		ret := 0
+		if (s == -1)
+			ret := 1
+			
+		if (this._debug) ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "([" val "])] -> " ret ; _DBG_		
+	
+		return ret
+	}
 
 /*
 ===============================================================================
@@ -475,10 +595,8 @@ See also:
 				ret := 1
 			}
 		}
-			
 		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
-		
 		return ret
 	}
 
@@ -786,7 +904,7 @@ Author(s):
 			
 		; Reset all "dangerous" settings (all windows should be left in a user accessable state)
 		if (this.alwaysontop == true) {
-			this.alwaysOnTop("off")
+			this.alwaysOnTop(false)
 		}
 		if (this.__isHidden() == 1) {
 			this.show()
@@ -820,91 +938,61 @@ Author(s):
 */     
 	__Get(aName) {
 		ret := 
-		if (this._debug) ; _DBG_
-			if (aName != "_debug")
-				OutputDebug % ">[" A_ThisFunc "(" aName ", [" this._hWnd "])]" ; _DBG_
-			
+		written := 0 ; _DBG_
+
         if (aName = "alwaysontop") {
 			ret := this.__isAlwaysOnTop()
-			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret ; _DBG_
-			return ret
 		}
 		else if (aName = "centercoords") { ; center coordinate of the current window
 			ret := this.__centercoords()
-			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret.Dump() ; _DBG_
-			return ret
 		}
         else if (aName = "classname") {
 			ret := this.__classname()
-			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret ; _DBG_
-			return ret
 		}
 		else if (aName = "exist") {
 			ret := this.__exist()
-			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret ; _DBG_
-			return ret
 		}
 		else if (aName = "hidden") {
 			ret := this.__isHidden()
-			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret ; _DBG_
-			return ret
+		}
+		else if (aName = "maximized") {
+			ret := this.__isMaximized()
+		}
+		else if (aName = "minimized") {
+			ret := this.__isMinimized()
 		}
 		else if (aName = "monitorID") {
 			ret := this.__monitorID()
-			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret ; _DBG_
-			return ret
 		}
 		else if (aName = "pos") { ; current position
 			ret := this.__pos()
+			written := 1 ; _DBG_
 			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret.Dump() ; _DBG_
-			return ret
+				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret.dump() ; _DBG_
 		}
 		else if (aName = "resizeable") { 
 			ret := this.__isResizable()
-			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret ; _DBG_
-			return ret
 		}
 		else if (aName = "rolledUp") {
 			ret := this.__isRolledUp()
-			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret ; _DBG_
-			return ret
 		}
 		else if (aName = "rolledUpHeight") {
 			SysGet, ret, 29
-			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret ; _DBG_
-			return ret
 		}
 		else if (aName = "style") {
 			ret := this.__style()
-			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret ; _DBG_
-			return ret
 		}
 		else if (aName = "styleEx") {
 			ret := this.__styleEx()
-			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret ; _DBG_
-			return ret
 		}
 		else if (aName = "title") {
 			ret :=  this.__title()
-			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret ; _DBG_
-			return ret
 		}
-		else {
-			return
-		}
+		
+		if (this._debug) ; _DBG_
+			if (!written) ; _DBG_
+			OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret ; _DBG_
+
 		return ret
 	}
 
