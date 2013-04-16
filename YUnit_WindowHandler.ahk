@@ -1,4 +1,5 @@
 ;#NoEnv
+#Warn
 
 #Include %A_ScriptDir%\Yunit\Yunit.ahk
 #Include %A_ScriptDir%\Yunit\Window.ahk
@@ -11,13 +12,29 @@
 #SingleInstance force
 
 
-ReferenceVersion := "0.3.2"
+ReferenceVersion := "0.4.0"
 debug := 1
 
-;Yunit.Use(YunitStdOut, YunitWindow).Test(MiscTestSuite)
+;Yunit.Use(YunitStdOut, YunitWindow).Test(RollupTestSuite)
 Yunit.Use(YunitStdOut, YunitWindow).Test(MiscTestSuite, NotRealWindowTestSuite, HideShowTestSuite, ExistTestSuite, RollupTestSuite, MoveResizeTestSuite, TileTestSuite)
 Return
 
+; ###################################################################
+class TempTestSuite
+{
+    Begin()
+    {
+		Global debug
+		this.obj := new WindowHandler(0, debug)
+    }
+ 
+	End()
+    {
+		this.obj.kill()
+        this.remove("obj")
+		this.obj := 
+    }
+}
 
 class TileTestSuite 
 {
@@ -59,31 +76,32 @@ class RollupTestSuite
 		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
 		OutputDebug % "******************************* " A_ThisFunc " 1 ****************************"
 		val := this.obj.rolledUp
-		Yunit.assert(val == 0)
+		Yunit.assert(val == false)
 		
 		OutputDebug % "******************************* " A_ThisFunc " 2 ****************************"
-		this.obj.rollup("off")
+		this.obj.rollup(false)
 		val := this.obj.rolledUp
-		Yunit.assert(val == 0)
+		Yunit.assert(val == false)
 		
 		OutputDebug % "******************************* " A_ThisFunc " 3 ****************************"
-		this.obj.rollup("on")
+		this.obj.rollup(true)
 		val := this.obj.rolledUp
-		Yunit.assert(val == 1)
+		Yunit.assert(val == true)
 		
 		OutputDebug % "******************************* " A_ThisFunc " 4 ****************************"
-		this.obj.rollup("off")
+		this.obj.rollup(false)
 		val := this.obj.rolledUp
-		Yunit.assert(val == 0)
+		Yunit.assert(val == false)
 		
 		OutputDebug % "******************************* " A_ThisFunc " 5 ****************************"
 		this.obj.rollup("toggle") ; as the window wasn't rolled up, it should be rolled up now
 		val := this.obj.rolledUp
-		Yunit.assert(val == 1)
+		Yunit.assert(val == true)
 		
 		OutputDebug % "******************************* " A_ThisFunc " 6 ****************************"
 		this.obj.rollup("toggle") ; as the window was rolled up, it shouldn't be rolled up now
 		val := this.obj.rolledUp
+		Yunit.assert(val == false)
 
 		OutputDebug % "******************************* " A_ThisFunc " 7 ****************************"
 		this.End()
@@ -109,7 +127,49 @@ class MoveResizeTestSuite
 		Global debug
 		this.obj := new WindowHandler(0, debug)
     }
-    
+ 
+	Maximize() 
+	{
+		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
+		Yunit.assert(this.obj.maximized == false)
+		Yunit.assert(this.obj.minimized == false)
+		this.obj.maximize(true)
+		Yunit.assert(this.obj.maximized == true)
+		Yunit.assert(this.obj.minimized == false)
+		this.obj.maximize(false)
+		Yunit.assert(this.obj.maximized == false)
+		Yunit.assert(this.obj.minimized == false)
+		this.obj.maximize("toggle")
+		Yunit.assert(this.obj.maximized == true)
+		Yunit.assert(this.obj.minimized == false)
+		this.obj.maximize("toggle")
+		Yunit.assert(this.obj.maximized == false)
+		Yunit.assert(this.obj.minimized == false)
+		OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
+		
+	}
+	
+	Minimize() 
+	{
+		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
+		Yunit.assert(this.obj.maximized == false)
+		Yunit.assert(this.obj.minimized == false)
+		this.obj.minimize(true)
+		Yunit.assert(this.obj.maximized == false)
+		Yunit.assert(this.obj.minimized == true)
+		this.obj.minimize(false)
+		Yunit.assert(this.obj.maximized == false)
+		Yunit.assert(this.obj.minimized == false)
+		this.obj.minimize("toggle")
+		Yunit.assert(this.obj.maximized == false)
+		Yunit.assert(this.obj.minimized == true)
+		this.obj.minimize("toggle")
+		Yunit.assert(this.obj.maximized == false)
+		Yunit.assert(this.obj.minimized == false)
+		OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
+		
+	}
+	
     MoveViaWinMove()
     {
 		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
@@ -288,9 +348,9 @@ class HideShowTestSuite
 		Yunit.assert(this.obj.hidden == false)
 		this.obj.hide()
 		Yunit.assert(this.obj.hidden == true)
-		this.obj.hidden("off")
+		this.obj.hidden(false)
 		Yunit.assert(this.obj.hidden == false)
-		this.obj.hidden("on")
+		this.obj.hidden(true)
 		Yunit.assert(this.obj.hidden == true)
 		this.obj.hidden("toggle") ; as the window was hidden, it shouldn't be hidden now
 		Yunit.assert(this.obj.hidden == false)
@@ -379,11 +439,11 @@ class MiscTestSuite
 	AlwaysOnTop() {
 		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
 		Yunit.assert(this.obj.alwaysontop == false)
-		this.obj.alwaysOnTop("on")
+		this.obj.alwaysOnTop(true)
 		Yunit.assert(this.obj.alwaysontop == true)
-		this.obj.alwaysOnTop("off")
+		this.obj.alwaysOnTop(false)
 		Yunit.assert(this.obj.alwaysontop == false)
-		this.obj.alwaysOnTop("off")
+		this.obj.alwaysOnTop(false)
 		Yunit.assert(this.obj.alwaysontop == false)
 		this.obj.alwaysOnTop("toggle")
 		Yunit.assert(this.obj.alwaysontop == true)
