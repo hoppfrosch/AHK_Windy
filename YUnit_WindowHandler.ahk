@@ -12,8 +12,9 @@
 #SingleInstance force
 
 
-ReferenceVersion := "0.4.0"
+ReferenceVersion := "0.5.0"
 debug := 1
+
 
 ;Yunit.Use(YunitStdOut, YunitWindow).Test(RollupTestSuite)
 Yunit.Use(YunitStdOut, YunitWindow).Test(MiscTestSuite, NotRealWindowTestSuite, HideShowTestSuite, ExistTestSuite, RollupTestSuite, MoveResizeTestSuite, TileTestSuite)
@@ -439,19 +440,15 @@ class MiscTestSuite
 	AlwaysOnTop() {
 		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
 		Yunit.assert(this.obj.alwaysontop == false)
-		this.obj.alwaysOnTop(true)
+		this.obj.alwaysOnTop := true
 		Yunit.assert(this.obj.alwaysontop == true)
-		this.obj.alwaysOnTop(false)
+		this.obj.alwaysOnTop := false
 		Yunit.assert(this.obj.alwaysontop == false)
-		this.obj.alwaysOnTop(false)
+		this.obj.alwaysOnTop := false
 		Yunit.assert(this.obj.alwaysontop == false)
-		this.obj.alwaysOnTop("toggle")
+		this.obj.alwaysOnTop := !this.obj.alwaysOnTop
 		Yunit.assert(this.obj.alwaysontop == true)
-		this.obj.alwaysOnTop("toggle")
-		Yunit.assert(this.obj.alwaysontop == false)
-		this.obj.alwaysOnTop()
-		Yunit.assert(this.obj.alwaysontop == true)
-		this.obj.alwaysOnTop()
+		this.obj.alwaysOnTop := !this.obj.alwaysOnTop
 		Yunit.assert(this.obj.alwaysontop == false)
 		OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
 	}

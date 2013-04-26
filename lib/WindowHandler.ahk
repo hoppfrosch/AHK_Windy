@@ -12,30 +12,37 @@
 		### Author
 			[hoppfrosch](hoppfrosch@ahk4.me)
 		### History
+		    - 0.5.0
+				- [*] Added setter for property `alwaysOnTop`
+					- [*] Renamed `alwaysOnTop()` to `_alwaysOnTop()`
 		    - 0.4.0 
-				- [+] New: Maximize Window `[maximize()](#maximize)`
-				- [+] New: Minimize Window `[minimize()](#minimize)`
-				- [+] New: Property `[maximized()](#maximized)` to check maximized-state of window  
-				- [+] New: Property `[minimized()](#minimized)` to check minimized-state of window  
+				- [+] New: Maximize Window `maximize()`
+				- [+] New: Minimize Window `minimize()`
+				- [+] New: Property `maximized` to check maximized-state of window  
+				- [+] New: Property `minimized` to check minimized-state of window  
 				- [*] Simplified `__Get()` (centralized debugging)  
-				- [*] Incompatible Change: Unified parameternames "on"/"on" to true/false (`[alwaysOnTop()](#alwaysOnTop)`, `[hidden()](#hidden)`, `[rollup()](#rollup)`, ...)
+				- [*] Incompatible Change: Unified parameternames "on"/"on" to true/false (`alwaysOnTop()`, `hidden()`, `rollup()`, ...)
 			- 0.3.2 
-				- [+] Check whether window is a real window <__isWindow>
+				- [+] Check whether window is a real window `__isWindow`
 			- 0.3.1 
-				- [*] Renamed `tile()` to `[movePercental()](#movePercental)`
-				- [*] Use of monWorkingArea instead of monSize within `[movePercental()](#movePercental)`
+				- [*] Renamed `tile()` to `movePercental()`
+				- [*] Use of `monWorkingArea` instead of `monSize` within `movePercental()`
 			- 0.3.0 
-				- [+] Tiling-Functionality `[tile()](#movePercental)`
+				- [+] Tiling-Functionality `tile()`
 			- 0.2.0 
 				- [+] Event-Handling
-				- [+] New: Rollup Window `[rollup()](#rollup)`
+				- [+] New: Rollup Window `rollup()`
 			- 0.1.0 
 				- [+] Initial
+		## To Be Done
+			- Replace existing functions with properties:
+				-
+			
 	@UseShortForm
 */
 class WindowHandler {
 	
-	_version := "0.4.0"
+	_version := "0.5.0"
 	_debug := 0
 	_hWnd := 0
 	
@@ -48,17 +55,153 @@ class WindowHandler {
 	_posStack := 0
 
 
+__Set(aName, aValue) {
+		ret :=
+		
+		 if (aName = "alwaysOnTop") {
+	/*! ---------------------------------------------------------------------------------------
+		Property: alwaysOnTop [set]
+			Sets the *Always-On-Top*-State
+		Remarks:
+			### Valid values			
+				* `true` or `1` - activates  *Always-On-Top*-State
+				* `false` or `0` - deactivates  *Always-On-Top*-State
+			To toogle current *Always-On-Top*-State, simply use `obj.alwaysOnTop := !obj.alwaysOnTop`	
+				
+			### Author(s)
+				* 20130426 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
+	*/
+			this.__alwaysOnTop(aValue)
+		}
+	}
+
+/*
+===============================================================================
+Function: __Get
+	Custom Getter (*INTERNAL*)
+
+	Supports following attributes:
+	* *rolledUpHeight* - Height of a rolled-up window		
+	* *style* - Style of the window (see <__style>)
+	* *styleEx* - extended style of window (see <__styleEx>)
+	* *title* - title of window (see <__title>)
+	
+Author(s):
+	20121030 - hoppfrosch - Original
+===============================================================================
+*/     
+	__Get(aName) {
+		ret := 
+		written := 0 ; _DBG_
+
+	
+        if (aName = "alwaysOnTop") {
+	/*! ---------------------------------------------------------------------------------------
+		Property: alwaysOnTop [get]
+			Returns the current *Always-On-Top*-State
+	*/
+			ret := this.__isAlwaysOnTop()
+		}
+		else if (aName = "centercoords") { ; center coordinate of the current window
+	/*! ---------------------------------------------------------------------------------------
+		Property: centercoords [get]
+			Returns the coordinates of the center of the window as a [Rectangle](Rectangle.html)-object
+	*/
+			ret := this.__centercoords()
+		}
+        else if (aName = "classname") {
+	/*! ---------------------------------------------------------------------------------------
+		Property: classname [get]
+			Returns the name of the window class
+	*/
+			ret := this.__classname()
+		}
+		else if (aName = "exist") {
+	/*! ---------------------------------------------------------------------------------------
+		Property: exist [get]
+			Checks whether the window still exists
+	*/
+			ret := this.__exist()
+		}
+		else if (aName = "hidden") {
+	/*! ---------------------------------------------------------------------------------------
+		Property: hidden [get]
+			Returns the current *Hidden*-State (see [hidden()](#hidden))
+	*/
+			ret := this.__isHidden()
+		}
+		else if (aName = "maximized") {
+	/*! ---------------------------------------------------------------------------------------
+		Property: maximized [get]
+			Returns the current *Maximized*-State (see [maximize()](#maximize))
+	*/
+			ret := this.__isMaximized()
+		}
+		else if (aName = "minimized") {
+	/*! ---------------------------------------------------------------------------------------
+		Property: minimized [get]
+			Returns the current *Maximized*-State (see [minimize()](#minimize))
+	*/
+			ret := this.__isMinimized()
+		}
+		else if (aName = "monitorID") {
+	/*! ---------------------------------------------------------------------------------------
+		Property: monitorID [get]
+			Returns the ID of monitor on which the window is on
+	*/
+			ret := this.__monitorID()
+		}
+		else if (aName = "pos") { ; current position
+	/*! ---------------------------------------------------------------------------------------
+		Property: pos [get]
+			Returns the position and size of the window as a [Rectangle](Rectangle.html)-object
+	*/
+			ret := this.__pos()
+			written := 1 ; _DBG_
+			if (this._debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret.dump() ; _DBG_
+		}
+		else if (aName = "resizeable") { 
+	/*! ---------------------------------------------------------------------------------------
+		Property: resizeable [get]
+			Checks whether window is resizeable
+	*/
+			ret := this.__isResizable()
+		}
+		else if (aName = "rolledUp") {
+			ret := this.__isRolledUp()
+		}
+		else if (aName = "rolledUpHeight") {
+			SysGet, ret, 29
+		}
+		else if (aName = "style") {
+			ret := this.__style()
+		}
+		else if (aName = "styleEx") {
+			ret := this.__styleEx()
+		}
+		else if (aName = "title") {
+			ret :=  this.__title()
+		}
+		
+		if (this._debug) ; _DBG_
+			if (!written) ; _DBG_
+			OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret ; _DBG_
+
+		return ret
+	}
+
 	/*! ===============================================================================
-		Method: alwaysOnTop(mode:="toggle")
+		Method: __alwaysOnTop(mode:="toggle")
 			Sets *Always-On-Top*-Mode for window
+			
+			**Better use property-set functionality for this: `[alwaysOnTop](#alwaysOnTop)`**
 			
 			*Always-On-Top* can be explicitly switched on or off using the given parameter. If the parameter is missing the *Always-On-Top* state is toggled
 			
 			The current *Always-On-Top* state can be retrieved via property [alwaysOnTop](#alwaysOnTop).
 		Parameters:
 			mode - *(Optional)* true (1),  false (0), "toggle"
-		Returns:
-			-
 		Remarks:
 			### See also: 
 				[alwaysOnTop](#alwaysOnTop)
@@ -66,7 +209,7 @@ class WindowHandler {
 			### Author(s)
 				* 20130308 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
 	*/
-	alwaysOnTop(mode:="toggle") 
+	__alwaysOnTop(mode:="toggle") 
 	{
 		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> CurrentState:" this.alwaysontop ; _DBG_
@@ -965,127 +1108,6 @@ Author(s):
 		}
 			
 		ObjRelease(&this)
-	}
-
-/*
-===============================================================================
-Function: __Get
-	Custom Getter (*INTERNAL*)
-
-	Supports following attributes:
-	* *maximized* - is window maximized? (see <__isMaximized>)
-	* *minimized* - is window minimized? (see <__isMinimized>)
-	* *monitorID* - ID of monitor the window currently is on (i.e center of window) (see <__monitorID>)
-	* *pos* - current position of window Returns an object of class <Rectangle> (see <__pos>)
-	* *resizable* - is the window resizeable?  Returns a bool containig the Resizeble-state of the window (see <__isResizable>)
-	* *rolledUpHeight* - Height of a rolled-up window		
-	* *style* - Style of the window (see <__style>)
-	* *styleEx* - extended style of window (see <__styleEx>)
-	* *title* - title of window (see <__title>)
-	
-Author(s):
-	20121030 - hoppfrosch - Original
-===============================================================================
-*/     
-	__Get(aName) {
-		ret := 
-		written := 0 ; _DBG_
-
-	
-        if (aName = "alwaysOnTop") {
-	/*! ---------------------------------------------------------------------------------------
-		Property: alwaysOnTop [get]
-			Returns the current *Always-On-Top*-State (see [alwaysOnTop()](#alwaysOnTop))
-	*/
-			ret := this.__isAlwaysOnTop()
-		}
-		else if (aName = "centercoords") { ; center coordinate of the current window
-	/*! ---------------------------------------------------------------------------------------
-		Property: centercoords [get]
-			Returns the coordinates of the center of the window as a [Rectangle](Rectangle.html)-object
-	*/
-			ret := this.__centercoords()
-		}
-        else if (aName = "classname") {
-	/*! ---------------------------------------------------------------------------------------
-		Property: classname [get]
-			Returns the name of the window class
-	*/
-			ret := this.__classname()
-		}
-		else if (aName = "exist") {
-	/*! ---------------------------------------------------------------------------------------
-		Property: exist [get]
-			Checks whether the window still exists
-	*/
-			ret := this.__exist()
-		}
-		else if (aName = "hidden") {
-	/*! ---------------------------------------------------------------------------------------
-		Property: hidden [get]
-			Returns the current *Hidden*-State (see [hidden()](#hidden))
-	*/
-			ret := this.__isHidden()
-		}
-		else if (aName = "maximized") {
-	/*! ---------------------------------------------------------------------------------------
-		Property: maximized [get]
-			Returns the current *Maximized*-State (see [maximize()](#maximize))
-	*/
-			ret := this.__isMaximized()
-		}
-		else if (aName = "minimized") {
-	/*! ---------------------------------------------------------------------------------------
-		Property: minimized [get]
-			Returns the current *Maximized*-State (see [minimize()](#minimize))
-	*/
-			ret := this.__isMinimized()
-		}
-		else if (aName = "monitorID") {
-	/*! ---------------------------------------------------------------------------------------
-		Property: monitorID [get]
-			Returns the ID of monitor on which the window is on
-	*/
-			ret := this.__monitorID()
-		}
-		else if (aName = "pos") { ; current position
-	/*! ---------------------------------------------------------------------------------------
-		Property: pos [get]
-			Returns the position and size of the window as a [Rectangle](Rectangle.html)-object
-	*/
-			ret := this.__pos()
-			written := 1 ; _DBG_
-			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret.dump() ; _DBG_
-		}
-		else if (aName = "resizeable") { 
-	/*! ---------------------------------------------------------------------------------------
-		Property: resizeable [get]
-			Checks whether window is resizeable
-	*/
-			ret := this.__isResizable()
-		}
-		else if (aName = "rolledUp") {
-			ret := this.__isRolledUp()
-		}
-		else if (aName = "rolledUpHeight") {
-			SysGet, ret, 29
-		}
-		else if (aName = "style") {
-			ret := this.__style()
-		}
-		else if (aName = "styleEx") {
-			ret := this.__styleEx()
-		}
-		else if (aName = "title") {
-			ret :=  this.__title()
-		}
-		
-		if (this._debug) ; _DBG_
-			if (!written) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret ; _DBG_
-
-		return ret
 	}
 
 /*
