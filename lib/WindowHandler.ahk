@@ -1,30 +1,38 @@
-/*
-	Title: WindowHandling class
-		Class to handle single window
-
-	Author: 
-		hoppfrosch@ahk4.me
-		
-	License: 
-		This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See http://www.wtfpl.net/ for more details.
-		
-	Changelog:
-		0.3.2 - [+] Check whether window is a real window <__isWindow>
-        0.3.1 - [*] Renamed <tile> to <movePercental>
-				[*] Use of monWorkingArea instead of monSize within <movePercental>
-		0.3.0 - [+] Tiling-Functionality <tile>
-		0.2.0 - [+] Event-Handling, <rollup>, <__isRolledUp>
-		0.1.0 - [+] Initial
-		
-*/
-	
-; ****** HINT: Documentation can be extracted to HTML using NaturalDocs ************** */
-
+; ****** HINT: Documentation can be extracted to HTML using GenDocs (https://github.com/fincs/GenDocs) by fincs************** */
 #include <Rectangle>
 #include <MultiMonitorEnv>
 #include <_WindowHandlerEvent>
 
 ; ******************************************************************************************************************************************
+/*!
+	Class: WindowHandler
+	Remarks:
+		### License
+			This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See [WTFPL](http://www.wtfpl.net/) for more details.
+		### Author
+			[hoppfrosch](hoppfrosch@ahk4.me)
+		### History
+		    - 0.4.0 
+				- [+] New: Maximize Window `[maximize()](#maximize)`
+				- [+] New: Minimize Window `[minimize()](#minimize)`
+				- [+] New: Property `[maximized()](#maximized)` to check maximized-state of window  
+				- [+] New: Property `[minimized()](#minimized)` to check minimized-state of window  
+				- [*] Simplified `__Get()` (centralized debugging)  
+				- [*] Incompatible Change: Unified parameternames "on"/"on" to true/false (`[alwaysOnTop()](#alwaysOnTop)`, `[hidden()](#hidden)`, `[rollup()](#rollup)`, ...)
+			- 0.3.2 
+				- [+] Check whether window is a real window <__isWindow>
+			- 0.3.1 
+				- [*] Renamed `tile()` to `[movePercental()](#movePercental)`
+				- [*] Use of monWorkingArea instead of monSize within `[movePercental()](#movePercental)`
+			- 0.3.0 
+				- [+] Tiling-Functionality `[tile()](#movePercental)`
+			- 0.2.0 
+				- [+] Event-Handling
+				- [+] New: Rollup Window `[rollup()](#rollup)`
+			- 0.1.0 
+				- [+] Initial
+	@UseShortForm
+*/
 class WindowHandler {
 	
 	_version := "0.4.0"
@@ -38,23 +46,28 @@ class WindowHandler {
 	_bManualMovement := false
 
 	_posStack := 0
-	
-/*
-===============================================================================
-Function: alwaysOnTop
-	Toogles "Always On Top" for window
 
-Parameters:
-	mode - true,  false, "toggle" (Default)
 
-See also:  
-	<__isAlwaysOnTop>, <__Get>
-
-Author(s):
-	20130308 - hoppfrosch@ahk4.me - Initial
-===============================================================================
-*/
-	alwaysOnTop(mode="toggle") {
+	/*! ===============================================================================
+		Method: alwaysOnTop(mode:="toggle")
+			Sets *Always-On-Top*-Mode for window
+			
+			*Always-On-Top* can be explicitly switched on or off using the given parameter. If the parameter is missing the *Always-On-Top* state is toggled
+			
+			The current *Always-On-Top* state can be retrieved via property [alwaysOnTop](#alwaysOnTop).
+		Parameters:
+			mode - *(Optional)* true (1),  false (0), "toggle"
+		Returns:
+			-
+		Remarks:
+			### See also: 
+				[alwaysOnTop](#alwaysOnTop)
+			
+			### Author(s)
+				* 20130308 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
+	*/
+	alwaysOnTop(mode:="toggle") 
+	{
 		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> CurrentState:" this.alwaysontop ; _DBG_
 		foundpos := RegExMatch(mode, "i)1|0|toggle")
@@ -74,21 +87,26 @@ Author(s):
 			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode_bak ")] -> NewState:" this.alwaysontop ; _DBG_
 	}
 
-/*
-===============================================================================
-Function: hidden
-	Toogles "Hidden" for window
-
-Parameters:
-	mode - true, false, "toggle" (Default)
-
-See also:  
-	<show>, <hide>, <__isHidden>
-
-Author(s):
-	20130308 - hoppfrosch@ahk4.me - Initial
-===============================================================================
-*/
+	/*! ===============================================================================
+		Method: hidden(mode="toggle")
+			Sets *Hidden*-State for window
+			
+			*Hidden* can be explicitly switched on or off using the given parameter. If the parameter is missing the *Hidden* state is toggled.
+			
+			`obj.hidden(false)` is equivalent to `[obj.show()](#show)` - `obj.hidden(true)` is equivalent to `[obj.hide()](#hide)`
+			
+			The current *Hidden* state can be retrieved via property [hidden](#Hidden).
+		Parameters:
+			mode - *(Optional)* true (1),  false (0), "toggle"
+		Returns:
+			-
+		Remarks:
+			### See also: 
+			[show()](#show), [hide()](#hide), [__isHidden](#__isHidden)
+			
+			### Author(s)
+				* 20130308 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
+	*/
 	hidden(mode="toggle") {
 		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> CurrentState:" this.__isHidden() ; _DBG_
@@ -111,19 +129,23 @@ Author(s):
 		if (this._debug) ; _DBG_
 			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> NewState:" this.__isHidden() ; _DBG_
 	}
-	
-/*
-===============================================================================
-Function: hide
-	Hides the Window. Use <show> to unhide a hidden window
 
-See also:
-	<show>, <__isHidden>, <hidden>
+	/*! ===============================================================================
+		Method: hide()
+			Hides the Window.
+			
+			`obj.hide()` is equivalent to `[obj.hidden(true)](#hidden)`. 
+			
+			Use `[obj.show()](#show)`, `[obj.hidden(false)](#hidden)` or `[obj.hidden("toggle")](#hidden)` to unhide a hidden window.
 
-Author(s):
-	20130308 - hoppfrosch@ahk4.me - Original
-===============================================================================
-*/
+			The current *Hidden* state can be retrieved via property [hidden](#Hidden).
+		Remarks:
+			### See also: 
+			[show()](#show), [hidden()](#hidden), [__isHidden()](#__isHidden)
+			
+			### Author(s)
+				* 20130308 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
+	*/
 	hide() {
 		val := this._hWnd
 		if (this._debug) ; _DBG_
@@ -131,15 +153,19 @@ Author(s):
 		WinHide ahk_id %val%
 	}
 
-/*
-===============================================================================
-Function:   kill
-	Kills the Window
-
-Author(s):
-	20130308 - hoppfrosch@ahk4.me - Original
-===============================================================================
-*/
+	/*! ===============================================================================
+		Method: kill()
+			Kills the Window (Forces the window to close)
+			
+			Performs the AHK command `[WinKill](http://www.autohotkey.com/docs/commands/WinKill.htm)`
+			
+		Remarks:
+			### See also: 
+			[close()](#close)
+			
+			### Author(s)
+				* 20130308 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
+	*/
 	kill() {
 		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])]" ; _DBG_		
@@ -150,15 +176,20 @@ Author(s):
 		DetectHiddenWindows, %prevState%
 	}
 
-/*
-===============================================================================
-Function:   maximize
-	Maximizes the Window
-
-Author(s):
-	20130415 - hoppfrosch@ahk4.me - Original
-===============================================================================
-*/
+	/*! ===============================================================================
+		Method: maximize(mode="toggle")
+			Toggles *Maximize* state of the window
+			
+			*Maximize* can be explicitly switched on or off using the given parameter. If the parameter is missing the *Maximize* state is toggled.
+		Parameters:
+			mode - *(Optional)* true (1),  false (0), "toggle"
+		Remarks:
+			### See also: 
+			[minimize()](#minimize)
+			
+			### Author(s)
+				* 20130415 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
+	*/
 	maximize(mode="toggle") {
 		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> CurrentState:" this.maximized ; _DBG_
@@ -183,15 +214,20 @@ Author(s):
 		DetectHiddenWindows, %prevState%
 	}
 	
-/*
-===============================================================================
-Function:   minimize
-	Maximizes the Window
-
-Author(s):
-	20130416 - hoppfrosch@ahk4.me - Original
-===============================================================================
-*/
+	/*! ===============================================================================
+		Method: minimize(mode="toggle")
+			Toggles *Minimize* state of the window
+			
+			*Minimize* can be explicitly switched on or off using the given parameter. If the parameter is missing the *Minimize* state is toggled.
+		Parameters:
+			mode - *(Optional)* true (1),  false (0), "toggle"
+		Remarks:
+			### See also: 
+			[maximize()](#maximize)
+			
+			### Author(s)
+				* 20130416 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
+	*/
 	minimize(mode="toggle") {
 		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> CurrentState:" this.minimized ; _DBG_
@@ -216,19 +252,24 @@ Author(s):
 		DetectHiddenWindows, %prevState%
 	}
 	
-/*
-===============================================================================
-Function: move
-	Moves the window
-
-Parameters:
-	X,Y,W,H - Position and Width/Height the window has to be moved/resized to
-
-Author(s):
-	20130308 - hoppfrosch@ahk4.me - Original
-===============================================================================
-*/
-	move(X,Y,W="",H="") {
+	/*! ===============================================================================
+		Method: move(X,Y,W=99999,H=99999)
+			Moves and/or resizes the window
+			
+			The given coordinates/sizes are absolute coordinates/sizes. If the value of any coordinate is equal *99999* the current value keeps unchanged. For example: Resize-only can be performed by `obj.move(99999,99999,width,height)`
+		Parameters:
+			x - x-Coordinate (absolute) the window has to be moved to - use *99999* to preserve actual value
+			y - y-Coordinate (absolute) the window has to be moved to - use *99999* to preserve actual value
+			w - *(Optional)* width (absolute) the window has to be resized to - use *99999* to preserve actual value
+			h - *(Optional)* height (absolute) the window has to be resized to - use *99999* to preserve actual value
+		Remarks:
+			### See also: 
+			[movePercental()](movePercental)
+			
+			### Author(s)
+				* 20130308 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
+	*/
+	move(X,Y,W="99999",H="99999") {
 		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "])(X=" X " ,Y=" Y " ,W=" W " ,H=" H ")]" ; _DBG_		
 		if (X = 99999 || Y = 99999 || W = 99999 || H = 9999)
@@ -251,18 +292,30 @@ Author(s):
 		WinMove % "ahk_id" this._hWnd, , X, Y, W, H
 	}
 
-/*
-===============================================================================
-Function: movePercental
-    move and resize window relative to the screen size.
 
-Parameters:
-	xFactor, yFactor, wFactor, hFactor - Position and Size of the destination relative to current screen
-    
-Author(s):
-    Original idea - Lexikos - http://www.autohotkey.com/forum/topic21703.html
-===============================================================================
-*/
+	/*! ===============================================================================
+		Method: movePercental(xFactor=0, yFactor=0, wFactor=100, hFactor=100)
+			move and resize window relative to the size of the current.
+			
+			For example: 
+			 * `obj.movePercental(0,0,100,100)` creates a window with origin 0,0 and a *width=100% of screen width* and *height=100% of screen height*
+			 * `obj.movePercental(25,25,50,50)` creates a window at *x=25% of screen width*, *y =25% of screen height*, and with *width=50% of screen width*, *height=50% of screen height*. The resulting window is a screen centered window with the described width and height
+		Parameters:
+			xFactor - x-position factor (percents of current screen width) the window has to be moved to (Range: 0.0 to 100.0)
+			yFactor - y-position factor (percents of current screen height) the window has to be moved to (Range: 0.0 to 100.0)
+			wFactor - *(Optional)* width-size factor (percents of current screen width) the window has to be resized to (Range: 0.0 to 100.0)
+			hFactor - *(Optional)* height-size factor (percents of current screen height) the window has to be resized to (Range: 0.0 to 100.0)
+		Remarks:
+			### See also: 
+			[move()](move)
+			
+			### Author(s)
+			    * xxxxxxxx - Lexikos - [Original on AHK-Forum](http://www.autohotkey.com/forum/topic21703.html)
+				* 20130402 - [hoppfrosch](hoppfrosch@ahk4.me) - Rewritten
+				
+			### Caveats / Known issues
+			    * The range of the method parameters is **NOT** checked - so be carefull using any values <0 or >100
+	*/
 	movePercental(xFactor=0, yFactor=0, wFactor=100, hFactor=100) {
 		
 		if (this._debug) ; _DBG_
@@ -285,21 +338,18 @@ Author(s):
 		if (this._debug) ; _DBG_
 			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], xFactor=" xFactor ", yFactor=" yFactor ", wFactor=" wFactor ", hFactor=" hFactor ")] -> padded to (" this.pos.Dump() ") on Monitor (" monId ")" ; _DBG_
 	}
-/*
-===============================================================================
-Function: rollup
-	Toogles "rollup" for window
-
-Parameters:
-	mode - 0, 1, "toggle" (Default)
-
-See also:  
-	<__isRolledUp>
-
-Author(s):
-	20130312 - hoppfrosch@ahk4.me - Original
-===============================================================================
-*/
+	
+	/*! ===============================================================================
+		Method: rollup(mode="toggle") {
+			Toggles *Rollup* state of the window. The window cann be rolled up (minimized) to its titlebar and unrolled again.
+			
+			*Rollup* can be explicitly switched on or off using the given parameter. If the parameter is missing the *Rollup* state is toggled.
+		Parameters:
+			mode - *(Optional)* true (1),  false (0), "toggle"
+		Remarks:
+			### Author(s)
+				* 20130312 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
+	*/
 	rollup(mode="toggle") {
 		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> CurrentState:" this.rolledUp ; _DBG_
@@ -342,18 +392,22 @@ Author(s):
 
 	}
 
-/*
-===============================================================================
-Function:   show
-	Shows the Window. Used to show a hidden window (see <hide>)
-	
-See also:
-	<hide>, <__isHidden>
-
-Author(s):
-	20130308 - hoppfrosch@ahk4.me - Original
-===============================================================================
-*/
+	/*! ===============================================================================
+		Method: show()
+			Hides the Window. Used to show a hidden window.
+			
+			`obj.show()` is equivalent to `[obj.hidden(false)](#hidden)`. 
+			
+			Use `[obj.hide()](#hide)`, `[obj.hidden(true)](#hidden)` or `[obj.hidden("toggle")](#hidden)` to hide a currently shown window.
+			
+			The current *Hidden* state can be retrieved via property [hidden](#Hidden).
+		Remarks:
+			### See also: 
+			[hide()](#hide), [hidden()](#hidden), [__isHidden()](#__isHidden)
+			
+			### Author(s)
+				* 20130308 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
+	*/
 	show() {
 		val := this._hWnd
 		if (this._debug) ; _DBG_
@@ -919,14 +973,11 @@ Function: __Get
 	Custom Getter (*INTERNAL*)
 
 	Supports following attributes:
-	* *alwaysontop* - is windows fixed on top of all other windows? (see <__isAlwaysOnTop>)
-	* *centercoords* - current coordinates of the center of the window (see <__centercoords>)
-	* *classname* - classename of window (see <__classname>)
-	* *exist* - does window exist? (see <__exist>)
-	* *hidden* - is window hidden? (see <__hidden>)
+	* *maximized* - is window maximized? (see <__isMaximized>)
+	* *minimized* - is window minimized? (see <__isMinimized>)
 	* *monitorID* - ID of monitor the window currently is on (i.e center of window) (see <__monitorID>)
 	* *pos* - current position of window Returns an object of class <Rectangle> (see <__pos>)
-	* *resizable* - is the window resizeable?  Returns a bool containig the Resizeble-state of the window (see <_isResizable>)
+	* *resizable* - is the window resizeable?  Returns a bool containig the Resizeble-state of the window (see <__isResizable>)
 	* *rolledUpHeight* - Height of a rolled-up window		
 	* *style* - Style of the window (see <__style>)
 	* *styleEx* - extended style of window (see <__styleEx>)
@@ -940,37 +991,78 @@ Author(s):
 		ret := 
 		written := 0 ; _DBG_
 
-        if (aName = "alwaysontop") {
+	
+        if (aName = "alwaysOnTop") {
+	/*! ---------------------------------------------------------------------------------------
+		Property: alwaysOnTop [get]
+			Returns the current *Always-On-Top*-State (see [alwaysOnTop()](#alwaysOnTop))
+	*/
 			ret := this.__isAlwaysOnTop()
 		}
 		else if (aName = "centercoords") { ; center coordinate of the current window
+	/*! ---------------------------------------------------------------------------------------
+		Property: centercoords [get]
+			Returns the coordinates of the center of the window as a [Rectangle](Rectangle.html)-object
+	*/
 			ret := this.__centercoords()
 		}
         else if (aName = "classname") {
+	/*! ---------------------------------------------------------------------------------------
+		Property: classname [get]
+			Returns the name of the window class
+	*/
 			ret := this.__classname()
 		}
 		else if (aName = "exist") {
+	/*! ---------------------------------------------------------------------------------------
+		Property: exist [get]
+			Checks whether the window still exists
+	*/
 			ret := this.__exist()
 		}
 		else if (aName = "hidden") {
+	/*! ---------------------------------------------------------------------------------------
+		Property: hidden [get]
+			Returns the current *Hidden*-State (see [hidden()](#hidden))
+	*/
 			ret := this.__isHidden()
 		}
 		else if (aName = "maximized") {
+	/*! ---------------------------------------------------------------------------------------
+		Property: maximized [get]
+			Returns the current *Maximized*-State (see [maximize()](#maximize))
+	*/
 			ret := this.__isMaximized()
 		}
 		else if (aName = "minimized") {
+	/*! ---------------------------------------------------------------------------------------
+		Property: minimized [get]
+			Returns the current *Maximized*-State (see [minimize()](#minimize))
+	*/
 			ret := this.__isMinimized()
 		}
 		else if (aName = "monitorID") {
+	/*! ---------------------------------------------------------------------------------------
+		Property: monitorID [get]
+			Returns the ID of monitor on which the window is on
+	*/
 			ret := this.__monitorID()
 		}
 		else if (aName = "pos") { ; current position
+	/*! ---------------------------------------------------------------------------------------
+		Property: pos [get]
+			Returns the position and size of the window as a [Rectangle](Rectangle.html)-object
+	*/
 			ret := this.__pos()
 			written := 1 ; _DBG_
 			if (this._debug) ; _DBG_
 				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret.dump() ; _DBG_
 		}
 		else if (aName = "resizeable") { 
+	/*! ---------------------------------------------------------------------------------------
+		Property: resizeable [get]
+			Checks whether window is resizeable
+	*/
 			ret := this.__isResizable()
 		}
 		else if (aName = "rolledUp") {
@@ -1071,6 +1163,9 @@ Author(s):
 	
 }
 
+/*!
+	End of class
+*/
 
 /*
 ===============================================================================
