@@ -24,7 +24,6 @@
 			* New functionality
 				* Method `close()`
 				* Property `active` (getter (Is window active window?) and setter (activate/deactivate window))
-	@UseShortForm
 */
 class WindowHandler {
 	
