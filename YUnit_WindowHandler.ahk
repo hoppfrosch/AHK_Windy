@@ -11,8 +11,7 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-
-ReferenceVersion := "0.5.2"
+ReferenceVersion := "0.5.3"
 debug := 1
 
 
@@ -80,27 +79,27 @@ class RollupTestSuite
 		Yunit.assert(val == false)
 		
 		OutputDebug % "******************************* " A_ThisFunc " 2 ****************************"
-		this.obj.rollup(false)
+		this.obj.rolledUp := false
 		val := this.obj.rolledUp
 		Yunit.assert(val == false)
 		
 		OutputDebug % "******************************* " A_ThisFunc " 3 ****************************"
-		this.obj.rollup(true)
+		this.obj.rolledUp := true
 		val := this.obj.rolledUp
 		Yunit.assert(val == true)
 		
 		OutputDebug % "******************************* " A_ThisFunc " 4 ****************************"
-		this.obj.rollup(false)
+		this.obj.rolledUp := false
 		val := this.obj.rolledUp
 		Yunit.assert(val == false)
 		
 		OutputDebug % "******************************* " A_ThisFunc " 5 ****************************"
-		this.obj.rollup("toggle") ; as the window wasn't rolled up, it should be rolled up now
+		this.obj.rolledUp := !this.obj.rolledUp ; as the window wasn't rolled up, it should be rolled up now
 		val := this.obj.rolledUp
 		Yunit.assert(val == true)
 		
 		OutputDebug % "******************************* " A_ThisFunc " 6 ****************************"
-		this.obj.rollup("toggle") ; as the window was rolled up, it shouldn't be rolled up now
+		this.obj.rolledUp := !this.obj.rolledUp ; as the window was rolled up, it shouldn't be rolled up now
 		val := this.obj.rolledUp
 		Yunit.assert(val == false)
 

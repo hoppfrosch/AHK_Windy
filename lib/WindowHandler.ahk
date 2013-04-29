@@ -14,8 +14,6 @@
 		### Author
 			[hoppfrosch](hoppfrosch@ahk4.me)
 		### To Be done
-			* Move existing functionality to `__Setter()`:
-				* `rolledUp`
 			* Implement `__Setter()`-functionality
 				* `monitorID`
 				* `pos`
@@ -24,12 +22,13 @@
 				* `style`
 				* `styleEx`
 			* New functionality
-				* `close()`
+				* Method `close()`
+				* Property `active` (getter (Is window active window?) and setter (activate/deactivate window))
 	@UseShortForm
 */
 class WindowHandler {
 	
-	_version := "0.5.2"
+	_version := "0.5.3"
 	_debug := 0
 	_hWnd := 0
 	
@@ -54,13 +53,18 @@ __Set(aName, aValue) {
 			this.__hidden(aValue)
 		}
 		else if (aName = "minimized") {
-		; See documentation on minimize [get]
+		; See documentation on minimized [get]
 			this.__minimize(aValue)
 		}
 		else if (aName = "maximized") {
-		; See documentation on maximize [get]
+		; See documentation on maximized [get]
 			this.__maximize(aValue)
 		}
+		else if (aName = "rolledUp") {
+		; See documentation on rolledUp [get]
+			this.__rollUp(aValue)
+		}
+
 
 	}
 
@@ -68,12 +72,6 @@ __Set(aName, aValue) {
 ===============================================================================
 Function: __Get
 	Custom Getter (*INTERNAL*)
-
-	Supports following attributes:
-	* *rolledUpHeight* - Height of a rolled-up window		
-	* *style* - Style of the window (see <__style>)
-	* *styleEx* - extended style of window (see <__styleEx>)
-	* *title* - title of window (see <__title>)
 	
 Author(s):
 	20121030 - hoppfrosch - Original
@@ -207,10 +205,18 @@ Author(s):
 		}
 		else if (aName = "rolledUp") {
 	/*! ---------------------------------------------------------------------------------------
-		Property: rolledUp [get]
-			Checks whether window is rolled up toits title bar
+		Property: rolledUp [get/set]
+			Get or Set the *RolledUp*-State  (window is rolled up to its title bar)
 			
-			**ToBeDone: Implementation of Setter-functionality**
+		Remarks:
+			### Valid values			
+				* `true` or `1` - activates *RolledUp*-State
+				* `false` or `0` - deactivates *RolledUp*-State
+				
+			To toogle current *RolledUp*-State, simply use `obj.rolledUp := !obj.rolledUp`	
+				
+			### Author(s)
+				* 20130429 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
 	*/
 			ret := this.__isRolledUp()
 		}
@@ -234,7 +240,7 @@ Author(s):
 		}
 		else if (aName = "styleEx") {
 	/*! ---------------------------------------------------------------------------------------
-		Property: style [get]
+		Property: styleEx [get]
 			Returns current window extended style
 			
 			**ToBeDone: Implementation of Setter-functionality**
@@ -243,7 +249,7 @@ Author(s):
 		}
 		else if (aName = "title") {
 	/*! ---------------------------------------------------------------------------------------
-		Property: style [get]
+		Property: title [get]
 			Returns current window title
 			
 			There is no setter available, since this is a constant window property
@@ -544,18 +550,18 @@ Author(s):
 			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], xFactor=" xFactor ", yFactor=" yFactor ", wFactor=" wFactor ", hFactor=" hFactor ")] -> padded to (" this.pos.Dump() ") on Monitor (" monId ")" ; _DBG_
 	}
 	
-	/*! ===============================================================================
-		Method: rollup(mode="toggle") {
-			Toggles *Rollup* state of the window. The window cann be rolled up (minimized) to its titlebar and unrolled again.
+	/* ===============================================================================
+		Method: __rollup(mode="toggle") {
+			Sets/Toggles *Rollup* state of the window. The window cann be rolled up (minimized) to its titlebar and unrolled again.
 			
-			*Rollup* can be explicitly switched on or off using the given parameter. If the parameter is missing the *Rollup* state is toggled.
+			**Better use property-set functionality for this: `[rolledUp](#rolledUp)`**
 		Parameters:
 			mode - *(Optional)* true (1),  false (0), "toggle"
 		Remarks:
 			### Author(s)
 				* 20130312 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
 	*/
-	rollup(mode="toggle") {
+	__rollup(mode="toggle") {
 		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> CurrentState:" this.rolledUp ; _DBG_
 		foundpos := RegExMatch(mode, "i)0|1|toggle")
