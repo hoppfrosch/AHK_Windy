@@ -12,12 +12,24 @@
 		### License
 			This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See [WTFPL](http://www.wtfpl.net/) for more details.
 		### Author
-			[hoppfrosch](hoppfrosch@ahk4.me)		
+			[hoppfrosch](hoppfrosch@ahk4.me)
+		### To Be done
+			* Move existing functionality to `__Setter()`:
+				* `rolledUp`
+			* Implement `__Setter()`-functionality
+				* `monitorID`
+				* `pos`
+				* `centercoords`
+				* `resizeable`
+				* `style`
+				* `styleEx`
+			* New functionality
+				* `close()`
 	@UseShortForm
 */
 class WindowHandler {
 	
-	_version := "0.5.1"
+	_version := "0.5.2"
 	_debug := 0
 	_hWnd := 0
 	
@@ -34,17 +46,22 @@ __Set(aName, aValue) {
 		ret :=
 		
 		if (aName = "alwaysOnTop") {
-	/* ---------------------------------------------------------------------------------------
-		See documentation on alwaysOnTop [get]
-	*/
+		; See documentation on alwaysOnTop [get]
 			this.__alwaysOnTop(aValue)
 		}
 		else if (aName = "hidden") {
-	/* ---------------------------------------------------------------------------------------
-		see documentation on hidden [get]
-	*/
-			ret := this.__hidden(aValue)
+		; See documentation on hidden [get]
+			this.__hidden(aValue)
 		}
+		else if (aName = "minimized") {
+		; See documentation on minimize [get]
+			this.__minimize(aValue)
+		}
+		else if (aName = "maximized") {
+		; See documentation on maximize [get]
+			this.__maximize(aValue)
+		}
+
 	}
 
 /*
@@ -74,8 +91,8 @@ Author(s):
 			
 		Remarks:
 			### Valid values			
-				* `true` or `1` - activates  *Always-On-Top*-State
-				* `false` or `0` - deactivates  *Always-On-Top*-State
+				* `true` or `1` - activates *Always-On-Top*-State
+				* `false` or `0` - deactivates *Always-On-Top*-State
 			To toogle current *Always-On-Top*-State, simply use `obj.alwaysOnTop := !obj.alwaysOnTop`	
 				
 			### Author(s)
@@ -87,6 +104,8 @@ Author(s):
 	/*! ---------------------------------------------------------------------------------------
 		Property: centercoords [get]
 			Returns the coordinates of the center of the window as a [Rectangle](Rectangle.html)-object
+			
+			**ToBeDone: Implementation of Setter-functionality**
 	*/
 			ret := this.__centercoords()
 		}
@@ -94,6 +113,8 @@ Author(s):
 	/*! ---------------------------------------------------------------------------------------
 		Property: classname [get]
 			Returns the name of the window class
+			
+			There is no setter available, since this is a constant window property
 	*/
 			ret := this.__classname()
 		}
@@ -101,6 +122,8 @@ Author(s):
 	/*! ---------------------------------------------------------------------------------------
 		Property: exist [get]
 			Checks whether the window still exists
+			
+			There is no setter available, since user cannot enforce existance of window
 	*/
 			ret := this.__exist()
 		}
@@ -111,8 +134,8 @@ Author(s):
 			
 		Remarks:
 			### Valid values			
-				* `true` or `1` - activates  *Hidden*-State
-				* `false` or `0` - deactivates  *Hidden*-State
+				* `true` or `1` - activates *Hidden*-State
+				* `false` or `0` - deactivates *Hidden*-State
 			To toogle current *Hidden*-State, simply use `obj.hidden := !obj.hidden`	
 				
 			### Author(s)
@@ -122,15 +145,33 @@ Author(s):
 		}
 		else if (aName = "maximized") {
 	/*! ---------------------------------------------------------------------------------------
-		Property: maximized [get]
-			Returns the current *Maximized*-State (see [maximize()](#maximize))
+		Property: maximized [get/set]
+			Get or Set the *Maximized*-State
+			
+		Remarks:
+			### Valid values			
+				* `true` or `1` - activates  *Maximized*-State
+				* `false` or `0` - deactivates  *Maximized*-State
+			To toogle current *Maximized*-State, simply use `obj.maximized := !obj.maximized`	
+				
+			### Author(s)
+				* 20130429 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
 	*/
 			ret := this.__isMaximized()
 		}
 		else if (aName = "minimized") {
 	/*! ---------------------------------------------------------------------------------------
 		Property: minimized [get]
-			Returns the current *Maximized*-State (see [minimize()](#minimize))
+			Get or Set the *Minimized*-State
+			
+		Remarks:
+			### Valid values			
+				* `true` or `1` - activates *Minimized*-State
+				* `false` or `0` - deactivates *Minimized*-State
+			To toogle current *Minimized*-State, simply use `obj.minimized := !obj.maximized`	
+				
+			### Author(s)
+				* 20130429 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
 	*/
 			ret := this.__isMinimized()
 		}
@@ -138,6 +179,8 @@ Author(s):
 	/*! ---------------------------------------------------------------------------------------
 		Property: monitorID [get]
 			Returns the ID of monitor on which the window is on
+			
+			**ToBeDone: Implementation of Setter-functionality**
 	*/
 			ret := this.__monitorID()
 		}
@@ -145,6 +188,8 @@ Author(s):
 	/*! ---------------------------------------------------------------------------------------
 		Property: pos [get]
 			Returns the position and size of the window as a [Rectangle](Rectangle.html)-object
+			
+			**ToBeDone: Implementation of Setter-functionality**
 	*/
 			ret := this.__pos()
 			written := 1 ; _DBG_
@@ -155,22 +200,54 @@ Author(s):
 	/*! ---------------------------------------------------------------------------------------
 		Property: resizeable [get]
 			Checks whether window is resizeable
+			
+			**ToBeDone: Implementation of Setter-functionality**
 	*/
 			ret := this.__isResizable()
 		}
 		else if (aName = "rolledUp") {
+	/*! ---------------------------------------------------------------------------------------
+		Property: rolledUp [get]
+			Checks whether window is rolled up toits title bar
+			
+			**ToBeDone: Implementation of Setter-functionality**
+	*/
 			ret := this.__isRolledUp()
 		}
 		else if (aName = "rolledUpHeight") {
+	/*! ---------------------------------------------------------------------------------------
+		Property: rolledUpHeight [get]
+			Returns the height of the caption bar of windows
+			
+			There is no setter available, since this is a system constant
+	*/
 			SysGet, ret, 29
 		}
 		else if (aName = "style") {
+	/*! ---------------------------------------------------------------------------------------
+		Property: style [get]
+			Returns current window style
+			
+			**ToBeDone: Implementation of Setter-functionality**
+	*/
 			ret := this.__style()
 		}
 		else if (aName = "styleEx") {
+	/*! ---------------------------------------------------------------------------------------
+		Property: style [get]
+			Returns current window extended style
+			
+			**ToBeDone: Implementation of Setter-functionality**
+	*/
 			ret := this.__styleEx()
 		}
 		else if (aName = "title") {
+	/*! ---------------------------------------------------------------------------------------
+		Property: style [get]
+			Returns current window title
+			
+			There is no setter available, since this is a constant window property
+	*/
 			ret :=  this.__title()
 		}
 		
@@ -181,7 +258,7 @@ Author(s):
 		return ret
 	}
 
-	/*! ===============================================================================
+	/* ===============================================================================
 		Method: __alwaysOnTop(mode:="toggle")
 			Sets *Always-On-Top*-Mode for window
 			
@@ -220,7 +297,7 @@ Author(s):
 			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode_bak ")] -> NewState:" this.alwaysontop ; _DBG_
 	}
 
-	/*! ===============================================================================
+	/* ===============================================================================
 		Method: __hidden(mode="toggle")
 			Sets *Hidden*-State for window
 			
@@ -263,7 +340,7 @@ Author(s):
 			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> NewState:" this.__isHidden() ; _DBG_
 	}
 
-	/*! ===============================================================================
+	/* ===============================================================================
 		Method: __hide()
 			Hides the Window - Sets *Hidden*-State for window to true
 			
@@ -304,21 +381,21 @@ Author(s):
 		DetectHiddenWindows, %prevState%
 	}
 
-	/*! ===============================================================================
-		Method: maximize(mode="toggle")
-			Toggles *Maximize* state of the window
+	/* ===============================================================================
+		Method: __maximize(mode="toggle")
+			Sets/Toggles *Maximize* state of the window
 			
-			*Maximize* can be explicitly switched on or off using the given parameter. If the parameter is missing the *Maximize* state is toggled.
+			**Better use property-set functionality for this: `[maximize](#maximize)`**
 		Parameters:
 			mode - *(Optional)* true (1),  false (0), "toggle"
 		Remarks:
 			### See also: 
-			[minimize()](#minimize)
+			[__minimize()](#__minimize)
 			
 			### Author(s)
 				* 20130415 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
 	*/
-	maximize(mode="toggle") {
+	__maximize(mode="toggle") {
 		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> CurrentState:" this.maximized ; _DBG_
 		foundpos := RegExMatch(mode, "i)0|1|toggle")
@@ -342,21 +419,21 @@ Author(s):
 		DetectHiddenWindows, %prevState%
 	}
 	
-	/*! ===============================================================================
-		Method: minimize(mode="toggle")
-			Toggles *Minimize* state of the window
+	/* ===============================================================================
+		Method: __minimize(mode="toggle")
+			Sets/Toggles *Minimized* state of the window
 			
-			*Minimize* can be explicitly switched on or off using the given parameter. If the parameter is missing the *Minimize* state is toggled.
+			**Better use property-set functionality for this: `[minimized](#minimized)`**
 		Parameters:
 			mode - *(Optional)* true (1),  false (0), "toggle"
 		Remarks:
 			### See also: 
-			[maximize()](#maximize)
+			[__maximize()](#__maximize)
 			
 			### Author(s)
 				* 20130416 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
 	*/
-	minimize(mode="toggle") {
+	__minimize(mode="toggle") {
 		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> CurrentState:" this.minimized ; _DBG_
 		foundpos := RegExMatch(mode, "i)1|0|toggle")
@@ -520,7 +597,7 @@ Author(s):
 
 	}
 
-	/*! ===============================================================================
+	/* ===============================================================================
 		Method: __show()
 			Hides the Window. Used to show a hidden window. - Sets *Hidden*-State for window to false
 			

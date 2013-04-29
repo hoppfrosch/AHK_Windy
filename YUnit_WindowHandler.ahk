@@ -12,7 +12,7 @@
 #SingleInstance force
 
 
-ReferenceVersion := "0.5.1"
+ReferenceVersion := "0.5.2"
 debug := 1
 
 
@@ -134,16 +134,16 @@ class MoveResizeTestSuite
 		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
 		Yunit.assert(this.obj.maximized == false)
 		Yunit.assert(this.obj.minimized == false)
-		this.obj.maximize(true)
+		this.obj.maximized := true
 		Yunit.assert(this.obj.maximized == true)
 		Yunit.assert(this.obj.minimized == false)
-		this.obj.maximize(false)
+		this.obj.maximized := false
 		Yunit.assert(this.obj.maximized == false)
 		Yunit.assert(this.obj.minimized == false)
-		this.obj.maximize("toggle")
+		this.obj.maximized := !this.obj.maximized
 		Yunit.assert(this.obj.maximized == true)
 		Yunit.assert(this.obj.minimized == false)
-		this.obj.maximize("toggle")
+		this.obj.maximized := !this.obj.maximized
 		Yunit.assert(this.obj.maximized == false)
 		Yunit.assert(this.obj.minimized == false)
 		OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
@@ -155,16 +155,16 @@ class MoveResizeTestSuite
 		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
 		Yunit.assert(this.obj.maximized == false)
 		Yunit.assert(this.obj.minimized == false)
-		this.obj.minimize(true)
+		this.obj.minimized := true
 		Yunit.assert(this.obj.maximized == false)
 		Yunit.assert(this.obj.minimized == true)
-		this.obj.minimize(false)
+		this.obj.minimized := false
 		Yunit.assert(this.obj.maximized == false)
 		Yunit.assert(this.obj.minimized == false)
-		this.obj.minimize("toggle")
+		this.obj.minimized := !this.obj.minimized
 		Yunit.assert(this.obj.maximized == false)
 		Yunit.assert(this.obj.minimized == true)
-		this.obj.minimize("toggle")
+		this.obj.minimized := !this.obj.minimized
 		Yunit.assert(this.obj.maximized == false)
 		Yunit.assert(this.obj.minimized == false)
 		OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
