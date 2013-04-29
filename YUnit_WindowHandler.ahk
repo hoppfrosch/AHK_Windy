@@ -12,7 +12,7 @@
 #SingleInstance force
 
 
-ReferenceVersion := "0.5.0"
+ReferenceVersion := "0.5.1"
 debug := 1
 
 
@@ -345,17 +345,17 @@ class HideShowTestSuite
 	{
 		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
 		Yunit.assert(this.obj.hidden == false)
-		this.obj.show()
+		this.obj.hidden := false
 		Yunit.assert(this.obj.hidden == false)
-		this.obj.hide()
+		this.obj.hidden := true
 		Yunit.assert(this.obj.hidden == true)
-		this.obj.hidden(false)
+		this.obj.hidden := false
 		Yunit.assert(this.obj.hidden == false)
-		this.obj.hidden(true)
+		this.obj.hidden := true
 		Yunit.assert(this.obj.hidden == true)
-		this.obj.hidden("toggle") ; as the window was hidden, it shouldn't be hidden now
+		this.obj.hidden := !this.obj.hidden ; as the window was hidden, it shouldn't be hidden now
 		Yunit.assert(this.obj.hidden == false)
-		this.obj.hidden("toggle") ; as the window wasn't hidden, it should be hidden now
+		this.obj.hidden := !this.obj.hidden  ; as the window wasn't hidden, it should be hidden now
 		Yunit.assert(this.obj.hidden == true)
 		OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
 	}
@@ -370,7 +370,7 @@ class HideShowTestSuite
     HiddenTrue() 
     {
 		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
-        this.obj.hide()
+        this.obj.hidden := true
         Yunit.assert(this.obj.hidden==true)
 		OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
     }
