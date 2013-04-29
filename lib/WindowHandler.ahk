@@ -6,43 +6,18 @@
 ; ******************************************************************************************************************************************
 /*!
 	Class: WindowHandler
+		Perform actions on windows using an unified class based interface
+		
 	Remarks:
 		### License
 			This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See [WTFPL](http://www.wtfpl.net/) for more details.
 		### Author
-			[hoppfrosch](hoppfrosch@ahk4.me)
-		### History
-		    - 0.5.0
-				- [*] Added setter for property `alwaysOnTop`
-					- [*] Renamed `alwaysOnTop()` to `_alwaysOnTop()`
-		    - 0.4.0 
-				- [+] New: Maximize Window `maximize()`
-				- [+] New: Minimize Window `minimize()`
-				- [+] New: Property `maximized` to check maximized-state of window  
-				- [+] New: Property `minimized` to check minimized-state of window  
-				- [*] Simplified `__Get()` (centralized debugging)  
-				- [*] Incompatible Change: Unified parameternames "on"/"on" to true/false (`alwaysOnTop()`, `hidden()`, `rollup()`, ...)
-			- 0.3.2 
-				- [+] Check whether window is a real window `__isWindow`
-			- 0.3.1 
-				- [*] Renamed `tile()` to `movePercental()`
-				- [*] Use of `monWorkingArea` instead of `monSize` within `movePercental()`
-			- 0.3.0 
-				- [+] Tiling-Functionality `tile()`
-			- 0.2.0 
-				- [+] Event-Handling
-				- [+] New: Rollup Window `rollup()`
-			- 0.1.0 
-				- [+] Initial
-		## To Be Done
-			- Replace existing functions with properties:
-				-
-			
+			[hoppfrosch](hoppfrosch@ahk4.me)		
 	@UseShortForm
 */
 class WindowHandler {
 	
-	_version := "0.5.0"
+	_version := "0.5.1"
 	_debug := 0
 	_hWnd := 0
 	
@@ -58,20 +33,17 @@ class WindowHandler {
 __Set(aName, aValue) {
 		ret :=
 		
-		 if (aName = "alwaysOnTop") {
-	/*! ---------------------------------------------------------------------------------------
-		Property: alwaysOnTop [set]
-			Sets the *Always-On-Top*-State
-		Remarks:
-			### Valid values			
-				* `true` or `1` - activates  *Always-On-Top*-State
-				* `false` or `0` - deactivates  *Always-On-Top*-State
-			To toogle current *Always-On-Top*-State, simply use `obj.alwaysOnTop := !obj.alwaysOnTop`	
-				
-			### Author(s)
-				* 20130426 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
+		if (aName = "alwaysOnTop") {
+	/* ---------------------------------------------------------------------------------------
+		See documentation on alwaysOnTop [get]
 	*/
 			this.__alwaysOnTop(aValue)
+		}
+		else if (aName = "hidden") {
+	/* ---------------------------------------------------------------------------------------
+		see documentation on hidden [get]
+	*/
+			ret := this.__hidden(aValue)
 		}
 	}
 
@@ -97,8 +69,17 @@ Author(s):
 	
         if (aName = "alwaysOnTop") {
 	/*! ---------------------------------------------------------------------------------------
-		Property: alwaysOnTop [get]
-			Returns the current *Always-On-Top*-State
+		Property: alwaysOnTop [get/set]
+			Get or Set the *Always-On-Top*-State
+			
+		Remarks:
+			### Valid values			
+				* `true` or `1` - activates  *Always-On-Top*-State
+				* `false` or `0` - deactivates  *Always-On-Top*-State
+			To toogle current *Always-On-Top*-State, simply use `obj.alwaysOnTop := !obj.alwaysOnTop`	
+				
+			### Author(s)
+				* 20130426 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
 	*/
 			ret := this.__isAlwaysOnTop()
 		}
@@ -125,8 +106,17 @@ Author(s):
 		}
 		else if (aName = "hidden") {
 	/*! ---------------------------------------------------------------------------------------
-		Property: hidden [get]
-			Returns the current *Hidden*-State (see [hidden()](#hidden))
+		Property: hidden [get/set]
+			Get or Set the *Hidden*-State
+			
+		Remarks:
+			### Valid values			
+				* `true` or `1` - activates  *Hidden*-State
+				* `false` or `0` - deactivates  *Hidden*-State
+			To toogle current *Hidden*-State, simply use `obj.hidden := !obj.hidden`	
+				
+			### Author(s)
+				* 20130426 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
 	*/
 			ret := this.__isHidden()
 		}
@@ -231,12 +221,12 @@ Author(s):
 	}
 
 	/*! ===============================================================================
-		Method: hidden(mode="toggle")
+		Method: __hidden(mode="toggle")
 			Sets *Hidden*-State for window
 			
-			*Hidden* can be explicitly switched on or off using the given parameter. If the parameter is missing the *Hidden* state is toggled.
+			**Better use property-set functionality for this: `[hidden](#hidden)`**
 			
-			`obj.hidden(false)` is equivalent to `[obj.show()](#show)` - `obj.hidden(true)` is equivalent to `[obj.hide()](#hide)`
+			*Hidden* can be explicitly switched on or off using the given parameter. If the parameter is missing the *Hidden* state is toggled.
 			
 			The current *Hidden* state can be retrieved via property [hidden](#Hidden).
 		Parameters:
@@ -245,12 +235,12 @@ Author(s):
 			-
 		Remarks:
 			### See also: 
-			[show()](#show), [hide()](#hide), [__isHidden](#__isHidden)
+			[hidden](#Hidden)
 			
 			### Author(s)
 				* 20130308 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
 	*/
-	hidden(mode="toggle") {
+	__hidden(mode="toggle") {
 		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> CurrentState:" this.__isHidden() ; _DBG_
 		foundpos := RegExMatch(mode, "i)1|0|toggle")
@@ -274,22 +264,17 @@ Author(s):
 	}
 
 	/*! ===============================================================================
-		Method: hide()
-			Hides the Window.
+		Method: __hide()
+			Hides the Window - Sets *Hidden*-State for window to true
 			
-			`obj.hide()` is equivalent to `[obj.hidden(true)](#hidden)`. 
-			
-			Use `[obj.show()](#show)`, `[obj.hidden(false)](#hidden)` or `[obj.hidden("toggle")](#hidden)` to unhide a hidden window.
+			**Better use property-set functionality for this: `[hidden](#hidden)`**
 
 			The current *Hidden* state can be retrieved via property [hidden](#Hidden).
 		Remarks:
-			### See also: 
-			[show()](#show), [hidden()](#hidden), [__isHidden()](#__isHidden)
-			
 			### Author(s)
 				* 20130308 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
 	*/
-	hide() {
+	__hide() {
 		val := this._hWnd
 		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])]" ; _DBG_		
@@ -536,18 +521,13 @@ Author(s):
 	}
 
 	/*! ===============================================================================
-		Method: show()
-			Hides the Window. Used to show a hidden window.
+		Method: __show()
+			Hides the Window. Used to show a hidden window. - Sets *Hidden*-State for window to false
 			
-			`obj.show()` is equivalent to `[obj.hidden(false)](#hidden)`. 
-			
-			Use `[obj.hide()](#hide)`, `[obj.hidden(true)](#hidden)` or `[obj.hidden("toggle")](#hidden)` to hide a currently shown window.
+			**Better use property-set functionality for this: `[hidden](#hidden)`**
 			
 			The current *Hidden* state can be retrieved via property [hidden](#Hidden).
 		Remarks:
-			### See also: 
-			[hide()](#hide), [hidden()](#hidden), [__isHidden()](#__isHidden)
-			
 			### Author(s)
 				* 20130308 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
 	*/
