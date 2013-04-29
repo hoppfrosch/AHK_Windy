@@ -8,7 +8,7 @@
 	Class: WindowHandler
 		Perform actions on windows using an unified class based interface
 		
-	Remarks:
+	Extra:
 		### License
 			This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See [WTFPL](http://www.wtfpl.net/) for more details.
 		### Author
@@ -16,7 +16,6 @@
 		### To Be done
 			* Implement `__Setter()`-functionality
 				* `monitorID`
-				* `pos`
 				* `centercoords`
 				* `resizeable`
 				* `style`
@@ -27,7 +26,7 @@
 */
 class WindowHandler {
 	
-	_version := "0.5.3"
+	_version := "0.5.4"
 	_debug := 0
 	_hWnd := 0
 	
@@ -63,6 +62,10 @@ __Set(aName, aValue) {
 		; See documentation on rolledUp [get]
 			this.__rollUp(aValue)
 		}
+		else if (aName = "pos") {
+		; See documentation on property pos [get]
+			this.move(aValue.x, avalue.y, avalue.w, avalue.h)
+		}
 
 
 	}
@@ -86,7 +89,7 @@ Author(s):
 		Property: alwaysOnTop [get/set]
 			Get or Set the *Always-On-Top*-State
 			
-		Remarks:
+		Extra:
 			### Valid values			
 				* `true` or `1` - activates *Always-On-Top*-State
 				* `false` or `0` - deactivates *Always-On-Top*-State
@@ -158,7 +161,7 @@ Author(s):
 		}
 		else if (aName = "minimized") {
 	/*! ---------------------------------------------------------------------------------------
-		Property: minimized [get]
+		Property: minimized [get/set]
 			Get or Set the *Minimized*-State
 			
 		Remarks:
@@ -183,10 +186,15 @@ Author(s):
 		}
 		else if (aName = "pos") { ; current position
 	/*! ---------------------------------------------------------------------------------------
-		Property: pos [get]
-			Returns the position and size of the window as a [Rectangle](Rectangle.html)-object
+		Property: pos [get/set]
+			Get or Set the position and size of the window (To set the position use class [Rectangle](rectangle.html))
 			
-			**ToBeDone: Implementation of Setter-functionality**
+		Example:
+			`obj.pos := new [Rectangle](rectangle.html)(xnew, ynew, wnew, hnew)`
+			
+		Extra:
+			### Author(s)
+				* 20130429 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
 	*/
 			ret := this.__pos()
 			written := 1 ; _DBG_

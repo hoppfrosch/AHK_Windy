@@ -11,7 +11,7 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.5.3"
+ReferenceVersion := "0.5.4"
 debug := 1
 
 
@@ -210,6 +210,26 @@ class MoveResizeTestSuite
         OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
     }
 	
+	MoveViaPosProperty()
+    {
+		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
+		oldPos := this.obj.pos
+		OutputDebug % "Initial Position: " oldPos.Dump()
+		
+        xnew := oldPos.x+200
+		ynew := oldPos.y+200
+		
+		OutputDebug % "BEFORE - Moving from " oldPos.Dump() " to (" xnew "," ynew "," oldPos.w "," oldPos.h ")"
+		this.obj.pos := new Rectangle(xnew,ynew,oldPos.w,oldPos.h)
+		newPos := this.obj.pos
+        OutputDebug % "AFTER - Moving from " oldPos.Dump() " to " newPos.Dump()
+		Yunit.assert(newPos.x == xnew)
+		Yunit.assert(newPos.y == ynew)
+		Yunit.assert(newPos.w == oldPos.w)
+		Yunit.assert(newPos.h == oldPos.h)
+        OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
+    }
+	
     MoveResizeViaWinMove()
     {
         OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
@@ -244,6 +264,28 @@ class MoveResizeTestSuite
 		hnew := oldPos.h+20
 		OutputDebug % "BEFORE - Moving from " oldPos.Dump() " to (" xnew "," ynew "," wnew "," hnew ")"
         this.obj.move(xnew, ynew, wnew, hnew)
+		newPos := this.obj.pos
+        OutputDebug % "AFTER - Moving from " oldPos.Dump() " to " newPos.Dump()
+        Yunit.assert(newPos.x == xnew)
+		Yunit.assert(newPos.y == ynew)
+		Yunit.assert(newPos.w == wnew)
+		Yunit.assert(newPos.h == hnew)
+		
+        OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
+    }
+	
+	MoveResizeViaPosProperty()
+    {
+        OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
+        oldPos := this.obj.pos
+		OutputDebug % "Initial Position: " oldPos.Dump()
+        
+		xnew := oldPos.x+10
+		ynew := oldPos.y+20
+        wnew := oldPos.w+10
+		hnew := oldPos.h+20
+		OutputDebug % "BEFORE - Moving from " oldPos.Dump() " to (" xnew "," ynew "," wnew "," hnew ")"
+        this.obj.pos := new Rectangle(xnew, ynew, wnew, hnew)
 		newPos := this.obj.pos
         OutputDebug % "AFTER - Moving from " oldPos.Dump() " to " newPos.Dump()
         Yunit.assert(newPos.x == xnew)
@@ -297,6 +339,26 @@ class MoveResizeTestSuite
         OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
     }
 	
+	ResizeViaPosProperty()
+    {
+		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
+        oldPos := this.obj.pos
+		OutputDebug % "Initial Position: " oldPos.Dump()
+        
+        wnew := oldPos.w+100
+		hnew := oldPos.h+200
+		
+		OutputDebug % "BEFORE - Moving from " oldPos.Dump() " to (" oldPos.x "," oldPos.y "," wnew "," hnew ")"
+        this.obj.pos := new Rectangle(oldPos.x, oldPos.y, wnew, hnew)
+		newPos := this.obj.pos
+        OutputDebug % "AFTER - Moving from " oldPos.Dump() " to " newPos.Dump()
+        Yunit.assert(newPos.x == oldPos.x)
+		Yunit.assert(newPos.y == oldPos.y)
+		Yunit.assert(newPos.w == wnew)
+		Yunit.assert(newPos.h == hnew)
+		
+        OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
+    }
 
 	NoMoveResizeViaWinMove() {
 		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
@@ -324,6 +386,19 @@ class MoveResizeTestSuite
 		Yunit.assert(newPos.h == oldPos.h)		
 	}		
 
+	NoMoveResizeViaPosProperty() {
+		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
+        oldPos := this.obj.pos
+		OutputDebug % "Initial Position: " oldPos.Dump()
+		this.obj.pos := new Rectangle(oldPos.x, oldPos.y, oldPos.w, oldPos.h)
+		newPos := this.obj.pos
+        OutputDebug % "AFTER - Moving from " oldPos.Dump() " to " newPos.Dump()
+        Yunit.assert(newPos.x == oldPos.x)
+		Yunit.assert(newPos.y == oldPos.y)
+		Yunit.assert(newPos.w == oldPos.w)
+		Yunit.assert(newPos.h == oldPos.h)		
+	}
+	
 	End()
     {
 		this.obj.kill()
