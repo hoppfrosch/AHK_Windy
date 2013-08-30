@@ -23,10 +23,11 @@
 			* New functionality
 				* Method `close()`
 				* Property `active` (getter (Is window active window?) and setter (activate/deactivate window))
+				* Property `titlebar` (getter and setter (enable/disable titlebar))
 */
 class WindowHandler {
 	
-	_version := "0.5.4"
+	_version := "0.5.5"
 	_debug := 0
 	_hWnd := 0
 	
@@ -65,6 +66,10 @@ __Set(aName, aValue) {
 		else if (aName = "pos") {
 		; See documentation on property pos [get]
 			this.move(aValue.x, avalue.y, avalue.w, avalue.h)
+		}
+		else if (aName = "transparency") {
+		; See documentation on property transparency [get]
+			return this.__setTransparency(aValue)
 		}
 
 
@@ -254,6 +259,15 @@ Author(s):
 	*/
 			ret := this.__styleEx()
 		}
+		else if (aName = "transparency") {
+	/*! ---------------------------------------------------------------------------------------
+		Property: transparency [get/set]
+			Get or Set the transparency of the window
+			
+			**ToBeDone: Implementation of Setter-functionality**
+	*/
+			ret := this.__getTransparency()
+		}
 		else if (aName = "title") {
 	/*! ---------------------------------------------------------------------------------------
 		Property: title [get]
@@ -341,7 +355,7 @@ Author(s):
 
 		if (mode == 1)
 			this.Hide()
-		else if (mode == 0)
+		else if (mode == 0) 
 			this.Show()
 		else {
 			if (this.__isHidden())
@@ -692,6 +706,34 @@ Author(s):
 		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
 		return ret
+	}
+	
+	__getTransparency() {
+		val := this._hWnd
+		WinGet, s, Transparent, ahk_id %val% 
+		ret := 255
+		if (s != "")
+			ret := s
+		
+		;if (this._debug) ; _DBG_
+		;	OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_
+		
+		return ret
+	}
+	
+	__setTransparency(transparency) {
+		val := this._hWnd
+
+		transOrig := transparency
+		if (transparency == "OFF")
+			transparency := 255
+	
+		WinSet, Transparent, %transparency%, ahk_id %val% 
+		
+		if (this._debug) ; _DBG_
+			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], transparency=" transOrig "(" transparency "))] -> NewState:" this.transparency ; _DBG_
+		
+		return transparency
 	}
 
 /*

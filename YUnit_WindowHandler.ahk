@@ -11,16 +11,16 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.5.4"
+ReferenceVersion := "0.5.5"
 debug := 1
 
 
-;Yunit.Use(YunitStdOut, YunitWindow).Test(RollupTestSuite)
-Yunit.Use(YunitStdOut, YunitWindow).Test(MiscTestSuite, NotRealWindowTestSuite, HideShowTestSuite, ExistTestSuite, RollupTestSuite, MoveResizeTestSuite, TileTestSuite)
+;Yunit.Use(YunitStdOut, YunitWindow).Test(TransparencyTestSuite)
+Yunit.Use(YunitStdOut, YunitWindow).Test(TransparencyTestSuite, MiscTestSuite, NotRealWindowTestSuite, HideShowTestSuite, ExistTestSuite, RollupTestSuite, MoveResizeTestSuite, TileTestSuite)
 Return
 
 ; ###################################################################
-class TempTestSuite
+class TransparencyTestSuite
 {
     Begin()
     {
@@ -28,6 +28,32 @@ class TempTestSuite
 		this.obj := new WindowHandler(0, debug)
     }
  
+	transparency() {
+		Global debug
+
+		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "] Test 1 >>>>>>>>>>>>>>>>>>>>>>>>>>"
+		t := this.obj.transparency
+		Yunit.assert(t == 255)
+		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "] Test 2 >>>>>>>>>>>>>>>>>>>>>>>>>>"
+		this.obj.transparency := 100
+		t := this.obj.transparency
+		Yunit.assert(t == 100)
+		OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
+	}
+	
+	transparency2() {
+		Global debug
+
+		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "] Test 1 >>>>>>>>>>>>>>>>>>>>>>>>>>"
+		this.obj.transparency := 100
+		t := this.obj.transparency
+		Yunit.assert(t == 100)
+		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "] Test 2 >>>>>>>>>>>>>>>>>>>>>>>>>>"
+		this.obj.transparency := "OFF"
+		t := this.obj.transparency
+		Yunit.assert(t == 255)
+		OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
+	}
 	End()
     {
 		this.obj.kill()
