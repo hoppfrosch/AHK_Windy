@@ -27,7 +27,7 @@
 */
 class WindowHandler {
 	
-	_version := "0.5.5"
+	_version := "0.5.6"
 	_debug := 0
 	_hWnd := 0
 	
@@ -45,7 +45,7 @@ __Set(aName, aValue) {
 		
 		if (aName = "alwaysOnTop") {
 		; See documentation on alwaysOnTop [get]
-			this.__alwaysOnTop(aValue)
+			return this.__alwaysOnTop(aValue)
 		}
 		else if (aName = "hidden") {
 		; See documentation on hidden [get]
@@ -308,6 +308,7 @@ Author(s):
 		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> CurrentState:" this.alwaysontop ; _DBG_
 		foundpos := RegExMatch(mode, "i)1|0|toggle")
+		
 		if (foundpos = 0)
 			mode := "toggle"
 
@@ -316,12 +317,15 @@ Author(s):
 		mode_bak := mode
 		if (mode == true)
 			mode := "on"
-		else if (mode == false)
+		else if (mode == false) 
 			mode := "off"
+
 		WinSet, AlwaysOnTop, %mode%,  ahk_id %val%
 			
 		if (this._debug) ; _DBG_
 			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode_bak ")] -> NewState:" this.alwaysontop ; _DBG_
+		
+		return this.__isAlwaysOnTop()
 	}
 
 	/* ===============================================================================
