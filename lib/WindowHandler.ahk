@@ -27,7 +27,7 @@
 */
 class WindowHandler {
 	
-	_version := "0.5.7"
+	_version := "0.5.8"
 	_debug := 0
 	_hWnd := 0
 	
@@ -45,7 +45,7 @@ __Set(aName, aValue) {
 		
 		if (aName = "alwaysOnTop") {
 		; See documentation on alwaysOnTop [get]
-			return this.__alwaysOnTop(aValue)
+			return this.__setAlwaysOnTop(aValue)
 		}
 		else if (aName = "hidden") {
 		; See documentation on hidden [get]
@@ -98,12 +98,12 @@ Author(s):
 			### Valid values			
 				* `true` or `1` - activates *Always-On-Top*-State
 				* `false` or `0` - deactivates *Always-On-Top*-State
-			To toogle current *Always-On-Top*-State, simply use `obj.alwaysOnTop := !obj.alwaysOnTop`	
+			    * To toogle current *Always-On-Top*-State, simply use `obj.alwaysOnTop := !obj.alwaysOnTop`	
 				
 			### Author(s)
 				* 20130426 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
 	*/
-			ret := this.__isAlwaysOnTop()
+			ret := this.__getAlwaysOnTop()
 		}
 		else if (aName = "centercoords") { ; center coordinate of the current window
 	/*! ---------------------------------------------------------------------------------------
@@ -141,7 +141,7 @@ Author(s):
 			### Valid values			
 				* `true` or `1` - activates *Hidden*-State
 				* `false` or `0` - deactivates *Hidden*-State
-			To toogle current *Hidden*-State, simply use `obj.hidden := !obj.hidden`	
+			    * To toogle current *Hidden*-State, simply use `obj.hidden := !obj.hidden`	
 				
 			### Author(s)
 				* 20130426 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
@@ -285,36 +285,52 @@ Author(s):
 		return ret
 	}
 
-	/* ===============================================================================
-		Method: __alwaysOnTop(mode:="toggle")
-			Sets *Always-On-Top*-Mode for window
-			
-			**Better use property-set functionality for this: `[alwaysOnTop](#alwaysOnTop)`**
-			
-			*Always-On-Top* can be explicitly switched on or off using the given parameter. If the parameter is missing the *Always-On-Top* state is toggled
-			
-			The current *Always-On-Top* state can be retrieved via property [alwaysOnTop](#alwaysOnTop).
-		Parameters:
-			mode - *(Optional)* true (1),  false (0), "toggle"
-		Remarks:
-			### See also: 
-				[alwaysOnTop](#alwaysOnTop)
-			
-			### Author(s)
-				* 20130308 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
-	*/
-	__alwaysOnTop(mode:="toggle") 
+/*
+===============================================================================
+Function:   __getAlwaysOnTop
+	Determine whether window is set to "always on top" (*INTERNAL*)
+
+Returns:
+	True or False
+
+See also:  
+	<alwaysOnTop>, <__Get>
+
+Author(s):
+	20130308 - hoppfrosch@ahk4.me - Initial
+===============================================================================
+*/
+	__getAlwaysOnTop() {
+		val := this._hWnd
+		ret := (this.styleEx & 0x08) ; WS_EX_TOPMOST
+		ret := ret>0?1:0
+		
+		if (this._debug) ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_
+		return ret
+	}
+
+/* ===============================================================================
+Method: __setAlwaysOnTop(mode)
+	Sets *Always-On-Top*-Mode for window (*INTERNAL*)
+
+	*Always-On-Top* can be explicitly switched on or off using the given parameter. If the parameter is missing the *Always-On-Top* state is toggled
+	
+	The current *Always-On-Top* state can be retrieved via property [alwaysOnTop](#alwaysOnTop).
+	
+Parameters:
+	mode -  true (1),  false (0)
+
+Remarks:
+	### Author(s)
+		* 20130308 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
+*/
+	__setAlwaysOnTop(mode) 
 	{
 		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> CurrentState:" this.alwaysontop ; _DBG_
-		foundpos := RegExMatch(mode, "i)1|0|toggle")
 		
-		if (foundpos = 0)
-			mode := "toggle"
-
-		StringLower mode,mode	
 		val := this._hWnd
-		mode_bak := mode
 		if (mode == true)
 			mode := "on"
 		else if (mode == false) 
@@ -323,9 +339,9 @@ Author(s):
 		WinSet, AlwaysOnTop, %mode%,  ahk_id %val%
 			
 		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode_bak ")] -> NewState:" this.alwaysontop ; _DBG_
+			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> NewState:" this.alwaysontop ; _DBG_
 		
-		return this.__isAlwaysOnTop()
+		return this.alwaysOnTop
 	}
 
 
@@ -733,31 +749,6 @@ Author(s):
 			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], transparency=" transOrig "(" transparency "))] -> NewState:" this.transparency ; _DBG_
 		
 		return transparency
-	}
-
-/*
-===============================================================================
-Function:   __isAlwaysOnTop
-	Determine whether window is set to "always on top" (*INTERNAL*)
-
-Returns:
-	True or False
-
-See also:  
-	<alwaysOnTop>, <__Get>
-
-Author(s):
-	20130308 - hoppfrosch@ahk4.me - Initial
-===============================================================================
-*/
-	__isAlwaysOnTop() {
-		val := this._hWnd
-		ret := (this.styleEx & 0x08) ; WS_EX_TOPMOST
-		ret := ret>0?1:0
-		
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_
-		return ret
 	}
 
 /*

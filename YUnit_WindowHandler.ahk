@@ -11,12 +11,12 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.5.7"
+ReferenceVersion := "0.5.8"
 debug := 1
 
 
 ;Yunit.Use(YunitStdOut, YunitWindow).Test(HideShowTestSuite)
-Yunit.Use(YunitStdOut, YunitWindow).Test(TransparencyTestSuite, MiscTestSuite, NotRealWindowTestSuite, HideShowTestSuite, ExistTestSuite, RollupTestSuite, MoveResizeTestSuite, TileTestSuite)
+Yunit.Use(YunitStdOut, YunitWindow).Test(MiscTestSuite, NotRealWindowTestSuite, HideShowTestSuite, ExistTestSuite, RollupTestSuite, MoveResizeTestSuite, TileTestSuite, TransparencyTestSuite)
 Return
 
 ; ###################################################################
@@ -31,29 +31,21 @@ class TransparencyTestSuite
 	transparency() {
 		Global debug
 
-		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "] Test 1 >>>>>>>>>>>>>>>>>>>>>>>>>>"
+		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
+		OutputDebug % "******************************* " A_ThisFunc " 1 ****************************"
 		t := this.obj.transparency
 		Yunit.assert(t == 255)
-		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "] Test 2 >>>>>>>>>>>>>>>>>>>>>>>>>>"
+		OutputDebug % "******************************* " A_ThisFunc " 3 ****************************"
 		this.obj.transparency := 100
 		t := this.obj.transparency
 		Yunit.assert(t == 100)
-		OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
-	}
-	
-	transparency2() {
-		Global debug
-
-		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "] Test 1 >>>>>>>>>>>>>>>>>>>>>>>>>>"
-		this.obj.transparency := 100
-		t := this.obj.transparency
-		Yunit.assert(t == 100)
-		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "] Test 2 >>>>>>>>>>>>>>>>>>>>>>>>>>"
+		OutputDebug % "******************************* " A_ThisFunc " 3 ****************************"
 		this.obj.transparency := "OFF"
 		t := this.obj.transparency
 		Yunit.assert(t == 255)
 		OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
 	}
+	
 	End()
     {
 		this.obj.kill()
