@@ -27,7 +27,7 @@
 */
 class WindowHandler {
 	
-	_version := "0.5.8"
+	_version := "0.5.9"
 	_debug := 0
 	_hWnd := 0
 	
@@ -53,7 +53,7 @@ __Set(aName, aValue) {
 		}
 		else if (aName = "minimized") {
 		; See documentation on minimized [get]
-			this.__minimize(aValue)
+			this.__setMinimized(aValue)
 		}
 		else if (aName = "maximized") {
 		; See documentation on maximized [get]
@@ -173,12 +173,12 @@ Author(s):
 			### Valid values			
 				* `true` or `1` - activates *Minimized*-State
 				* `false` or `0` - deactivates *Minimized*-State
-			To toogle current *Minimized*-State, simply use `obj.minimized := !obj.maximized`	
+			    * To toogle current *Minimized*-State, simply use `obj.minimized := !obj.minimized`	
 				
 			### Author(s)
 				* 20130429 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
 	*/
-			ret := this.__isMinimized()
+			ret := this.__getMinimized()
 		}
 		else if (aName = "monitorID") {
 	/*! ---------------------------------------------------------------------------------------
@@ -401,7 +401,7 @@ See also:
 	*/
 	__setHidden(mode) {
 		if (this._debug) ; _DBG_
-			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> CurrentState:" this.__getHidden() ; _DBG_
+			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> CurrentState:" this.hidden ; _DBG_
 
 		val := this._hWnd
 		ret := 0
@@ -414,7 +414,7 @@ See also:
 			ret := 0
 		}
 		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> NewState:" this.__getHidden() ; _DBG_
+			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> NewState:" this.hidden ; _DBG_
 		
 		return ret
 	}
@@ -450,8 +450,6 @@ See also:
 		Parameters:
 			mode - *(Optional)* true (1),  false (0), "toggle"
 		Remarks:
-			### See also: 
-			[__minimize()](#__minimize)
 			
 			### Author(s)
 				* 20130415 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
@@ -479,33 +477,45 @@ See also:
 			WinRestore % "ahk_id" this._hWnd
 		DetectHiddenWindows, %prevState%
 	}
-	
-	/* ===============================================================================
-		Method: __minimize(mode="toggle")
-			Sets/Toggles *Minimized* state of the window
+
+
+/*
+===============================================================================
+Function:   __getMinimized
+	Checks whether the given hWnd refers to a Minimized window (*INTERNAL*)
+
+Returns:
+	true (window is a Minimized window), false (window is not a Minimized window)
+
+Author(s):
+	20130415 - hoppfrosch@ahk4.me - Original
+===============================================================================
+*/
+	__getMinimized() {
+		val := this._hWnd
+		WinGet, s, MinMax, ahk_id %val% 
+		ret := 0
+		if (s == -1)
+			ret := 1	
+		return ret
+	}
+
+/* ===============================================================================
+Method: __setMinimized(mode)
+	Sets *Minimized* state of the window (*INTERNAL*)
 			
-			**Better use property-set functionality for this: `[minimized](#minimized)`**
-		Parameters:
-			mode - *(Optional)* true (1),  false (0), "toggle"
-		Remarks:
-			### See also: 
-			[__maximize()](#__maximize)
-			
-			### Author(s)
-				* 20130416 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
-	*/
-	__minimize(mode="toggle") {
+Parameters:
+	mode - true (1),  false (0)
+
+Remarks:
+	### Author(s)
+		* 20130416 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
+*/
+	__setMinimized(mode) {
 		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> CurrentState:" this.minimized ; _DBG_
-		foundpos := RegExMatch(mode, "i)1|0|toggle")
-		if (foundpos = 0)
-			mode := "toggle"
-		StringLower mode,mode	
 		newState := 1
-		if (mode == "toggle") {
-			newState := !(this.minimized)
-		}
-		else if (mode == 0) {
+		if (mode == 0) {
 			newState := 0
 		}
 		
@@ -516,6 +526,11 @@ See also:
 		else 
 			WinRestore % "ahk_id" this._hWnd
 		DetectHiddenWindows, %prevState%
+
+		if (this._debug) ; _DBG_
+			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> NewState:" this.minimized ; _DBG_
+
+		return this.minimized
 	}
 	
 	/*! ===============================================================================
@@ -768,31 +783,6 @@ Author(s):
 		WinGet, s, MinMax, ahk_id %val% 
 		ret := 0
 		if (s == 1)
-			ret := 1
-			
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" val "])] -> " ret ; _DBG_		
-	
-		return ret
-	}
-
-/*
-===============================================================================
-Function:   __isMinimized
-	Checks whether the given hWnd refers to a Minimized window (*INTERNAL*)
-
-Returns:
-	true (window is a Minimized window), false (window is not a Minimized window)
-
-Author(s):
-	20130415 - hoppfrosch@ahk4.me - Original
-===============================================================================
-*/
-	__isMinimized() {
-		val := this._hWnd
-		WinGet, s, MinMax, ahk_id %val% 
-		ret := 0
-		if (s == -1)
 			ret := 1
 			
 		if (this._debug) ; _DBG_
