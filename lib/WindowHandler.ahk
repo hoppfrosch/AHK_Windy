@@ -30,7 +30,7 @@
 */
 class WindowHandler {
 	
-	_version := "0.5.10"
+	_version := "0.5.11"
 	_debug := 0
 	_hWnd := 0
 	
@@ -63,7 +63,7 @@ class WindowHandler {
 			this.__setMaximized(aValue)
 		}
 		else if (aName == "rolledUp") {
-			this.__rollUp(aValue)
+			this.__setRolledUp(aValue)
 		}
 		else if (aName == "pos") {
 			this.move(aValue.x, avalue.y, avalue.w, avalue.h)
@@ -192,7 +192,7 @@ class WindowHandler {
 	Remarks:		
 		* To toogle current *rolledUp*-Property, simply use `objrolledUp := !obj.rolledUp`
 */
-			ret := this.__isRolledUp()
+			ret := this.__getRolledUp()
 		}
 		else if (aName = "rolledUpHeight") {
 /*! ---------------------------------------------------------------------------------------
@@ -419,6 +419,68 @@ class WindowHandler {
 
 		return this.minimized
 	}
+	__getRolledUp() {
+/* ===============================================================================
+	Method:   __getRolledUp
+		Checks whether the window is rolled up (*INTERNAL*)
+	Returns:
+		true (window is rolled up), false (window is not rolled up) or -1 (window does not exist at all)
+*/
+		ret := 0
+		if !this.exist {
+			; the window does not exist at all ...
+			ret := -1
+		}
+		else {
+			currPos := this.pos
+			if (currPos.h <= this.rolledUpHeight) {
+				ret := 1
+			}
+		}
+		if (this._debug) ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
+		return ret
+	}
+	__setRolledUp(mode) {
+/* ===============================================================================
+	Method: __setRolledUp(mode) {
+		Sets *rollup* Property of the window. The window cann be rolled up (minimized) to its titlebar and unrolled again.
+	Parameters:
+		mode - true (1),  false (0)
+*/
+		roll := 1
+		if (mode == 1) 		
+			roll := 1
+		else if (mode == 0) 
+			if (this.rolledUp == true)
+				roll := 0 ; Only rolled window can be unrolled
+			else
+				roll := -1 ; As window is not rolled up, you cannot unroll it as requested ....
+		else {
+			if (this.rolledUp == true)
+				roll := 0
+			else
+				roll := 1
+		}
+		
+		; Determine the minmal height of a window
+		MinWinHeight := this.rolledUpHeight
+		; Get size of current window
+		hwnd := this._hWnd
+		currPos := this.pos
+	
+		if (roll == 1) { ; Roll
+            this.move(currPos.x, currPos.y, currPos.w, MinWinHeight)
+		}
+		else if (roll = 0) { ; Unroll
+			this.__posRestore()			
+		}
+		
+		if (this._debug) ; _DBG_
+			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> New Value:" this.rolledUp ; _DBG_
+
+		return roll
+	}
 	__getTransparency() {
 /* ===============================================================================
 	Method:   __getTransparency
@@ -558,57 +620,6 @@ class WindowHandler {
 			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], xFactor=" xFactor ", yFactor=" yFactor ", wFactor=" wFactor ", hFactor=" hFactor ")] -> padded to (" this.pos.Dump() ") on Monitor (" monId ")" ; _DBG_
 	}
 	
-/* ===============================================================================
-	Method: __rollup(mode="toggle") {
-		Sets/Toggles *Rollup* Property of the window. The window cann be rolled up (minimized) to its titlebar and unrolled again.
-		**Better use property-set functionality for this: `[rolledUp](#rolledUp)`**
-	Parameters:
-		mode - *(Optional)* true (1),  false (0), "toggle"
-	Remarks:
-		### Author(s)
-			* 20130312 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
-*/
-	__rollup(mode="toggle") {
-		if (this._debug) ; _DBG_
-			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> Current Value:" this.rolledUp ; _DBG_
-		foundpos := RegExMatch(mode, "i)0|1|toggle")
-		if (foundpos = 0)
-			mode := "toggle"
-
-		StringLower mode,mode
-
-		roll := 1
-		if (mode == 1) 		
-			roll := 1
-		else if (mode == 0) 
-			if (this.rolledUp == true)
-				roll := 0 ; Only rolled window can be unrolled
-			else
-				roll := -1 ; As window is not rolled up, you cannot unroll it as requested ....
-		else {
-			if (this.rolledUp == true)
-				roll := 0
-			else
-				roll := 1
-		}
-		
-		; Determine the minmal height of a window
-		MinWinHeight := this.rolledUpHeight
-		; Get size of current window
-		hwnd := this._hWnd
-		currPos := this.pos
-	
-		if (roll == 1) { ; Roll
-            this.move(currPos.x, currPos.y, currPos.w, MinWinHeight)
-		}
-		else if (roll = 0) { ; Unroll
-			this.__posRestore()			
-		}
-		
-		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> New Value:" this.rolledUp ; _DBG_
-
-	}
 
 /* ===============================================================================
 Method: __centercoords
@@ -691,34 +702,6 @@ Author(s):
 		
 		return ret
 }
-
-/* ===============================================================================
-Method:   __isRolledUp
-	Checks whether the window is rolled up (*INTERNAL*)
-
-Returns:
-	true (window is rolled up), false (window is not rolled up) or -1 (window does not exist at all)
-
-Author(s):
-	20130312 - hoppfrosch@ahk4.me - Original
-	*/
-	__isRolledUp() {
-		ret := 0
-		if !this.exist {
-			; the window does not exist at all ...
-			ret := -1
-		}
-		else {
-			currPos := this.pos
-			if (currPos.h <= this.rolledUpHeight) {
-				ret := 1
-			}
-		}
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
-		return ret
-	}
-
 
 /* ===============================================================================
 Method:   __isWindow
