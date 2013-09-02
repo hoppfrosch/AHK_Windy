@@ -27,7 +27,7 @@
 */
 class WindowHandler {
 	
-	_version := "0.5.9"
+	_version := "0.5.10"
 	_debug := 0
 	_hWnd := 0
 	
@@ -57,7 +57,7 @@ __Set(aName, aValue) {
 		}
 		else if (aName = "maximized") {
 		; See documentation on maximized [get]
-			this.__maximize(aValue)
+			this.__setMaximized(aValue)
 		}
 		else if (aName = "rolledUp") {
 		; See documentation on rolledUp [get]
@@ -157,12 +157,12 @@ Author(s):
 			### Valid values			
 				* `true` or `1` - activates  *Maximized*-State
 				* `false` or `0` - deactivates  *Maximized*-State
-			To toogle current *Maximized*-State, simply use `obj.maximized := !obj.maximized`	
+			    * To toogle current *Maximized*-State, simply use `obj.maximized := !obj.maximized`	
 				
 			### Author(s)
 				* 20130429 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
 	*/
-			ret := this.__isMaximized()
+			ret := this.__getMaximized()
 		}
 		else if (aName = "minimized") {
 	/*! ---------------------------------------------------------------------------------------
@@ -442,30 +442,42 @@ See also:
 		DetectHiddenWindows, %prevState%
 	}
 
-	/* ===============================================================================
-		Method: __maximize(mode="toggle")
-			Sets/Toggles *Maximize* state of the window
-			
-			**Better use property-set functionality for this: `[maximize](#maximize)`**
-		Parameters:
-			mode - *(Optional)* true (1),  false (0), "toggle"
-		Remarks:
-			
-			### Author(s)
-				* 20130415 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
-	*/
-	__maximize(mode="toggle") {
-		if (this._debug) ; _DBG_
-			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> CurrentState:" this.maximized ; _DBG_
-		foundpos := RegExMatch(mode, "i)0|1|toggle")
-		if (foundpos = 0)
-			mode := "toggle"
-		StringLower mode,mode	
+/*
+===============================================================================
+Function:   __isMaximized
+	Checks whether the given hWnd refers to a maximized window (*INTERNAL*)
+
+Returns:
+	true (window is a maximized window), false (window is not a maximized window)
+
+Author(s):
+	20130415 - hoppfrosch@ahk4.me - Original
+===============================================================================
+*/
+	__getMaximized() {
+		val := this._hWnd
+		WinGet, s, MinMax, ahk_id %val% 
+		ret := 0
+		if (s == 1)
+			ret := 1	
+		return ret
+	}
+	
+/* ===============================================================================
+	Method: __setMaximized(mode)
+		Sets *Maximized* state of the window (*UINTERNAL *)
+
+	Parameters:
+		mode - *(Optional)* true (1),  false (0), "toggle"
+
+	Remarks:
+
+		### Author(s)
+			* 20130415 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
+*/
+	__setMaximized(mode) {
 		newState := 1
-		if (mode == "toggle") {
-			newState := !(this.maximized)
-		}
-		else if (mode == 0) {
+		if (mode == 0) {
 			newState := 0
 		}
 		
@@ -476,6 +488,11 @@ See also:
 		else 
 			WinRestore % "ahk_id" this._hWnd
 		DetectHiddenWindows, %prevState%
+
+		if (this._debug) ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> NewState:" this.maximized ; _DBG_
+		
+		return this.maximized
 	}
 
 
@@ -512,8 +529,6 @@ Remarks:
 		* 20130416 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
 */
 	__setMinimized(mode) {
-		if (this._debug) ; _DBG_
-			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> CurrentState:" this.minimized ; _DBG_
 		newState := 1
 		if (mode == 0) {
 			newState := 0
@@ -764,31 +779,6 @@ Author(s):
 			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], transparency=" transOrig "(" transparency "))] -> NewState:" this.transparency ; _DBG_
 		
 		return transparency
-	}
-
-/*
-===============================================================================
-Function:   __isMaximized
-	Checks whether the given hWnd refers to a maximized window (*INTERNAL*)
-
-Returns:
-	true (window is a maximized window), false (window is not a maximized window)
-
-Author(s):
-	20130415 - hoppfrosch@ahk4.me - Original
-===============================================================================
-*/
-	__isMaximized() {
-		val := this._hWnd
-		WinGet, s, MinMax, ahk_id %val% 
-		ret := 0
-		if (s == 1)
-			ret := 1
-			
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" val "])] -> " ret ; _DBG_		
-	
-		return ret
 	}
 
 /*
