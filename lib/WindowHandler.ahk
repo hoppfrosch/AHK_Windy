@@ -11,8 +11,11 @@
 	Extra:
 		### License
 			This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See [WTFPL](http://www.wtfpl.net/) for more details.
+
+	Remarks:
 		### Author
 			[hoppfrosch](hoppfrosch@ahk4.me)
+
 		### To Be done
 			* Implement `__Setter()`-functionality
 				* `monitorID`
@@ -23,7 +26,7 @@
 			* New functionality
 				* Method `close()`
 				* Property `active` (getter (Is window active window?) and setter (activate/deactivate window))
-				* Property `titlebar` (getter and setter (enable/disable titlebar))
+				* Property `titlebar` (getter and setter (enable/disable titlebar)
 */
 class WindowHandler {
 	
@@ -39,242 +42,201 @@ class WindowHandler {
 
 	_posStack := 0
 
-
-__Set(aName, aValue) {
+    ; ###################### Helper functions for properties (Getter/Setter implementation) ############################
+	__Set(aName, aValue) {
+/* ===============================================================================
+	Method: __Set(aName, aValue)
+		Custom Setter (*INTERNAL*)
+*/   
 		ret :=
 		
-		if (aName = "alwaysOnTop") {
-		; See documentation on alwaysOnTop [get]
+		if (aName == "alwaysOnTop") {
 			return this.__setAlwaysOnTop(aValue)
 		}
-		else if (aName = "hidden") {
-		; See documentation on hidden [get]
+		else if (aName == "hidden") {
 			return this.__setHidden(aValue)
 		}
-		else if (aName = "minimized") {
-		; See documentation on minimized [get]
+		else if (aName == "minimized") {
 			this.__setMinimized(aValue)
 		}
-		else if (aName = "maximized") {
-		; See documentation on maximized [get]
+		else if (aName == "maximized") {
 			this.__setMaximized(aValue)
 		}
-		else if (aName = "rolledUp") {
-		; See documentation on rolledUp [get]
+		else if (aName == "rolledUp") {
 			this.__rollUp(aValue)
 		}
-		else if (aName = "pos") {
-		; See documentation on property pos [get]
+		else if (aName == "pos") {
 			this.move(aValue.x, avalue.y, avalue.w, avalue.h)
 		}
-		else if (aName = "transparency") {
-		; See documentation on property transparency [get]
+		else if (aName == "transparency") {
 			return this.__setTransparency(aValue)
 		}
 
 
 	}
-
-/*
-===============================================================================
-Function: __Get
-	Custom Getter (*INTERNAL*)
-	
-Author(s):
-	20121030 - hoppfrosch - Original
-===============================================================================
-*/     
 	__Get(aName) {
+/* ===============================================================================
+	Method: __Get(aName)
+		Custom Getter (*INTERNAL*)
+*/   
 		ret := 
 		written := 0 ; _DBG_
 
 	
         if (aName = "alwaysOnTop") {
-	/*! ---------------------------------------------------------------------------------------
-		Property: alwaysOnTop [get/set]
-			Get or Set the *Always-On-Top*-State
-			
-		Extra:
-			### Valid values			
-				* `true` or `1` - activates *Always-On-Top*-State
-				* `false` or `0` - deactivates *Always-On-Top*-State
-			    * To toogle current *Always-On-Top*-State, simply use `obj.alwaysOnTop := !obj.alwaysOnTop`	
-				
-			### Author(s)
-				* 20130426 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
-	*/
+/*! ---------------------------------------------------------------------------------------
+	Property: alwaysOnTop [get/set]
+		Get or Set the *alwaysontop*-Property.  Set/Unset alwaysontop flag of the current window or get the current state
+	Value:
+		flag - `true` or `false` (activates/deactivates *alwaysontop*-Property)
+	Remarks:		
+		* To toogle current *alwaysontop*-Property, simply use `obj.alwaysontop := !obj.alwaysontop`
+*/
 			ret := this.__getAlwaysOnTop()
 		}
-		else if (aName = "centercoords") { ; center coordinate of the current window
-	/*! ---------------------------------------------------------------------------------------
-		Property: centercoords [get]
-			Returns the coordinates of the center of the window as a [Rectangle](Rectangle.html)-object
+		else if (aName = "centercoords") {
+/*! ---------------------------------------------------------------------------------------
+	Property: centercoords [get]
+		Returns the coordinates of the center of the window as a [Rectangle](Rectangle.html)-object
 			
-			**ToBeDone: Implementation of Setter-functionality**
-	*/
+		**ToBeDone: Implementation of Setter-functionality**
+*/
 			ret := this.__centercoords()
 		}
         else if (aName = "classname") {
-	/*! ---------------------------------------------------------------------------------------
-		Property: classname [get]
-			Returns the name of the window class
-			
-			There is no setter available, since this is a constant window property
-	*/
+/*! ---------------------------------------------------------------------------------------
+	Property: classname [get]
+		Get the name of the window class. There is no setter available, since this is a constant window property
+*/
 			ret := this.__classname()
 		}
 		else if (aName = "exist") {
-	/*! ---------------------------------------------------------------------------------------
-		Property: exist [get]
-			Checks whether the window still exists
-			
-			There is no setter available, since user cannot enforce existance of window
-	*/
+/*! ---------------------------------------------------------------------------------------
+	Property: exist [get]
+		Checks whether the window still exists. There is no setter available, since user cannot enforce existance of window
+*/
 			ret := this.__exist()
 		}
 		else if (aName = "hidden") {
-	/*! ---------------------------------------------------------------------------------------
-		Property: hidden [get/set]
-			Get or Set the *Hidden*-State
-			
-		Remarks:
-			### Valid values			
-				* `true` or `1` - activates *Hidden*-State
-				* `false` or `0` - deactivates *Hidden*-State
-			    * To toogle current *Hidden*-State, simply use `obj.hidden := !obj.hidden`	
-				
-			### Author(s)
-				* 20130426 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
-	*/
+/*! ---------------------------------------------------------------------------------------
+	Property: hidden [get/set]
+		Get or Set the *hidden*-Property. Hides/Unhide the current window or get the current state of hiding
+	Value:
+		flag - `true` or `false` (activates/deactivates *hidden*-Property)
+	Remarks:		
+		* To toogle current *hidden*-Property, simply use `obj.hidden := !obj.hidden`	
+*/
 			ret := this.__getHidden()
 		}
 		else if (aName = "maximized") {
-	/*! ---------------------------------------------------------------------------------------
-		Property: maximized [get/set]
-			Get or Set the *Maximized*-State
-			
-		Remarks:
-			### Valid values			
-				* `true` or `1` - activates  *Maximized*-State
-				* `false` or `0` - deactivates  *Maximized*-State
-			    * To toogle current *Maximized*-State, simply use `obj.maximized := !obj.maximized`	
-				
-			### Author(s)
-				* 20130429 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
-	*/
+/*! ---------------------------------------------------------------------------------------
+	Property: maximized [get/set]
+		Get or Set the *maximized*-Property. Maximizes/Demaximizes the current window or get the current state of maximization
+	Value:
+		flag - `true` or `false` (activates/deactivates *maximized*-Property)
+	Remarks:		
+		* To toogle current *maximized*-Property, simply use `obj.maximized := !obj.maximized`	
+*/
 			ret := this.__getMaximized()
 		}
 		else if (aName = "minimized") {
-	/*! ---------------------------------------------------------------------------------------
-		Property: minimized [get/set]
-			Get or Set the *Minimized*-State
-			
-		Remarks:
-			### Valid values			
-				* `true` or `1` - activates *Minimized*-State
-				* `false` or `0` - deactivates *Minimized*-State
-			    * To toogle current *Minimized*-State, simply use `obj.minimized := !obj.minimized`	
-				
-			### Author(s)
-				* 20130429 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
-	*/
+/*! ---------------------------------------------------------------------------------------
+	Property: minimized [get/set]
+		Get or Set the *minimized*-Property. Minimizes/Deminimizes the current window or get the current state of minimization
+	Value:
+		flag - `true` or `false` (activates/deactivates *minimized*-Property)
+	Remarks:		
+		* To toogle current *minimized*-Property, simply use `obj.minimized := !obj.minimized`	
+*/
 			ret := this.__getMinimized()
 		}
 		else if (aName = "monitorID") {
-	/*! ---------------------------------------------------------------------------------------
-		Property: monitorID [get]
-			Returns the ID of monitor on which the window is on
-			
-			**ToBeDone: Implementation of Setter-functionality**
-	*/
+/*! ---------------------------------------------------------------------------------------
+	Property: monitorID [get]
+		Returns the ID of monitor on which the window is on
+		
+		**ToBeDone: Implementation of Setter-functionality**
+*/
 			ret := this.__monitorID()
 		}
 		else if (aName = "pos") { ; current position
-	/*! ---------------------------------------------------------------------------------------
-		Property: pos [get/set]
-			Get or Set the position and size of the window (To set the position use class [Rectangle](rectangle.html))
-			
-		Example:
-			`obj.pos := new [Rectangle](rectangle.html)(xnew, ynew, wnew, hnew)`
-			
-		Extra:
-			### Author(s)
-				* 20130429 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
-	*/
+/*! ---------------------------------------------------------------------------------------
+	Property: pos [get/set]
+		Get or Set the position and size of the window (To set the position use class [Rectangle](rectangle.html))	
+	Example:
+		`obj.pos := new [Rectangle](rectangle.html)(xnew, ynew, wnew, hnew)`	
+	Extra:
+		### Author(s)
+			* 20130429 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
+*/
 			ret := this.__pos()
 			written := 1 ; _DBG_
 			if (this._debug) ; _DBG_
 				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret.dump() ; _DBG_
 		}
 		else if (aName = "resizeable") { 
-	/*! ---------------------------------------------------------------------------------------
-		Property: resizeable [get]
-			Checks whether window is resizeable
-			
-			**ToBeDone: Implementation of Setter-functionality**
-	*/
+/*! ---------------------------------------------------------------------------------------
+	Property: resizeable [get]
+		Checks whether window is resizeable
+	
+		**ToBeDone: Implementation of Setter-functionality**
+*/
 			ret := this.__isResizable()
 		}
 		else if (aName = "rolledUp") {
-	/*! ---------------------------------------------------------------------------------------
-		Property: rolledUp [get/set]
-			Get or Set the *RolledUp*-State  (window is rolled up to its title bar)
-			
-		Remarks:
-			### Valid values			
-				* `true` or `1` - activates *RolledUp*-State
-				* `false` or `0` - deactivates *RolledUp*-State
-				
-			To toogle current *RolledUp*-State, simply use `obj.rolledUp := !obj.rolledUp`	
-				
-			### Author(s)
-				* 20130429 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
-	*/
+/*! ---------------------------------------------------------------------------------------
+	Property: rolledUp [get/set]
+		Get or Set the *RolledUp*-Property (window is rolled up to its title bar).  Rolls/De-Rolls the current window or get the current state of RollUp
+	Value:
+		flag - `true` or `false` (activates/deactivates *rolledUp*-Property)
+	Remarks:		
+		* To toogle current *rolledUp*-Property, simply use `objrolledUp := !obj.rolledUp`
+*/
 			ret := this.__isRolledUp()
 		}
 		else if (aName = "rolledUpHeight") {
-	/*! ---------------------------------------------------------------------------------------
-		Property: rolledUpHeight [get]
-			Returns the height of the caption bar of windows
-			
-			There is no setter available, since this is a system constant
-	*/
+/*! ---------------------------------------------------------------------------------------
+	Property: rolledUpHeight [get]
+		Returns the height of the caption bar of windows
+	
+    	There is no setter available, since this is a system constant
+*/
 			SysGet, ret, 29
 		}
 		else if (aName = "style") {
-	/*! ---------------------------------------------------------------------------------------
-		Property: style [get]
-			Returns current window style
-			
-			**ToBeDone: Implementation of Setter-functionality**
-	*/
+/*! ---------------------------------------------------------------------------------------
+	Property: style [get]
+		Returns current window style
+	
+    	**ToBeDone: Implementation of Setter-functionality**
+*/
 			ret := this.__style()
 		}
 		else if (aName = "styleEx") {
-	/*! ---------------------------------------------------------------------------------------
-		Property: styleEx [get]
-			Returns current window extended style
-			
-			**ToBeDone: Implementation of Setter-functionality**
-	*/
+/*! ---------------------------------------------------------------------------------------
+	Property: styleEx [get]
+		Returns current window extended style
+		
+		**ToBeDone: Implementation of Setter-functionality**
+*/
 			ret := this.__styleEx()
 		}
 		else if (aName = "transparency") {
-	/*! ---------------------------------------------------------------------------------------
-		Property: transparency [get/set]
-			Get or Set the transparency of the window
+/*! ---------------------------------------------------------------------------------------
+	Property: transparency [get/set]
+		Get or Set the transparency of the window
 			
-			**ToBeDone: Implementation of Setter-functionality**
-	*/
+		**ToBeDone: Implementation of Setter-functionality**
+*/
 			ret := this.__getTransparency()
 		}
 		else if (aName = "title") {
-	/*! ---------------------------------------------------------------------------------------
-		Property: title [get]
-			Returns current window title
+/*! ---------------------------------------------------------------------------------------
+	Property: title [get]
+		Returns current window title
 			
-			There is no setter available, since this is a constant window property
-	*/
+		There is no setter available, since this is a constant window property
+*/
 			ret :=  this.__title()
 		}
 		
@@ -284,23 +246,14 @@ Author(s):
 
 		return ret
 	}
-
-/*
-===============================================================================
-Function:   __getAlwaysOnTop
-	Determine whether window is set to "always on top" (*INTERNAL*)
-
-Returns:
-	True or False
-
-See also:  
-	<alwaysOnTop>, <__Get>
-
-Author(s):
-	20130308 - hoppfrosch@ahk4.me - Initial
-===============================================================================
-*/
 	__getAlwaysOnTop() {
+/* ===============================================================================
+	Method:   __getAlwaysOnTop
+		Determine whether window is set to "always on top" (*INTERNAL*)
+
+	Returns:
+		True or False
+*/
 		val := this._hWnd
 		ret := (this.styleEx & 0x08) ; WS_EX_TOPMOST
 		ret := ret>0?1:0
@@ -309,26 +262,15 @@ Author(s):
 			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_
 		return ret
 	}
-
+	__setAlwaysOnTop(mode) 	{
 /* ===============================================================================
-Method: __setAlwaysOnTop(mode)
-	Sets *Always-On-Top*-Mode for window (*INTERNAL*)
-
-	*Always-On-Top* can be explicitly switched on or off using the given parameter. If the parameter is missing the *Always-On-Top* state is toggled
-	
-	The current *Always-On-Top* state can be retrieved via property [alwaysOnTop](#alwaysOnTop).
-	
-Parameters:
-	mode -  true (1),  false (0)
-
-Remarks:
-	### Author(s)
-		* 20130308 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
+	Method: __setAlwaysOnTop(mode)
+		Sets *alwaysontop*-Mode for window (*INTERNAL*)	
+	Parameters:
+		mode -  true (1),  false (0)
 */
-	__setAlwaysOnTop(mode) 
-	{
 		if (this._debug) ; _DBG_
-			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> CurrentState:" this.alwaysontop ; _DBG_
+			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> Current Value:" this.alwaysontop ; _DBG_
 		
 		val := this._hWnd
 		if (mode == true)
@@ -339,28 +281,17 @@ Remarks:
 		WinSet, AlwaysOnTop, %mode%,  ahk_id %val%
 			
 		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> NewState:" this.alwaysontop ; _DBG_
+			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> New Value:" this.alwaysontop ; _DBG_
 		
 		return this.alwaysOnTop
 	}
-
-
-/*
-===============================================================================
-Function:   __getHidden
-	Get the hidden-attribute of window (*INTERNAL*)
-
-Returns:
-	true (window is hidden), false (window is visible) or -1 (window does not exist at all)
-
-Author(s):
-	20130308 - hoppfrosch@ahk4.me - Original
-	
-See also:
-   <hidden>
-===============================================================================
-*/
 	__getHidden() {
+/* ===============================================================================
+	Method:   __getHidden
+		Get the hidden-attribute of window (*INTERNAL*)
+	Returns:
+		true (window is hidden), false (window is visible) or -1 (window does not exist at all)
+*/
 		prevState := A_DetectHiddenWindows
 		ret := false
 		DetectHiddenWindows, Off
@@ -385,23 +316,15 @@ See also:
 			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
 		return ret
 	}
-
-/* ===============================================================================
-		Method: __setHidden(mode="1")
-			Sets *Hidden*-State for window
-			
-			The current *Hidden* state can be retrieved via property [hidden](#Hidden).
-		Parameters:
-			mode - * true (1),  false (0)
-		Returns:
-			-
-		Remarks:		
-			### Author(s)
-				* 20130902 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
-	*/
 	__setHidden(mode) {
+/* ===============================================================================
+	Method: __setHidden(mode="1")
+		Sets *Hidden*-Property for window
+	Parameters:
+		mode - * true (1),  false (0)
+*/
 		if (this._debug) ; _DBG_
-			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> CurrentState:" this.hidden ; _DBG_
+			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> Current Value:" this.hidden ; _DBG_
 
 		val := this._hWnd
 		ret := 0
@@ -414,47 +337,17 @@ See also:
 			ret := 0
 		}
 		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> NewState:" this.hidden ; _DBG_
+			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> New Value:" this.hidden ; _DBG_
 		
 		return ret
 	}
-
-	/*! ===============================================================================
-		Method: kill()
-			Kills the Window (Forces the window to close)
-			
-			Performs the AHK command `[WinKill](http://www.autohotkey.com/docs/commands/WinKill.htm)`
-			
-		Remarks:
-			### See also: 
-			[close()](#close)
-			
-			### Author(s)
-				* 20130308 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
-	*/
-	kill() {
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])]" ; _DBG_		
-
-		prevState := A_DetectHiddenWindows
-		DetectHiddenWindows, On
-		WinKill % "ahk_id" this._hWnd
-		DetectHiddenWindows, %prevState%
-	}
-
-/*
-===============================================================================
-Function:   __isMaximized
-	Checks whether the given hWnd refers to a maximized window (*INTERNAL*)
-
-Returns:
-	true (window is a maximized window), false (window is not a maximized window)
-
-Author(s):
-	20130415 - hoppfrosch@ahk4.me - Original
-===============================================================================
-*/
 	__getMaximized() {
+/* ===============================================================================
+	Method:  __getMaximized
+		Checks whether the given hWnd refers to a maximized window (*INTERNAL*)
+	Returns:
+		true (window is a maximized window), false (window is not a maximized window)
+*/
 		val := this._hWnd
 		WinGet, s, MinMax, ahk_id %val% 
 		ret := 0
@@ -462,20 +355,13 @@ Author(s):
 			ret := 1	
 		return ret
 	}
-	
+	__setMaximized(mode) {
 /* ===============================================================================
 	Method: __setMaximized(mode)
-		Sets *Maximized* state of the window (*UINTERNAL *)
-
+		Sets *maximized* Property of the window (*INTERNAL *)
 	Parameters:
-		mode - *(Optional)* true (1),  false (0), "toggle"
-
-	Remarks:
-
-		### Author(s)
-			* 20130415 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
+		mode - *(Optional)* true (1),  false (0)
 */
-	__setMaximized(mode) {
 		newState := 1
 		if (mode == 0) {
 			newState := 0
@@ -490,25 +376,17 @@ Author(s):
 		DetectHiddenWindows, %prevState%
 
 		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> NewState:" this.maximized ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> New Value:" this.maximized ; _DBG_
 		
 		return this.maximized
 	}
-
-
-/*
-===============================================================================
-Function:   __getMinimized
-	Checks whether the given hWnd refers to a Minimized window (*INTERNAL*)
-
-Returns:
-	true (window is a Minimized window), false (window is not a Minimized window)
-
-Author(s):
-	20130415 - hoppfrosch@ahk4.me - Original
-===============================================================================
-*/
 	__getMinimized() {
+/* ===============================================================================
+	Method:   __getMinimized
+		Checks whether the given hWnd refers to a Minimized window (*INTERNAL*)
+	Returns:
+		true (window is a Minimized window), false (window is not a Minimized window)
+*/
 		val := this._hWnd
 		WinGet, s, MinMax, ahk_id %val% 
 		ret := 0
@@ -516,19 +394,13 @@ Author(s):
 			ret := 1	
 		return ret
 	}
-
-/* ===============================================================================
-Method: __setMinimized(mode)
-	Sets *Minimized* state of the window (*INTERNAL*)
-			
-Parameters:
-	mode - true (1),  false (0)
-
-Remarks:
-	### Author(s)
-		* 20130416 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
-*/
 	__setMinimized(mode) {
+/* ===============================================================================
+	Method: __setMinimized(mode)
+		Sets *Minimized* Property of the window (*INTERNAL*)
+	Parameters:
+		mode - true (1),  false (0)
+*/
 		newState := 1
 		if (mode == 0) {
 			newState := 0
@@ -543,29 +415,83 @@ Remarks:
 		DetectHiddenWindows, %prevState%
 
 		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> NewState:" this.minimized ; _DBG_
+			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> New Value:" this.minimized ; _DBG_
 
 		return this.minimized
 	}
+	__getTransparency() {
+/* ===============================================================================
+	Method:   __getTransparency
+		Gets the transparency setting of the given hWnd 
+	Returns:
+		transparency
+*/
+		val := this._hWnd
+		WinGet, s, Transparent, ahk_id %val% 
+		ret := 255
+		if (s != "")
+			ret := s
+		
+		if (this._debug) ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_
+		return ret
+	}	
+	__setTransparency(transparency) {
+/* ===============================================================================
+	Method: __setTransparency(transparency)
+		Sets the transparency of the window (*INTERNAL*)
+	Parameters:
+		transparency - transparency to be set (0 (Full Tranyparency) - 255 (No Transparency) OR "OFF")
+*/		
+		val := this._hWnd
+
+		transOrig := transparency
+		if (transparency == "OFF")
+			transparency := 255
 	
-	/*! ===============================================================================
-		Method: move(X,Y,W=99999,H=99999)
-			Moves and/or resizes the window
+		WinSet, Transparent, %transparency%, ahk_id %val% 
+		
+		if (this._debug) ; _DBG_
+			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], transparency=" transOrig "(" transparency "))] -> New Value:" this.transparency ; _DBG_
+		
+		return transparency
+	}
+	
+	; ######################## Methods to be called directly ########################################################### 
+	kill() {
+/*! ===============================================================================
+	Method: kill()
+		Kills the Window (Forces the window to close)
 			
-			The given coordinates/sizes are absolute coordinates/sizes. If the value of any coordinate is equal *99999* the current value keeps unchanged. For example: Resize-only can be performed by `obj.move(99999,99999,width,height)`
-		Parameters:
-			x - x-Coordinate (absolute) the window has to be moved to - use *99999* to preserve actual value
-			y - y-Coordinate (absolute) the window has to be moved to - use *99999* to preserve actual value
-			w - *(Optional)* width (absolute) the window has to be resized to - use *99999* to preserve actual value
-			h - *(Optional)* height (absolute) the window has to be resized to - use *99999* to preserve actual value
-		Remarks:
-			### See also: 
-			[movePercental()](movePercental)
+		Performs the AHK command `[WinKill](http://www.autohotkey.com/docs/commands/WinKill.htm)`
 			
-			### Author(s)
-				* 20130308 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
-	*/
+	Remarks:
+		### See also: 
+			[close()](#close)
+*/
+		if (this._debug) ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])]" ; _DBG_		
+
+		prevState := A_DetectHiddenWindows
+		DetectHiddenWindows, On
+		WinKill % "ahk_id" this._hWnd
+		DetectHiddenWindows, %prevState%
+	}	
 	move(X,Y,W="99999",H="99999") {
+/*! ===============================================================================
+	Method: move(X,Y,W=99999,H=99999)
+		Moves and/or resizes the window
+			
+		The given coordinates/sizes are absolute coordinates/sizes. If the value of any coordinate is equal *99999* the current value keeps unchanged. For example: Resize-only can be performed by `obj.move(99999,99999,width,height)`
+	Parameters:
+		x - x-Coordinate (absolute) the window has to be moved to - use *99999* to preserve actual value
+		y - y-Coordinate (absolute) the window has to be moved to - use *99999* to preserve actual value
+		w - *(Optional)* width (absolute) the window has to be resized to - use *99999* to preserve actual value
+		h - *(Optional)* height (absolute) the window has to be resized to - use *99999* to preserve actual value
+	Remarks:
+		### See also: 
+			[movePercental()](movePercental)
+*/
 		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "])(X=" X " ,Y=" Y " ,W=" W " ,H=" H ")]" ; _DBG_		
 		if (X = 99999 || Y = 99999 || W = 99999 || H = 9999)
@@ -587,33 +513,30 @@ Remarks:
 			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "])(X=" X " ,Y=" Y " ,W=" W " ,H=" H ")]" ; _DBG_		
 		WinMove % "ahk_id" this._hWnd, , X, Y, W, H
 	}
-
-
-	/*! ===============================================================================
-		Method: movePercental(xFactor=0, yFactor=0, wFactor=100, hFactor=100)
-			move and resize window relative to the size of the current.
+	movePercental(xFactor=0, yFactor=0, wFactor=100, hFactor=100) {
+/*! ===============================================================================
+	Method: movePercental(xFactor=0, yFactor=0, wFactor=100, hFactor=100)
+		move and resize window relative to the size of the current.
 			
-			For example: 
-			 * `obj.movePercental(0,0,100,100)` creates a window with origin 0,0 and a *width=100% of screen width* and *height=100% of screen height*
-			 * `obj.movePercental(25,25,50,50)` creates a window at *x=25% of screen width*, *y =25% of screen height*, and with *width=50% of screen width*, *height=50% of screen height*. The resulting window is a screen centered window with the described width and height
-		Parameters:
-			xFactor - x-position factor (percents of current screen width) the window has to be moved to (Range: 0.0 to 100.0)
-			yFactor - y-position factor (percents of current screen height) the window has to be moved to (Range: 0.0 to 100.0)
-			wFactor - *(Optional)* width-size factor (percents of current screen width) the window has to be resized to (Range: 0.0 to 100.0)
-			hFactor - *(Optional)* height-size factor (percents of current screen height) the window has to be resized to (Range: 0.0 to 100.0)
-		Remarks:
-			### See also: 
+		For example: 
+		 * `obj.movePercental(0,0,100,100)` creates a window with origin 0,0 and a *width=100% of screen width* and *height=100% of screen height*
+		 * `obj.movePercental(25,25,50,50)` creates a window at *x=25% of screen width*, *y =25% of screen height*, and with *width=50% of screen width*, *height=50% of screen height*. The resulting window is a screen centered window with the described width and height
+	Parameters:
+		xFactor - x-position factor (percents of current screen width) the window has to be moved to (Range: 0.0 to 100.0)
+		yFactor - y-position factor (percents of current screen height) the window has to be moved to (Range: 0.0 to 100.0)
+		wFactor - *(Optional)* width-size factor (percents of current screen width) the window has to be resized to (Range: 0.0 to 100.0)
+		hFactor - *(Optional)* height-size factor (percents of current screen height) the window has to be resized to (Range: 0.0 to 100.0)
+	Remarks:
+		### See also: 
 			[move()](move)
 			
-			### Author(s)
-			    * xxxxxxxx - Lexikos - [Original on AHK-Forum](http://www.autohotkey.com/forum/topic21703.html)
-				* 20130402 - [hoppfrosch](hoppfrosch@ahk4.me) - Rewritten
-				
-			### Caveats / Known issues
-			    * The range of the method parameters is **NOT** checked - so be carefull using any values <0 or >100
-	*/
-	movePercental(xFactor=0, yFactor=0, wFactor=100, hFactor=100) {
-		
+		### Author(s)
+		    * xxxxxxxx - Lexikos - [Original on AHK-Forum](http://www.autohotkey.com/forum/topic21703.html)
+			* 20130402 - [hoppfrosch](hoppfrosch@ahk4.me) - Rewritten
+			
+		### Caveats / Known issues
+		    * The range of the method parameters is **NOT** checked - so be carefull using any values <0 or >100
+*/	
 		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], xFactor=" xFactor ", yFactor=" yFactor ", wFactor=" wFactor ", hFactor=" hFactor ")]" ; _DBG_
 			
@@ -635,20 +558,19 @@ Remarks:
 			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], xFactor=" xFactor ", yFactor=" yFactor ", wFactor=" wFactor ", hFactor=" hFactor ")] -> padded to (" this.pos.Dump() ") on Monitor (" monId ")" ; _DBG_
 	}
 	
-	/* ===============================================================================
-		Method: __rollup(mode="toggle") {
-			Sets/Toggles *Rollup* state of the window. The window cann be rolled up (minimized) to its titlebar and unrolled again.
-			
-			**Better use property-set functionality for this: `[rolledUp](#rolledUp)`**
-		Parameters:
-			mode - *(Optional)* true (1),  false (0), "toggle"
-		Remarks:
-			### Author(s)
-				* 20130312 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
-	*/
+/* ===============================================================================
+	Method: __rollup(mode="toggle") {
+		Sets/Toggles *Rollup* Property of the window. The window cann be rolled up (minimized) to its titlebar and unrolled again.
+		**Better use property-set functionality for this: `[rolledUp](#rolledUp)`**
+	Parameters:
+		mode - *(Optional)* true (1),  false (0), "toggle"
+	Remarks:
+		### Author(s)
+			* 20130312 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
+*/
 	__rollup(mode="toggle") {
 		if (this._debug) ; _DBG_
-			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> CurrentState:" this.rolledUp ; _DBG_
+			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> Current Value:" this.rolledUp ; _DBG_
 		foundpos := RegExMatch(mode, "i)0|1|toggle")
 		if (foundpos = 0)
 			mode := "toggle"
@@ -684,13 +606,12 @@ Remarks:
 		}
 		
 		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> NewState:" this.rolledUp ; _DBG_
+			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> New Value:" this.rolledUp ; _DBG_
 
 	}
 
-/*
-===============================================================================
-Function: __centercoords
+/* ===============================================================================
+Method: __centercoords
 	Determine center of the window (*INTERNAL*)
 
 Returns:
@@ -698,7 +619,6 @@ Returns:
 
 Author(s):
 	20130308 - hoppfrosch@ahk4.me - Original
-===============================================================================
 */
 	__centercoords() {
 		pos := this.Pos
@@ -710,9 +630,8 @@ Author(s):
 		return centerPos
 	}
 
-/*
-===============================================================================
-Function:   __classname 
+/* ===============================================================================
+Method:   __classname 
 	Determines the Window class (*INTERNAL*)
 
 Returns:
@@ -720,7 +639,6 @@ Returns:
 
 Author(s):
 	20130308 - hoppfrosch@ahk4.me - Original
-=============================================================================== 
 */
 	__classname() {
 		val := this._hWnd
@@ -730,9 +648,8 @@ Author(s):
 		return __classname
 	}
 
-/*
-===============================================================================
-Function:   __exist
+/* ===============================================================================
+Method:   __exist
 	Checks if the specified window exists (*INTERNAL*)
 
 Returns:
@@ -740,7 +657,6 @@ Returns:
 
 Author(s):
 	20130308 - hoppfrosch@ahk4.me - Original
-===============================================================================
 */
 	__exist() {
 		val := this._hWnd
@@ -753,37 +669,8 @@ Author(s):
 		return ret
 	}
 	
-	__getTransparency() {
-		val := this._hWnd
-		WinGet, s, Transparent, ahk_id %val% 
-		ret := 255
-		if (s != "")
-			ret := s
-		
-		;if (this._debug) ; _DBG_
-		;	OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_
-		
-		return ret
-	}
-	
-	__setTransparency(transparency) {
-		val := this._hWnd
-
-		transOrig := transparency
-		if (transparency == "OFF")
-			transparency := 255
-	
-		WinSet, Transparent, %transparency%, ahk_id %val% 
-		
-		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], transparency=" transOrig "(" transparency "))] -> NewState:" this.transparency ; _DBG_
-		
-		return transparency
-	}
-
-/*
-===============================================================================
-Function:   __isResizable
+/* ===============================================================================
+Method:   __isResizable
     Determine whether window can be resized by user (*INTERNAL*)
 
 Returns:
@@ -791,7 +678,6 @@ Returns:
      
 Author(s):
     20130308 - hoppfrosch@ahk4.me - Original
-===============================================================================
 */
 	__isResizable() {
 		ret := true
@@ -806,9 +692,8 @@ Author(s):
 		return ret
 }
 
-/*
-===============================================================================
-Function:   __isRolledUp
+/* ===============================================================================
+Method:   __isRolledUp
 	Checks whether the window is rolled up (*INTERNAL*)
 
 Returns:
@@ -816,11 +701,7 @@ Returns:
 
 Author(s):
 	20130312 - hoppfrosch@ahk4.me - Original
-	
-See also:
-	<rollup>
-===============================================================================
-*/
+	*/
 	__isRolledUp() {
 		ret := 0
 		if !this.exist {
@@ -839,9 +720,8 @@ See also:
 	}
 
 
-/*
-===============================================================================
-Function:   __isWindow
+/* ===============================================================================
+Method:   __isWindow
 	Checks whether the given hWnd refers to a TRUE window (As opposed to the desktop or a menu, etc.) (*INTERNAL*)
 
 Returns:
@@ -849,7 +729,6 @@ Returns:
 
 Author(s):
 	20080121 - ManaUser - Original (http://www.autohotkey.com/board/topic/25393-appskeys-a-suite-of-simple-utility-hotkeys/)
-===============================================================================
 */
 	__isWindow(hWnd) {
 		WinGet, s, Style, ahk_id %hWnd% 
@@ -861,9 +740,8 @@ Author(s):
 		return ret
 	}
 	
-/*
-===============================================================================
-Function:  __ monitorID
+/* ===============================================================================
+Method:  __ monitorID
     Determines ID of monitor the window currently is on (i.e center of window) (*INTERNAL*)
 
 Returns:
@@ -871,7 +749,6 @@ Returns:
      
 Author(s):
 	20130308 - hoppfrosch@ahk4.me - Original
-===============================================================================
 */
 	__monitorID(default=1) {
 		mon := default
@@ -883,9 +760,8 @@ Author(s):
 		return mon
 }
 	
-/*
-===============================================================================
-Function: __pos
+/* ===============================================================================
+Method: __pos
 	Determine current position of the window (*INTERNAL*)
 
 Returns:
@@ -893,7 +769,6 @@ Returns:
 
 Author(s):
 	20130308 - hoppfrosch@ahk4.me - Original
-===============================================================================
 */
 	__pos() {
 		currPos := new Rectangle(0,0,0,0,this._debug)
@@ -903,14 +778,12 @@ Author(s):
 		return currPos
 	}
 
-/*
-===============================================================================
-Function: __posPush
+/* ===============================================================================
+Method: __posPush
 	Pushes current position of the window on position stack (*INTERNAL*)
 
 Author(s):
 	20130311 - hoppfrosch@ahk4.me - Original
-===============================================================================
 */
 	__posPush() {
 		this._posStack.Insert(1, this.pos)
@@ -920,14 +793,12 @@ Author(s):
 		}
 	}
 
-/*
-===============================================================================
-Function: __posStackDump
+/* ===============================================================================
+Method: __posStackDump
 	Dumps the current position stack via OutputDebug (*INTERNAL*)
 
 Author(s):
 	20130312 - hoppfrosch@ahk4.me - Original
-===============================================================================
 */	
 	__posStackDump() {
 		For key,value in this._posStack	; loops through all elements in Stack
@@ -936,9 +807,8 @@ Author(s):
 		return
 	}
 	
-/*
-===============================================================================
-Function: __posRestore
+/* ===============================================================================
+Method: __posRestore
 	Restores position of the window  from Stack(*INTERNAL*)
 
 Parameters:
@@ -946,7 +816,6 @@ Parameters:
 
 Author(s):
 	20130308 - hoppfrosch@ahk4.me - Original
-===============================================================================
 */
 	__posRestore(index="2") {
 		if (this._debug) ; _DBG_
@@ -962,9 +831,8 @@ Author(s):
 	}
 
 
-/*
-===============================================================================
-Function:   __style
+/* ===============================================================================
+Method:   __style
 	Determines the current style of the window (*INTERNAL*)
 	
 Returns:
@@ -972,7 +840,6 @@ Returns:
 
 Author(s):
 	20130308 - hoppfrosch@ahk4.me - Original
-===============================================================================
 */
 	__style() {
 		val := this._hWnd
@@ -982,9 +849,8 @@ Author(s):
 		return currStyle
 	}
 
-/*
-===============================================================================
-Function:   __styleEx
+/* ===============================================================================
+Method:   __styleEx
 	Determines the current extended style of the window (*INTERNAL*)
 	
 Returns:
@@ -992,7 +858,6 @@ Returns:
 
 Author(s):
 	20130308 - hoppfrosch@ahk4.me - Original
-===============================================================================
 */
 	__styleEx() {
 		val := this._hWnd
@@ -1002,9 +867,8 @@ Author(s):
 		return currExStyle
 	}
 
-/*
-===============================================================================
-Function:   __title
+/* ===============================================================================
+Method:   __title
 	Determines the Window title (*INTERNAL*)
 	
 Returns:
@@ -1012,7 +876,6 @@ Returns:
 
 Author(s):
 	20130308 - hoppfrosch@ahk4.me - Original
-===============================================================================
 */
 	__title()	{
 		val := this._hWnd
@@ -1022,9 +885,8 @@ Author(s):
 		return title
 	}
 
-/*
-===============================================================================
-Function: __debug
+/* ===============================================================================
+Method: __debug
 	Set or get the _debug flag (*INTERNAL*)
 
 Parameters:
@@ -1035,7 +897,6 @@ Returns:
 
 Author(s):
 	20130308 - hoppfrosch@ahk4.me - Original
-===============================================================================
 */  
 	__debug(value="") { ; _DBG_
 		if % (value="") ; _DBG_
@@ -1045,9 +906,8 @@ Author(s):
 		return this._debug ; _DBG_
 	} ; _DBG_
 
-/*
-===============================================================================
-Function: __SetWinEventHook
+/* ===============================================================================
+Method: __SetWinEventHook
 	Set the hook for certain win-events (*INTERNAL*)
 
 Parameters:
@@ -1058,7 +918,6 @@ Returns:
 
 Author(s):
 	20130311 - hoppfrosch@ahk4.me - Original
-===============================================================================
 */  
 	__SetWinEventHook(eventMin, eventMax, hmodWinEventProc, lpfnWinEventProc, idProcess, idThread, dwFlags) {
 		if (this._debug) ; _DBG_ 
@@ -1077,16 +936,14 @@ Author(s):
 		return ret
 	}
 	
-	/*
-===============================================================================
-Function:   __onLocationChange
+/* ===============================================================================
+Method:   __onLocationChange
 	Callback on Object-Event <CONST_EVENT.OBJECT.LOCATIONCHANGE> or on <CONST_EVENT.SYSTEM.MOVESIZEEND>
 	
 	Store windows size/pos on each change
 
 Author(s):
 	20130312 - hoppfrosch@ahk4.me - AutoHotkey-Implementation
-===============================================================================
 */
 	__onLocationChange() {
 		if this._hWnd = 0
@@ -1113,14 +970,9 @@ Author(s):
 	}
 
  
-/*
-===============================================================================
-Function: __Delete
+/* ===============================================================================
+Method: __Delete
 	Destructor (*INTERNAL*)
-
-Author(s):
-	20130308 - hoppfrosch@ahk4.me - Original
-===============================================================================
 */     
 	__Delete() {
 		if (this._hwnd <= 0) {
@@ -1151,9 +1003,8 @@ Author(s):
 		ObjRelease(&this)
 	}
 
-/*
-===============================================================================
-Function: __New
+/* ===============================================================================
+Method: __New
 	Constructor (*INTERNAL*)
 
 Parameters:
@@ -1165,7 +1016,6 @@ Returns:
 
 Author(s):
 	20130308 - hoppfrosch@ahk4.me - Original
-===============================================================================
 */     
 	__New(_hWnd=-1, _debug=0, _test=0) {
 		this._debug := _debug
@@ -1230,8 +1080,7 @@ Author(s):
 	End of class
 */
 
-/*
-===============================================================================
+/*! ===============================================================================
 Function:   ClassWindowHandler_EventHook
 	Callback on System Events. Used as dispatcher to detect window manipulation and calling the appropriate member-function within class <WindowHandler>
 	
@@ -1241,7 +1090,6 @@ Author(s):
 See also:
 	http://www.autohotkey.com/community/viewtopic.php?t=35659
 	http://www.autohotkey.com/community/viewtopic.php?f=1&t=88156
-===============================================================================
 */
 ClassWindowHandler_EventHook(hWinEventHook, Event, hWnd, idObject, idChild, dwEventThread, dwmsEventTime ) {
 	; ClassWindowHandler_EventHook is used as WindowsEventHook - it's registered as callback within <__SetWinEventHook> of class <WindowHandler>.
@@ -1292,3 +1140,7 @@ ClassWindowHandler_EventHook(hWinEventHook, Event, hWnd, idObject, idChild, dwEv
 	; ########## END: Handling window movement ####################################################
 	return
 }
+
+/*!
+	End of class
+*/
