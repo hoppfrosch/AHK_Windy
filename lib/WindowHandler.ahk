@@ -27,7 +27,7 @@
 */
 class WindowHandler {
 	
-	_version := "0.5.6"
+	_version := "0.5.7"
 	_debug := 0
 	_hWnd := 0
 	
@@ -49,7 +49,7 @@ __Set(aName, aValue) {
 		}
 		else if (aName = "hidden") {
 		; See documentation on hidden [get]
-			this.__hidden(aValue)
+			return this.__setHidden(aValue)
 		}
 		else if (aName = "minimized") {
 		; See documentation on minimized [get]
@@ -146,7 +146,7 @@ Author(s):
 			### Author(s)
 				* 20130426 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
 	*/
-			ret := this.__isHidden()
+			ret := this.__getHidden()
 		}
 		else if (aName = "maximized") {
 	/*! ---------------------------------------------------------------------------------------
@@ -328,65 +328,79 @@ Author(s):
 		return this.__isAlwaysOnTop()
 	}
 
-	/* ===============================================================================
-		Method: __hidden(mode="toggle")
+
+/*
+===============================================================================
+Function:   __getHidden
+	Get the hidden-attribute of window (*INTERNAL*)
+
+Returns:
+	true (window is hidden), false (window is visible) or -1 (window does not exist at all)
+
+Author(s):
+	20130308 - hoppfrosch@ahk4.me - Original
+	
+See also:
+   <hidden>
+===============================================================================
+*/
+	__getHidden() {
+		prevState := A_DetectHiddenWindows
+		ret := false
+		DetectHiddenWindows, Off
+		if this.exist {
+			; As HiddenWindows are not detected, the window is not hidden in this case ...
+			ret := false
+		} 
+		else {
+			DetectHiddenWindows, On 
+			if this.exist {
+				; As HiddenWindows are detected, the window is hidden in this case ...
+				ret := true
+			} 
+			else {
+				; the window does not exist at all ...
+				ret := -1
+			}
+		}
+		
+		DetectHiddenWindows, %prevState%
+		if (this._debug) ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
+		return ret
+	}
+
+/* ===============================================================================
+		Method: __setHidden(mode="1")
 			Sets *Hidden*-State for window
-			
-			**Better use property-set functionality for this: `[hidden](#hidden)`**
-			
-			*Hidden* can be explicitly switched on or off using the given parameter. If the parameter is missing the *Hidden* state is toggled.
 			
 			The current *Hidden* state can be retrieved via property [hidden](#Hidden).
 		Parameters:
-			mode - *(Optional)* true (1),  false (0), "toggle"
+			mode - * true (1),  false (0)
 		Returns:
 			-
-		Remarks:
-			### See also: 
-			[hidden](#Hidden)
-			
+		Remarks:		
 			### Author(s)
-				* 20130308 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
+				* 20130902 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
 	*/
-	__hidden(mode="toggle") {
+	__setHidden(mode) {
 		if (this._debug) ; _DBG_
-			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> CurrentState:" this.__isHidden() ; _DBG_
-		foundpos := RegExMatch(mode, "i)1|0|toggle")
-		if (foundpos = 0)
-			mode := "toggle"
+			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> CurrentState:" this.__getHidden() ; _DBG_
 
-		StringLower mode,mode
-
-		if (mode == 1)
-			this.Hide()
-		else if (mode == 0) 
-			this.Show()
-		else {
-			if (this.__isHidden())
-				this.show()
-			else
-				this.hide()
+		val := this._hWnd
+		ret := 0
+		if (mode == true) {
+			WinHide ahk_id %val%
+			ret := 1
+		}
+		else if (mode == false) {
+			WinShow ahk_id %val%
+			ret := 0
 		}
 		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> NewState:" this.__isHidden() ; _DBG_
-	}
-
-	/* ===============================================================================
-		Method: __hide()
-			Hides the Window - Sets *Hidden*-State for window to true
-			
-			**Better use property-set functionality for this: `[hidden](#hidden)`**
-
-			The current *Hidden* state can be retrieved via property [hidden](#Hidden).
-		Remarks:
-			### Author(s)
-				* 20130308 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
-	*/
-	__hide() {
-		val := this._hWnd
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])]" ; _DBG_		
-		WinHide ahk_id %val%
+			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> NewState:" this.__getHidden() ; _DBG_
+		
+		return ret
 	}
 
 	/*! ===============================================================================
@@ -628,25 +642,6 @@ Author(s):
 
 	}
 
-	/* ===============================================================================
-		Method: __show()
-			Hides the Window. Used to show a hidden window. - Sets *Hidden*-State for window to false
-			
-			**Better use property-set functionality for this: `[hidden](#hidden)`**
-			
-			The current *Hidden* state can be retrieved via property [hidden](#Hidden).
-		Remarks:
-			### Author(s)
-				* 20130308 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
-	*/
-	show() {
-		val := this._hWnd
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])]" ; _DBG_		
-		WinShow ahk_id %val%
-	}
-
-
 /*
 ===============================================================================
 Function: __centercoords
@@ -762,47 +757,6 @@ Author(s):
 		
 		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_
-		return ret
-	}
-
-/*
-===============================================================================
-Function:   __isHidden
-	Checks whether the window is hidden (*INTERNAL*)
-
-Returns:
-	true (window is hidden), false (window is visible) or -1 (window does not exist at all)
-
-Author(s):
-	20130308 - hoppfrosch@ahk4.me - Original
-	
-See also:
-	<hide>, <show>, <hidden>
-===============================================================================
-*/
-	__isHidden() {
-		prevState := A_DetectHiddenWindows
-		ret := false
-		DetectHiddenWindows, Off
-		if this.exist {
-			; As HiddenWindows are not detected, the window is not hidden in this case ...
-			ret := false
-		} 
-		else {
-			DetectHiddenWindows, On 
-			if this.exist {
-				; As HiddenWindows are detected, the window is hidden in this case ...
-				ret := true
-			} 
-			else {
-				; the window does not exist at all ...
-				ret := -1
-			}
-		}
-		
-		DetectHiddenWindows, %prevState%
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
 		return ret
 	}
 

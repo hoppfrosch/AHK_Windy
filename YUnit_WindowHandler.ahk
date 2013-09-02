@@ -11,11 +11,11 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.5.6"
+ReferenceVersion := "0.5.7"
 debug := 1
 
 
-;Yunit.Use(YunitStdOut, YunitWindow).Test(TransparencyTestSuite)
+;Yunit.Use(YunitStdOut, YunitWindow).Test(HideShowTestSuite)
 Yunit.Use(YunitStdOut, YunitWindow).Test(TransparencyTestSuite, MiscTestSuite, NotRealWindowTestSuite, HideShowTestSuite, ExistTestSuite, RollupTestSuite, MoveResizeTestSuite, TileTestSuite)
 Return
 
@@ -466,15 +466,15 @@ class HideShowTestSuite
         Yunit.assert(this.obj.hidden==false)
 		OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
     }
-        
+      
     HiddenTrue() 
     {
 		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
         this.obj.hidden := true
-        Yunit.assert(this.obj.hidden==true)
+        Yunit.assert(this.obj.hidden == true)
 		OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
     }
-        
+
     HiddenDoesNotExist() 
     {
 		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
@@ -482,7 +482,7 @@ class HideShowTestSuite
         Yunit.assert(this.obj.hidden==-1)
 		OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
     }
-       
+     
     End()
     {
 		this.obj.kill()
