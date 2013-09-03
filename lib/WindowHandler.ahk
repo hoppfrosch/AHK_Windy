@@ -30,7 +30,7 @@
 */
 class WindowHandler {
 	
-	_version := "0.5.11"
+	_version := "0.5.12"
 	_debug := 0
 	_hWnd := 0
 	
@@ -57,16 +57,16 @@ class WindowHandler {
 			return this.__setHidden(aValue)
 		}
 		else if (aName == "minimized") {
-			this.__setMinimized(aValue)
+			return this.__setMinimized(aValue)
 		}
 		else if (aName == "maximized") {
-			this.__setMaximized(aValue)
+			return this.__setMaximized(aValue)
 		}
 		else if (aName == "rolledUp") {
-			this.__setRolledUp(aValue)
+			return this.__setRolledUp(aValue)
 		}
 		else if (aName == "pos") {
-			this.move(aValue.x, avalue.y, avalue.w, avalue.h)
+			return this.__setPos(aValue)
 		}
 		else if (aName == "transparency") {
 			return this.__setTransparency(aValue)
@@ -169,7 +169,7 @@ class WindowHandler {
 		### Author(s)
 			* 20130429 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
 */
-			ret := this.__pos()
+			ret := this.__getPos()
 			written := 1 ; _DBG_
 			if (this._debug) ; _DBG_
 				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret.dump() ; _DBG_
@@ -336,10 +336,12 @@ class WindowHandler {
 			WinShow ahk_id %val%
 			ret := 0
 		}
-		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> New Value:" this.hidden ; _DBG_
 		
-		return ret
+		isHidden := this.hidden
+		if (this._debug) ; _DBG_
+			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> New Value:" isHidden ; _DBG_
+		
+		return isHidden
 	}
 	__getMaximized() {
 /* ===============================================================================
@@ -374,11 +376,12 @@ class WindowHandler {
 		else 
 			WinRestore % "ahk_id" this._hWnd
 		DetectHiddenWindows, %prevState%
-
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> New Value:" this.maximized ; _DBG_
 		
-		return this.maximized
+		isMax := this.maximized
+		if (this._debug) ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> New Value:" isMax ; _DBG_
+		
+		return isMax
 	}
 	__getMinimized() {
 /* ===============================================================================
@@ -414,10 +417,39 @@ class WindowHandler {
 			WinRestore % "ahk_id" this._hWnd
 		DetectHiddenWindows, %prevState%
 
+		isMin := this.minimized
 		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> New Value:" this.minimized ; _DBG_
+			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> New Value:" isMin ; _DBG_
 
-		return this.minimized
+		return isMin
+	}
+	__getPos() {
+/* ===============================================================================
+	Method: __getPos
+		Determine current position of the window (*INTERNAL*)
+	Returns:
+		<Rectangle> - Rectangle containing the current position and size of the window
+*/
+		currPos := new Rectangle(0,0,0,0,this._debug)
+		currPos.fromHWnd(this._hWnd)
+		if (this._debug) ; _DBG_
+			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "])] -> (" currPos.dump() ")" ; _DBG_
+		return currPos
+	}
+	__setPos(rect) {
+/* ===============================================================================
+	Method: __setPos(rect) {
+		Sets *position* (x,y,w,h) the window.
+	Parameters:
+		<Rectangle> - Rectangle containing the new position and size of the window
+*/
+		this.move(rect.x, rect.y, rect.w, rect.h)
+		newPos := this.pos
+		
+		if (this._debug) ; _DBG_
+			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], pos=" newPos.Dump()")] -> New Value:" newPos.Dump() ; _DBG_
+
+		return newPos
 	}
 	__getRolledUp() {
 /* ===============================================================================
@@ -476,10 +508,11 @@ class WindowHandler {
 			this.__posRestore()			
 		}
 		
+		isRolled := this.rolledUp
 		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> New Value:" this.rolledUp ; _DBG_
+			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> New Value:" isRolled ; _DBG_
 
-		return roll
+		return isRolled
 	}
 	__getTransparency() {
 /* ===============================================================================
@@ -513,10 +546,11 @@ class WindowHandler {
 	
 		WinSet, Transparent, %transparency%, ahk_id %val% 
 		
+		trans := this.transparency
 		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], transparency=" transOrig "(" transparency "))] -> New Value:" this.transparency ; _DBG_
+			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], transparency=" transOrig "(" transparency "))] -> New Value:" trans ; _DBG_
 		
-		return transparency
+		return trans
 	}
 	
 	; ######################## Methods to be called directly ########################################################### 
@@ -743,24 +777,6 @@ Author(s):
 		return mon
 }
 	
-/* ===============================================================================
-Method: __pos
-	Determine current position of the window (*INTERNAL*)
-
-Returns:
-	<Rectangle> - Rectangle containing the current position and size of the window
-
-Author(s):
-	20130308 - hoppfrosch@ahk4.me - Original
-*/
-	__pos() {
-		currPos := new Rectangle(0,0,0,0,this._debug)
-		currPos.fromHWnd(this._hWnd)
-		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "])] -> (" currPos.dump() ")" ; _DBG_
-		return currPos
-	}
-
 /* ===============================================================================
 Method: __posPush
 	Pushes current position of the window on position stack (*INTERNAL*)
