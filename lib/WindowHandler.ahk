@@ -34,7 +34,7 @@
 
 class WindowHandler {
 	
-	_version := "0.5.14"
+	_version := "0.5.15"
 	_debug := 0
 	_hWnd := 0
 	
@@ -116,9 +116,11 @@ class WindowHandler {
         else if (aName = "classname") {
 /*! ---------------------------------------------------------------------------------------
 	Property: classname [get]
-		Get the name of the window class. There is no setter available, since this is a constant window property
+		Get the name of the window class. 
+	Remarks:
+		There is no setter available, since this is a constant window property
 */
-			ret := this.__classname()
+			ret := this.__getClassname()
 		}
 		else if (aName = "debug") {
 /*! ---------------------------------------------------------------------------------------
@@ -305,6 +307,20 @@ class WindowHandler {
 		
 		return this.alwaysOnTop
 	}
+	__getClassname() { ; NO SETTER!!
+/* ===============================================================================
+	Method:   __getClassname 
+		Determines the name of the Window class (*INTERNAL*)
+	Returns:
+		WindowClass
+*/
+		val := this._hWnd
+		WinGetClass, __classname, ahk_id %val%
+		if (this._debug) ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "]) -> (" __classname ")]" ; _DBG_		
+		return __classname
+	}
+
 	__getDebug() {                                                                 ; _DBG_
 /* =============================================================================== ; _DBG_
 	Method:   __getDebug                                                           ; _DBG_
@@ -314,7 +330,6 @@ class WindowHandler {
 */                                                                                 ; _DBG_ 
 		return this._debug                                                         ; _DBG_
 	}                                                                              ; _DBG_
-	
 	__setDebug(mode) {                                                             ; _DBG_
 /* =============================================================================== ; _DBG_
 	Method: __setDebug(mode)                                                       ; _DBG_
@@ -326,7 +341,6 @@ class WindowHandler {
 		this._debug := mode                                                        ; _DBG_
 		return this._debug                                                         ; _DBG_
 	}                                                                              ; _DBG_			
-
 	__getHidden() {
 /* ===============================================================================
 	Method:   __getHidden
@@ -745,24 +759,6 @@ Author(s):
 		if (this._debug) ; _DBG_
 			OutputDebug % "<[" A_ThisFunc "(pos="pos.dump() " [" this._hWnd "])] -> " centerPos.dump() ; _DBG_
 		return centerPos
-	}
-
-/* ===============================================================================
-Method:   __classname 
-	Determines the Window class (*INTERNAL*)
-
-Returns:
-	WindowClass
-
-Author(s):
-	20130308 - hoppfrosch@ahk4.me - Original
-*/
-	__classname() {
-		val := this._hWnd
-		WinGetClass, __classname, ahk_id %val%
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "]) -> (" __classname ")]" ; _DBG_		
-		return __classname
 	}
 
 /* ===============================================================================
