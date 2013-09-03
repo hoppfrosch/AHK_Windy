@@ -11,7 +11,7 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.5.12"
+ReferenceVersion := "0.5.13"
 debug := 1
 
 
@@ -526,6 +526,8 @@ class MiscTestSuite
     {
 		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
         Yunit.assert(this.obj.title =="Unbenannt - Editor")
+		this.obj.title := "Halllloo"
+		Yunit.assert(this.obj.title =="Halllloo")
 		OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
     }
 	

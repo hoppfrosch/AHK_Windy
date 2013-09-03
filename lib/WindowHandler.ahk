@@ -30,7 +30,7 @@
 */
 class WindowHandler {
 	
-	_version := "0.5.12"
+	_version := "0.5.13"
 	_debug := 0
 	_hWnd := 0
 	
@@ -67,6 +67,9 @@ class WindowHandler {
 		}
 		else if (aName == "pos") {
 			return this.__setPos(aValue)
+		}
+		else if (aName == "title") {
+			return this.__setTitle(aValue)
 		}
 		else if (aName == "transparency") {
 			return this.__setTransparency(aValue)
@@ -232,12 +235,14 @@ class WindowHandler {
 		}
 		else if (aName = "title") {
 /*! ---------------------------------------------------------------------------------------
-	Property: title [get]
-		Returns current window title
-			
-		There is no setter available, since this is a constant window property
+	Property: title [get/set]
+		Get/Set current window title. 
+	Value:
+		title - Window Title to be set
+	Remarks:		
+		* A change to a window's title might be merely temporary if the application that owns the window frequently changes the title.
 */
-			ret :=  this.__title()
+			ret :=  this.__getTitle()
 		}
 		
 		if (this._debug) ; _DBG_
@@ -439,7 +444,7 @@ class WindowHandler {
 	__setPos(rect) {
 /* ===============================================================================
 	Method: __setPos(rect) {
-		Sets *position* (x,y,w,h) the window.
+		Sets *position* (x,y,w,h) the window. (*INTERNAL*)
 	Parameters:
 		<Rectangle> - Rectangle containing the new position and size of the window
 */
@@ -513,6 +518,36 @@ class WindowHandler {
 			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> New Value:" isRolled ; _DBG_
 
 		return isRolled
+	}
+	__getTitle()	{
+/* ===============================================================================
+	Method:   __getTitle
+		Determines the Window title (*INTERNAL*)
+	Returns:
+		WindowTitle
+*/
+		val := this._hWnd
+		WinGetTitle, title, ahk_id %val%
+		if (this._debug) ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "]) -> (" title ")]" ; _DBG_		
+		return title
+	}
+	__setTitle(title) {
+/* ===============================================================================
+	Method: __setTitle(title)
+		Sets the title of the window (*INTERNAL*)
+	Parameters:
+		title - title to be set
+*/	
+		val := this._hWnd
+		prevState := A_DetectHiddenWindows
+		DetectHiddenWindows, On
+		WinSetTitle, ahk_id %val%,, %title%
+		DetectHiddenWindows, %prevState%
+		newTitle := this.title
+		if (this._debug) ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "], title=" title ")] -> " newTitle ; _DBG_		
+		return newTitle
 	}
 	__getTransparency() {
 /* ===============================================================================
@@ -864,24 +899,6 @@ Author(s):
 		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> (" currExStyle ")" ; _DBG_		
 		return currExStyle
-	}
-
-/* ===============================================================================
-Method:   __title
-	Determines the Window title (*INTERNAL*)
-	
-Returns:
-	WindowTitle
-
-Author(s):
-	20130308 - hoppfrosch@ahk4.me - Original
-*/
-	__title()	{
-		val := this._hWnd
-		WinGetTitle, title, ahk_id %val%
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "]) -> (" title ")]" ; _DBG_		
-		return title
 	}
 
 /* ===============================================================================
