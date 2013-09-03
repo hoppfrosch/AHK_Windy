@@ -1,4 +1,6 @@
-; ****** HINT: Documentation can be extracted to HTML using GenDocs (https://github.com/fincs/GenDocs) by fincs************** */
+; ****** HINT: Documentation can be extracted to HTML using GenDocs (https://github.com/fincs/GenDocs) by fincs
+; ****** HINT: Debug-lines should contain "; _DBG_" at the end of lines - using this, the debug lines could be automatically removed through scripts before releasing the sourcecode
+
 #include <Rectangle>
 #include <MultiMonitorEnv>
 #include <_WindowHandlerEvent>
@@ -28,9 +30,11 @@
 				* Property `active` (getter (Is window active window?) and setter (activate/deactivate window))
 				* Property `titlebar` (getter and setter (enable/disable titlebar)
 */
+
+
 class WindowHandler {
 	
-	_version := "0.5.13"
+	_version := "0.5.14"
 	_debug := 0
 	_hWnd := 0
 	
@@ -52,6 +56,9 @@ class WindowHandler {
 		
 		if (aName == "alwaysOnTop") {
 			return this.__setAlwaysOnTop(aValue)
+		}
+		else if (aName == "debug") {
+			return this.__setDebug(aValue)
 		}
 		else if (aName == "hidden") {
 			return this.__setHidden(aValue)
@@ -112,6 +119,15 @@ class WindowHandler {
 		Get the name of the window class. There is no setter available, since this is a constant window property
 */
 			ret := this.__classname()
+		}
+		else if (aName = "debug") {
+/*! ---------------------------------------------------------------------------------------
+	Property: debug [get/set]
+		Set or get the _debug flag
+	Value:
+		value - Value to set the debug flag to
+*/
+			ret := this.__getDebug()			
 		}
 		else if (aName = "exist") {
 /*! ---------------------------------------------------------------------------------------
@@ -201,7 +217,7 @@ class WindowHandler {
 /*! ---------------------------------------------------------------------------------------
 	Property: rolledUpHeight [get]
 		Returns the height of the caption bar of windows
-	
+	Remarks:
     	There is no setter available, since this is a system constant
 */
 			SysGet, ret, 29
@@ -255,7 +271,6 @@ class WindowHandler {
 /* ===============================================================================
 	Method:   __getAlwaysOnTop
 		Determine whether window is set to "always on top" (*INTERNAL*)
-
 	Returns:
 		True or False
 */
@@ -290,6 +305,28 @@ class WindowHandler {
 		
 		return this.alwaysOnTop
 	}
+	__getDebug() {                                                                 ; _DBG_
+/* =============================================================================== ; _DBG_
+	Method:   __getDebug                                                           ; _DBG_
+		Retrieves current debug mode (*INTERNAL*)                                  ; _DBG_ 
+	Returns:                                                                       ; _DBG_  
+		True or False                                                              ; _DBG_
+*/                                                                                 ; _DBG_ 
+		return this._debug                                                         ; _DBG_
+	}                                                                              ; _DBG_
+	
+	__setDebug(mode) {                                                             ; _DBG_
+/* =============================================================================== ; _DBG_
+	Method: __setDebug(mode)                                                       ; _DBG_
+		Sets *debug*-Mode for class (*INTERNAL*)	                               ; _DBG_
+	Parameters:                                                                    ; _DBG_
+		mode -  true (1),  false (0)                                               ; _DBG_  
+*/                                                                                 ; _DBG_
+		mode := mode<1?0:1                                                         ; _DBG_
+		this._debug := mode                                                        ; _DBG_
+		return this._debug                                                         ; _DBG_
+	}                                                                              ; _DBG_			
+
 	__getHidden() {
 /* ===============================================================================
 	Method:   __getHidden
@@ -900,27 +937,6 @@ Author(s):
 			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> (" currExStyle ")" ; _DBG_		
 		return currExStyle
 	}
-
-/* ===============================================================================
-Method: __debug
-	Set or get the _debug flag (*INTERNAL*)
-
-Parameters:
-	value - Value to set the _debug flag to (OPTIONAL)
-
-Returns:
-	true or false, depending on current value
-
-Author(s):
-	20130308 - hoppfrosch@ahk4.me - Original
-*/  
-	__debug(value="") { ; _DBG_
-		if % (value="") ; _DBG_
-			return this._debug ; _DBG_
-		value := value<1?0:1 ; _DBG_
-		this._debug := value ; _DBG_
-		return this._debug ; _DBG_
-	} ; _DBG_
 
 /* ===============================================================================
 Method: __SetWinEventHook
