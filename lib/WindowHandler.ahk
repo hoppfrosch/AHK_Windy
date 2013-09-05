@@ -21,7 +21,6 @@
 		### To Be done
 			* Implement `__Setter()`-functionality
 				* `monitorID`
-				* `centercoords`
 				* `resizeable`
 				* `style`
 				* `styleEx`
@@ -34,7 +33,7 @@
 
 class WindowHandler {
 	
-	_version := "0.5.15"
+	_version := "0.5.16"
 	_debug := 0
 	_hWnd := 0
 	
@@ -56,6 +55,9 @@ class WindowHandler {
 		
 		if (aName == "alwaysOnTop") {
 			return this.__setAlwaysOnTop(aValue)
+		}
+		else if (aName == "centercoords") {
+			return this.__setCentercoords(aValue)
 		}
 		else if (aName == "debug") {
 			return this.__setDebug(aValue)
@@ -111,7 +113,7 @@ class WindowHandler {
 			
 		**ToBeDone: Implementation of Setter-functionality**
 */
-			ret := this.__centercoords()
+			ret := this.__getCentercoords()
 		}
         else if (aName = "classname") {
 /*! ---------------------------------------------------------------------------------------
@@ -191,9 +193,6 @@ class WindowHandler {
 			* 20130429 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
 */
 			ret := this.__getPos()
-			written := 1 ; _DBG_
-			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret.dump() ; _DBG_
 		}
 		else if (aName = "resizeable") { 
 /*! ---------------------------------------------------------------------------------------
@@ -262,11 +261,11 @@ class WindowHandler {
 */
 			ret :=  this.__getTitle()
 		}
-		
+		/*
 		if (this._debug) ; _DBG_
 			if (!written) ; _DBG_
 			OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret ; _DBG_
-
+        */
 		return ret
 	}
 	__getAlwaysOnTop() {
@@ -307,6 +306,44 @@ class WindowHandler {
 		
 		return this.alwaysOnTop
 	}
+	__getCentercoords() {
+/* ===============================================================================
+	Method: __getCentercoords
+		Determine center of the window (*INTERNAL*)
+	Returns:
+		<Rectangle> - Rectangle containing the current center and size (0) of the window
+*/
+		pos := this.Pos
+		x := Round((pos.w)/2 + pos.x)
+		y := Round((pos.h)/2 + pos.y)
+		centerPos := new Rectangle(x,y,0,0,this._debug)
+		if (this._debug) ; _DBG_
+			OutputDebug % "<[" A_ThisFunc "(pos="pos.dump() " [" this._hWnd "])] -> " centerPos.dump() ; _DBG_
+		return centerPos
+	}
+	__setCentercoords(rect) {
+/* ===============================================================================
+	Method: __setCentercoords
+		Sets center of the window (*INTERNAL*). This moves the window to new center coordinates
+	Value:
+		rect - <Rectangle> containing the new center window. The given size will be ignored
+*/
+		currCenter := this.centercoords
+		currPos := this.pos
+		
+		xoffset := rect.x - currCenter.x
+		yoffset := rect.y - currCenter.y
+		
+		x := currPos.x + xoffset
+		y := currPos.y + yoffset
+		
+		this.move(x,y,99999,99999)
+		centerPos := this.centercoords
+		if (this._debug) ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "(pos="rect.dump() " [" this._hWnd "])] -> " centerPos.dump() ; _DBG_
+		return centerPos
+	}
+	
 	__getClassname() { ; NO SETTER!!
 /* ===============================================================================
 	Method:   __getClassname 
@@ -320,7 +357,6 @@ class WindowHandler {
 			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "]) -> (" __classname ")]" ; _DBG_		
 		return __classname
 	}
-
 	__getDebug() {                                                                 ; _DBG_
 /* =============================================================================== ; _DBG_
 	Method:   __getDebug                                                           ; _DBG_
@@ -741,25 +777,7 @@ class WindowHandler {
 	}
 	
 
-/* ===============================================================================
-Method: __centercoords
-	Determine center of the window (*INTERNAL*)
-
-Returns:
-	<Rectangle> - Rectangle containing the current center and size (0) of the window
-
-Author(s):
-	20130308 - hoppfrosch@ahk4.me - Original
-*/
-	__centercoords() {
-		pos := this.Pos
-		x := Round((pos.w)/2 + pos.x)
-		y := Round((pos.h)/2 + pos.y)
-		centerPos := new Rectangle(x,y,0,0,this._debug)
-		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "(pos="pos.dump() " [" this._hWnd "])] -> " centerPos.dump() ; _DBG_
-		return centerPos
-	}
+	
 
 /* ===============================================================================
 Method:   __exist

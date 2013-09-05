@@ -11,13 +11,58 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.5.15"
+ReferenceVersion := "0.5.16"
 debug := 1
 
 
-;Yunit.Use(YunitStdOut, YunitWindow).Test(HideShowTestSuite)
+;Yunit.Use(YunitStdOut, YunitWindow).Test(TempTestSuite)
 Yunit.Use(YunitStdOut, YunitWindow).Test(MiscTestSuite, NotRealWindowTestSuite, HideShowTestSuite, ExistTestSuite, RollupTestSuite, MoveResizeTestSuite, TileTestSuite, TransparencyTestSuite)
 Return
+
+
+; ###################################################################
+class TempTestSuite
+{
+    Begin()
+    {
+		Global debug
+		this.obj := new WindowHandler(0, debug)
+    }
+ 
+ Center() {
+		Global debug
+		
+		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
+		hwnd := this.obj._hwnd
+		WinGetPos  x, y, w, h, ahk_id %hwnd%
+		centerx := round(x+(w)/2)
+		centery := round(y+(h)/2)
+		OutputDebug % "******************************* " A_ThisFunc " 1 ****************************"
+		center := this.obj.centercoords
+		Yunit.assert(center.x == centerx)
+		Yunit.assert(center.y == centery)
+		Yunit.assert(center.w == 0)
+		Yunit.assert(center.h == 0)
+		
+		OutputDebug % "******************************* " A_ThisFunc " 2 ****************************"
+		newCenter := new Rectangle(205,205,0,0,0, 1)
+		this.obj.centercoords := newCenter
+		center := this.obj.centercoords
+		Yunit.assert(center.x == 205)
+		Yunit.assert(center.y == 205)
+		Yunit.assert(center.w == 0)
+		Yunit.assert(center.h == 0)
+		OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
+	}
+	
+	End()
+    {
+		this.obj.kill()
+        this.remove("obj")
+		this.obj := 
+    }
+}
+
 
 ; ###################################################################
 class TransparencyTestSuite
@@ -28,7 +73,7 @@ class TransparencyTestSuite
 		this.obj := new WindowHandler(0, debug)
     }
  
-	transparency() {
+	Transparency() {
 		Global debug
 
 		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
@@ -54,6 +99,7 @@ class TransparencyTestSuite
     }
 }
 
+; ###################################################################
 class TileTestSuite 
 {
 	Begin()
@@ -515,6 +561,32 @@ class MiscTestSuite
     }
 	
 
+	Center() {
+		Global debug
+		
+		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
+		hwnd := this.obj._hwnd
+		WinGetPos  x, y, w, h, ahk_id %hwnd%
+		centerx := round(x+(w)/2)
+		centery := round(y+(h)/2)
+		OutputDebug % "******************************* " A_ThisFunc " 1 ****************************"
+		center := this.obj.centercoords
+		Yunit.assert(center.x == centerx)
+		Yunit.assert(center.y == centery)
+		Yunit.assert(center.w == 0)
+		Yunit.assert(center.h == 0)
+		
+		OutputDebug % "******************************* " A_ThisFunc " 2 ****************************"
+		newCenter := new Rectangle(205,205,0,0,0,debug)
+		this.obj.centercoords := newCenter
+		center := this.obj.centercoords
+		Yunit.assert(center.x == 205)
+		Yunit.assert(center.y == 205)
+		Yunit.assert(center.w == 0)
+		Yunit.assert(center.h == 0)
+		OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
+	}
+	
     Classname()
     {
 		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
@@ -544,20 +616,6 @@ class MiscTestSuite
 		Yunit.assert(this.obj.alwaysontop == true)
 		this.obj.alwaysOnTop := !this.obj.alwaysOnTop
 		Yunit.assert(this.obj.alwaysontop == false)
-		OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
-	}
-	
-	Center() {
-		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
-		hwnd := this.obj._hwnd
-		WinGetPos  x, y, w, h, ahk_id %hwnd%
-		centerx := round(x+(w)/2)
-		centery := round(y+(h)/2)
-		center := this.obj.centercoords
-		Yunit.assert(center.x == centerx)
-		Yunit.assert(center.y == centery)
-		Yunit.assert(center.w == 0)
-		Yunit.assert(center.h == 0)
 		OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
 	}
     
