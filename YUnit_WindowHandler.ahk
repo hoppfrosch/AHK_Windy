@@ -11,12 +11,12 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.5.16"
+ReferenceVersion := "0.5.17"
 debug := 1
 
 
 ;Yunit.Use(YunitStdOut, YunitWindow).Test(TempTestSuite)
-Yunit.Use(YunitStdOut, YunitWindow).Test(MiscTestSuite, NotRealWindowTestSuite, HideShowTestSuite, ExistTestSuite, RollupTestSuite, MoveResizeTestSuite, TileTestSuite, TransparencyTestSuite)
+Yunit.Use(YunitStdOut, YunitWindow).Test(MiscTestSuite, NotRealWindowTestSuite, HideShowTestSuite, ExistTestSuite, RollupTestSuite, MoveResizeTestSuite, TransparencyTestSuite)
 Return
 
 
@@ -29,29 +29,36 @@ class TempTestSuite
 		this.obj := new WindowHandler(0, debug)
     }
  
- Center() {
+/*
+	IsResizeable() {
+		val := this.obj.isResizable()
+		Yunit.assert( val == 1)
+		sleep, 500
+	}
+*/	
+	End()
+    {
+		this.obj.kill()
+        this.remove("obj")
+		this.obj := 
+    }
+}
+
+; ###################################################################
+class TileTestSuite 
+{
+	Begin()
+    {
 		Global debug
-		
+		this.obj := new WindowHandler(0, debug)
+    }
+	
+	movePercental() {
+		Global debug
+
 		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
-		hwnd := this.obj._hwnd
-		WinGetPos  x, y, w, h, ahk_id %hwnd%
-		centerx := round(x+(w)/2)
-		centery := round(y+(h)/2)
-		OutputDebug % "******************************* " A_ThisFunc " 1 ****************************"
-		center := this.obj.centercoords
-		Yunit.assert(center.x == centerx)
-		Yunit.assert(center.y == centery)
-		Yunit.assert(center.w == 0)
-		Yunit.assert(center.h == 0)
-		
-		OutputDebug % "******************************* " A_ThisFunc " 2 ****************************"
-		newCenter := new Rectangle(205,205,0,0,0, 1)
-		this.obj.centercoords := newCenter
-		center := this.obj.centercoords
-		Yunit.assert(center.x == 205)
-		Yunit.assert(center.y == 205)
-		Yunit.assert(center.w == 0)
-		Yunit.assert(center.h == 0)
+		this.obj.movePercental(25, 25, 50, 50)
+		MsgBox % A_ThisFunc " - To be done ..."
 		OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
 	}
 	
@@ -62,7 +69,6 @@ class TempTestSuite
 		this.obj := 
     }
 }
-
 
 ; ###################################################################
 class TransparencyTestSuite
@@ -98,33 +104,6 @@ class TransparencyTestSuite
 		this.obj := 
     }
 }
-
-; ###################################################################
-class TileTestSuite 
-{
-	Begin()
-    {
-		Global debug
-		this.obj := new WindowHandler(0, debug)
-    }
-	
-	movePercental() {
-		Global debug
-
-		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
-		this.obj.movePercental(25, 25, 50, 50)
-		MsgBox % A_ThisFunc " - To be done ..."
-		OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
-	}
-	
-	End()
-    {
-		this.obj.kill()
-        this.remove("obj")
-		this.obj := 
-    }
-}
-
 
 class RollupTestSuite 
 {
@@ -618,6 +597,26 @@ class MiscTestSuite
 		Yunit.assert(this.obj.alwaysontop == false)
 		OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
 	}
+	
+	MonitorID() {
+		Global debug
+		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
+		OutputDebug % "******************************* " A_ThisFunc " 1 ****************************"
+		this.obj.Move(2,2,300,300)
+		monID := this.obj.monitorID
+		Yunit.assert(monId == 1)
+		OutputDebug % "******************************* " A_ThisFunc " 2 - via Move *****************"
+		obj := new MultiMonitorEnv(debug)
+		rect2 := obj.monBoundary(2)
+		this.obj.Move(rect2.x+10,rect2.y+10,300,300)
+		monID := this.obj.monitorID
+		Yunit.assert(monId == 2)
+		OutputDebug % "******************************* " A_ThisFunc " 3 - via MonitorID ************"
+		this.obj.monitorID := 1
+		monID := this.obj.monitorID
+		Yunit.assert(monId == 1)
+		OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
+	}
     
 	Getter() {
 		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
@@ -666,39 +665,6 @@ class ExistTestSuite
 
 
 /*
-class MiscTestSuite
-{
-	Begin()
-    {
-		Global debug
-		this.obj := new WindowHandler(0, debug)
-    }
-        
-	MonitorID() {
-		this.obj.Move(2,2,300,300)
-		monID := this.obj.monitorID
-		Yunit.assert(monId == 1)
-		obj := new MultiMonitorEnv(debug)
-		rect2 := obj.monBoundary(2)
-		this.obj.Move(rect2.x+10,rect2.y+10,300,300)
-		monID := this.obj.monitorID()
-		Yunit.assert(monId == 2)
-	}
-
-	IsResizeable() {
-		val := this.obj.isResizable()
-		Yunit.assert( val == 1)
-		sleep, 500
-	}
-    
-    End()
-    {
-		this.obj.kill()
-        this.remove("obj")
-		this.obj := 
-    }
-}
-
 ; ###################################################################
 class MoveResizeTestSuite
 {
