@@ -1,23 +1,17 @@
-/*
-	Title: Rectangle
-		Class to handle Rectangles
-
-	Author: 
-		hoppfrosch (hoppfrosch@ahk4.me)
-		
-	License: 
-		This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See http://www.wtfpl.net/ for more details.
-		
-	Changelog:
-		0.2.0 - [+] Compare functionality <equal>, <equalPos>, <equalSize>
-		0.1.0 - [+] Initial
-*/
-	
-; ****** HINT: Documentation can be extracted to HTML using NaturalDocs ************** */
-
-; Global Varibles
+; ****** HINT: Documentation can be extracted to HTML using GenDocs (https://github.com/fincs/GenDocs) by fincs************** */
 
 ; ******************************************************************************************************************************************
+/*!
+	Class: Rectangle
+		Handling rectangles (given through [x, y (upper-left corner), w, h] or [x, y (upper-left corner), x, y (lower-right corner)])
+		
+	Remarks:
+		### License
+			This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See [WTFPL](http://www.wtfpl.net/) for more details.
+		### Author
+			[hoppfrosch](hoppfrosch@ahk4.me)		
+	@UseShortForm
+*/
 class Rectangle {
 	
 	_version := "0.2.0"
@@ -28,104 +22,86 @@ class Rectangle {
 	h := 0
 
 
-/*
-===============================================================================
-Function: Dump
-	Dumps coordinates to a string
-
-Parameters:
-	new - Rectangle
-
-Returns:
-	printable string
-
-Author(s):
-	20130311 - hoppfrosch@ahk4.me - Original
-===============================================================================
-*/  
+	/*! ===============================================================================
+		Method: Dump()
+			Dumps coordinates to a string
+		Returns:
+			printable string containing coordinates
+		Remarks:
+			### Author(s)
+				* 20130311 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
+	*/
 	Dump() {
 		return "(" this.x "," this.y "," this.w "," this.h ")"
 	}
 
-/*
-===============================================================================
-Function: equal
-	Compares currrent rectangle to given rectangle
-
-Parameters:
-	comp - Rectangle to compare with
-
-Returns:
-	true or false
-
-See also: <equalPos>, <equalSize>
-
-Author(s):
-	20130311 - hoppfrosch@ahk4.me - Original
-===============================================================================
-*/  
+	/*! ===============================================================================
+		Method: equal(comp)
+			Compares currrent rectangle to given rectangle
+		Parameters:
+			comp - [Rectangle](Rectangle.html) to compare with
+		Returns:
+			true or false
+		Remarks:
+			### See also: 
+				[equalPos()](#equalPos), [equalSize()](#equalSize)
+				
+			### Author(s)
+				* 20130311 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
+	*/
 	equal(comp) {
 		return this.equalPos(comp) AND this.equalSize(comp)
 	}
 
-/*
-===============================================================================
-Function: equalPos
-	Compares currrent rectangle position to given rectangle
-
-Parameters:
-	comp - Rectangle to compare with
-
-Returns:
-	true or false
-
-See also: <equal>, <equalSize>
-
-Author(s):
-	20130311 - hoppfrosch@ahk4.me - Original
-===============================================================================
-*/  
+	/*! ===============================================================================
+		Method: equalPos(comp)
+			Compares currrent rectangle position to given rectangle position
+		Parameters:
+			comp - [Rectangle](Rectangle.html) to compare with
+		Returns:
+			true or false
+		Remarks:
+			### See also: 
+				[equal()](#equal), [equalSize()](#equalSize)
+				
+			### Author(s)
+				* 20130311 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
+	*/
 	equalPos(comp) {
 		return (this.x == comp.x) AND (this.y == comp.y)
 	}
-	
-/*
-===============================================================================
-Function: equalSize
-	Compares currrent rectangle size to given rectangle
 
-Parameters:
-	comp - Rectangle to compare with
-
-Returns:
-	true or false
-	
-See also: <equalPos>, <equal>
-
-
-Author(s):
-	20130311 - hoppfrosch@ahk4.me - Original
-===============================================================================
-*/  
+	/*! ===============================================================================
+		Method: equalSize(comp)
+			Compares currrent rectangle size to given rectangle size
+		Parameters:
+			comp - [Rectangle](Rectangle.html) to compare with
+		Returns:
+			true or false
+		Remarks:
+			### See also: 
+				[equal()](#equal), [equalPos()](#equalPos)
+				
+			### Author(s)
+				* 20130311 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
+	*/
 	equalSize(comp) {
 		ret := (this.w == comp.w)  AND (this.h == comp.h)
 		return ret
 	}
 
-/*
-===============================================================================
-Function: fromHWnd
-	Fills values from given Window (given by Handle)
-
-Parameters:
-	hWnd - Window handle, whose geometry has to be determined
-
-See also: <fromWinPos>
-
-Author(s):
-	20130311 - hoppfrosch@ahk4.me - Original
-===============================================================================
-*/  
+	/*! ===============================================================================
+		Method: fromHWnd(hwnd)
+			Fills values from given Window (given by Handle)
+		Parameters:
+			hWnd - Window handle, whose geometry has to be determined
+		Remarks:
+			### See also: 
+				[fromWinPos()](#fromWinPos)
+				
+			### Author(s)
+				* 20130311 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
+	*/
 	fromHWnd(hwnd) {
 		WinGetPos, x, y, w, h, ahk_id %hwnd%
 		this.x := x
@@ -136,20 +112,15 @@ Author(s):
 			OutputDebug % "|[" A_ThisFunc "([" hwnd "])] -> x,y,w,h: (" x "," y "," w "," h ")" ; _DBG_
 	}
 
-/*
-===============================================================================
-Function: fromRectangle
-	Fills values from <Rectangle>
-
-Parameters:
-	new - Rectangle
-
-See also: <fromHWnd>
-
-Author(s):
-	20130311 - hoppfrosch@ahk4.me - Original
-===============================================================================
-*/  
+	/*! ===============================================================================
+		Method: fromRectangle(new)
+			Fills values from given [Rectangle](Rectangle.html)
+		Parameters:
+			new - Rectangle
+		Remarks:
+			### Author(s)
+				* 20130311 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
+	*/
 	fromRectangle(new) {
 		this.x := new.x 
 		this.y := new.y
@@ -196,13 +167,57 @@ Author(s):
 ===============================================================================
 */    
 	__Get(aName) {
+		/*! ---------------------------------------------------------------------------------------
+			Property: x [get/set]
+				Get or Set x-coordinate of the upper left corner of the rectangle
+				
+				This is identical to property [xul](#xul)
+		*/
+		
+		/*! ---------------------------------------------------------------------------------------
+			Property: y [get/set]
+				Get or Set y-coordinate of the upper left corner of the rectangle
+				
+				This is identical to property [yul](#yul)
+		*/
+		
+		/*! ---------------------------------------------------------------------------------------
+			Property: w [get/set]
+				Get or Set the width of the rectangle
+		*/
+		
+		/*! ---------------------------------------------------------------------------------------
+			Property: h [get/set]
+				Get or Set the height of the rectangle
+		*/
+
         if (aName = "xul") ; x - upper left corner
+		/*! ---------------------------------------------------------------------------------------
+			Property: xul [get/set]
+				Get or Set x-coordinate of the upper left corner of the rectangle			
+				
+				This is identical to property [x](#x)
+		*/
 			return this.x
 		if (aName = "yul") ; y - upper left corner
+		/*! ---------------------------------------------------------------------------------------
+			Property: yul [get/set]
+				Get or Set y-coordinate of the upper left corner of the rectangle			
+				
+				This is identical to property [y](#y)
+		*/
 			return this.y
 		if (aName = "xlr") ; x - lower right corner
+		/*! ---------------------------------------------------------------------------------------
+			Property: xlr [get/set]
+				Get or Set x-coordinate of the lower right corner of the rectangle			
+		*/
 			return this.x+this.w
 		if (aName = "ylr") ; y - lower right left corner
+		/*! ---------------------------------------------------------------------------------------
+			Property: ylr [get/set]
+				Get or Set y-coordinate of the lower right corner of the rectangle			
+		*/
 			return this.y+this.h
 			
 		return
@@ -261,3 +276,6 @@ Author(s):
 	}
 }
 
+/*!
+	End of class
+*/
