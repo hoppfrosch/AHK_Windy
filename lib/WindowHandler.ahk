@@ -21,23 +21,27 @@
 		### To Be done
 			* Implement `__Setter()`-functionality
 				* `monitorID`
-				* `centercoords`
-				* `resizeable`
 				* `style`
 				* `styleEx`
 			* New functionality
 				* Method `close()`
 				* Property `active` (getter (Is window active window?) and setter (activate/deactivate window))
-				* Property `titlebar` (getter and setter (enable/disable titlebar)
+				* Property `titlebar` (getter and setter (enable/disable titlebar))
+				* Property `x` (getter and setter) - X coordinate of the window
+				* Property `y` (getter and setter) - Y coordinate of the window
+				* Property `width` (getter and setter) - Width of the window
+				* Property `heigth` (getter and setter) - heigth of the window
+				* Property `resizeable` (getter and setter) - Make getter work correctly & Setter: disable the sizebox ...
 */
 
 
 class WindowHandler {
 	
-	_version := "0.5.15"
+	_version := "0.5.17"
 	_debug := 0
 	_hWnd := 0
-	
+
+	__useEventHook := 1
 	_hWinEventHook1 := 0
 	_hWinEventHook2 := 0
 	_HookProcAdr := 0
@@ -57,17 +61,23 @@ class WindowHandler {
 		if (aName == "alwaysOnTop") {
 			return this.__setAlwaysOnTop(aValue)
 		}
+		else if (aName == "centercoords") {
+			return this.__setCentercoords(aValue)
+		}
 		else if (aName == "debug") {
 			return this.__setDebug(aValue)
 		}
 		else if (aName == "hidden") {
 			return this.__setHidden(aValue)
 		}
+		else if (aName == "maximized") {
+			return this.__setMaximized(aValue)
+		}
 		else if (aName == "minimized") {
 			return this.__setMinimized(aValue)
 		}
-		else if (aName == "maximized") {
-			return this.__setMaximized(aValue)
+		else if (aName == "monitorID") {
+			return this.__setMonitorID(aValue)
 		}
 		else if (aName == "rolledUp") {
 			return this.__setRolledUp(aValue)
@@ -111,7 +121,7 @@ class WindowHandler {
 			
 		**ToBeDone: Implementation of Setter-functionality**
 */
-			ret := this.__centercoords()
+			ret := this.__getCentercoords()
 		}
         else if (aName = "classname") {
 /*! ---------------------------------------------------------------------------------------
@@ -173,12 +183,14 @@ class WindowHandler {
 		}
 		else if (aName = "monitorID") {
 /*! ---------------------------------------------------------------------------------------
-	Property: monitorID [get]
-		Returns the ID of monitor on which the window is on
-		
-		**ToBeDone: Implementation of Setter-functionality**
+	Property: monitorID [get/set]
+		Get or Set the ID of monitor on which the window is on. Setting the property moves the window to the corresponding monitor, trying to place the window at the same (scaled) position
+	Value:
+		ID - Monitor-ID (if ID > max(ID) then ID = max(ID) will be used)
+	Remarks
+		* Setting the property moves the window to the corresponding monitor, retaining the (relative) position and size of the window
 */
-			ret := this.__monitorID()
+			ret := this.__getMonitorID()
 		}
 		else if (aName = "pos") { ; current position
 /*! ---------------------------------------------------------------------------------------
@@ -191,9 +203,6 @@ class WindowHandler {
 			* 20130429 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
 */
 			ret := this.__getPos()
-			written := 1 ; _DBG_
-			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret.dump() ; _DBG_
 		}
 		else if (aName = "resizeable") { 
 /*! ---------------------------------------------------------------------------------------
@@ -262,11 +271,11 @@ class WindowHandler {
 */
 			ret :=  this.__getTitle()
 		}
-		
+		/*
 		if (this._debug) ; _DBG_
 			if (!written) ; _DBG_
 			OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret ; _DBG_
-
+        */
 		return ret
 	}
 	__getAlwaysOnTop() {
@@ -307,6 +316,44 @@ class WindowHandler {
 		
 		return this.alwaysOnTop
 	}
+	__getCentercoords() {
+/* ===============================================================================
+	Method: __getCentercoords
+		Determine center of the window (*INTERNAL*)
+	Returns:
+		<Rectangle> - Rectangle containing the current center and size (0) of the window
+*/
+		pos := this.Pos
+		x := Round((pos.w)/2 + pos.x)
+		y := Round((pos.h)/2 + pos.y)
+		centerPos := new Rectangle(x,y,0,0,this._debug)
+		if (this._debug) ; _DBG_
+			OutputDebug % "<[" A_ThisFunc "(pos="pos.dump() " [" this._hWnd "])] -> " centerPos.dump() ; _DBG_
+		return centerPos
+	}
+	__setCentercoords(rect) {
+/* ===============================================================================
+	Method: __setCentercoords
+		Sets center of the window (*INTERNAL*). This moves the window to new center coordinates
+	Value:
+		rect - <Rectangle> containing the new center window. The given size will be ignored
+*/
+		currCenter := this.centercoords
+		currPos := this.pos
+		
+		xoffset := rect.x - currCenter.x
+		yoffset := rect.y - currCenter.y
+		
+		x := currPos.x + xoffset
+		y := currPos.y + yoffset
+		
+		this.move(x,y,99999,99999)
+		centerPos := this.centercoords
+		if (this._debug) ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "(pos="rect.dump() " [" this._hWnd "])] -> " centerPos.dump() ; _DBG_
+		return centerPos
+	}
+	
 	__getClassname() { ; NO SETTER!!
 /* ===============================================================================
 	Method:   __getClassname 
@@ -320,7 +367,6 @@ class WindowHandler {
 			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "]) -> (" __classname ")]" ; _DBG_		
 		return __classname
 	}
-
 	__getDebug() {                                                                 ; _DBG_
 /* =============================================================================== ; _DBG_
 	Method:   __getDebug                                                           ; _DBG_
@@ -478,6 +524,52 @@ class WindowHandler {
 			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> New Value:" isMin ; _DBG_
 
 		return isMin
+	}
+	__getMonitorID() {
+/* ===============================================================================
+	Method:  __getMonitorID
+		Determines ID of monitor the window currently is on (i.e center of window) (*INTERNAL*)
+	Returns:
+		MonitorID
+*/
+		mon := 1
+		c := this.centercoords
+		mme := new MultiMonitorEnv(this._debug)
+		mon := mme.monGetFromCoord(c.x,c.y,mon)
+		if (this._debug) ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " mon ; _DBG_		
+		return mon
+	}
+	__setMonitorID(newID) {
+/* ===============================================================================
+	Method: __setMonitorID(newID)
+		Moves the window to the given Monitor (*INTERNAL)
+	Parameters:
+		newID - Monitor-ID
+*/
+		obj := new MultiMonitorEnv(this._debug)
+		
+		realID := newID
+		if (realID > obj.monCount()) {
+			realID := obj.monCount()
+		}
+		if (realID < 1) {
+			realID := 1
+		}
+		newMon := obj.monBoundary(realID)
+		
+		oldID := this.monitorID
+		oldMon := obj.monBoundary(oldID)
+		
+		oldPos := this.pos
+		xnew := newMon.x+(oldPos.x - oldMon.x)
+		ynew := newMon.y+(oldPos.y - oldMon.y)
+		this.Move(xnew,ynew)
+		monID := this.monitorID
+		if (this._debug) ; _DBG_
+			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], ID=" newID ")] -> New Value:" monID " (from: " oldID ")" ; _DBG_
+
+		return monID
 	}
 	__getPos() {
 /* ===============================================================================
@@ -741,25 +833,7 @@ class WindowHandler {
 	}
 	
 
-/* ===============================================================================
-Method: __centercoords
-	Determine center of the window (*INTERNAL*)
-
-Returns:
-	<Rectangle> - Rectangle containing the current center and size (0) of the window
-
-Author(s):
-	20130308 - hoppfrosch@ahk4.me - Original
-*/
-	__centercoords() {
-		pos := this.Pos
-		x := Round((pos.w)/2 + pos.x)
-		y := Round((pos.h)/2 + pos.y)
-		centerPos := new Rectangle(x,y,0,0,this._debug)
-		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "(pos="pos.dump() " [" this._hWnd "])] -> " centerPos.dump() ; _DBG_
-		return centerPos
-	}
+	
 
 /* ===============================================================================
 Method:   __exist
@@ -824,27 +898,7 @@ Author(s):
 	
 		return ret
 	}
-	
-/* ===============================================================================
-Method:  __ monitorID
-    Determines ID of monitor the window currently is on (i.e center of window) (*INTERNAL*)
-
-Returns:
-    MonitorID
-     
-Author(s):
-	20130308 - hoppfrosch@ahk4.me - Original
-*/
-	__monitorID(default=1) {
-		mon := default
-		c := this.centercoords
-		mme := new MultiMonitorEnv(this._debug)
-		mon := mme.monGetFromCoord(c.x,c.y,default)
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " mon ; _DBG_		
-		return mon
-}
-	
+		
 /* ===============================================================================
 Method: __posPush
 	Pushes current position of the window on position stack (*INTERNAL*)
@@ -1010,13 +1064,15 @@ Method: __Delete
 		if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])"  ; _DBG_
 			
+		if (this.__useEventHook == 1) {
+			if (this.__hWinEventHook1)
+				DllCall( "user32\UnhookWinEvent", Uint,this._hWinEventHook1 )
+			if (this.__hWinEventHook2)
+				DllCall( "user32\UnhookWinEvent", Uint,this._hWinEventHook2 )
+			if (this._HookProcAdr)
+				DllCall( "kernel32\GlobalFree", UInt,&this._HookProcAdr ) ; free up allocated memory for RegisterCallback
+		}
 		
-		if (this.__hWinEventHook1)
-			DllCall( "user32\UnhookWinEvent", Uint,this._hWinEventHook1 )
-		if (this.__hWinEventHook2)
-			DllCall( "user32\UnhookWinEvent", Uint,this._hWinEventHook2 )
-		if (this._HookProcAdr)
-			DllCall( "kernel32\GlobalFree", UInt,&this._HookProcAdr ) ; free up allocated memory for RegisterCallback
 		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])"  ; _DBG_
 			
@@ -1027,8 +1083,10 @@ Method: __Delete
 		if (this.__isHidden() == 1) {
 			this.show()
 		}
-			
-		ObjRelease(&this)
+		
+		if (this.__useEventHook == 1) {		
+			ObjRelease(&this)
+		}
 	}
 
 /* ===============================================================================
@@ -1089,11 +1147,13 @@ Author(s):
 		this.__posPush()
 		
 		; Registering global callback and storing adress (&this) within A_EventInfo
-		ObjAddRef(&this)
-		this._HookProcAdr := RegisterCallback("ClassWindowHandler_EventHook", "", "", &this)
-		; Setting Callback on Adress <_HookProcAdr> on appearance of any event out of certain range
-		this._hWinEventHook1 := this.__SetWinEventHook( CONST_EVENT.SYSTEM.SOUND, CONST_EVENT.SYSTEM.DESKTOPSWITCH, 0, this._HookProcAdr, 0, 0, 0 )	
-		this._hWinEventHook2 := this.__SetWinEventHook( CONST_EVENT.OBJECT.SHOW, CONST_EVENT.OBJECT.CONTENTSCROLLED, 0, this._HookProcAdr, 0, 0, 0 )	
+		if (this.__useEventHook == 1) {
+			ObjAddRef(&this)
+			this._HookProcAdr := RegisterCallback("ClassWindowHandler_EventHook", "", "", &this)
+			; Setting Callback on Adress <_HookProcAdr> on appearance of any event out of certain range
+			this._hWinEventHook1 := this.__SetWinEventHook( CONST_EVENT.SYSTEM.SOUND, CONST_EVENT.SYSTEM.DESKTOPSWITCH, 0, this._HookProcAdr, 0, 0, 0 )	
+			this._hWinEventHook2 := this.__SetWinEventHook( CONST_EVENT.OBJECT.SHOW, CONST_EVENT.OBJECT.CONTENTSCROLLED, 0, this._HookProcAdr, 0, 0, 0 )	
+		}
 		
 		if (this._debug) ; _DBG_
 			OutputDebug % "<[" A_ThisFunc "(hWnd=(" _hWnd "))]" ; _DBG_
