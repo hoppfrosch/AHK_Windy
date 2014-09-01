@@ -14,6 +14,8 @@ The idea is based on [WindowPad](http://http://www.autohotkey.com/board/topic/19
  - [AutoHotkey 1.0](http://www.autohotkey.com/)
 - [Coco](https://gist.github.com/cocobelgica)
  - [XML](https://gist.github.com/cocobelgica/4576128)-Library 
+- [HotKeyIt](http://www.autohotkey.com/board/user/6031-hotkeyit/)
+ - [TT](http://www.autohotkey.com/board/topic/60605-ahl-lv2-tt-full-blown-tooltip-library/)-Library 
 - [Lexikos](http://www.autohotkey.com/board/user/2446-lexikos/)
  - for taking up the development on [AutoHotkey](http://l.autohotkey.net/) (aka. AHK_L)
  - [WindowPad](http://http://www.autohotkey.com/board/topic/19990-windowpad-window-moving-tool) as **main inspiration**
