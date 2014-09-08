@@ -1,7 +1,7 @@
 ﻿; ****** HINT: Documentation can be extracted to HTML using GenDocs (https://github.com/fincs/GenDocs) by fincs
 ; ****** HINT: Debug-lines should contain "; _DBG_" at the end of lines - using this, the debug lines could be automatically removed through scripts before releasing the sourcecode
 
-#include <Rectangle>
+#include <EDE\Rectangle>
 #include <MultiMonitorEnv>
 #include <_WindowHandlerEvent>
 
@@ -20,7 +20,6 @@
 
 		### To Be done
 			* Implement `__Setter()`-functionality
-				* `monitorID`
 				* `style`
 				* `styleEx`
 			* New functionality

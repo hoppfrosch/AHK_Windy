@@ -13,7 +13,7 @@
 		0.1.0 - [+] Initial
 */
 
-#include <Rectangle>
+#include <EDE\Rectangle>
 
 ; ****** HINT: Documentation can be extracted to HTML using NaturalDocs ************** */
 
