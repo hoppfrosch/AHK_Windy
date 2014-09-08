@@ -35,7 +35,7 @@
 */
 class WindowHandler {
 	
-	_version := "0.5.18"
+	_version := "0.5.19"
 	_debug := 0
 	_hWnd := 0
 
@@ -101,7 +101,7 @@ class WindowHandler {
 		written := 0 ; _DBG_
 
 	
-        if (aName = "alwaysOnTop") {
+		if (aName = "alwaysOnTop") {
 /*! ---------------------------------------------------------------------------------------
 	Property: alwaysOnTop [get/set]
 		Get or Set the *alwaysontop*-Property.  Set/Unset alwaysontop flag of the current window or get the current state
@@ -121,7 +121,7 @@ class WindowHandler {
 */
 			ret := this.__getCentercoords()
 		}
-        else if (aName = "classname") {
+		else if (aName = "classname") {
 /*! ---------------------------------------------------------------------------------------
 	Property: classname [get]
 		Get the name of the window class. 
@@ -202,14 +202,16 @@ class WindowHandler {
 */
 			ret := this.__getPos()
 		}
-		else if (aName = "resizeable") { 
+		else if (aName = "processID") {
 /*! ---------------------------------------------------------------------------------------
-	Property: resizeable [get]
-		Checks whether window is resizeable
-	
-		**ToBeDone: Implementation of Setter-functionality**
+	Property: processID [get]
+		Get the ID of the process the window belongs to
+	Remarks:		
+		There is no setter available, since this cannot be modified
 */
-			ret := this.__isResizable()
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])]" ; _DBG_
+			ret := this.__getProcessID()
 		}
 		else if (aName = "processname") {
 /*! ---------------------------------------------------------------------------------------
@@ -218,9 +220,18 @@ class WindowHandler {
 	Remarks:		
 		There is no setter available, since this cannot be modified
 */
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])]" ; _DBG_
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])]" ; _DBG_
 			ret := this.__getProcessname()
+		}
+		else if (aName = "resizeable") { 
+/*! ---------------------------------------------------------------------------------------
+	Property: resizeable [get]
+		Checks whether window is resizeable
+	
+		**ToBeDone: Implementation of Setter-functionality**
+*/
+			ret := this.__isResizable()
 		}
 		else if (aName = "rolledUp") {
 /*! ---------------------------------------------------------------------------------------
@@ -606,6 +617,22 @@ class WindowHandler {
 			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], pos=" newPos.Dump()")] -> New Value:" newPos.Dump() ; _DBG_
 
 		return newPos
+	}
+	__getProcessID() {
+/* ===============================================================================
+	Method:   __getProcessID
+		Gets the process-ID of the process the window belongs to (*INTERNAL*)
+	Returns:
+		processID or empty string (if window does not exist)
+*/
+		ret := ""
+		if this.exist {
+			WinGet, PID, PID, % "ahk_id " this._hWnd
+			ret := PID
+		}
+		if (this._debug) ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
+		return ret
 	}
 	__getProcessname() {
 /* ===============================================================================
