@@ -11,7 +11,7 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.5.18"
+ReferenceVersion := "0.5.19"
 debug := 1
 
 
@@ -27,10 +27,10 @@ class TempTestSuite {
 		this.obj := new WindowHandler(0, debug)
 	}
 
-	Processname() {
-		val := this.obj.processname
-		OutputDebug % "|[" A_ThisFunc "]" ; _DBG_
-		Yunit.assert( val == "notepad.exe")
+	Processid() {
+		val := this.obj.processID
+		OutputDebug % "|[" A_ThisFunc "] - " val ; _DBG_
+		Yunit.assert( val > 0)
 		sleep, 500
 	}
 	     
@@ -554,6 +554,13 @@ class MiscTestSuite {
 		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
 		val := this.obj.processname
 		Yunit.assert( val == "notepad.exe")
+		OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
+	}
+
+	ProcessID() {
+			OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
+		val := this.obj.processID
+		Yunit.assert( val > 0)
 		OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
 	}
 	
