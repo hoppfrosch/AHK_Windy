@@ -16,7 +16,7 @@
 
 	Remarks:
 		### Author
-			[hoppfrosch](hoppfrosch@ahk4.me)
+			[hoppfrosch](hoppfrosch@gmx.de)
 
 		### To Be done
 			* Implement `__Setter()`-functionality
@@ -200,7 +200,7 @@ class WindowHandler {
 		`obj.pos := new [Rectangle](rectangle.html)(xnew, ynew, wnew, hnew)`	
 	Extra:
 		### Author(s)
-			* 20130429 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
+			* 20130429 - [hoppfrosch](hoppfrosch@gmx.de) - Original
 */
 			ret := this.__getPos()
 		}
@@ -790,7 +790,7 @@ class WindowHandler {
 	movePercental(xFactor=0, yFactor=0, wFactor=100, hFactor=100) {
 /*! ===============================================================================
 	Method: movePercental(xFactor=0, yFactor=0, wFactor=100, hFactor=100)
-		move and resize window relative to the size of the current.
+		move and resize window relative to the size of the current screen.
 			
 		For example: 
 		 * `obj.movePercental(0,0,100,100)` creates a window with origin 0,0 and a *width=100% of screen width* and *height=100% of screen height*
@@ -806,7 +806,7 @@ class WindowHandler {
 			
 		### Author(s)
 		    * xxxxxxxx - Lexikos - [Original on AHK-Forum](http://www.autohotkey.com/forum/topic21703.html)
-			* 20130402 - [hoppfrosch](hoppfrosch@ahk4.me) - Rewritten
+			* 20130402 - [hoppfrosch](hoppfrosch@gmx.de) - Rewritten
 			
 		### Caveats / Known issues
 		    * The range of the method parameters is **NOT** checked - so be carefull using any values <0 or >100
@@ -843,7 +843,7 @@ Returns:
 	true or false
 
 Author(s):
-	20130308 - hoppfrosch@ahk4.me - Original
+	20130308 - hoppfrosch@gmx.de - Original
 */
 	__exist() {
 		val := this._hWnd
@@ -864,7 +864,7 @@ Returns:
     True or False
      
 Author(s):
-    20130308 - hoppfrosch@ahk4.me - Original
+    20130308 - hoppfrosch@gmx.de - Original
 */
 	__isResizable() {
 		ret := true
@@ -904,7 +904,7 @@ Method: __posPush
 	Pushes current position of the window on position stack (*INTERNAL*)
 
 Author(s):
-	20130311 - hoppfrosch@ahk4.me - Original
+	20130311 - hoppfrosch@gmx.de - Original
 */
 	__posPush() {
 		this._posStack.Insert(1, this.pos)
@@ -919,7 +919,7 @@ Method: __posStackDump
 	Dumps the current position stack via OutputDebug (*INTERNAL*)
 
 Author(s):
-	20130312 - hoppfrosch@ahk4.me - Original
+	20130312 - hoppfrosch@gmx.de - Original
 */	
 	__posStackDump() {
 		For key,value in this._posStack	; loops through all elements in Stack
@@ -936,7 +936,7 @@ Parameters:
 	index - Index of position to restore (Default = 2) (1 is the current position)
 
 Author(s):
-	20130308 - hoppfrosch@ahk4.me - Original
+	20130308 - hoppfrosch@gmx.de - Original
 */
 	__posRestore(index="2") {
 		if (this._debug) ; _DBG_
@@ -960,7 +960,7 @@ Returns:
 	Current Style
 
 Author(s):
-	20130308 - hoppfrosch@ahk4.me - Original
+	20130308 - hoppfrosch@gmx.de - Original
 */
 	__style() {
 		val := this._hWnd
@@ -978,7 +978,7 @@ Returns:
 	Current Extended Style
 
 Author(s):
-	20130308 - hoppfrosch@ahk4.me - Original
+	20130308 - hoppfrosch@gmx.de - Original
 */
 	__styleEx() {
 		val := this._hWnd
@@ -999,7 +999,7 @@ Returns:
 	true or false, depending on result of dllcall
 
 Author(s):
-	20130311 - hoppfrosch@ahk4.me - Original
+	20130311 - hoppfrosch@gmx.de - Original
 */  
 	__SetWinEventHook(eventMin, eventMax, hmodWinEventProc, lpfnWinEventProc, idProcess, idThread, dwFlags) {
 		if (this._debug) ; _DBG_ 
@@ -1025,7 +1025,7 @@ Method:   __onLocationChange
 	Store windows size/pos on each change
 
 Author(s):
-	20130312 - hoppfrosch@ahk4.me - AutoHotkey-Implementation
+	20130312 - hoppfrosch@gmx.de - AutoHotkey-Implementation
 */
 	__onLocationChange() {
 		if this._hWnd = 0
@@ -1101,7 +1101,7 @@ Returns:
 	true or false, depending on current value
 
 Author(s):
-	20130308 - hoppfrosch@ahk4.me - Original
+	20130308 - hoppfrosch@gmx.de - Original
 */     
 	__New(_hWnd=-1, _debug=0, _test=0) {
 		this._debug := _debug
