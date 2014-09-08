@@ -4,7 +4,7 @@
 #Include %A_ScriptDir%\Yunit\Yunit.ahk
 #Include %A_ScriptDir%\Yunit\Window.ahk
 #Include %A_ScriptDir%\Yunit\StdOut.ahk
-#include <MouseTools>
+#include <EDE\Mouse>
 
 #Warn All
 #Warn LocalSameAsGlobal, Off
