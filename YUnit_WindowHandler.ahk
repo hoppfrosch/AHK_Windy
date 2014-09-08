@@ -5,6 +5,7 @@
 #Include %A_ScriptDir%\Yunit\Window.ahk
 #Include %A_ScriptDir%\Yunit\StdOut.ahk
 #include <EDE\Rectangle>
+#include <EDE\MultiMonitorEnv>
 #include <WindowHandler>
 
 ; #Warn All
