@@ -1,4 +1,4 @@
-; ****** HINT: Documentation can be extracted to HTML using GenDocs (https://github.com/fincs/GenDocs) by fincs
+﻿; ****** HINT: Documentation can be extracted to HTML using GenDocs (https://github.com/fincs/GenDocs) by fincs
 ; ****** HINT: Debug-lines should contain "; _DBG_" at the end of lines - using this, the debug lines could be automatically removed through scripts before releasing the sourcecode
 
 #include <Rectangle>
@@ -16,7 +16,7 @@
 
 	Remarks:
 		### Author
-			[hoppfrosch](hoppfrosch@ahk4.me)
+			[hoppfrosch](hoppfrosch@gmx.de)
 
 		### To Be done
 			* Implement `__Setter()`-functionality
@@ -33,11 +33,9 @@
 				* Property `heigth` (getter and setter) - heigth of the window
 				* Property `resizeable` (getter and setter) - Make getter work correctly & Setter: disable the sizebox ...
 */
-
-
 class WindowHandler {
 	
-	_version := "0.5.17"
+	_version := "0.5.19"
 	_debug := 0
 	_hWnd := 0
 
@@ -103,7 +101,7 @@ class WindowHandler {
 		written := 0 ; _DBG_
 
 	
-        if (aName = "alwaysOnTop") {
+		if (aName = "alwaysOnTop") {
 /*! ---------------------------------------------------------------------------------------
 	Property: alwaysOnTop [get/set]
 		Get or Set the *alwaysontop*-Property.  Set/Unset alwaysontop flag of the current window or get the current state
@@ -123,7 +121,7 @@ class WindowHandler {
 */
 			ret := this.__getCentercoords()
 		}
-        else if (aName = "classname") {
+		else if (aName = "classname") {
 /*! ---------------------------------------------------------------------------------------
 	Property: classname [get]
 		Get the name of the window class. 
@@ -200,9 +198,31 @@ class WindowHandler {
 		`obj.pos := new [Rectangle](rectangle.html)(xnew, ynew, wnew, hnew)`	
 	Extra:
 		### Author(s)
-			* 20130429 - [hoppfrosch](hoppfrosch@ahk4.me) - Original
+			* 20130429 - [hoppfrosch](hoppfrosch@gmx.de) - Original
 */
 			ret := this.__getPos()
+		}
+		else if (aName = "processID") {
+/*! ---------------------------------------------------------------------------------------
+	Property: processID [get]
+		Get the ID of the process the window belongs to
+	Remarks:		
+		There is no setter available, since this cannot be modified
+*/
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])]" ; _DBG_
+			ret := this.__getProcessID()
+		}
+		else if (aName = "processname") {
+/*! ---------------------------------------------------------------------------------------
+	Property: processname [get]
+		Get the Name of the process the window belongs to
+	Remarks:		
+		There is no setter available, since this cannot be modified
+*/
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])]" ; _DBG_
+			ret := this.__getProcessname()
 		}
 		else if (aName = "resizeable") { 
 /*! ---------------------------------------------------------------------------------------
@@ -353,7 +373,6 @@ class WindowHandler {
 			OutputDebug % "|[" A_ThisFunc "(pos="rect.dump() " [" this._hWnd "])] -> " centerPos.dump() ; _DBG_
 		return centerPos
 	}
-	
 	__getClassname() { ; NO SETTER!!
 /* ===============================================================================
 	Method:   __getClassname 
@@ -599,6 +618,38 @@ class WindowHandler {
 
 		return newPos
 	}
+	__getProcessID() {
+/* ===============================================================================
+	Method:   __getProcessID
+		Gets the process-ID of the process the window belongs to (*INTERNAL*)
+	Returns:
+		processID or empty string (if window does not exist)
+*/
+		ret := ""
+		if this.exist {
+			WinGet, PID, PID, % "ahk_id " this._hWnd
+			ret := PID
+		}
+		if (this._debug) ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
+		return ret
+	}
+	__getProcessname() {
+/* ===============================================================================
+	Method:   __getProcessname
+		Gets the processname of the process the window belongs to (*INTERNAL*)
+	Returns:
+		processname or empty string (if window does not exist)
+*/
+		ret := ""
+		if this.exist {
+			WinGet, PName, ProcessName, % "ahk_id " this._hWnd
+			ret := PName
+		}
+		if (this._debug) ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
+		return ret
+	}
 	__getRolledUp() {
 /* ===============================================================================
 	Method:   __getRolledUp
@@ -790,7 +841,7 @@ class WindowHandler {
 	movePercental(xFactor=0, yFactor=0, wFactor=100, hFactor=100) {
 /*! ===============================================================================
 	Method: movePercental(xFactor=0, yFactor=0, wFactor=100, hFactor=100)
-		move and resize window relative to the size of the current.
+		move and resize window relative to the size of the current screen.
 			
 		For example: 
 		 * `obj.movePercental(0,0,100,100)` creates a window with origin 0,0 and a *width=100% of screen width* and *height=100% of screen height*
@@ -806,7 +857,7 @@ class WindowHandler {
 			
 		### Author(s)
 		    * xxxxxxxx - Lexikos - [Original on AHK-Forum](http://www.autohotkey.com/forum/topic21703.html)
-			* 20130402 - [hoppfrosch](hoppfrosch@ahk4.me) - Rewritten
+			* 20130402 - [hoppfrosch](hoppfrosch@gmx.de) - Rewritten
 			
 		### Caveats / Known issues
 		    * The range of the method parameters is **NOT** checked - so be carefull using any values <0 or >100
@@ -832,9 +883,8 @@ class WindowHandler {
 			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], xFactor=" xFactor ", yFactor=" yFactor ", wFactor=" wFactor ", hFactor=" hFactor ")] -> padded to (" this.pos.Dump() ") on Monitor (" monId ")" ; _DBG_
 	}
 	
-
-	
-
+	; ######################## Internal Methods - not to be called directly ############################################
+	__exist() {
 /* ===============================================================================
 Method:   __exist
 	Checks if the specified window exists (*INTERNAL*)
@@ -843,9 +893,8 @@ Returns:
 	true or false
 
 Author(s):
-	20130308 - hoppfrosch@ahk4.me - Original
+	20130308 - hoppfrosch@gmx.de - Original
 */
-	__exist() {
 		val := this._hWnd
 		_hWnd := WinExist("ahk_id " val)
 		ret := true
@@ -855,7 +904,7 @@ Author(s):
 			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
 		return ret
 	}
-	
+	__isResizable() {
 /* ===============================================================================
 Method:   __isResizable
     Determine whether window can be resized by user (*INTERNAL*)
@@ -864,9 +913,8 @@ Returns:
     True or False
      
 Author(s):
-    20130308 - hoppfrosch@ahk4.me - Original
+    20130308 - hoppfrosch@gmx.de - Original
 */
-	__isResizable() {
 		ret := true
 		if this.__classname in Chrome_XPFrame,MozillaUIWindowClass
 			ret := true
@@ -878,7 +926,7 @@ Author(s):
 		
 		return ret
 }
-
+	__isWindow(hWnd) {
 /* ===============================================================================
 Method:   __isWindow
 	Checks whether the given hWnd refers to a TRUE window (As opposed to the desktop or a menu, etc.) (*INTERNAL*)
@@ -889,7 +937,6 @@ Returns:
 Author(s):
 	20080121 - ManaUser - Original (http://www.autohotkey.com/board/topic/25393-appskeys-a-suite-of-simple-utility-hotkeys/)
 */
-	__isWindow(hWnd) {
 		WinGet, s, Style, ahk_id %hWnd% 
 		ret := s & 0xC00000 ? (s & 0x80000000 ? 0 : 1) : 0  ;WS_CAPTION AND !WS_POPUP(for tooltips etc) 
 			
@@ -897,37 +944,35 @@ Author(s):
 			OutputDebug % "|[" A_ThisFunc "([" hWnd "])] -> " ret ; _DBG_		
 	
 		return ret
-	}
-		
+	}	
+	__posPush() {
 /* ===============================================================================
 Method: __posPush
 	Pushes current position of the window on position stack (*INTERNAL*)
 
 Author(s):
-	20130311 - hoppfrosch@ahk4.me - Original
+	20130311 - hoppfrosch@gmx.de - Original
 */
-	__posPush() {
 		this._posStack.Insert(1, this.pos)
 		if (this._debug) { ; _DBG_ 
 			this.__posStackDump() ; _DBG_ 
 			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "])] -> (" this._posStack[1].dump() ")" ; _DBG_
 		}
 	}
-
+	__posStackDump() {
 /* ===============================================================================
 Method: __posStackDump
 	Dumps the current position stack via OutputDebug (*INTERNAL*)
 
 Author(s):
-	20130312 - hoppfrosch@ahk4.me - Original
+	20130312 - hoppfrosch@gmx.de - Original
 */	
-	__posStackDump() {
 		For key,value in this._posStack	; loops through all elements in Stack
 		
 			OutputDebug % "|[" A_ThisFunc "()] -> (" key "): (" Value.dump() ")" ; _DBG_
 		return
 	}
-	
+	__posRestore(index="2") {
 /* ===============================================================================
 Method: __posRestore
 	Restores position of the window  from Stack(*INTERNAL*)
@@ -936,9 +981,8 @@ Parameters:
 	index - Index of position to restore (Default = 2) (1 is the current position)
 
 Author(s):
-	20130308 - hoppfrosch@ahk4.me - Original
+	20130308 - hoppfrosch@gmx.de - Original
 */
-	__posRestore(index="2") {
 		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], index=" index ")]" ; _DBG_
 		restorePos := this._posStack[index]
@@ -950,8 +994,7 @@ Author(s):
 		if (this._debug) ; _DBG_
 			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "])] LastPos: " currPos.Dump() " - RestoredPos: " restorePos.Dump() ; _DBG_
 	}
-
-
+	__style() {
 /* ===============================================================================
 Method:   __style
 	Determines the current style of the window (*INTERNAL*)
@@ -960,16 +1003,15 @@ Returns:
 	Current Style
 
 Author(s):
-	20130308 - hoppfrosch@ahk4.me - Original
+	20130308 - hoppfrosch@gmx.de - Original
 */
-	__style() {
 		val := this._hWnd
 		WinGet, currStyle, Style, ahk_id %val%
 		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> (" currStyle ")" ; _DBG_		
 		return currStyle
 	}
-
+	__styleEx() {
 /* ===============================================================================
 Method:   __styleEx
 	Determines the current extended style of the window (*INTERNAL*)
@@ -978,16 +1020,15 @@ Returns:
 	Current Extended Style
 
 Author(s):
-	20130308 - hoppfrosch@ahk4.me - Original
+	20130308 - hoppfrosch@gmx.de - Original
 */
-	__styleEx() {
 		val := this._hWnd
 		WinGet, currExStyle, ExStyle, ahk_id %val%
 		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> (" currExStyle ")" ; _DBG_		
 		return currExStyle
 	}
-
+	__SetWinEventHook(eventMin, eventMax, hmodWinEventProc, lpfnWinEventProc, idProcess, idThread, dwFlags) {
 /* ===============================================================================
 Method: __SetWinEventHook
 	Set the hook for certain win-events (*INTERNAL*)
@@ -999,9 +1040,8 @@ Returns:
 	true or false, depending on result of dllcall
 
 Author(s):
-	20130311 - hoppfrosch@ahk4.me - Original
-*/  
-	__SetWinEventHook(eventMin, eventMax, hmodWinEventProc, lpfnWinEventProc, idProcess, idThread, dwFlags) {
+	20130311 - hoppfrosch@gmx.de - Original
+*/ 
 		if (this._debug) ; _DBG_ 
 			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])(eventMin=" eventMin ", eventMax=" eventMax ", hmodWinEventProc=" hmodWinEventProc ", lpfnWinEventProc=" lpfnWinEventProc ", idProcess=" idProcess ", idThread=" idThread ", dwFlags=" dwFlags ")"  ; _DBG_
 		
@@ -1016,8 +1056,8 @@ Author(s):
 			, Uint,idThread
 			, Uint,dwFlags)   
 		return ret
-	}
-	
+	}	
+	__onLocationChange() {
 /* ===============================================================================
 Method:   __onLocationChange
 	Callback on Object-Event <CONST_EVENT.OBJECT.LOCATIONCHANGE> or on <CONST_EVENT.SYSTEM.MOVESIZEEND>
@@ -1025,9 +1065,8 @@ Method:   __onLocationChange
 	Store windows size/pos on each change
 
 Author(s):
-	20130312 - hoppfrosch@ahk4.me - AutoHotkey-Implementation
+	20130312 - hoppfrosch@gmx.de - AutoHotkey-Implementation
 */
-	__onLocationChange() {
 		if this._hWnd = 0
 			return
 		
@@ -1049,14 +1088,12 @@ Author(s):
 		if (this._debug) ; _DBG_
 			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "])] LastPos: " lastPos.Dump() " - NewPos: " currPos.Dump() ; _DBG_
 		return
-	}
-
- 
+	}  
+	__Delete() {
 /* ===============================================================================
 Method: __Delete
 	Destructor (*INTERNAL*)
-*/     
-	__Delete() {
+*/ 
 		if (this._hwnd <= 0) {
 			return
 		}
@@ -1088,7 +1125,7 @@ Method: __Delete
 			ObjRelease(&this)
 		}
 	}
-
+	__New(_hWnd=-1, _debug=0, _test=0) {
 /* ===============================================================================
 Method: __New
 	Constructor (*INTERNAL*)
@@ -1101,9 +1138,8 @@ Returns:
 	true or false, depending on current value
 
 Author(s):
-	20130308 - hoppfrosch@ahk4.me - Original
-*/     
-	__New(_hWnd=-1, _debug=0, _test=0) {
+	20130308 - hoppfrosch@gmx.de - Original
+*/   
 		this._debug := _debug
 		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "(hWnd=(" _hWnd "))] (version: " this._version ")" ; _DBG_
