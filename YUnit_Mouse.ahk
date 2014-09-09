@@ -9,7 +9,7 @@
 #Warn All
 #Warn LocalSameAsGlobal, Off
 
-ReferenceVersion := "0.1.0"
+ReferenceVersion := "0.1.1"
 
 Yunit.Use(YunitStdOut, YunitWindow).Test(MiscTestSuite)
 Return
@@ -18,7 +18,7 @@ class MiscTestSuite
 {
 	Begin()  {
 		debug := 1
-		this.r := new MouseTools(debug)
+		this.r := new Mouse(debug)
     }
 	
 	Version() {
@@ -28,6 +28,11 @@ class MiscTestSuite
 		
 	Locate() {
 		this.r.locate()
+	}
+
+	Pos() {
+		MsgBox % this.r.pos.dump() " - " this.r.x "," this.r.y
+		
 	}
 
 	End() {
