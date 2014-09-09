@@ -24,11 +24,11 @@
 class MultiMonitorEnv {
 	
 	_debug := 0
-	_version := "0.1.3"
+	_version := "0.1.4"
 	
 
-/*
-===============================================================================
+	monBoundary(mon=1) {
+/* ===============================================================================
 function: 	monBoundary
 	Get the boundaries of a monitor in Pixel, related to virtual screen. 
 	
@@ -42,9 +42,7 @@ Returns:
 
 Author(s):
     20121101 - hoppfrosch - Original
-===============================================================================
 */
-	monBoundary(mon=1) {
 		SysGet, size, Monitor, %mon%
 		rect := new Rectangle(sizeLeft, sizeTop, sizeRight, sizeBottom, this._debug)
 		if (this._debug) ; _DBG_
@@ -52,8 +50,8 @@ Author(s):
 		return rect
 	}
 	
-/*
-===============================================================================
+	monCenter(mon=1) {
+/* ===============================================================================
 function:	monCenter
     Get the center coordinates of a monitor in Pixel, related to virtual screen. 
 	The virtual screen is the bounding rectangle of all display monitors
@@ -66,9 +64,7 @@ Returns:
 
 Author(s):
     20121101 - hoppfrosch - Original
-===============================================================================
 */
-	monCenter(mon=1) {
 		boundary := this.monBoundary(mon)
 		xcenter := floor(boundary.x+(boundary.w-boundary.x)/2)
 		ycenter := floor(boundary.y+(boundary.h-boundary.y)/2)
@@ -78,8 +74,8 @@ Author(s):
 		return rect
 	}
 	
-/*
-===============================================================================
+	monCount() {
+/* ===============================================================================
 function:   monCount
 	Determines the number of monitors currently attached
   
@@ -88,17 +84,15 @@ Returns:
 
 Author(s):
 	20121101 - hoppfrosch - Original
-===============================================================================
 */
-	monCount() {
 		SysGet, mCnt, MonitorCount
 		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "()] -> " mCnt ; _DBG_
 		return mCnt
 	}
 
-/*
-===============================================================================
+	monGetFromCoord(x, y, default=1) {
+/* ===============================================================================
 Function:  monGetFromCoord
     Get the index of the monitor containing the specified x and y coordinates.
 
@@ -111,9 +105,7 @@ Returns:
 
 Author(s):
     Original - Lexikos - http://www.autohotkey.com/forum/topic21703.html
-===============================================================================
 */
-	monGetFromCoord(x, y, default=1) {
 		m := this.monCount
 		mon := default
 		; Iterate through all monitors.
@@ -128,8 +120,8 @@ Author(s):
 		return mon
 	}
 	
-/*
-===============================================================================
+	monGetFromMouse(default=1) {
+/* ===============================================================================
 Function:   monGetFromMouse
     Get the index of the monitor where the mouse is
 
@@ -141,9 +133,7 @@ Returns:
 
 Author(s):
     20120322- hoppfrosch: Initial
-===============================================================================
 */
-	monGetFromMouse(default=1) {
 		MouseGetPos,x,y 
 		mon := this.monGetFromCoord(x,y,default)
 		
@@ -153,8 +143,8 @@ Author(s):
 	}
 
 
-/*
-===============================================================================
+	monNext(mon=0, cycle=1) {
+/* ===============================================================================
 function:	monNext
     Gets the next monitor starting from given monitor. As default the starting monitor will be taken from current mousepos.
 	
@@ -167,9 +157,7 @@ Returns:
 
 Author(s):
     20121101 - hoppfrosch - Original
-===============================================================================
 */
-	monNext(mon=0, cycle=1) {
 		currMon := mon
 		if (mon == 0)
 			currMon = this.monGetFromMouse()
@@ -193,8 +181,9 @@ Author(s):
 		return nextMon
 	}
 	
-/*
-===============================================================================
+
+	monPrev(mon=0, cycle=1) {
+/* ===============================================================================
 function:	monPrev
     Gets the previous monitor starting from given monitor. As default the starting monitor will be taken from current mousepos.
 	
@@ -207,9 +196,7 @@ Returns:
 
 Author(s):
     20121101 - hoppfrosch - Original
-===============================================================================
 */
-	monPrev(mon=0, cycle=1) {
 		currMon := mon
 		if (mon == 0)
 			currMon = this.monGetFromMouse()
@@ -232,9 +219,52 @@ Author(s):
 		
 		return prevMon
 	}
+
+	monScaleX(mon1=1, mon2=1) {
+/* ===============================================================================
+Function:  monSize
+    Determines the scaling factor in y-direction for coordinates when moving from mon1 to mon2
+
+Parameters:
+    mon1 - Monitor number of first monitor
+    mon2 - Monitor number of second monitor
+  
+Returns:
+   Scaling factor
+
+Author(s):
+    20140909 - hoppfrosch - Original
+*/
+		size1 := this.monSize(mon1)
+		size2 := this.monSize(mon2)
+		scaleX := size2.w / size1.w
+		return scaleX
+	}
+
+	monScaleY(mon1=1, mon2=1) {
+/* ===============================================================================
+Function:  monSize
+    Determines the scaling factor in y-direction for coordinates when moving from mon1 to mon2
+
+Parameters:
+    mon1 - Monitor number of first monitor
+    mon2 - Monitor number of second monitor
+  
+Returns:
+   Scaling factor
+
+Author(s):
+    20140909 - hoppfrosch - Original
+*/
+		size1 := this.monSize(mon1)
+		size2 := this.monSize(mon2)
+		scaleY := size2.h / size1.h
+		return scaleY
+	}
+
 	
-/*
-===============================================================================
+	monSize(mon=1) {
+/* ===============================================================================
 Function:  monSize
     Get the size of a monitor in Pixel
 
@@ -246,9 +276,8 @@ Returns:
 
 Author(s):
     20121101 - hoppfrosch - Original
-===============================================================================
 */
-	monSize(mon=1) {
+
 		SysGet, size, Monitor, %mon%
 		rect := new Rectangle(0,0, sizeRight-sizeLeft, sizeBottom-sizeTop, this._debug)
 		if (this._debug) ; _DBG_
@@ -256,8 +285,8 @@ Author(s):
 		return rect
 	}
 
-/*
-===============================================================================
+	monWorkArea(mon=1) {
+/* ===============================================================================
 Function:  monWorkArea
     Same as <monSize>, except the area is reduced to exclude the area occupied by the taskbar and other registered desktop toolbars.
 
@@ -269,17 +298,17 @@ Returns:
 
 Author(s):
     20130322 - hoppfrosch - Original
-===============================================================================
 */
-	monWorkArea(mon=1) {
+
 		SysGet, size, MonitorWorkArea , %mon%
 		rect := new Rectangle(0,0, sizeRight-sizeLeft, sizeBottom-sizeTop, this._debug)
 		if (this._debug) ; _DBG_
 			OutputDebug % "<[" A_ThisFunc "(" mon ")] -> (" rect.dump() ")" ; _DBG_
 		return rect
 	}
-/*
-===============================================================================
+
+	virtualScreenSize() {
+/* ===============================================================================
 Function:  virtualScreenSize
     Get the size of virtual screen in Pixel
 	
@@ -293,9 +322,8 @@ Returns:
 
 Author(s):
     20121101 - hoppfrosch - Original
-===============================================================================
 */
-	virtualScreenSize() {
+
 		; Get position and size of virtual screen.
         SysGet, x, 76
         SysGet, y, 77
