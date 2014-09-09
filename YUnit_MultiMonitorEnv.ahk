@@ -11,18 +11,17 @@
 #SingleInstance force
 
 
-ReferenceVersion := "0.1.3"
+ReferenceVersion := "0.1.4"
 debug := 1
 
-Yunit.Use(YunitStdOut, YunitWindow).Test(MultiMonitorEnvTestSuite)
+Yunit.Use(YunitStdOut, YunitWindow).Test(MultiMonitorEnvTestSuite2)
 Return
 
 ExitApp
 
 class MultiMonitorEnvTestSuite2
 {
-	Begin()
-    {
+	Begin() {
 		Global debug
 		this.obj := new MultiMonitorEnv(debug)
 		this.monCount := 2
@@ -35,9 +34,7 @@ class MultiMonitorEnvTestSuite2
 		this.monvirtHeight := this.mon2Height
     }
 
-	    		
-	End()
-    {
+	End()  {
         this.remove("obj")
 		this.obj := 
     }
@@ -45,8 +42,7 @@ class MultiMonitorEnvTestSuite2
 
 class MultiMonitorEnvTestSuite
 {
-	Begin()
-    {
+	Begin() {
 		Global debug
 		this.obj := new MultiMonitorEnv(debug)
 		this.monCount := 2
@@ -60,8 +56,7 @@ class MultiMonitorEnvTestSuite
     }
 	
 	
-    Version()
-    {
+    Version() {
 		Global ReferenceVersion
 		Yunit.assert(this.obj._version == ReferenceVersion)
     }
@@ -149,9 +144,14 @@ class MultiMonitorEnvTestSuite
 		Yunit.assert(monPrv == this.monCount)
 	}
 
-	    		
-	End()
-    {
+	MonScale() {
+		Yunit.assert(this.obj.monScaleX(1,1) == 1)
+		Yunit.assert(this.obj.monScaleY(1,1) == 1)
+		Yunit.assert(this.obj.monScaleX(2,2) == 1)
+		Yunit.assert(this.obj.monScaleY(2,2) == 1)
+	}
+		    		
+	End() {
         this.remove("obj")
 		this.obj := 
     }
