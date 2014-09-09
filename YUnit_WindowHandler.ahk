@@ -4,9 +4,7 @@
 #Include %A_ScriptDir%\Yunit\Yunit.ahk
 #Include %A_ScriptDir%\Yunit\Window.ahk
 #Include %A_ScriptDir%\Yunit\StdOut.ahk
-#include <EDE\Rectangle>
-#include <EDE\MultiMonitorEnv>
-#include <WindowHandler>
+#include <EDE\Windowhandler>
 
 ; #Warn All
 ;#Warn LocalSameAsGlobal, Off

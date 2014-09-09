@@ -3,7 +3,7 @@
 
 #include <EDE\Rectangle>
 #include <EDE\MultiMonitorEnv>
-#include <_WindowHandlerEvent>
+#include <EDE\_WindowHandlerEvent>
 
 ; ******************************************************************************************************************************************
 /*!
@@ -17,20 +17,6 @@
 	Remarks:
 		### Author
 			[hoppfrosch](hoppfrosch@gmx.de)
-
-		### To Be done
-			* Implement `__Setter()`-functionality
-				* `style`
-				* `styleEx`
-			* New functionality
-				* Method `close()`
-				* Property `active` (getter (Is window active window?) and setter (activate/deactivate window))
-				* Property `titlebar` (getter and setter (enable/disable titlebar))
-				* Property `x` (getter and setter) - X coordinate of the window
-				* Property `y` (getter and setter) - Y coordinate of the window
-				* Property `width` (getter and setter) - Width of the window
-				* Property `heigth` (getter and setter) - heigth of the window
-				* Property `resizeable` (getter and setter) - Make getter work correctly & Setter: disable the sizebox ...
 */
 class WindowHandler {
 	
