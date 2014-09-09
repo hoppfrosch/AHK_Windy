@@ -4,7 +4,7 @@
 
 ; ******************************************************************************************************************************************
 /*!
-Class: MouseTools
+Class: Mouse
 	toolset to handle mousecursor within a MultiMonitorEnvironment
 	
 Remarks:
@@ -14,7 +14,7 @@ Remarks:
 		[hoppfrosch](hoppfrosch@gmx.de)		
 @UseShortForm
 */
-class MouseTools {
+class Mouse {
 	
 	_version := "0.1.0"
 	_debug := 0 ; _DBG_	
@@ -41,65 +41,65 @@ Remarks:
 		* 20110127 - [hoppfrosch](hoppfrosch@gmx.de) - Original
 */
 	locate() {
-    applicationname := A_ScriptName
-    
-    SetWinDelay,0 
-    DetectHiddenWindows,On
-    CoordMode,Mouse,Screen
-    
-    delay := 100
-    size1 := 250
-    size2 := 200
-    size3 := 150
-    size4 := 100
-    size5 := 50
-    col1 := "Red"
-    col2 := "Blue"
-    col3 := "Yellow"
-    col4 := "Lime"
-    col5 := "Green"
-    boldness1 := 700
-    boldness2 := 600
-    boldness3 := 500
-    boldness4 := 400
-    boldness5 := 300
-    
-    Transform, OutputVar, Chr, 177
-    
-    Loop,5
-    { 
-      MouseGetPos,x,y 
-      size:=size%A_Index%
-      width:=Round(size%A_Index%*1.4)
-      height:=Round(size%A_Index%*1.4)
-      colX:=col%A_Index%
-      boldness:=boldness%A_Index%
-      Gui,%A_Index%:Destroy
-      Gui,%A_Index%:+Owner +AlwaysOnTop -Resize -SysMenu -MinimizeBox -MaximizeBox -Disabled -Caption -Border -ToolWindow 
-      Gui,%A_Index%:Margin,0,0 
-      Gui,%A_Index%:Color,123456
-      
-      Gui,%A_Index%:Font,c%colX% S%size% W%boldness%,Wingdings
-      Gui,%A_Index%:Add,Text,,%OutputVar%
-      
-      Gui,%A_Index%:Show,X-%width% Y-%height% W%width% H%height% NoActivate,%applicationname%%A_Index%
-      WinSet,TransColor,123456,%applicationname%%A_Index%
-    }
-    Loop,5
-    {
-        MouseGetPos,x,y 
-        WinMove,%applicationname%%A_Index%,,% x-size%A_Index%/1.7,% y-size%A_Index%/1.4
-        WinShow,%applicationname%%A_Index%
-        Sleep,%delay%
-        WinHide,%applicationname%%A_Index%
-        ;Sleep,%delay% 
-    }
+	    applicationname := A_ScriptName
+	    
+	    SetWinDelay,0 
+	    DetectHiddenWindows,On
+	    CoordMode,Mouse,Screen
+	    
+	    delay := 100
+	    size1 := 250
+	    size2 := 200
+	    size3 := 150
+	    size4 := 100
+	    size5 := 50
+	    col1 := "Red"
+	    col2 := "Blue"
+	    col3 := "Yellow"
+	    col4 := "Lime"
+	    col5 := "Green"
+	    boldness1 := 700
+	    boldness2 := 600
+	    boldness3 := 500
+	    boldness4 := 400
+	    boldness5 := 300
+	    
+	    Transform, OutputVar, Chr, 177
+	    
+	    Loop,5
+	    { 
+	      MouseGetPos,x,y 
+	      size:=size%A_Index%
+	      width:=Round(size%A_Index%*1.4)
+	      height:=Round(size%A_Index%*1.4)
+	      colX:=col%A_Index%
+	      boldness:=boldness%A_Index%
+	      Gui,%A_Index%:Destroy
+	      Gui,%A_Index%:+Owner +AlwaysOnTop -Resize -SysMenu -MinimizeBox -MaximizeBox -Disabled -Caption -Border -ToolWindow 
+	      Gui,%A_Index%:Margin,0,0 
+	      Gui,%A_Index%:Color,123456
+	      
+	      Gui,%A_Index%:Font,c%colX% S%size% W%boldness%,Wingdings
+	      Gui,%A_Index%:Add,Text,,%OutputVar%
+	      
+	      Gui,%A_Index%:Show,X-%width% Y-%height% W%width% H%height% NoActivate,%applicationname%%A_Index%
+	      WinSet,TransColor,123456,%applicationname%%A_Index%
+	    }
+	    Loop,5
+	    {
+	        MouseGetPos,x,y 
+	        WinMove,%applicationname%%A_Index%,,% x-size%A_Index%/1.7,% y-size%A_Index%/1.4
+	        WinShow,%applicationname%%A_Index%
+	        Sleep,%delay%
+	        WinHide,%applicationname%%A_Index%
+	        ;Sleep,%delay% 
+	    }
 
-    Loop,5
-    { 
-        Gui,%A_Index%:Destroy
-    }
-}
+	    Loop,5
+	    { 
+	        Gui,%A_Index%:Destroy
+	    }
+	}
 
 /*! ===============================================================================
 Method:  __debug
