@@ -1,7 +1,8 @@
 ; ****** HINT: Documentation can be extracted to HTML using GenDocs (https://github.com/fincs/GenDocs) by fincs************** */
 
-#include <Rectangle>
+#include <EDE\Point>
 
+class Mouse {
 ; ******************************************************************************************************************************************
 /*!
 Class: Mouse
@@ -14,12 +15,12 @@ Remarks:
 		[hoppfrosch](hoppfrosch@gmx.de)		
 @UseShortForm
 */
-class Mouse {
 	
-	_version := "0.1.0"
+	_version := "0.1.1"
 	_debug := 0 ; _DBG_	
 
 
+	Dump() {
 /*! ===============================================================================
 Method: Dump()
 	Dumps coordinates to a string
@@ -27,20 +28,19 @@ Returns:
 	printable string containing coordinates
 Remarks:
 	### Author(s)
-		* 20130311 - [hoppfrosch](hoppfrosch@gmx.de) - Original
+		* 20140909 - [hoppfrosch](hoppfrosch@gmx.de) - Original
 */
-	Dump() {
-		return "(" ")"
+		return "(" this.x "," this.y ")"
 	}
 
+	locate() {
 /*! ===============================================================================
-Method: locate(comp)
+Method: locate()
 	Easy find the mouse
 Remarks:
 	### Author(s)
 		* 20110127 - [hoppfrosch](hoppfrosch@gmx.de) - Original
 */
-	locate() {
 	    applicationname := A_ScriptName
 	    
 	    SetWinDelay,0 
@@ -100,7 +100,8 @@ Remarks:
 	        Gui,%A_Index%:Destroy
 	    }
 	}
-
+	
+	__debug(value="") { ; _DBG_
 /*! ===============================================================================
 Method:  __debug
 	Set or get the debug flag (*INTERNAL*)
@@ -115,7 +116,6 @@ Remarks:
 	### Author(s)
 		* 20140908 - [hoppfrosch](hoppfrosch@gmx.de) - Original
 */  
-	__debug(value="") { ; _DBG_
 		if % (value="") ; _DBG_
 			return this._debug ; _DBG_
 		value := value<1?0:1 ; _DBG_
@@ -123,6 +123,48 @@ Remarks:
 		return this._debug ; _DBG_
 	} ; _DBG_
 
+	__Get(aName) {
+/*! ===============================================================================
+Method: __Get
+	Custom Getter Function (*INTERNAL*)
+	
+Remarks:
+	### Author(s)
+		* 20140908 - [hoppfrosch](hoppfrosch@gmx.de) - Original
+*/    
+		if (aName = "x")  { 
+		/*! ---------------------------------------------------------------------------------------
+			Property: x [get/set]
+				Get or Set x-coordinate of the upper left corner of the rectangle
+				
+				This is identical to property [xul](#xul)
+		*/
+			return this.pos.x
+		}
+
+		 if (aName = "y")  { 
+		/*! ---------------------------------------------------------------------------------------
+			Property: y [get/set]
+				Get or Set y-coordinate of the mouse position
+				
+				This is identical to property [yul](#yul)
+		*/
+			return this.pos.x
+		}
+
+        if (aName = "pos")  { ; x,y - coordinates as Point
+		/*! ---------------------------------------------------------------------------------------
+			Property: pos [get/set]
+				Get or Set the mouse position
+		*/
+			pt := new Point()
+			return pt.fromMouse()
+		}
+			
+		return
+	}
+
+	__New(debug=false) {
 /*! ===============================================================================
 Method: __New
 	Constructor (*INTERNAL*)
@@ -134,7 +176,6 @@ Remarks:
 	### Author(s)
 		* 20140908 - [hoppfrosch](hoppfrosch@gmx.de) - Original
 */     
-	__New(debug=false) {
 		this._debug := debug ; _DBG_
 		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc ")] (version: " this._version ")" ; _DBG_
