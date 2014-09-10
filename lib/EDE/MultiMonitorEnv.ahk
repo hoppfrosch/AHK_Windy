@@ -14,6 +14,7 @@
 */
 
 #include <EDE\Rectangle>
+#include <EDE\Point>
 
 ; ****** HINT: Documentation can be extracted to HTML using NaturalDocs ************** */
 
@@ -24,11 +25,56 @@
 class MultiMonitorEnv {
 	
 	_debug := 0
-	_version := "0.1.4"
+	_version := "0.1.5"
 	
 
+	monCoordAbsToRel(x,y) {
+/*! ===============================================================================
+function: 	monCoordAbsToRel
+	Transforms absolute coordinates into coordinates relative to screen. 
+	
+Parameters:
+    x,y - absolute coordinates
+  
+Returns:
+    Object containing relative coordinates and monitorID
+
+Author(s):
+    20140910 - hoppfrosch - Original
+*/
+		ret := Object()
+		ret.monID := this.monGetFromCoord(x,y)
+
+		r := this.monBoundary(ret.monID)
+		ret.x := x - r.x
+		ret.y := y - r.y
+		return ret
+	}
+
+	monCoordRelToAbs(monID=1,x=0,y=0) {
+/*! ===============================================================================
+function: 	monCoordRelToAbs
+	Transforms coordinates relative to screen into absolute coordinates
+	
+Parameters:
+    x,y - relative coordinates
+	monID - MonitorID
+  
+Returns:
+    Object containing absolute coordinates
+
+Author(s):
+    20140910 - hoppfrosch - Original
+*/
+		ret := Object()
+		r := this.monBoundary(monID)
+		ret.x := x + r.x
+		ret.y := y + r.y
+		return ret
+	}
+	
 	monBoundary(mon=1) {
-/* ===============================================================================
+/*! ===============================================================================
 function: 	monBoundary
 	Get the boundaries of a monitor in Pixel, related to virtual screen. 
 	
@@ -51,7 +97,7 @@ Author(s):
 	}
 	
 	monCenter(mon=1) {
-/* ===============================================================================
+/*! ===============================================================================
 function:	monCenter
     Get the center coordinates of a monitor in Pixel, related to virtual screen. 
 	The virtual screen is the bounding rectangle of all display monitors
