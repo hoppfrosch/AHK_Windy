@@ -11,10 +11,10 @@
 #SingleInstance force
 
 
-ReferenceVersion := "0.1.4"
+ReferenceVersion := "0.1.5"
 debug := 1
 
-Yunit.Use(YunitStdOut, YunitWindow).Test(MultiMonitorEnvTestSuite2)
+Yunit.Use(YunitStdOut, YunitWindow).Test(MultiMonitorEnvTestSuite)
 Return
 
 ExitApp
@@ -32,6 +32,24 @@ class MultiMonitorEnvTestSuite2
 		
 		this.monvirtWidth := this.mon1Width + this.mon2Width
 		this.monvirtHeight := this.mon2Height
+    }
+
+    CoordTrans() {
+		x := this.obj.monCoordAbsToRel(10,10)
+		Yunit.assert(x.monID == 1)
+		Yunit.assert(x.x == 10)
+		Yunit.assert(x.y == 10)
+    	x := this.obj.monCoordAbsToRel(1930,10)
+		Yunit.assert(x.monID == 2)
+		Yunit.assert(x.x == 10)
+		Yunit.assert(x.y == 10)
+		y := this.obj.monCoordRelToAbs(1, 10, 10)
+		Yunit.assert(y.x == 10)
+		Yunit.assert(y.y == 10)
+		y := this.obj.monCoordRelToAbs(2, 10, 10)
+		Yunit.assert(y.x == 1930)
+		Yunit.assert(y.y == 10)
+    	return
     }
 
 	End()  {
@@ -72,6 +90,24 @@ class MultiMonitorEnvTestSuite
 		Yunit.assert(rectMon2.h == this.monvirtHeight)
 	}
 
+    CoordTrans() {
+		x := this.obj.monCoordAbsToRel(10,10)
+		Yunit.assert(x.monID == 1)
+		Yunit.assert(x.x == 10)
+		Yunit.assert(x.y == 10)
+    	x := this.obj.monCoordAbsToRel(1930,10)
+		Yunit.assert(x.monID == 2)
+		Yunit.assert(x.x == 10)
+		Yunit.assert(x.y == 10)
+		y := this.obj.monCoordRelToAbs(1, 10, 10)
+		Yunit.assert(y.x == 10)
+		Yunit.assert(y.y == 10)
+		y := this.obj.monCoordRelToAbs(2, 10, 10)
+		Yunit.assert(y.x == 1930)
+		Yunit.assert(y.y == 10)
+    	return
+    }
+	
 	MonCount() {
 		Yunit.assert(this.obj.monCount == this.monCount)
 	}
