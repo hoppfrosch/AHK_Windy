@@ -14,7 +14,7 @@
 */
 class Point {
 	
-	_version := "0.1.0"
+	_version := "0.1.1"
 	_debug := 0 ; _DBG_	
 	x := 0
 	y := 0
@@ -63,6 +63,8 @@ class Point {
 		this.y := y
 		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "([" hwnd "])] -> x,y: (" x "," y ")" ; _DBG_
+		
+		return this
 	}
 
 	fromMouse() {
@@ -78,6 +80,8 @@ class Point {
 		this.y := y
 		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "([" hwnd "])] -> x,y: (" x "," y ")" ; _DBG_
+		
+		return this
 	}
 
 	fromPoint(new) {
@@ -95,6 +99,8 @@ class Point {
 		this.y := new.y
 		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "] -> x,y: " this.Dump() ; _DBG_
+		
+		return this
 	}
 
 	__debug(value="") { ; _DBG_
