@@ -1,6 +1,7 @@
 ; ****** HINT: Documentation can be extracted to HTML using GenDocs (https://github.com/fincs/GenDocs) by fincs************** */
 
 #include <EDE\Point>
+#include <EDE\MultiMonitorEnv>
 
 class Mouse {
 ; ******************************************************************************************************************************************
@@ -16,7 +17,7 @@ Remarks:
 @UseShortForm
 */
 	
-	_version := "0.1.1"
+	_version := "0.1.2"
 	_debug := 0 ; _DBG_	
 
 
@@ -141,8 +142,7 @@ Remarks:
 		*/
 			return this.pos.x
 		}
-
-		 if (aName = "y")  { 
+		if (aName = "y")  { 
 		/*! ---------------------------------------------------------------------------------------
 			Property: y [get/set]
 				Get or Set y-coordinate of the mouse position
@@ -151,7 +151,6 @@ Remarks:
 		*/
 			return this.pos.x
 		}
-
         if (aName = "pos")  { ; x,y - coordinates as Point
 		/*! ---------------------------------------------------------------------------------------
 			Property: pos [get/set]
@@ -160,6 +159,15 @@ Remarks:
 			pt := new Point()
 			return pt.fromMouse()
 		}
+		if (aName = "monitorID")  {
+		/*! ---------------------------------------------------------------------------------------
+			Property: monitorID [get/set]
+				Get or Set the monitor the mouse is currently on
+		*/
+			mme := new MultiMonitorEnv()
+			return mme.monGetFromMouse()
+		}
+		
 			
 		return
 	}
