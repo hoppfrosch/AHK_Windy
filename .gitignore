@@ -9,3 +9,4 @@ lib/WindowHandler-doc/
 ForcePull_Local.sh
 NCHITTEST.ahk
 backup/
+*.bak
