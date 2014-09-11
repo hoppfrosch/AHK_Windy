@@ -1,10 +1,10 @@
-#NoEnv
+﻿#NoEnv
 
 #Include %A_ScriptDir%\Yunit\Yunit.ahk
 #Include %A_ScriptDir%\Yunit\Window.ahk
 #Include %A_ScriptDir%\Yunit\StdOut.ahk
-#include <EDE\MultiMonitorEnv>
-#include <EDE\Rectangle>
+#include lib\EDE\MultiMonitorEnv.ahk
+#include lib\EDE\Rectangle.ahk
 
 #Warn All
 ;#Warn LocalSameAsGlobal, Off
@@ -192,5 +192,3 @@ class MultiMonitorEnvTestSuite
 		this.obj := 
     }
 }
-
-
