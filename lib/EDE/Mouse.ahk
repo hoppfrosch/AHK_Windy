@@ -7,29 +7,30 @@ class Mouse {
 	; ******************************************************************************************************************************************
 	/*!
 		Class: Mouse
-			toolset to handle mousecursor within a MultiMonitorEnvironment
+		toolset to handle mousecursor within a MultiMonitorEnvironment
 		
 		Remarks:
-			### License
-				This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See [WTFPL](http://www.wtfpl.net/) for more details.
-			### Author
-				[hoppfrosch](hoppfrosch@gmx.de)		
+		### License
+		This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See [WTFPL](http://www.wtfpl.net/) for more details.
+		### Author
+		[hoppfrosch](hoppfrosch@gmx.de)		
 		@UseShortForm
 	*/
 	
-	_version := "0.1.3"
+	_version := "0.1.4"
 	_debug := 0 ; _DBG_	
+	_showLocatorAfterMove := 1
 	
 	
 	Dump() {
 		/*! ===============================================================================
 			Method: Dump()
-				Dumps coordinates to a string
+			Dumps coordinates to a string
 			Returns:
-				printable string containing coordinates
+			printable string containing coordinates
 			Remarks:
-				### Author(s)
-					* 20140909 - [hoppfrosch](hoppfrosch@gmx.de) - Original
+			### Author(s)
+			* 20140909 - [hoppfrosch](hoppfrosch@gmx.de) - Original
 		*/
 		return "(" this.x "," this.y ")"
 	}
@@ -37,10 +38,10 @@ class Mouse {
 	locate() {
 		/*! ===============================================================================
 			Method: locate()
-				Easy find the mouse
+			Easy find the mouse
 			Remarks:
-				### Author(s)
-				* 20110127 - [hoppfrosch](hoppfrosch@gmx.de) - Original
+			### Author(s)
+			* 20110127 - [hoppfrosch](hoppfrosch@gmx.de) - Original
 		*/
 		applicationname := A_ScriptName
 		
@@ -105,17 +106,17 @@ class Mouse {
 	__debug(value="") { ; _DBG_
 		/*! ===============================================================================
 			Method:  __debug
-				Set or get the debug flag (*INTERNAL*)
+			Set or get the debug flag (*INTERNAL*)
 			
 			Parameters:
-				value - Value to set the debug flag to (OPTIONAL)
+			value - Value to set the debug flag to (OPTIONAL)
 			
 			Returns:
-				true or false, depending on current value
+			true or false, depending on current value
 			
 			Remarks:
-				### Author(s)
-					* 20140908 - [hoppfrosch](hoppfrosch@gmx.de) - Original
+			### Author(s)
+			* 20140908 - [hoppfrosch](hoppfrosch@gmx.de) - Original
 		*/  
 		if % (value="") ; _DBG_
 			return this._debug ; _DBG_
@@ -124,103 +125,120 @@ class Mouse {
 		return this._debug ; _DBG_
 	} ; _DBG_
 	
-	__Get(aName) {
-		/*! ===============================================================================
-			Method: __Get
-				Custom Getter Function (*INTERNAL*)
-			
-			Remarks: 
-				### Author(s)
-					* 20140908 - [hoppfrosch](hoppfrosch@gmx.de) - Original
-		*/    
-		if (aName = "x")  { 
-			/*! ---------------------------------------------------------------------------------------
-				Property: x [get/set]
-					Get or Set x-coordinate of the upper left corner of the rectangle
-				
-					This is identical to property [xul](#xul)
-			*/
-			return this.pos.x
-		}
-		if (aName = "y")  { 
-			/*! ---------------------------------------------------------------------------------------
-				Property: y [get/set]
-					Get or Set y-coordinate of the mouse position
-				
-				This is identical to property [yul](#yul)
-			*/
-			return this.pos.y
-		}
-		if (aName = "pos")  { ; x,y - coordinates as Point
-			/*! ---------------------------------------------------------------------------------------
-				Property: pos [get/set]
-					Get or Set the mouse position
-			*/
-			pt := new Point()
-			return pt.fromMouse()
-		}
-		if (aName = "monitorID")  {
-			/*! ---------------------------------------------------------------------------------------
-				Property: monitorID [get/set]
-					Get or Set the monitor the mouse is currently on
-			*/
+	__move(x,y) {
+		CoordMode, Mouse, Screen
+		MouseMove, x, y, 0
+		if (this.showLocatorAfterMove == 1)
+			this.locate()
+	
+	}
+	
+	; ##### Start of properties #########################################################################
+	monitorID {
+		/*! ---------------------------------------------------------------------------------------
+			Property: monitorID [get/set]
+			Get or Set the monitor the mouse is currently on
+		*/
+		get {
 			mme := new MultiMonitorEnv()
 			return mme.monGetFromMouse()
 		}
-		
-		
-		return
-	}
-	
-	__New(debug=false) {
-		/*! ===============================================================================
-			Method: __New
-				Constructor (*INTERNAL*)
-			
-			Parameters:
-				debug - Flag to enable debugging (Optional - Default: 0)
-			
-			Remarks:
-				### Author(s)
-					* 20140908 - [hoppfrosch](hoppfrosch@gmx.de) - Original
-		*/     
-		this._debug := debug ; _DBG_
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc ")] (version: " this._version ")" ; _DBG_
-	}
-	
-	__Set(aName, aValue) {
-		/*! #==============================================================================
-			Method: __Set
-				Custom Setter Function (*INTERNAL*)
-			
-			The coordinates are scaled during movemnent due monitor size 
-			
-			Remarks:
-				### Author(s)
-					* 20140910 - [hoppfrosch](hoppfrosch@gmx.de) - Original
-		*/    
-		if (aName = "monitorID") {
+		set {
 			currMon := this.monitorID
-			if (aValue != currMon) {
+			OutputDebug % "<[" A_ThisFunc "()] - >New:" value "<-> Current:" CurrMon ; _DBG_
+			if (value != currMon) {
 				mme := new MultiMonitorEnv(true)
 				; Determine relative Coordinates relative to current monitor
 				curr := mme.monCoordAbsToRel(this.x,this.y) 
 				; Determine scaling factors from current monitor to destination monitor
-				scaleX := mme.monScaleX(currMon,aValue)
-				scaleY := mme.monScaleY(currMon,aValue)
-				r := mme.monBoundary(aValue)
+				scaleX := mme.monScaleX(currMon,value)
+				scaleY := mme.monScaleY(currMon,value)
+				r := mme.monBoundary(value)
 				; Scale the relative coordinates and add them to the origin of destination monitor
 				x := r.x + scaleX*curr.x
 				y := r.y + scaleX*curr.y
 				; Move the mouse onto new monitor
-				CoordMode, Mouse, Screen
-				MouseMove, x, y, 0
-				this.locate()
+				this.__move(x, y)
 			}
+			return this.monitorID
+		}
+	}
+	
+	pos {
+		/*! ---------------------------------------------------------------------------------------
+			Property: x [get/set]
+			Get or Set position of mouse
+		*/
+		get {
+			pt := new Point()
+			return pt.fromMouse()
 		}
 		
-		return aValue
+		set {
+			this.__move(value.x, value.y)
+			return value
+		}
+	}
+	
+	showLocatorAfterMove {
+			/*! ---------------------------------------------------------------------------------------
+			Property: showLocatorAfterMove [get/set]
+			Get or Set the flag to show the Mouse-Locator after moving the mouse
+		*/
+		get {
+			return this._showLocatorAfterMove
+		}
+		set {
+			this._showLocatorAfterMove := value
+			return value
+		}
+	}
+	x {
+		/*! ---------------------------------------------------------------------------------------
+			Property: x [get/set]
+			Get or Set x-coordinate of mouse
+		*/
+		get {
+			return this.pos.x
+		}
+		
+		set {
+			this.__move(value, this.y)
+			return value
+		}
+	}
+	
+	y {
+		/*! ---------------------------------------------------------------------------------------
+			Property: y [get/set]
+			Get or Set x-coordinate of mouse
+		*/
+		get {
+			return this.pos.y
+		}
+		
+		set {
+			this.__move(this.x, value)
+			return value
+		}
+	}
+	; ##### End of properties #########################################################################
+	
+	__New(debug=false) {
+		/*! ===============================================================================
+			Method: __New
+			Constructor (*INTERNAL*)
+			
+			Parameters:
+			debug - Flag to enable debugging (Optional - Default: 0)
+			
+			Remarks:
+			### Author(s)
+			* 20140908 - [hoppfrosch](hoppfrosch@gmx.de) - Original
+		*/     
+		this._debug := debug ; _DBG_
+		if (this._debug) ; _DBG_
+			OutputDebug % "|[" A_ThisFunc ")] (version: " this._version ")" ; _DBG_
 	}
 }
 
