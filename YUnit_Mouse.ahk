@@ -9,7 +9,7 @@
 #Warn All
 #Warn LocalSameAsGlobal, Off
 
-ReferenceVersion := "0.1.2"
+ReferenceVersion := "0.1.3"
 
 Yunit.Use(YunitStdOut, YunitWindow).Test(MiscTestSuite)
 Return
@@ -31,8 +31,10 @@ class MiscTestSuite
 	}
 
 	Pos() {
-		MsgBox % this.r.pos.dump() " - " this.r.x "," this.r.y
-		MsgBox % "MonitorID:"  this.r.monitorID
+		this.r.monitorID := 1
+		Yunit.assert(this.r.monitorID == 1)
+		this.r.monitorID := 2
+		Yunit.assert(this.r.monitorID == 2)
 	}
 
 	End() {
