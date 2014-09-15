@@ -17,7 +17,7 @@ Remarks:
 @UseShortForm
 */
 	
-	_version := "0.1.2"
+	_version := "0.1.3"
 	_debug := 0 ; _DBG_	
 
 
@@ -187,6 +187,40 @@ Remarks:
 		this._debug := debug ; _DBG_
 		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc ")] (version: " this._version ")" ; _DBG_
+	}
+	
+	__Set(aName, aValue) {
+		/*! #==============================================================================
+			Method: __Set
+			Custom Setter Function (*INTERNAL*)
+			
+			The coordinates are scaled during movemnent due monitor size 
+			
+			Remarks:
+			### Author(s)
+			* 20140910 - [hoppfrosch](hoppfrosch@gmx.de) - Original
+		*/    
+		if (aName = "monitorID") {
+			currMon := this.monitorID
+			if (aValue != currMon) {
+				mme := new MultiMonitorEnv(true)
+				; Determine relative Coordinates relative to current monitor
+				curr := mme.monCoordAbsToRel(this.x,this.y) 
+				; Determine scaling factors from current monitor to destination monitor
+				scaleX := mme.monScaleX(currMon,aValue)
+				scaleY := mme.monScaleY(currMon,aValue)
+				r := mme.monBoundary(aValue)
+				; Scale the relative coordinates and add them to the origin of destination monitor
+				x := r.x + scaleX*curr.x
+				y := r.y + scaleX*curr.y
+				; Move the mouse onto new monitor
+				CoordMode, Mouse, Screen
+				MouseMove, x, y, 0
+				this.locate()
+			}
+		}
+		
+		return aValue
 	}
 }
 
