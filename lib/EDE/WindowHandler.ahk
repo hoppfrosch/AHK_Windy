@@ -108,6 +108,22 @@ class WindowHandler {
 			return centerPos
 		}
 	}
+
+	debug {
+	/*! ---------------------------------------------------------------------------------------
+		Property: debug [get/set]
+			Debug flag
+	*/
+		get {
+			return this._debug                                                         ; _DBG_
+		}
+		set {
+			mode := value<1?0:1                                                        ; _DBG_
+			this._debug := mode                                                        ; _DBG_
+			return this._debug                                                         ; _DBG_
+		}
+	}
+	
 	; ##################### End of Properties (AHK >1.1.16.x) ##############################################################
 	
     ; ###################### Helper functions for properties (Getter/Setter implementation) ############################
@@ -116,10 +132,7 @@ class WindowHandler {
 	Method: __Set(aName, aValue)
 		Custom Setter (*INTERNAL*)
 */   
-		if (aName == "debug") {
-			return this.__setDebug(aValue)
-		}
-		else if (aName == "hidden") {
+		if (aName == "hidden") {
 			return this.__setHidden(aValue)
 		}
 		else if (aName == "maximized") {
@@ -159,15 +172,6 @@ class WindowHandler {
 		There is no setter available, since this is a constant window property
 */
 			return this.__getClassname()
-		}
-		else if (aName = "debug") {
-/*! ---------------------------------------------------------------------------------------
-	Property: debug [get/set]
-		Set or get the _debug flag
-	Value:
-		value - Value to set the debug flag to
-*/
-			return this.__getDebug()			
 		}
 		else if (aName = "exist") {
 /*! ---------------------------------------------------------------------------------------
@@ -342,26 +346,6 @@ class WindowHandler {
 			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "]) -> (" __classname ")]" ; _DBG_		
 		return __classname
 	}
-	__getDebug() {                                                                 ; _DBG_
-/* =============================================================================== ; _DBG_
-	Method:   __getDebug                                                           ; _DBG_
-		Retrieves current debug mode (*INTERNAL*)                                  ; _DBG_ 
-	Returns:                                                                       ; _DBG_  
-		True or False                                                              ; _DBG_
-*/                                                                                 ; _DBG_ 
-		return this._debug                                                         ; _DBG_
-	}                                                                              ; _DBG_
-	__setDebug(mode) {                                                             ; _DBG_
-/* =============================================================================== ; _DBG_
-	Method: __setDebug(mode)                                                       ; _DBG_
-		Sets *debug*-Mode for class (*INTERNAL*)	                               ; _DBG_
-	Parameters:                                                                    ; _DBG_
-		mode -  true (1),  false (0)                                               ; _DBG_  
-*/                                                                                 ; _DBG_
-		mode := mode<1?0:1                                                         ; _DBG_
-		this._debug := mode                                                        ; _DBG_
-		return this._debug                                                         ; _DBG_
-	}                                                                              ; _DBG_			
 	__getHidden() {
 /* ===============================================================================
 	Method:   __getHidden
