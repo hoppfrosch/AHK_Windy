@@ -4,13 +4,15 @@
 #Include %A_ScriptDir%\Yunit\Yunit.ahk
 #Include %A_ScriptDir%\Yunit\Window.ahk
 #Include %A_ScriptDir%\Yunit\StdOut.ahk
-#include <EDE\Windowhandler>
+#include %A_ScriptDir%
+#include lib\EDE
+#include WindowHandler.ahk
 
 ; #Warn All
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.5.19"
+ReferenceVersion := "0.6.0"
 debug := 1
 
 
@@ -521,17 +523,13 @@ class MiscTestSuite {
 		center := this.obj.centercoords
 		Yunit.assert(center.x == centerx)
 		Yunit.assert(center.y == centery)
-		Yunit.assert(center.w == 0)
-		Yunit.assert(center.h == 0)
 		
 		OutputDebug % "******************************* " A_ThisFunc " 2 ****************************"
-		newCenter := new Rectangle(205,205,0,0,0,debug)
+		newCenter := new Point(205,205,debug)
 		this.obj.centercoords := newCenter
 		center := this.obj.centercoords
 		Yunit.assert(center.x == 205)
 		Yunit.assert(center.y == 205)
-		Yunit.assert(center.w == 0)
-		Yunit.assert(center.h == 0)
 		OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
 	}
 	

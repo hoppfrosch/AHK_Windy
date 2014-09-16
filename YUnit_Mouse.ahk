@@ -9,7 +9,7 @@
 #Warn All
 #Warn LocalSameAsGlobal, Off
 
-ReferenceVersion := "0.1.3"
+ReferenceVersion := "0.1.4"
 
 Yunit.Use(YunitStdOut, YunitWindow).Test(MiscTestSuite)
 Return

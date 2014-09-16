@@ -1,7 +1,9 @@
 ﻿; ****** HINT: Documentation can be extracted to HTML using GenDocs (https://github.com/fincs/GenDocs) by fincs
 ; ****** HINT: Debug-lines should contain "; _DBG_" at the end of lines - using this, the debug lines could be automatically removed through scripts before releasing the sourcecode
 
+
 #include <EDE\Rectangle>
+#include <EDE\Point>
 #include <EDE\MultiMonitorEnv>
 #include <EDE\_WindowHandlerEvent>
 
@@ -20,7 +22,7 @@
 */
 class WindowHandler {
 	
-	_version := "0.5.19"
+	_version := "0.6.0"
 	_debug := 0
 	_hWnd := 0
 
@@ -33,30 +35,246 @@ class WindowHandler {
 
 	_posStack := 0
 
+	; ##################### Start of Properties (AHK >1.1.16.x) ############################################################
+	alwaysOnTop {
+		/*! ---------------------------------------------------------------------------------------
+			Property: alwaysOnTop [get/set]
+			Get or Set the *alwaysontop*-Property.  Set/Unset alwaysontop flag of the current window or get the current state
+			
+			Value:
+			flag - `true` or `false` (activates/deactivates *alwaysontop*-Property)
+	
+			Remarks:		
+			* To toogle current *alwaysontop*-Property, simply use `obj.alwaysontop := !obj.alwaysontop`
+		*/
+		get {
+			ret := (this.styleEx & 0x08) ; WS_EX_TOPMOST
+			ret := ret>0?1:0
+		
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_
+			return ret
+		}
+		
+		set {
+			if (this._debug) ; _DBG_
+				OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], value=" value ")] -> Current Value:" this.alwaysontop ; _DBG_
+		
+			hwnd := this._hWnd
+			if (value == true)
+				value := "on"
+			else if (value == false) 
+				value := "off"
+
+			WinSet, AlwaysOnTop, %value%,  ahk_id %hwnd%
+				
+			if (this._debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], value=" value ")] -> New Value:" this.alwaysontop ; _DBG_
+		
+			return this.alwaysOnTop
+		}
+	}
+
+	centercoords {
+		/*! ---------------------------------------------------------------------------------------
+			Property: centercoords [get7SET]
+			Coordinates of the center of the window as a [Point](Point.html)-object
+		*/
+
+		get {
+			pos := this.Pos
+			x := Round((pos.w)/2 + pos.x)
+			y := Round((pos.h)/2 + pos.y)
+			centerPos := new Point(x,y,this._debug)
+			if (this._debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "(pos="pos.dump() " [" this._hWnd "])] -> " centerPos.dump() ; _DBG_
+			return centerPos
+		}
+
+		set {
+			currCenter := this.centercoords
+			currPos := this.pos
+		
+			xoffset := value.x - currCenter.x
+			yoffset := value.y - currCenter.y
+		
+			x := currPos.x + xoffset
+			y := currPos.y + yoffset
+		
+			this.move(x,y,99999,99999)
+			centerPos := this.centercoords
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "(pos=" value.dump() " [" this._hWnd "])] -> " centerPos.dump() ; _DBG_
+			return centerPos
+		}
+	}
+
+	classname {
+	/*! ---------------------------------------------------------------------------------------
+		Property: classname [get]
+		name of the window class. 
+
+		Remarks:
+		There is no setter available, since this is a constant window property
+	*/
+		get {
+			val := this._hWnd
+			WinGetClass, __classname, ahk_id %val%
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "]) -> (" __classname ")]" ; _DBG_		
+			return __classname
+		}
+	}
+	
+	debug {
+	/*! ---------------------------------------------------------------------------------------
+		Property: debug [get/set]
+			Debug flag
+	*/
+		get {
+			return this._debug                                                         ; _DBG_
+		}
+		set {
+			mode := value<1?0:1                                                        ; _DBG_
+			this._debug := mode                                                        ; _DBG_
+			return this._debug                                                         ; _DBG_
+		}
+	}
+
+	exist {
+	/*! ---------------------------------------------------------------------------------------
+	Property: exist [get]
+	Checks whether the window still exists. 
+
+	Remarks:
+	There is no setter available, since this is a constant window property
+	*/
+		get {
+			val := this._hWnd
+			_hWnd := WinExist("ahk_id " val)
+			ret := true
+			if (_hWnd = 0)
+				ret := false
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
+			return ret
+		}
+	}
+
+	hidden {
+	/*! ---------------------------------------------------------------------------------------
+		Property: hidden [get/set]
+		Get or Set the *hidden*-Property. Hides/Unhide the current window or get the current state of hiding
+
+		Value:
+		flag - `true` or `false` (activates/deactivates *hidden*-Property)
+
+		Remarks:		
+		* To toogle current *hidden*-Property, simply use `obj.hidden := !obj.hidden`	
+*/
+		get {
+			prevState := A_DetectHiddenWindows
+			ret := false
+			DetectHiddenWindows, Off
+			if this.exist {
+				; As HiddenWindows are not detected, the window is not hidden in this case ...
+				ret := false
+			} 
+			else {
+				DetectHiddenWindows, On 
+				if this.exist {
+					; As HiddenWindows are detected, the window is hidden in this case ...
+					ret := true
+				} 
+				else {
+					; the window does not exist at all ...
+					ret := -1
+				}
+			}
+			
+			DetectHiddenWindows, %prevState%
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
+			return ret
+		}
+
+		set{
+			mode := value
+			if (this._debug) ; _DBG_
+				OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> Current Value:" this.hidden ; _DBG_
+
+			val := this._hWnd
+			ret := 0
+			if (mode == true) {
+				WinHide ahk_id %val%
+				ret := 1
+			}
+			else if (mode == false) {
+				WinShow ahk_id %val%
+				ret := 0
+			}
+			
+			isHidden := this.hidden
+			if (this._debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> New Value:" isHidden ; _DBG_
+			
+			return isHidden
+		}
+	
+	}
+
+	maximized {
+	/*! ---------------------------------------------------------------------------------------
+		Property: maximized [get/set]
+		Get or Set the *maximized*-Property. Maximizes/Demaximizes the current window or get the current state of maximization
+		
+		Value:
+		flag - `true` or `false` (activates/deactivates *maximized*-Property)
+		
+		Remarks:		
+		* To toogle current *maximized*-Property, simply use `obj.maximized := !obj.maximized`	
+*/
+		get {
+			val := this._hWnd
+			WinGet, s, MinMax, ahk_id %val% 
+			ret := 0
+			if (s == 1)
+				ret := 1	
+			return ret
+		}
+
+		set {
+			mode := value
+			newState := 1
+			if (mode == 0) {
+				newState := 0
+			}
+			
+			prevState := A_DetectHiddenWindows
+			DetectHiddenWindows, On
+			if (newState == 1 )
+				WinMaximize % "ahk_id" this._hWnd
+			else 
+				WinRestore % "ahk_id" this._hWnd
+			DetectHiddenWindows, %prevState%
+			
+			isMax := this.maximized
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> New Value:" isMax ; _DBG_
+			
+			return isMax
+		}
+	}
+	
+	; ##################### End of Properties (AHK >1.1.16.x) ##############################################################
+	
     ; ###################### Helper functions for properties (Getter/Setter implementation) ############################
 	__Set(aName, aValue) {
 /* ===============================================================================
 	Method: __Set(aName, aValue)
 		Custom Setter (*INTERNAL*)
 */   
-		ret :=
-		
-		if (aName == "alwaysOnTop") {
-			return this.__setAlwaysOnTop(aValue)
-		}
-		else if (aName == "centercoords") {
-			return this.__setCentercoords(aValue)
-		}
-		else if (aName == "debug") {
-			return this.__setDebug(aValue)
-		}
-		else if (aName == "hidden") {
-			return this.__setHidden(aValue)
-		}
-		else if (aName == "maximized") {
-			return this.__setMaximized(aValue)
-		}
-		else if (aName == "minimized") {
+		if (aName == "minimized") {
 			return this.__setMinimized(aValue)
 		}
 		else if (aName == "monitorID") {
@@ -74,86 +292,15 @@ class WindowHandler {
 		else if (aName == "transparency") {
 			return this.__setTransparency(aValue)
 		}
-
-
 	}
 	__Get(aName) {
 /* ===============================================================================
 	Method: __Get(aName)
 		Custom Getter (*INTERNAL*)
 */   
-		ret := 
 		written := 0 ; _DBG_
-
 	
-		if (aName = "alwaysOnTop") {
-/*! ---------------------------------------------------------------------------------------
-	Property: alwaysOnTop [get/set]
-		Get or Set the *alwaysontop*-Property.  Set/Unset alwaysontop flag of the current window or get the current state
-	Value:
-		flag - `true` or `false` (activates/deactivates *alwaysontop*-Property)
-	Remarks:		
-		* To toogle current *alwaysontop*-Property, simply use `obj.alwaysontop := !obj.alwaysontop`
-*/
-			ret := this.__getAlwaysOnTop()
-		}
-		else if (aName = "centercoords") {
-/*! ---------------------------------------------------------------------------------------
-	Property: centercoords [get]
-		Returns the coordinates of the center of the window as a [Rectangle](Rectangle.html)-object
-			
-		**ToBeDone: Implementation of Setter-functionality**
-*/
-			ret := this.__getCentercoords()
-		}
-		else if (aName = "classname") {
-/*! ---------------------------------------------------------------------------------------
-	Property: classname [get]
-		Get the name of the window class. 
-	Remarks:
-		There is no setter available, since this is a constant window property
-*/
-			ret := this.__getClassname()
-		}
-		else if (aName = "debug") {
-/*! ---------------------------------------------------------------------------------------
-	Property: debug [get/set]
-		Set or get the _debug flag
-	Value:
-		value - Value to set the debug flag to
-*/
-			ret := this.__getDebug()			
-		}
-		else if (aName = "exist") {
-/*! ---------------------------------------------------------------------------------------
-	Property: exist [get]
-		Checks whether the window still exists. There is no setter available, since user cannot enforce existance of window
-*/
-			ret := this.__exist()
-		}
-		else if (aName = "hidden") {
-/*! ---------------------------------------------------------------------------------------
-	Property: hidden [get/set]
-		Get or Set the *hidden*-Property. Hides/Unhide the current window or get the current state of hiding
-	Value:
-		flag - `true` or `false` (activates/deactivates *hidden*-Property)
-	Remarks:		
-		* To toogle current *hidden*-Property, simply use `obj.hidden := !obj.hidden`	
-*/
-			ret := this.__getHidden()
-		}
-		else if (aName = "maximized") {
-/*! ---------------------------------------------------------------------------------------
-	Property: maximized [get/set]
-		Get or Set the *maximized*-Property. Maximizes/Demaximizes the current window or get the current state of maximization
-	Value:
-		flag - `true` or `false` (activates/deactivates *maximized*-Property)
-	Remarks:		
-		* To toogle current *maximized*-Property, simply use `obj.maximized := !obj.maximized`	
-*/
-			ret := this.__getMaximized()
-		}
-		else if (aName = "minimized") {
+		if (aName = "minimized") {
 /*! ---------------------------------------------------------------------------------------
 	Property: minimized [get/set]
 		Get or Set the *minimized*-Property. Minimizes/Deminimizes the current window or get the current state of minimization
@@ -162,7 +309,7 @@ class WindowHandler {
 	Remarks:		
 		* To toogle current *minimized*-Property, simply use `obj.minimized := !obj.minimized`	
 */
-			ret := this.__getMinimized()
+			return this.__getMinimized()
 		}
 		else if (aName = "monitorID") {
 /*! ---------------------------------------------------------------------------------------
@@ -173,7 +320,7 @@ class WindowHandler {
 	Remarks
 		* Setting the property moves the window to the corresponding monitor, retaining the (relative) position and size of the window
 */
-			ret := this.__getMonitorID()
+			return this.__getMonitorID()
 		}
 		else if (aName = "pos") { ; current position
 /*! ---------------------------------------------------------------------------------------
@@ -185,7 +332,7 @@ class WindowHandler {
 		### Author(s)
 			* 20130429 - [hoppfrosch](hoppfrosch@gmx.de) - Original
 */
-			ret := this.__getPos()
+			return this.__getPos()
 		}
 		else if (aName = "processID") {
 /*! ---------------------------------------------------------------------------------------
@@ -196,7 +343,7 @@ class WindowHandler {
 */
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])]" ; _DBG_
-			ret := this.__getProcessID()
+			return this.__getProcessID()
 		}
 		else if (aName = "processname") {
 /*! ---------------------------------------------------------------------------------------
@@ -207,7 +354,7 @@ class WindowHandler {
 */
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])]" ; _DBG_
-			ret := this.__getProcessname()
+			return this.__getProcessname()
 		}
 		else if (aName = "resizeable") { 
 /*! ---------------------------------------------------------------------------------------
@@ -216,7 +363,7 @@ class WindowHandler {
 	
 		**ToBeDone: Implementation of Setter-functionality**
 */
-			ret := this.__isResizable()
+			return this.__isResizable()
 		}
 		else if (aName = "rolledUp") {
 /*! ---------------------------------------------------------------------------------------
@@ -227,7 +374,7 @@ class WindowHandler {
 	Remarks:		
 		* To toogle current *rolledUp*-Property, simply use `objrolledUp := !obj.rolledUp`
 */
-			ret := this.__getRolledUp()
+			return this.__getRolledUp()
 		}
 		else if (aName = "rolledUpHeight") {
 /*! ---------------------------------------------------------------------------------------
@@ -237,6 +384,7 @@ class WindowHandler {
     	There is no setter available, since this is a system constant
 */
 			SysGet, ret, 29
+			return ret
 		}
 		else if (aName = "style") {
 /*! ---------------------------------------------------------------------------------------
@@ -245,7 +393,7 @@ class WindowHandler {
 	
     	**ToBeDone: Implementation of Setter-functionality**
 */
-			ret := this.__style()
+			return this.__style()
 		}
 		else if (aName = "styleEx") {
 /*! ---------------------------------------------------------------------------------------
@@ -254,7 +402,7 @@ class WindowHandler {
 		
 		**ToBeDone: Implementation of Setter-functionality**
 */
-			ret := this.__styleEx()
+			return this.__styleEx()
 		}
 		else if (aName = "transparency") {
 /*! ---------------------------------------------------------------------------------------
@@ -263,7 +411,7 @@ class WindowHandler {
 			
 		**ToBeDone: Implementation of Setter-functionality**
 */
-			ret := this.__getTransparency()
+			return this.__getTransparency()
 		}
 		else if (aName = "title") {
 /*! ---------------------------------------------------------------------------------------
@@ -274,221 +422,15 @@ class WindowHandler {
 	Remarks:		
 		* A change to a window's title might be merely temporary if the application that owns the window frequently changes the title.
 */
-			ret :=  this.__getTitle()
+			return this.__getTitle()
 		}
 		/*
 		if (this._debug) ; _DBG_
 			if (!written) ; _DBG_
 			OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret ; _DBG_
         */
-		return ret
 	}
-	__getAlwaysOnTop() {
-/* ===============================================================================
-	Method:   __getAlwaysOnTop
-		Determine whether window is set to "always on top" (*INTERNAL*)
-	Returns:
-		True or False
-*/
-		val := this._hWnd
-		ret := (this.styleEx & 0x08) ; WS_EX_TOPMOST
-		ret := ret>0?1:0
-		
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_
-		return ret
-	}
-	__setAlwaysOnTop(mode) 	{
-/* ===============================================================================
-	Method: __setAlwaysOnTop(mode)
-		Sets *alwaysontop*-Mode for window (*INTERNAL*)	
-	Parameters:
-		mode -  true (1),  false (0)
-*/
-		if (this._debug) ; _DBG_
-			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> Current Value:" this.alwaysontop ; _DBG_
-		
-		val := this._hWnd
-		if (mode == true)
-			mode := "on"
-		else if (mode == false) 
-			mode := "off"
-
-		WinSet, AlwaysOnTop, %mode%,  ahk_id %val%
-			
-		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> New Value:" this.alwaysontop ; _DBG_
-		
-		return this.alwaysOnTop
-	}
-	__getCentercoords() {
-/* ===============================================================================
-	Method: __getCentercoords
-		Determine center of the window (*INTERNAL*)
-	Returns:
-		<Rectangle> - Rectangle containing the current center and size (0) of the window
-*/
-		pos := this.Pos
-		x := Round((pos.w)/2 + pos.x)
-		y := Round((pos.h)/2 + pos.y)
-		centerPos := new Rectangle(x,y,0,0,this._debug)
-		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "(pos="pos.dump() " [" this._hWnd "])] -> " centerPos.dump() ; _DBG_
-		return centerPos
-	}
-	__setCentercoords(rect) {
-/* ===============================================================================
-	Method: __setCentercoords
-		Sets center of the window (*INTERNAL*). This moves the window to new center coordinates
-	Value:
-		rect - <Rectangle> containing the new center window. The given size will be ignored
-*/
-		currCenter := this.centercoords
-		currPos := this.pos
-		
-		xoffset := rect.x - currCenter.x
-		yoffset := rect.y - currCenter.y
-		
-		x := currPos.x + xoffset
-		y := currPos.y + yoffset
-		
-		this.move(x,y,99999,99999)
-		centerPos := this.centercoords
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "(pos="rect.dump() " [" this._hWnd "])] -> " centerPos.dump() ; _DBG_
-		return centerPos
-	}
-	__getClassname() { ; NO SETTER!!
-/* ===============================================================================
-	Method:   __getClassname 
-		Determines the name of the Window class (*INTERNAL*)
-	Returns:
-		WindowClass
-*/
-		val := this._hWnd
-		WinGetClass, __classname, ahk_id %val%
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "]) -> (" __classname ")]" ; _DBG_		
-		return __classname
-	}
-	__getDebug() {                                                                 ; _DBG_
-/* =============================================================================== ; _DBG_
-	Method:   __getDebug                                                           ; _DBG_
-		Retrieves current debug mode (*INTERNAL*)                                  ; _DBG_ 
-	Returns:                                                                       ; _DBG_  
-		True or False                                                              ; _DBG_
-*/                                                                                 ; _DBG_ 
-		return this._debug                                                         ; _DBG_
-	}                                                                              ; _DBG_
-	__setDebug(mode) {                                                             ; _DBG_
-/* =============================================================================== ; _DBG_
-	Method: __setDebug(mode)                                                       ; _DBG_
-		Sets *debug*-Mode for class (*INTERNAL*)	                               ; _DBG_
-	Parameters:                                                                    ; _DBG_
-		mode -  true (1),  false (0)                                               ; _DBG_  
-*/                                                                                 ; _DBG_
-		mode := mode<1?0:1                                                         ; _DBG_
-		this._debug := mode                                                        ; _DBG_
-		return this._debug                                                         ; _DBG_
-	}                                                                              ; _DBG_			
-	__getHidden() {
-/* ===============================================================================
-	Method:   __getHidden
-		Get the hidden-attribute of window (*INTERNAL*)
-	Returns:
-		true (window is hidden), false (window is visible) or -1 (window does not exist at all)
-*/
-		prevState := A_DetectHiddenWindows
-		ret := false
-		DetectHiddenWindows, Off
-		if this.exist {
-			; As HiddenWindows are not detected, the window is not hidden in this case ...
-			ret := false
-		} 
-		else {
-			DetectHiddenWindows, On 
-			if this.exist {
-				; As HiddenWindows are detected, the window is hidden in this case ...
-				ret := true
-			} 
-			else {
-				; the window does not exist at all ...
-				ret := -1
-			}
-		}
-		
-		DetectHiddenWindows, %prevState%
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
-		return ret
-	}
-	__setHidden(mode) {
-/* ===============================================================================
-	Method: __setHidden(mode="1")
-		Sets *Hidden*-Property for window
-	Parameters:
-		mode - * true (1),  false (0)
-*/
-		if (this._debug) ; _DBG_
-			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> Current Value:" this.hidden ; _DBG_
-
-		val := this._hWnd
-		ret := 0
-		if (mode == true) {
-			WinHide ahk_id %val%
-			ret := 1
-		}
-		else if (mode == false) {
-			WinShow ahk_id %val%
-			ret := 0
-		}
-		
-		isHidden := this.hidden
-		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> New Value:" isHidden ; _DBG_
-		
-		return isHidden
-	}
-	__getMaximized() {
-/* ===============================================================================
-	Method:  __getMaximized
-		Checks whether the given hWnd refers to a maximized window (*INTERNAL*)
-	Returns:
-		true (window is a maximized window), false (window is not a maximized window)
-*/
-		val := this._hWnd
-		WinGet, s, MinMax, ahk_id %val% 
-		ret := 0
-		if (s == 1)
-			ret := 1	
-		return ret
-	}
-	__setMaximized(mode) {
-/* ===============================================================================
-	Method: __setMaximized(mode)
-		Sets *maximized* Property of the window (*INTERNAL *)
-	Parameters:
-		mode - *(Optional)* true (1),  false (0)
-*/
-		newState := 1
-		if (mode == 0) {
-			newState := 0
-		}
-		
-		prevState := A_DetectHiddenWindows
-		DetectHiddenWindows, On
-		if (newState == 1 )
-			WinMaximize % "ahk_id" this._hWnd
-		else 
-			WinRestore % "ahk_id" this._hWnd
-		DetectHiddenWindows, %prevState%
-		
-		isMax := this.maximized
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> New Value:" isMax ; _DBG_
-		
-		return isMax
-	}
+	
 	__getMinimized() {
 /* ===============================================================================
 	Method:   __getMinimized
@@ -869,26 +811,6 @@ class WindowHandler {
 	}
 	
 	; ######################## Internal Methods - not to be called directly ############################################
-	__exist() {
-/* ===============================================================================
-Method:   __exist
-	Checks if the specified window exists (*INTERNAL*)
-
-Returns:
-	true or false
-
-Author(s):
-	20130308 - hoppfrosch@gmx.de - Original
-*/
-		val := this._hWnd
-		_hWnd := WinExist("ahk_id " val)
-		ret := true
-		if (_hWnd = 0)
-			ret := false
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
-		return ret
-	}
 	__isResizable() {
 /* ===============================================================================
 Method:   __isResizable
