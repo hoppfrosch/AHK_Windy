@@ -265,6 +265,49 @@ class WindowHandler {
 			return isMax
 		}
 	}
+
+	minimized {
+	/*! ---------------------------------------------------------------------------------------
+		Property: minimized [get/set]
+		Get or Set the *minimized*-Property. Minimizes/Deminimizes the current window or get the current state of minimization
+
+		Value:
+		flag - `true` or `false` (activates/deactivates *minimized*-Property)
+
+		Remarks:		
+		* To toogle current *minimized*-Property, simply use `obj.minimized := !obj.minimized`	
+	*/
+		get {
+			val := this._hWnd
+			WinGet, s, MinMax, ahk_id %val% 
+			ret := 0
+			if (s == -1)
+				ret := 1	
+			return ret
+		}
+
+		set {
+			mode := value
+			newState := 1
+			if (mode == 0) {
+				newState := 0
+			}
+		
+			prevState := A_DetectHiddenWindows
+			DetectHiddenWindows, On
+			if (newState == 1 )
+				WinMinimize % "ahk_id" this._hWnd
+			else 
+				WinRestore % "ahk_id" this._hWnd
+			DetectHiddenWindows, %prevState%
+	
+			isMin := this.minimized
+			if (this._debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> New Value:" isMin ; _DBG_
+
+			return isMin
+			}
+	}
 	
 	; ##################### End of Properties (AHK >1.1.16.x) ##############################################################
 	
@@ -274,10 +317,7 @@ class WindowHandler {
 	Method: __Set(aName, aValue)
 		Custom Setter (*INTERNAL*)
 */   
-		if (aName == "minimized") {
-			return this.__setMinimized(aValue)
-		}
-		else if (aName == "monitorID") {
+		if (aName == "monitorID") {
 			return this.__setMonitorID(aValue)
 		}
 		else if (aName == "rolledUp") {
@@ -300,18 +340,7 @@ class WindowHandler {
 */   
 		written := 0 ; _DBG_
 	
-		if (aName = "minimized") {
-/*! ---------------------------------------------------------------------------------------
-	Property: minimized [get/set]
-		Get or Set the *minimized*-Property. Minimizes/Deminimizes the current window or get the current state of minimization
-	Value:
-		flag - `true` or `false` (activates/deactivates *minimized*-Property)
-	Remarks:		
-		* To toogle current *minimized*-Property, simply use `obj.minimized := !obj.minimized`	
-*/
-			return this.__getMinimized()
-		}
-		else if (aName = "monitorID") {
+		if (aName = "monitorID") {
 /*! ---------------------------------------------------------------------------------------
 	Property: monitorID [get/set]
 		Get or Set the ID of monitor on which the window is on. Setting the property moves the window to the corresponding monitor, trying to place the window at the same (scaled) position
@@ -431,46 +460,6 @@ class WindowHandler {
         */
 	}
 	
-	__getMinimized() {
-/* ===============================================================================
-	Method:   __getMinimized
-		Checks whether the given hWnd refers to a Minimized window (*INTERNAL*)
-	Returns:
-		true (window is a Minimized window), false (window is not a Minimized window)
-*/
-		val := this._hWnd
-		WinGet, s, MinMax, ahk_id %val% 
-		ret := 0
-		if (s == -1)
-			ret := 1	
-		return ret
-	}
-	__setMinimized(mode) {
-/* ===============================================================================
-	Method: __setMinimized(mode)
-		Sets *Minimized* Property of the window (*INTERNAL*)
-	Parameters:
-		mode - true (1),  false (0)
-*/
-		newState := 1
-		if (mode == 0) {
-			newState := 0
-		}
-		
-		prevState := A_DetectHiddenWindows
-		DetectHiddenWindows, On
-		if (newState == 1 )
-			WinMinimize % "ahk_id" this._hWnd
-		else 
-			WinRestore % "ahk_id" this._hWnd
-		DetectHiddenWindows, %prevState%
-
-		isMin := this.minimized
-		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> New Value:" isMin ; _DBG_
-
-		return isMin
-	}
 	__getMonitorID() {
 /* ===============================================================================
 	Method:  __getMonitorID
