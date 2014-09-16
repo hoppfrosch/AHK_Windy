@@ -223,6 +223,49 @@ class WindowHandler {
 	
 	}
 
+	maximized {
+	/*! ---------------------------------------------------------------------------------------
+		Property: maximized [get/set]
+		Get or Set the *maximized*-Property. Maximizes/Demaximizes the current window or get the current state of maximization
+		
+		Value:
+		flag - `true` or `false` (activates/deactivates *maximized*-Property)
+		
+		Remarks:		
+		* To toogle current *maximized*-Property, simply use `obj.maximized := !obj.maximized`	
+*/
+		get {
+			val := this._hWnd
+			WinGet, s, MinMax, ahk_id %val% 
+			ret := 0
+			if (s == 1)
+				ret := 1	
+			return ret
+		}
+
+		set {
+			mode := value
+			newState := 1
+			if (mode == 0) {
+				newState := 0
+			}
+			
+			prevState := A_DetectHiddenWindows
+			DetectHiddenWindows, On
+			if (newState == 1 )
+				WinMaximize % "ahk_id" this._hWnd
+			else 
+				WinRestore % "ahk_id" this._hWnd
+			DetectHiddenWindows, %prevState%
+			
+			isMax := this.maximized
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> New Value:" isMax ; _DBG_
+			
+			return isMax
+		}
+	}
+	
 	; ##################### End of Properties (AHK >1.1.16.x) ##############################################################
 	
     ; ###################### Helper functions for properties (Getter/Setter implementation) ############################
@@ -231,10 +274,7 @@ class WindowHandler {
 	Method: __Set(aName, aValue)
 		Custom Setter (*INTERNAL*)
 */   
-		if (aName == "maximized") {
-			return this.__setMaximized(aValue)
-		}
-		else if (aName == "minimized") {
+		if (aName == "minimized") {
 			return this.__setMinimized(aValue)
 		}
 		else if (aName == "monitorID") {
@@ -260,18 +300,7 @@ class WindowHandler {
 */   
 		written := 0 ; _DBG_
 	
-		if (aName = "maximized") {
-/*! ---------------------------------------------------------------------------------------
-	Property: maximized [get/set]
-		Get or Set the *maximized*-Property. Maximizes/Demaximizes the current window or get the current state of maximization
-	Value:
-		flag - `true` or `false` (activates/deactivates *maximized*-Property)
-	Remarks:		
-		* To toogle current *maximized*-Property, simply use `obj.maximized := !obj.maximized`	
-*/
-			return this.__getMaximized()
-		}
-		else if (aName = "minimized") {
+		if (aName = "minimized") {
 /*! ---------------------------------------------------------------------------------------
 	Property: minimized [get/set]
 		Get or Set the *minimized*-Property. Minimizes/Deminimizes the current window or get the current state of minimization
@@ -402,47 +431,6 @@ class WindowHandler {
         */
 	}
 	
-	__getMaximized() { 
-/* ===============================================================================
-	Method:  __getMaximized
-		Checks whether the given hWnd refers to a maximized window (*INTERNAL*)
-	Returns:
-		true (window is a maximized window), false (window is not a maximized window)
-*/
-		val := this._hWnd
-		WinGet, s, MinMax, ahk_id %val% 
-		ret := 0
-		if (s == 1)
-			ret := 1	
-		return ret
-	}
-	
-	__setMaximized(mode) {
-/* ===============================================================================
-	Method: __setMaximized(mode)
-		Sets *maximized* Property of the window (*INTERNAL *)
-	Parameters:
-		mode - *(Optional)* true (1),  false (0)
-*/
-		newState := 1
-		if (mode == 0) {
-			newState := 0
-		}
-		
-		prevState := A_DetectHiddenWindows
-		DetectHiddenWindows, On
-		if (newState == 1 )
-			WinMaximize % "ahk_id" this._hWnd
-		else 
-			WinRestore % "ahk_id" this._hWnd
-		DetectHiddenWindows, %prevState%
-		
-		isMax := this.maximized
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> New Value:" isMax ; _DBG_
-		
-		return isMax
-	}
 	__getMinimized() {
 /* ===============================================================================
 	Method:   __getMinimized
