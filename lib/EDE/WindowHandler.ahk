@@ -357,15 +357,17 @@ class WindowHandler {
 		}
 	}
 
-	TODO_pos {
+	pos {
 	/*! ---------------------------------------------------------------------------------------
 	Property: pos [get/set]
 	Get or Set the position and size of the window (To set the position use class [Rectangle](rectangle.html))	
 	*/
 		get {
+			return this.__getPos()
 		}
 
 		set {
+			return this.__setPos(value)
 		}
 	}
 
@@ -377,11 +379,23 @@ class WindowHandler {
 		}
 	}
 
-	TODO_processname {
-		get {
-		}
+	processname {
+	/*! ---------------------------------------------------------------------------------------
+	Property: processname [get]
+	Get the Name of the process the window belongs to
 
-		set {
+	Remarks:		
+	There is no setter available, since this cannot be modified
+	*/
+		get {
+			ret := ""
+			if this.exist {
+				WinGet, PName, ProcessName, % "ahk_id " this._hWnd
+				ret := PName
+			}
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
+			return ret
 		}
 	}
 
@@ -490,43 +504,40 @@ class WindowHandler {
 		}
 	}
 
-	TODO_title {
+	title {
+	/*! ---------------------------------------------------------------------------------------
+	Property: title [get/set]
+	Current window title. 
+
+	Remarks:		
+	A change to a window's title might be merely temporary if the application that owns the window frequently changes the title.
+	*/
 		get {
+			return this.__getTitle()
 		}
 
 		set {
+			return this.__setTitle(value)
 		}
 	}
 
-	TODO_transparency {
+	transparency {
+	/*! ---------------------------------------------------------------------------------------
+	Property: transparency [get/set]
+	Current window transparency. 
+	*/
 		get {
+			return this.__getTransparency()
 		}
 
 		set {
+			return this.__setTransparency(value)
 		}
 	}
-
-
-
 
 	; ##################### End of Properties (AHK >1.1.16.x) ##############################################################
 	
     ; ###################### Helper functions for properties (Getter/Setter implementation) ############################
-	__Set(aName, aValue) {
-/* ===============================================================================
-	Method: __Set(aName, aValue)
-		Custom Setter (*INTERNAL*)
-*/   
-		if (aName == "pos") {
-			return this.__setPos(aValue)
-		}
-		else if (aName == "title") {
-			return this.__setTitle(aValue)
-		}
-		else if (aName == "transparency") {
-			return this.__setTransparency(aValue)
-		}
-	}
 	__Get(aName) {
 /* ===============================================================================
 	Method: __Get(aName)
@@ -534,19 +545,7 @@ class WindowHandler {
 */   
 		written := 0 ; _DBG_
 	
-		if (aName = "pos") { ; current position
-/*! ---------------------------------------------------------------------------------------
-	Property: pos [get/set]
-		Get or Set the position and size of the window (To set the position use class [Rectangle](rectangle.html))	
-	Example:
-		`obj.pos := new [Rectangle](rectangle.html)(xnew, ynew, wnew, hnew)`	
-	Extra:
-		### Author(s)
-			* 20130429 - [hoppfrosch](hoppfrosch@gmx.de) - Original
-*/
-			return this.__getPos()
-		}
-		else if (aName = "processID") {
+		if (aName = "processID") {
 /*! ---------------------------------------------------------------------------------------
 	Property: processID [get]
 		Get the ID of the process the window belongs to
@@ -556,17 +555,6 @@ class WindowHandler {
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])]" ; _DBG_
 			return this.__getProcessID()
-		}
-		else if (aName = "processname") {
-/*! ---------------------------------------------------------------------------------------
-	Property: processname [get]
-		Get the Name of the process the window belongs to
-	Remarks:		
-		There is no setter available, since this cannot be modified
-*/
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])]" ; _DBG_
-			return this.__getProcessname()
 		}
 		else if (aName = "resizeable") { 
 /*! ---------------------------------------------------------------------------------------
@@ -595,31 +583,6 @@ class WindowHandler {
 */
 			return this.__styleEx()
 		}
-		else if (aName = "transparency") {
-/*! ---------------------------------------------------------------------------------------
-	Property: transparency [get/set]
-		Get or Set the transparency of the window
-			
-		**ToBeDone: Implementation of Setter-functionality**
-*/
-			return this.__getTransparency()
-		}
-		else if (aName = "title") {
-/*! ---------------------------------------------------------------------------------------
-	Property: title [get/set]
-		Get/Set current window title. 
-	Value:
-		title - Window Title to be set
-	Remarks:		
-		* A change to a window's title might be merely temporary if the application that owns the window frequently changes the title.
-*/
-			return this.__getTitle()
-		}
-		/*
-		if (this._debug) ; _DBG_
-			if (!written) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret ; _DBG_
-        */
 	}
 	
 	__getPos() {
@@ -666,22 +629,7 @@ class WindowHandler {
 			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
 		return ret
 	}
-	__getProcessname() {
-/* ===============================================================================
-	Method:   __getProcessname
-		Gets the processname of the process the window belongs to (*INTERNAL*)
-	Returns:
-		processname or empty string (if window does not exist)
-*/
-		ret := ""
-		if this.exist {
-			WinGet, PName, ProcessName, % "ahk_id " this._hWnd
-			ret := PName
-		}
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
-		return ret
-	}
+
 	__getTitle()	{
 /* ===============================================================================
 	Method:   __getTitle
