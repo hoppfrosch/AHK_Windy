@@ -140,7 +140,27 @@ class WindowHandler {
 			return this._debug                                                         ; _DBG_
 		}
 	}
-	
+
+	exist {
+	/*! ---------------------------------------------------------------------------------------
+	Property: exist [get]
+	Checks whether the window still exists. 
+
+	Remarks:
+	There is no setter available, since this is a constant window property
+	*/
+		get {
+			val := this._hWnd
+			_hWnd := WinExist("ahk_id " val)
+			ret := true
+			if (_hWnd = 0)
+				ret := false
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
+			return ret
+		}
+	}
+
 	; ##################### End of Properties (AHK >1.1.16.x) ##############################################################
 	
     ; ###################### Helper functions for properties (Getter/Setter implementation) ############################
@@ -181,14 +201,7 @@ class WindowHandler {
 */   
 		written := 0 ; _DBG_
 	
-    	if (aName = "exist") {
-/*! ---------------------------------------------------------------------------------------
-	Property: exist [get]
-		Checks whether the window still exists. There is no setter available, since user cannot enforce existance of window
-*/
-			return this.__exist()
-		}
-		else if (aName = "hidden") {
+    	if (aName = "hidden") {
 /*! ---------------------------------------------------------------------------------------
 	Property: hidden [get/set]
 		Get or Set the *hidden*-Property. Hides/Unhide the current window or get the current state of hiding
@@ -820,26 +833,6 @@ class WindowHandler {
 	}
 	
 	; ######################## Internal Methods - not to be called directly ############################################
-	__exist() {
-/* ===============================================================================
-Method:   __exist
-	Checks if the specified window exists (*INTERNAL*)
-
-Returns:
-	true or false
-
-Author(s):
-	20130308 - hoppfrosch@gmx.de - Original
-*/
-		val := this._hWnd
-		_hWnd := WinExist("ahk_id " val)
-		ret := true
-		if (_hWnd = 0)
-			ret := false
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
-		return ret
-	}
 	__isResizable() {
 /* ===============================================================================
 Method:   __isResizable
