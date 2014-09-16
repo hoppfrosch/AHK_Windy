@@ -308,6 +308,54 @@ class WindowHandler {
 			return isMin
 			}
 	}
+
+	monitorID {
+	/*! ---------------------------------------------------------------------------------------
+		Property: monitorID [get/set]
+		Get or Set the ID of monitor on which the window is on. Setting the property moves the window to the corresponding monitor, trying to place the window at the same (scaled) position
+
+		Value:
+		ID - Monitor-ID (if ID > max(ID) then ID = max(ID) will be used)
+		
+		Remarks
+		* Setting the property moves the window to the corresponding monitor, retaining the (relative) position and size of the window
+*/
+		get {
+			mon := 1
+			c := this.centercoords
+			mme := new MultiMonitorEnv(this._debug)
+			mon := mme.monGetFromCoord(c.x,c.y,mon)
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " mon ; _DBG_		
+			return mon
+		}
+
+		set {
+			obj := new MultiMonitorEnv(this._debug)
+		
+			realID := value
+			if (realID > obj.monCount()) {
+				realID := obj.monCount()
+			}	
+			if (realID < 1) {
+				realID := 1
+			}
+			newMon := obj.monBoundary(realID)
+		
+			oldID := this.monitorID
+			oldMon := obj.monBoundary(oldID)
+		
+			oldPos := this.pos
+			xnew := newMon.x+(oldPos.x - oldMon.x)
+			ynew := newMon.y+(oldPos.y - oldMon.y)
+			this.Move(xnew,ynew)
+			monID := this.monitorID
+			if (this._debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], ID=" value ")] -> New Value:" monID " (from: " oldID ")" ; _DBG_
+	
+			return monID
+		}
+	}
 	
 	; ##################### End of Properties (AHK >1.1.16.x) ##############################################################
 	
@@ -317,10 +365,7 @@ class WindowHandler {
 	Method: __Set(aName, aValue)
 		Custom Setter (*INTERNAL*)
 */   
-		if (aName == "monitorID") {
-			return this.__setMonitorID(aValue)
-		}
-		else if (aName == "rolledUp") {
+		if (aName == "rolledUp") {
 			return this.__setRolledUp(aValue)
 		}
 		else if (aName == "pos") {
@@ -340,18 +385,7 @@ class WindowHandler {
 */   
 		written := 0 ; _DBG_
 	
-		if (aName = "monitorID") {
-/*! ---------------------------------------------------------------------------------------
-	Property: monitorID [get/set]
-		Get or Set the ID of monitor on which the window is on. Setting the property moves the window to the corresponding monitor, trying to place the window at the same (scaled) position
-	Value:
-		ID - Monitor-ID (if ID > max(ID) then ID = max(ID) will be used)
-	Remarks
-		* Setting the property moves the window to the corresponding monitor, retaining the (relative) position and size of the window
-*/
-			return this.__getMonitorID()
-		}
-		else if (aName = "pos") { ; current position
+		if (aName = "pos") { ; current position
 /*! ---------------------------------------------------------------------------------------
 	Property: pos [get/set]
 		Get or Set the position and size of the window (To set the position use class [Rectangle](rectangle.html))	
@@ -460,52 +494,6 @@ class WindowHandler {
         */
 	}
 	
-	__getMonitorID() {
-/* ===============================================================================
-	Method:  __getMonitorID
-		Determines ID of monitor the window currently is on (i.e center of window) (*INTERNAL*)
-	Returns:
-		MonitorID
-*/
-		mon := 1
-		c := this.centercoords
-		mme := new MultiMonitorEnv(this._debug)
-		mon := mme.monGetFromCoord(c.x,c.y,mon)
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " mon ; _DBG_		
-		return mon
-	}
-	__setMonitorID(newID) {
-/* ===============================================================================
-	Method: __setMonitorID(newID)
-		Moves the window to the given Monitor (*INTERNAL)
-	Parameters:
-		newID - Monitor-ID
-*/
-		obj := new MultiMonitorEnv(this._debug)
-		
-		realID := newID
-		if (realID > obj.monCount()) {
-			realID := obj.monCount()
-		}
-		if (realID < 1) {
-			realID := 1
-		}
-		newMon := obj.monBoundary(realID)
-		
-		oldID := this.monitorID
-		oldMon := obj.monBoundary(oldID)
-		
-		oldPos := this.pos
-		xnew := newMon.x+(oldPos.x - oldMon.x)
-		ynew := newMon.y+(oldPos.y - oldMon.y)
-		this.Move(xnew,ynew)
-		monID := this.monitorID
-		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], ID=" newID ")] -> New Value:" monID " (from: " oldID ")" ; _DBG_
-
-		return monID
-	}
 	__getPos() {
 /* ===============================================================================
 	Method: __getPos
