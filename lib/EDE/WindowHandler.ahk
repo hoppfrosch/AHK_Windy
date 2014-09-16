@@ -109,6 +109,23 @@ class WindowHandler {
 		}
 	}
 
+	classname {
+	/*! ---------------------------------------------------------------------------------------
+		Property: classname [get]
+		name of the window class. 
+
+		Remarks:
+		There is no setter available, since this is a constant window property
+	*/
+		get {
+			val := this._hWnd
+			WinGetClass, __classname, ahk_id %val%
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "]) -> (" __classname ")]" ; _DBG_		
+			return __classname
+		}
+	}
+	
 	debug {
 	/*! ---------------------------------------------------------------------------------------
 		Property: debug [get/set]
@@ -164,16 +181,7 @@ class WindowHandler {
 */   
 		written := 0 ; _DBG_
 	
-    	if (aName = "classname") {
-/*! ---------------------------------------------------------------------------------------
-	Property: classname [get]
-		Get the name of the window class. 
-	Remarks:
-		There is no setter available, since this is a constant window property
-*/
-			return this.__getClassname()
-		}
-		else if (aName = "exist") {
+    	if (aName = "exist") {
 /*! ---------------------------------------------------------------------------------------
 	Property: exist [get]
 		Checks whether the window still exists. There is no setter available, since user cannot enforce existance of window
@@ -333,19 +341,6 @@ class WindowHandler {
         */
 	}
 	
-	__getClassname() { ; NO SETTER!!
-/* ===============================================================================
-	Method:   __getClassname 
-		Determines the name of the Window class (*INTERNAL*)
-	Returns:
-		WindowClass
-*/
-		val := this._hWnd
-		WinGetClass, __classname, ahk_id %val%
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "]) -> (" __classname ")]" ; _DBG_		
-		return __classname
-	}
 	__getHidden() {
 /* ===============================================================================
 	Method:   __getHidden
