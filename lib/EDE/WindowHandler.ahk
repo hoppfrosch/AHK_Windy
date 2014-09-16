@@ -161,6 +161,68 @@ class WindowHandler {
 		}
 	}
 
+	hidden {
+	/*! ---------------------------------------------------------------------------------------
+		Property: hidden [get/set]
+		Get or Set the *hidden*-Property. Hides/Unhide the current window or get the current state of hiding
+
+		Value:
+		flag - `true` or `false` (activates/deactivates *hidden*-Property)
+
+		Remarks:		
+		* To toogle current *hidden*-Property, simply use `obj.hidden := !obj.hidden`	
+*/
+		get {
+			prevState := A_DetectHiddenWindows
+			ret := false
+			DetectHiddenWindows, Off
+			if this.exist {
+				; As HiddenWindows are not detected, the window is not hidden in this case ...
+				ret := false
+			} 
+			else {
+				DetectHiddenWindows, On 
+				if this.exist {
+					; As HiddenWindows are detected, the window is hidden in this case ...
+					ret := true
+				} 
+				else {
+					; the window does not exist at all ...
+					ret := -1
+				}
+			}
+			
+			DetectHiddenWindows, %prevState%
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
+			return ret
+		}
+
+		set{
+			mode := value
+			if (this._debug) ; _DBG_
+				OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> Current Value:" this.hidden ; _DBG_
+
+			val := this._hWnd
+			ret := 0
+			if (mode == true) {
+				WinHide ahk_id %val%
+				ret := 1
+			}
+			else if (mode == false) {
+				WinShow ahk_id %val%
+				ret := 0
+			}
+			
+			isHidden := this.hidden
+			if (this._debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> New Value:" isHidden ; _DBG_
+			
+			return isHidden
+		}
+	
+	}
+
 	; ##################### End of Properties (AHK >1.1.16.x) ##############################################################
 	
     ; ###################### Helper functions for properties (Getter/Setter implementation) ############################
@@ -169,10 +231,7 @@ class WindowHandler {
 	Method: __Set(aName, aValue)
 		Custom Setter (*INTERNAL*)
 */   
-		if (aName == "hidden") {
-			return this.__setHidden(aValue)
-		}
-		else if (aName == "maximized") {
+		if (aName == "maximized") {
 			return this.__setMaximized(aValue)
 		}
 		else if (aName == "minimized") {
@@ -201,18 +260,7 @@ class WindowHandler {
 */   
 		written := 0 ; _DBG_
 	
-    	if (aName = "hidden") {
-/*! ---------------------------------------------------------------------------------------
-	Property: hidden [get/set]
-		Get or Set the *hidden*-Property. Hides/Unhide the current window or get the current state of hiding
-	Value:
-		flag - `true` or `false` (activates/deactivates *hidden*-Property)
-	Remarks:		
-		* To toogle current *hidden*-Property, simply use `obj.hidden := !obj.hidden`	
-*/
-			return this.__getHidden()
-		}
-		else if (aName = "maximized") {
+		if (aName = "maximized") {
 /*! ---------------------------------------------------------------------------------------
 	Property: maximized [get/set]
 		Get or Set the *maximized*-Property. Maximizes/Demaximizes the current window or get the current state of maximization
@@ -354,64 +402,6 @@ class WindowHandler {
         */
 	}
 	
-	__getHidden() {
-/* ===============================================================================
-	Method:   __getHidden
-		Get the hidden-attribute of window (*INTERNAL*)
-	Returns:
-		true (window is hidden), false (window is visible) or -1 (window does not exist at all)
-*/
-		prevState := A_DetectHiddenWindows
-		ret := false
-		DetectHiddenWindows, Off
-		if this.exist {
-			; As HiddenWindows are not detected, the window is not hidden in this case ...
-			ret := false
-		} 
-		else {
-			DetectHiddenWindows, On 
-			if this.exist {
-				; As HiddenWindows are detected, the window is hidden in this case ...
-				ret := true
-			} 
-			else {
-				; the window does not exist at all ...
-				ret := -1
-			}
-		}
-		
-		DetectHiddenWindows, %prevState%
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
-		return ret
-	}
-	__setHidden(mode) {
-/* ===============================================================================
-	Method: __setHidden(mode="1")
-		Sets *Hidden*-Property for window
-	Parameters:
-		mode - * true (1),  false (0)
-*/
-		if (this._debug) ; _DBG_
-			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> Current Value:" this.hidden ; _DBG_
-
-		val := this._hWnd
-		ret := 0
-		if (mode == true) {
-			WinHide ahk_id %val%
-			ret := 1
-		}
-		else if (mode == false) {
-			WinShow ahk_id %val%
-			ret := 0
-		}
-		
-		isHidden := this.hidden
-		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> New Value:" isHidden ; _DBG_
-		
-		return isHidden
-	}
 	__getMaximized() { 
 /* ===============================================================================
 	Method:  __getMaximized
