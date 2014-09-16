@@ -356,7 +356,159 @@ class WindowHandler {
 			return monID
 		}
 	}
-	
+
+	TODO_pos {
+	/*! ---------------------------------------------------------------------------------------
+	Property: pos [get/set]
+	Get or Set the position and size of the window (To set the position use class [Rectangle](rectangle.html))	
+	*/
+		get {
+		}
+
+		set {
+		}
+	}
+
+	TODO_processID {
+		get {
+		}
+
+		set {
+		}
+	}
+
+	TODO_processname {
+		get {
+		}
+
+		set {
+		}
+	}
+
+	TODO_resizeable {
+		get {
+		}
+
+		set {
+		}
+	}
+
+	rolledUp {
+	/*! ---------------------------------------------------------------------------------------
+	Property: rolledUp [get/set]
+	Get or Set the *RolledUp*-Property (window is rolled up to its title bar).  Rolls/De-Rolls the current window or get the current state of RollUp
+
+	Value:
+	flag - `true` or `false` (activates/deactivates *rolledUp*-Property)
+
+	Remarks:		
+	* To toogle current *rolledUp*-Property, simply use `objrolledUp := !obj.rolledUp`
+	*/
+		get {
+			ret := 0
+			if !this.exist {
+				; the window does not exist at all ...
+				ret := -1
+			}
+			else {
+				currPos := this.pos
+				if (currPos.h <= this.rolledUpHeight) {
+					ret := 1
+				}
+			}
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
+			return ret
+		}
+
+		set {
+			mode := value
+			roll := 1
+			if (mode == 1) 		
+				roll := 1
+			else if (mode == 0) 
+				if (this.rolledUp == true)
+					roll := 0 ; Only rolled window can be unrolled
+				else
+					roll := -1 ; As window is not rolled up, you cannot unroll it as requested ....
+			else {
+				if (this.rolledUp == true)
+					roll := 0
+				else
+					roll := 1
+			}
+			
+			; Determine the minmal height of a window
+			MinWinHeight := this.rolledUpHeight
+			; Get size of current window
+			hwnd := this._hWnd
+			currPos := this.pos
+		
+			if (roll == 1) { ; Roll
+	            this.move(currPos.x, currPos.y, currPos.w, MinWinHeight)
+			}
+			else if (roll = 0) { ; Unroll
+				this.__posRestore()			
+			}
+			
+			isRolled := this.rolledUp
+			if (this._debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> New Value:" isRolled ; _DBG_
+
+			return isRolled
+		}
+	}
+
+	rolledUpHeight {
+	/*! ---------------------------------------------------------------------------------------
+	Property:rolledUpHeight [get]
+		Returns the height of the caption bar of windows
+		
+	Remarks:
+	There is no setter available, since this is a constant window property
+	*/
+		get {
+			SysGet, ret, 29
+			return ret
+		}
+
+	}
+
+	TODO_style {
+		get {
+		}
+
+		set {
+		}
+	}
+
+	TODO_styleEx {
+		get {
+		}
+
+		set {
+		}
+	}
+
+	TODO_title {
+		get {
+		}
+
+		set {
+		}
+	}
+
+	TODO_transparency {
+		get {
+		}
+
+		set {
+		}
+	}
+
+
+
+
 	; ##################### End of Properties (AHK >1.1.16.x) ##############################################################
 	
     ; ###################### Helper functions for properties (Getter/Setter implementation) ############################
@@ -365,10 +517,7 @@ class WindowHandler {
 	Method: __Set(aName, aValue)
 		Custom Setter (*INTERNAL*)
 */   
-		if (aName == "rolledUp") {
-			return this.__setRolledUp(aValue)
-		}
-		else if (aName == "pos") {
+		if (aName == "pos") {
 			return this.__setPos(aValue)
 		}
 		else if (aName == "title") {
@@ -427,27 +576,6 @@ class WindowHandler {
 		**ToBeDone: Implementation of Setter-functionality**
 */
 			return this.__isResizable()
-		}
-		else if (aName = "rolledUp") {
-/*! ---------------------------------------------------------------------------------------
-	Property: rolledUp [get/set]
-		Get or Set the *RolledUp*-Property (window is rolled up to its title bar).  Rolls/De-Rolls the current window or get the current state of RollUp
-	Value:
-		flag - `true` or `false` (activates/deactivates *rolledUp*-Property)
-	Remarks:		
-		* To toogle current *rolledUp*-Property, simply use `objrolledUp := !obj.rolledUp`
-*/
-			return this.__getRolledUp()
-		}
-		else if (aName = "rolledUpHeight") {
-/*! ---------------------------------------------------------------------------------------
-	Property: rolledUpHeight [get]
-		Returns the height of the caption bar of windows
-	Remarks:
-    	There is no setter available, since this is a system constant
-*/
-			SysGet, ret, 29
-			return ret
 		}
 		else if (aName = "style") {
 /*! ---------------------------------------------------------------------------------------
@@ -553,69 +681,6 @@ class WindowHandler {
 		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
 		return ret
-	}
-	__getRolledUp() {
-/* ===============================================================================
-	Method:   __getRolledUp
-		Checks whether the window is rolled up (*INTERNAL*)
-	Returns:
-		true (window is rolled up), false (window is not rolled up) or -1 (window does not exist at all)
-*/
-		ret := 0
-		if !this.exist {
-			; the window does not exist at all ...
-			ret := -1
-		}
-		else {
-			currPos := this.pos
-			if (currPos.h <= this.rolledUpHeight) {
-				ret := 1
-			}
-		}
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
-		return ret
-	}
-	__setRolledUp(mode) {
-/* ===============================================================================
-	Method: __setRolledUp(mode) {
-		Sets *rollup* Property of the window. The window cann be rolled up (minimized) to its titlebar and unrolled again.
-	Parameters:
-		mode - true (1),  false (0)
-*/
-		roll := 1
-		if (mode == 1) 		
-			roll := 1
-		else if (mode == 0) 
-			if (this.rolledUp == true)
-				roll := 0 ; Only rolled window can be unrolled
-			else
-				roll := -1 ; As window is not rolled up, you cannot unroll it as requested ....
-		else {
-			if (this.rolledUp == true)
-				roll := 0
-			else
-				roll := 1
-		}
-		
-		; Determine the minmal height of a window
-		MinWinHeight := this.rolledUpHeight
-		; Get size of current window
-		hwnd := this._hWnd
-		currPos := this.pos
-	
-		if (roll == 1) { ; Roll
-            this.move(currPos.x, currPos.y, currPos.w, MinWinHeight)
-		}
-		else if (roll = 0) { ; Unroll
-			this.__posRestore()			
-		}
-		
-		isRolled := this.rolledUp
-		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> New Value:" isRolled ; _DBG_
-
-		return isRolled
 	}
 	__getTitle()	{
 /* ===============================================================================
