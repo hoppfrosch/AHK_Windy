@@ -74,7 +74,6 @@ class WindowHandler {
 			return this.alwaysOnTop
 		}
 	}
-
 	centercoords {
 		/*! ---------------------------------------------------------------------------------------
 			Property: centercoords [get7SET]
@@ -108,7 +107,6 @@ class WindowHandler {
 			return centerPos
 		}
 	}
-
 	classname {
 	/*! ---------------------------------------------------------------------------------------
 		Property: classname [get]
@@ -125,7 +123,6 @@ class WindowHandler {
 			return __classname
 		}
 	}
-	
 	debug {
 	/*! ---------------------------------------------------------------------------------------
 		Property: debug [get/set]
@@ -140,7 +137,6 @@ class WindowHandler {
 			return this._debug                                                         ; _DBG_
 		}
 	}
-
 	exist {
 	/*! ---------------------------------------------------------------------------------------
 	Property: exist [get]
@@ -160,7 +156,6 @@ class WindowHandler {
 			return ret
 		}
 	}
-
 	hidden {
 	/*! ---------------------------------------------------------------------------------------
 		Property: hidden [get/set]
@@ -220,9 +215,7 @@ class WindowHandler {
 			
 			return isHidden
 		}
-	
 	}
-
 	maximized {
 	/*! ---------------------------------------------------------------------------------------
 		Property: maximized [get/set]
@@ -265,7 +258,6 @@ class WindowHandler {
 			return isMax
 		}
 	}
-
 	minimized {
 	/*! ---------------------------------------------------------------------------------------
 		Property: minimized [get/set]
@@ -308,7 +300,6 @@ class WindowHandler {
 			return isMin
 			}
 	}
-
 	monitorID {
 	/*! ---------------------------------------------------------------------------------------
 		Property: monitorID [get/set]
@@ -356,8 +347,7 @@ class WindowHandler {
 			return monID
 		}
 	}
-
-	pos {
+	pos { ; ToDo: Implementation
 	/*! ---------------------------------------------------------------------------------------
 	Property: pos [get/set]
 	Get or Set the position and size of the window (To set the position use class [Rectangle](rectangle.html))	
@@ -370,15 +360,25 @@ class WindowHandler {
 			return this.__setPos(value)
 		}
 	}
-
-	TODO_processID {
+	processID {
+	/*! ---------------------------------------------------------------------------------------
+	Property: processID [get]
+	Get the ID of the process the window belongs to
+	
+	Remarks:		
+	There is no setter available, since this cannot be modified
+	*/
 		get {
-		}
-
-		set {
+			ret := ""
+			if this.exist {
+				WinGet, PID, PID, % "ahk_id " this._hWnd
+				ret := PID
+			}
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
+			return ret
 		}
 	}
-
 	processname {
 	/*! ---------------------------------------------------------------------------------------
 	Property: processname [get]
@@ -398,15 +398,20 @@ class WindowHandler {
 			return ret
 		}
 	}
-
-	TODO_resizeable {
+	resizeable { ; ToDo: Implementation
+	/*! ---------------------------------------------------------------------------------------
+	Property: resizeable [get]
+	Checks whether window is resizeable
+	*/
 		get {
+			return this.__isResizable()
 		}
 
 		set {
+			; 	Todo: Implementation of Setter-functionality**
+			return value
 		}
 	}
-
 	rolledUp {
 	/*! ---------------------------------------------------------------------------------------
 	Property: rolledUp [get/set]
@@ -472,7 +477,6 @@ class WindowHandler {
 			return isRolled
 		}
 	}
-
 	rolledUpHeight {
 	/*! ---------------------------------------------------------------------------------------
 	Property:rolledUpHeight [get]
@@ -487,24 +491,35 @@ class WindowHandler {
 		}
 
 	}
-
-	TODO_style {
+	style { ; ToDo: Implementation
+	/*! ---------------------------------------------------------------------------------------
+	Property: style [get]
+	Returns current window style
+	*/
 		get {
+			return this.__style()
 		}
 
 		set {
+			; ToDo: Implementation of Setter-functionality**
+			return value
 		}
 	}
-
-	TODO_styleEx {
+	styleEx { ; ToDo: Implementation
+	/*! ---------------------------------------------------------------------------------------
+	Property: styleEx [get]
+	Returns current window extended style
+	*/
 		get {
+			return this.__styleEx()
 		}
 
 		set {
+			; ToDo: Implementation of Setter-functionality**
+			return value
 		}
 	}
-
-	title {
+	title { ; ToDo: Implementation
 	/*! ---------------------------------------------------------------------------------------
 	Property: title [get/set]
 	Current window title. 
@@ -520,8 +535,7 @@ class WindowHandler {
 			return this.__setTitle(value)
 		}
 	}
-
-	transparency {
+	transparency { ; ToDo: Implementation
 	/*! ---------------------------------------------------------------------------------------
 	Property: transparency [get/set]
 	Current window transparency. 
@@ -538,53 +552,6 @@ class WindowHandler {
 	; ##################### End of Properties (AHK >1.1.16.x) ##############################################################
 	
     ; ###################### Helper functions for properties (Getter/Setter implementation) ############################
-	__Get(aName) {
-/* ===============================================================================
-	Method: __Get(aName)
-		Custom Getter (*INTERNAL*)
-*/   
-		written := 0 ; _DBG_
-	
-		if (aName = "processID") {
-/*! ---------------------------------------------------------------------------------------
-	Property: processID [get]
-		Get the ID of the process the window belongs to
-	Remarks:		
-		There is no setter available, since this cannot be modified
-*/
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])]" ; _DBG_
-			return this.__getProcessID()
-		}
-		else if (aName = "resizeable") { 
-/*! ---------------------------------------------------------------------------------------
-	Property: resizeable [get]
-		Checks whether window is resizeable
-	
-		**ToBeDone: Implementation of Setter-functionality**
-*/
-			return this.__isResizable()
-		}
-		else if (aName = "style") {
-/*! ---------------------------------------------------------------------------------------
-	Property: style [get]
-		Returns current window style
-	
-    	**ToBeDone: Implementation of Setter-functionality**
-*/
-			return this.__style()
-		}
-		else if (aName = "styleEx") {
-/*! ---------------------------------------------------------------------------------------
-	Property: styleEx [get]
-		Returns current window extended style
-		
-		**ToBeDone: Implementation of Setter-functionality**
-*/
-			return this.__styleEx()
-		}
-	}
-	
 	__getPos() {
 /* ===============================================================================
 	Method: __getPos
@@ -613,23 +580,6 @@ class WindowHandler {
 
 		return newPos
 	}
-	__getProcessID() {
-/* ===============================================================================
-	Method:   __getProcessID
-		Gets the process-ID of the process the window belongs to (*INTERNAL*)
-	Returns:
-		processID or empty string (if window does not exist)
-*/
-		ret := ""
-		if this.exist {
-			WinGet, PID, PID, % "ahk_id " this._hWnd
-			ret := PID
-		}
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
-		return ret
-	}
-
 	__getTitle()	{
 /* ===============================================================================
 	Method:   __getTitle
