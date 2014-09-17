@@ -510,7 +510,7 @@ class WindowHandler {
 			return currStyle
 		}
 	}
-	styleEx { 
+	styleEx {
 	/*! ---------------------------------------------------------------------------------------
 	Property: styleEx [get]
 	Returns current window extended style
@@ -554,17 +554,32 @@ class WindowHandler {
 			return newTitle
 		}
 	}
-	transparency { ; ToDo: Implementation
+	transparency {
 	/*! ---------------------------------------------------------------------------------------
 	Property: transparency [get/set]
 	Current window transparency. 
 	*/
 		get {
-			return this.__getTransparency()
+			val := this._hWnd
+			WinGet, s, Transparent, ahk_id %val% 
+			ret := 255
+			if (s != "")
+				ret := s
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_
+			return ret
 		}
 
 		set {
-			return this.__setTransparency(value)
+			val := this._hWnd
+			transOrig := value
+			if (value == "OFF")
+				value := 255
+			WinSet, Transparent, %value%, ahk_id %val% 
+			trans := this.transparency
+			if (this._debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], transparency=" transOrig "(" value "))] -> New Value:" trans ; _DBG_
+			return trans
 		}
 	}
 
@@ -599,45 +614,7 @@ class WindowHandler {
 
 		return newPos
 	}
-	__getTransparency() {
-/* ===============================================================================
-	Method:   __getTransparency
-		Gets the transparency setting of the given hWnd 
-	Returns:
-		transparency
-*/
-		val := this._hWnd
-		WinGet, s, Transparent, ahk_id %val% 
-		ret := 255
-		if (s != "")
-			ret := s
-		
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_
-		return ret
-	}	
-	__setTransparency(transparency) {
-/* ===============================================================================
-	Method: __setTransparency(transparency)
-		Sets the transparency of the window (*INTERNAL*)
-	Parameters:
-		transparency - transparency to be set (0 (Full Tranyparency) - 255 (No Transparency) OR "OFF")
-*/		
-		val := this._hWnd
 
-		transOrig := transparency
-		if (transparency == "OFF")
-			transparency := 255
-	
-		WinSet, Transparent, %transparency%, ahk_id %val% 
-		
-		trans := this.transparency
-		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], transparency=" transOrig "(" transparency "))] -> New Value:" trans ; _DBG_
-		
-		return trans
-	}
-	
 	; ######################## Methods to be called directly ########################################################### 
 	kill() {
 /*! ===============================================================================
