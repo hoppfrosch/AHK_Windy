@@ -74,7 +74,6 @@ class WindowHandler {
 			return this.alwaysOnTop
 		}
 	}
-
 	centercoords {
 		/*! ---------------------------------------------------------------------------------------
 			Property: centercoords [get7SET]
@@ -108,7 +107,6 @@ class WindowHandler {
 			return centerPos
 		}
 	}
-
 	classname {
 	/*! ---------------------------------------------------------------------------------------
 		Property: classname [get]
@@ -125,7 +123,6 @@ class WindowHandler {
 			return __classname
 		}
 	}
-	
 	debug {
 	/*! ---------------------------------------------------------------------------------------
 		Property: debug [get/set]
@@ -140,7 +137,6 @@ class WindowHandler {
 			return this._debug                                                         ; _DBG_
 		}
 	}
-
 	exist {
 	/*! ---------------------------------------------------------------------------------------
 	Property: exist [get]
@@ -160,7 +156,6 @@ class WindowHandler {
 			return ret
 		}
 	}
-
 	hidden {
 	/*! ---------------------------------------------------------------------------------------
 		Property: hidden [get/set]
@@ -220,9 +215,7 @@ class WindowHandler {
 			
 			return isHidden
 		}
-	
 	}
-
 	maximized {
 	/*! ---------------------------------------------------------------------------------------
 		Property: maximized [get/set]
@@ -265,449 +258,341 @@ class WindowHandler {
 			return isMax
 		}
 	}
-	
-	; ##################### End of Properties (AHK >1.1.16.x) ##############################################################
-	
-    ; ###################### Helper functions for properties (Getter/Setter implementation) ############################
-	__Set(aName, aValue) {
-/* ===============================================================================
-	Method: __Set(aName, aValue)
-		Custom Setter (*INTERNAL*)
-*/   
-		if (aName == "minimized") {
-			return this.__setMinimized(aValue)
-		}
-		else if (aName == "monitorID") {
-			return this.__setMonitorID(aValue)
-		}
-		else if (aName == "rolledUp") {
-			return this.__setRolledUp(aValue)
-		}
-		else if (aName == "pos") {
-			return this.__setPos(aValue)
-		}
-		else if (aName == "title") {
-			return this.__setTitle(aValue)
-		}
-		else if (aName == "transparency") {
-			return this.__setTransparency(aValue)
-		}
-	}
-	__Get(aName) {
-/* ===============================================================================
-	Method: __Get(aName)
-		Custom Getter (*INTERNAL*)
-*/   
-		written := 0 ; _DBG_
-	
-		if (aName = "minimized") {
-/*! ---------------------------------------------------------------------------------------
-	Property: minimized [get/set]
+	minimized {
+	/*! ---------------------------------------------------------------------------------------
+		Property: minimized [get/set]
 		Get or Set the *minimized*-Property. Minimizes/Deminimizes the current window or get the current state of minimization
-	Value:
+
+		Value:
 		flag - `true` or `false` (activates/deactivates *minimized*-Property)
-	Remarks:		
+
+		Remarks:		
 		* To toogle current *minimized*-Property, simply use `obj.minimized := !obj.minimized`	
-*/
-			return this.__getMinimized()
+	*/
+		get {
+			val := this._hWnd
+			WinGet, s, MinMax, ahk_id %val% 
+			ret := 0
+			if (s == -1)
+				ret := 1	
+			return ret
 		}
-		else if (aName = "monitorID") {
-/*! ---------------------------------------------------------------------------------------
-	Property: monitorID [get/set]
+
+		set {
+			mode := value
+			newState := 1
+			if (mode == 0) {
+				newState := 0
+			}
+		
+			prevState := A_DetectHiddenWindows
+			DetectHiddenWindows, On
+			if (newState == 1 )
+				WinMinimize % "ahk_id" this._hWnd
+			else 
+				WinRestore % "ahk_id" this._hWnd
+			DetectHiddenWindows, %prevState%
+	
+			isMin := this.minimized
+			if (this._debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> New Value:" isMin ; _DBG_
+
+			return isMin
+			}
+	}
+	monitorID {
+	/*! ---------------------------------------------------------------------------------------
+		Property: monitorID [get/set]
 		Get or Set the ID of monitor on which the window is on. Setting the property moves the window to the corresponding monitor, trying to place the window at the same (scaled) position
-	Value:
+
+		Value:
 		ID - Monitor-ID (if ID > max(ID) then ID = max(ID) will be used)
-	Remarks
+		
+		Remarks
 		* Setting the property moves the window to the corresponding monitor, retaining the (relative) position and size of the window
 */
-			return this.__getMonitorID()
-		}
-		else if (aName = "pos") { ; current position
-/*! ---------------------------------------------------------------------------------------
-	Property: pos [get/set]
-		Get or Set the position and size of the window (To set the position use class [Rectangle](rectangle.html))	
-	Example:
-		`obj.pos := new [Rectangle](rectangle.html)(xnew, ynew, wnew, hnew)`	
-	Extra:
-		### Author(s)
-			* 20130429 - [hoppfrosch](hoppfrosch@gmx.de) - Original
-*/
-			return this.__getPos()
-		}
-		else if (aName = "processID") {
-/*! ---------------------------------------------------------------------------------------
-	Property: processID [get]
-		Get the ID of the process the window belongs to
-	Remarks:		
-		There is no setter available, since this cannot be modified
-*/
+		get {
+			mon := 1
+			c := this.centercoords
+			mme := new MultiMonitorEnv(this._debug)
+			mon := mme.monGetFromCoord(c.x,c.y,mon)
 			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])]" ; _DBG_
-			return this.__getProcessID()
+				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " mon ; _DBG_		
+			return mon
 		}
-		else if (aName = "processname") {
-/*! ---------------------------------------------------------------------------------------
-	Property: processname [get]
-		Get the Name of the process the window belongs to
-	Remarks:		
-		There is no setter available, since this cannot be modified
-*/
+
+		set {
+			obj := new MultiMonitorEnv(this._debug)
+		
+			realID := value
+			if (realID > obj.monCount()) {
+				realID := obj.monCount()
+			}	
+			if (realID < 1) {
+				realID := 1
+			}
+			newMon := obj.monBoundary(realID)
+		
+			oldID := this.monitorID
+			oldMon := obj.monBoundary(oldID)
+		
+			oldPos := this.pos
+			xnew := newMon.x+(oldPos.x - oldMon.x)
+			ynew := newMon.y+(oldPos.y - oldMon.y)
+			this.Move(xnew,ynew)
+			monID := this.monitorID
 			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])]" ; _DBG_
-			return this.__getProcessname()
-		}
-		else if (aName = "resizeable") { 
-/*! ---------------------------------------------------------------------------------------
-	Property: resizeable [get]
-		Checks whether window is resizeable
+				OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], ID=" value ")] -> New Value:" monID " (from: " oldID ")" ; _DBG_
 	
-		**ToBeDone: Implementation of Setter-functionality**
-*/
-			return this.__isResizable()
+			return monID
 		}
-		else if (aName = "rolledUp") {
-/*! ---------------------------------------------------------------------------------------
-	Property: rolledUp [get/set]
-		Get or Set the *RolledUp*-Property (window is rolled up to its title bar).  Rolls/De-Rolls the current window or get the current state of RollUp
-	Value:
-		flag - `true` or `false` (activates/deactivates *rolledUp*-Property)
+	}
+	pos {
+	/*! ---------------------------------------------------------------------------------------
+	Property: pos [get/set]
+	Get or Set the position and size of the window (To set the position use class [Rectangle](rectangle.html))	
+	*/
+		get {
+			currPos := new Rectangle(0,0,0,0,this._debug)
+			currPos.fromHWnd(this._hWnd)
+			if (this._debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "([" this._hWnd "])] -> (" currPos.dump() ")" ; _DBG_
+			return currPos
+		}
+
+		set {
+			rect := value
+			this.move(rect.x, rect.y, rect.w, rect.h)
+			newPos := this.pos
+			if (this._debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], pos=" newPos.Dump()")] -> New Value:" newPos.Dump() ; _DBG_
+			return newPos
+		}
+	}
+	processID {
+	/*! ---------------------------------------------------------------------------------------
+	Property: processID [get]
+	Get the ID of the process the window belongs to
+	
 	Remarks:		
-		* To toogle current *rolledUp*-Property, simply use `objrolledUp := !obj.rolledUp`
-*/
-			return this.__getRolledUp()
+	There is no setter available, since this cannot be modified
+	*/
+		get {
+			ret := ""
+			if this.exist {
+				WinGet, PID, PID, % "ahk_id " this._hWnd
+				ret := PID
+			}
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
+			return ret
 		}
-		else if (aName = "rolledUpHeight") {
-/*! ---------------------------------------------------------------------------------------
-	Property: rolledUpHeight [get]
+	}
+	processname {
+	/*! ---------------------------------------------------------------------------------------
+	Property: processname [get]
+	Get the Name of the process the window belongs to
+
+	Remarks:		
+	There is no setter available, since this cannot be modified
+	*/
+		get {
+			ret := ""
+			if this.exist {
+				WinGet, PName, ProcessName, % "ahk_id " this._hWnd
+				ret := PName
+			}
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
+			return ret
+		}
+	}
+	resizeable {
+	/*! ---------------------------------------------------------------------------------------
+	Property: resizeable [get]
+	Checks whether window is resizeable
+	*/
+
+	; ToDo: Property resizeable - Implementation of Setter-functionality
+		get {
+			ret := true
+			if this.__classname in Chrome_XPFrame,MozillaUIWindowClass
+				ret := true
+			else 
+		    	ret := (this.style & 0x40000) ; WS_SIZEBOX	
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_				
+			return ret
+		}
+	}
+	rolledUp {
+	/*! ---------------------------------------------------------------------------------------
+	Property: rolledUp [get/set]
+	Get or Set the *RolledUp*-Property (window is rolled up to its title bar).  Rolls/De-Rolls the current window or get the current state of RollUp
+
+	Value:
+	flag - `true` or `false` (activates/deactivates *rolledUp*-Property)
+
+	Remarks:		
+	* To toogle current *rolledUp*-Property, simply use `objrolledUp := !obj.rolledUp`
+	*/
+		get {
+			ret := 0
+			if !this.exist {
+				; the window does not exist at all ...
+				ret := -1
+			}
+			else {
+				currPos := this.pos
+				if (currPos.h <= this.rolledUpHeight) {
+					ret := 1
+				}
+			}
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
+			return ret
+		}
+
+		set {
+			mode := value
+			roll := 1
+			if (mode == 1) 		
+				roll := 1
+			else if (mode == 0) 
+				if (this.rolledUp == true)
+					roll := 0 ; Only rolled window can be unrolled
+				else
+					roll := -1 ; As window is not rolled up, you cannot unroll it as requested ....
+			else {
+				if (this.rolledUp == true)
+					roll := 0
+				else
+					roll := 1
+			}
+			
+			; Determine the minmal height of a window
+			MinWinHeight := this.rolledUpHeight
+			; Get size of current window
+			hwnd := this._hWnd
+			currPos := this.pos
+		
+			if (roll == 1) { ; Roll
+	            this.move(currPos.x, currPos.y, currPos.w, MinWinHeight)
+			}
+			else if (roll = 0) { ; Unroll
+				this.__posRestore()			
+			}
+			
+			isRolled := this.rolledUp
+			if (this._debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> New Value:" isRolled ; _DBG_
+
+			return isRolled
+		}
+	}
+	rolledUpHeight {
+	/*! ---------------------------------------------------------------------------------------
+	Property:rolledUpHeight [get]
 		Returns the height of the caption bar of windows
+		
 	Remarks:
-    	There is no setter available, since this is a system constant
-*/
+	There is no setter available, since this is a constant window property
+	*/
+		get {
 			SysGet, ret, 29
 			return ret
 		}
-		else if (aName = "style") {
-/*! ---------------------------------------------------------------------------------------
+
+	}
+	style {
+	/*! ---------------------------------------------------------------------------------------
 	Property: style [get]
-		Returns current window style
-	
-    	**ToBeDone: Implementation of Setter-functionality**
-*/
-			return this.__style()
+	Returns current window style
+	*/
+
+	; ToDo: Property style - Implementation of Setter-functionality
+		get {
+			val := this._hWnd
+			WinGet, currStyle, Style, ahk_id %val%
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> (" currStyle ")" ; _DBG_		
+			return currStyle
 		}
-		else if (aName = "styleEx") {
-/*! ---------------------------------------------------------------------------------------
+	}
+	styleEx {
+	/*! ---------------------------------------------------------------------------------------
 	Property: styleEx [get]
-		Returns current window extended style
-		
-		**ToBeDone: Implementation of Setter-functionality**
-*/
-			return this.__styleEx()
+	Returns current window extended style
+	*/
+
+	; ToDo: Property styleEx - Implementation of Setter-functionality
+		get {
+			val := this._hWnd
+			WinGet, currExStyle, ExStyle, ahk_id %val%
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> (" currExStyle ")" ; _DBG_		
+			return currExStyle
 		}
-		else if (aName = "transparency") {
-/*! ---------------------------------------------------------------------------------------
-	Property: transparency [get/set]
-		Get or Set the transparency of the window
-			
-		**ToBeDone: Implementation of Setter-functionality**
-*/
-			return this.__getTransparency()
-		}
-		else if (aName = "title") {
-/*! ---------------------------------------------------------------------------------------
+	}
+	title {
+	/*! ---------------------------------------------------------------------------------------
 	Property: title [get/set]
-		Get/Set current window title. 
-	Value:
-		title - Window Title to be set
+	Current window title. 
+
 	Remarks:		
-		* A change to a window's title might be merely temporary if the application that owns the window frequently changes the title.
-*/
-			return this.__getTitle()
+	A change to a window's title might be merely temporary if the application that owns the window frequently changes the title.
+	*/
+		get {
+			val := this._hWnd
+			WinGetTitle, title, ahk_id %val%
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "]) -> (" title ")]" ; _DBG_		
+			return title
 		}
-		/*
-		if (this._debug) ; _DBG_
-			if (!written) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "(" aName ", [" this._hWnd "])] -> " ret ; _DBG_
-        */
-	}
-	
-	__getMinimized() {
-/* ===============================================================================
-	Method:   __getMinimized
-		Checks whether the given hWnd refers to a Minimized window (*INTERNAL*)
-	Returns:
-		true (window is a Minimized window), false (window is not a Minimized window)
-*/
-		val := this._hWnd
-		WinGet, s, MinMax, ahk_id %val% 
-		ret := 0
-		if (s == -1)
-			ret := 1	
-		return ret
-	}
-	__setMinimized(mode) {
-/* ===============================================================================
-	Method: __setMinimized(mode)
-		Sets *Minimized* Property of the window (*INTERNAL*)
-	Parameters:
-		mode - true (1),  false (0)
-*/
-		newState := 1
-		if (mode == 0) {
-			newState := 0
-		}
-		
-		prevState := A_DetectHiddenWindows
-		DetectHiddenWindows, On
-		if (newState == 1 )
-			WinMinimize % "ahk_id" this._hWnd
-		else 
-			WinRestore % "ahk_id" this._hWnd
-		DetectHiddenWindows, %prevState%
 
-		isMin := this.minimized
-		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> New Value:" isMin ; _DBG_
+		set {
+			title := value
+			val := this._hWnd
+			prevState := A_DetectHiddenWindows
+			DetectHiddenWindows, On
+			WinSetTitle, ahk_id %val%,, %title%
+			DetectHiddenWindows, %prevState%
+			newTitle := this.title
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "], title=" title ")] -> " newTitle ; _DBG_		
+			return newTitle
+		}
+	}
+	transparency {
+	/*! ---------------------------------------------------------------------------------------
+	Property: transparency [get/set]
+	Current window transparency. 
+	*/
+		get {
+			val := this._hWnd
+			WinGet, s, Transparent, ahk_id %val% 
+			ret := 255
+			if (s != "")
+				ret := s
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_
+			return ret
+		}
 
-		return isMin
-	}
-	__getMonitorID() {
-/* ===============================================================================
-	Method:  __getMonitorID
-		Determines ID of monitor the window currently is on (i.e center of window) (*INTERNAL*)
-	Returns:
-		MonitorID
-*/
-		mon := 1
-		c := this.centercoords
-		mme := new MultiMonitorEnv(this._debug)
-		mon := mme.monGetFromCoord(c.x,c.y,mon)
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " mon ; _DBG_		
-		return mon
-	}
-	__setMonitorID(newID) {
-/* ===============================================================================
-	Method: __setMonitorID(newID)
-		Moves the window to the given Monitor (*INTERNAL)
-	Parameters:
-		newID - Monitor-ID
-*/
-		obj := new MultiMonitorEnv(this._debug)
-		
-		realID := newID
-		if (realID > obj.monCount()) {
-			realID := obj.monCount()
+		set {
+			val := this._hWnd
+			transOrig := value
+			if (value == "OFF")
+				value := 255
+			WinSet, Transparent, %value%, ahk_id %val% 
+			trans := this.transparency
+			if (this._debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], transparency=" transOrig "(" value "))] -> New Value:" trans ; _DBG_
+			return trans
 		}
-		if (realID < 1) {
-			realID := 1
-		}
-		newMon := obj.monBoundary(realID)
-		
-		oldID := this.monitorID
-		oldMon := obj.monBoundary(oldID)
-		
-		oldPos := this.pos
-		xnew := newMon.x+(oldPos.x - oldMon.x)
-		ynew := newMon.y+(oldPos.y - oldMon.y)
-		this.Move(xnew,ynew)
-		monID := this.monitorID
-		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], ID=" newID ")] -> New Value:" monID " (from: " oldID ")" ; _DBG_
+	}
 
-		return monID
-	}
-	__getPos() {
-/* ===============================================================================
-	Method: __getPos
-		Determine current position of the window (*INTERNAL*)
-	Returns:
-		<Rectangle> - Rectangle containing the current position and size of the window
-*/
-		currPos := new Rectangle(0,0,0,0,this._debug)
-		currPos.fromHWnd(this._hWnd)
-		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "])] -> (" currPos.dump() ")" ; _DBG_
-		return currPos
-	}
-	__setPos(rect) {
-/* ===============================================================================
-	Method: __setPos(rect) {
-		Sets *position* (x,y,w,h) the window. (*INTERNAL*)
-	Parameters:
-		<Rectangle> - Rectangle containing the new position and size of the window
-*/
-		this.move(rect.x, rect.y, rect.w, rect.h)
-		newPos := this.pos
-		
-		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], pos=" newPos.Dump()")] -> New Value:" newPos.Dump() ; _DBG_
-
-		return newPos
-	}
-	__getProcessID() {
-/* ===============================================================================
-	Method:   __getProcessID
-		Gets the process-ID of the process the window belongs to (*INTERNAL*)
-	Returns:
-		processID or empty string (if window does not exist)
-*/
-		ret := ""
-		if this.exist {
-			WinGet, PID, PID, % "ahk_id " this._hWnd
-			ret := PID
-		}
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
-		return ret
-	}
-	__getProcessname() {
-/* ===============================================================================
-	Method:   __getProcessname
-		Gets the processname of the process the window belongs to (*INTERNAL*)
-	Returns:
-		processname or empty string (if window does not exist)
-*/
-		ret := ""
-		if this.exist {
-			WinGet, PName, ProcessName, % "ahk_id " this._hWnd
-			ret := PName
-		}
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
-		return ret
-	}
-	__getRolledUp() {
-/* ===============================================================================
-	Method:   __getRolledUp
-		Checks whether the window is rolled up (*INTERNAL*)
-	Returns:
-		true (window is rolled up), false (window is not rolled up) or -1 (window does not exist at all)
-*/
-		ret := 0
-		if !this.exist {
-			; the window does not exist at all ...
-			ret := -1
-		}
-		else {
-			currPos := this.pos
-			if (currPos.h <= this.rolledUpHeight) {
-				ret := 1
-			}
-		}
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
-		return ret
-	}
-	__setRolledUp(mode) {
-/* ===============================================================================
-	Method: __setRolledUp(mode) {
-		Sets *rollup* Property of the window. The window cann be rolled up (minimized) to its titlebar and unrolled again.
-	Parameters:
-		mode - true (1),  false (0)
-*/
-		roll := 1
-		if (mode == 1) 		
-			roll := 1
-		else if (mode == 0) 
-			if (this.rolledUp == true)
-				roll := 0 ; Only rolled window can be unrolled
-			else
-				roll := -1 ; As window is not rolled up, you cannot unroll it as requested ....
-		else {
-			if (this.rolledUp == true)
-				roll := 0
-			else
-				roll := 1
-		}
-		
-		; Determine the minmal height of a window
-		MinWinHeight := this.rolledUpHeight
-		; Get size of current window
-		hwnd := this._hWnd
-		currPos := this.pos
-	
-		if (roll == 1) { ; Roll
-            this.move(currPos.x, currPos.y, currPos.w, MinWinHeight)
-		}
-		else if (roll = 0) { ; Unroll
-			this.__posRestore()			
-		}
-		
-		isRolled := this.rolledUp
-		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> New Value:" isRolled ; _DBG_
-
-		return isRolled
-	}
-	__getTitle()	{
-/* ===============================================================================
-	Method:   __getTitle
-		Determines the Window title (*INTERNAL*)
-	Returns:
-		WindowTitle
-*/
-		val := this._hWnd
-		WinGetTitle, title, ahk_id %val%
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "]) -> (" title ")]" ; _DBG_		
-		return title
-	}
-	__setTitle(title) {
-/* ===============================================================================
-	Method: __setTitle(title)
-		Sets the title of the window (*INTERNAL*)
-	Parameters:
-		title - title to be set
-*/	
-		val := this._hWnd
-		prevState := A_DetectHiddenWindows
-		DetectHiddenWindows, On
-		WinSetTitle, ahk_id %val%,, %title%
-		DetectHiddenWindows, %prevState%
-		newTitle := this.title
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "], title=" title ")] -> " newTitle ; _DBG_		
-		return newTitle
-	}
-	__getTransparency() {
-/* ===============================================================================
-	Method:   __getTransparency
-		Gets the transparency setting of the given hWnd 
-	Returns:
-		transparency
-*/
-		val := this._hWnd
-		WinGet, s, Transparent, ahk_id %val% 
-		ret := 255
-		if (s != "")
-			ret := s
-		
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_
-		return ret
-	}	
-	__setTransparency(transparency) {
-/* ===============================================================================
-	Method: __setTransparency(transparency)
-		Sets the transparency of the window (*INTERNAL*)
-	Parameters:
-		transparency - transparency to be set (0 (Full Tranyparency) - 255 (No Transparency) OR "OFF")
-*/		
-		val := this._hWnd
-
-		transOrig := transparency
-		if (transparency == "OFF")
-			transparency := 255
-	
-		WinSet, Transparent, %transparency%, ahk_id %val% 
-		
-		trans := this.transparency
-		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], transparency=" transOrig "(" transparency "))] -> New Value:" trans ; _DBG_
-		
-		return trans
-	}
+	; ##################### End of Properties (AHK >1.1.16.x) ##############################################################
 	
 	; ######################## Methods to be called directly ########################################################### 
 	kill() {
@@ -811,28 +696,6 @@ class WindowHandler {
 	}
 	
 	; ######################## Internal Methods - not to be called directly ############################################
-	__isResizable() {
-/* ===============================================================================
-Method:   __isResizable
-    Determine whether window can be resized by user (*INTERNAL*)
-
-Returns:
-    True or False
-     
-Author(s):
-    20130308 - hoppfrosch@gmx.de - Original
-*/
-		ret := true
-		if this.__classname in Chrome_XPFrame,MozillaUIWindowClass
-			ret := true
-		else 
-		    ret := (this.style & 0x40000) ; WS_SIZEBOX
-		
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
-		
-		return ret
-}
 	__isWindow(hWnd) {
 /* ===============================================================================
 Method:   __isWindow
@@ -900,40 +763,6 @@ Author(s):
 		this.move(restorePos.x, restorePos.y, restorePos.w, restorePos.h)
 		if (this._debug) ; _DBG_
 			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "])] LastPos: " currPos.Dump() " - RestoredPos: " restorePos.Dump() ; _DBG_
-	}
-	__style() {
-/* ===============================================================================
-Method:   __style
-	Determines the current style of the window (*INTERNAL*)
-	
-Returns:
-	Current Style
-
-Author(s):
-	20130308 - hoppfrosch@gmx.de - Original
-*/
-		val := this._hWnd
-		WinGet, currStyle, Style, ahk_id %val%
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> (" currStyle ")" ; _DBG_		
-		return currStyle
-	}
-	__styleEx() {
-/* ===============================================================================
-Method:   __styleEx
-	Determines the current extended style of the window (*INTERNAL*)
-	
-Returns:
-	Current Extended Style
-
-Author(s):
-	20130308 - hoppfrosch@gmx.de - Original
-*/
-		val := this._hWnd
-		WinGet, currExStyle, ExStyle, ahk_id %val%
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> (" currExStyle ")" ; _DBG_		
-		return currExStyle
 	}
 	__SetWinEventHook(eventMin, eventMax, hmodWinEventProc, lpfnWinEventProc, idProcess, idThread, dwFlags) {
 /* ===============================================================================
