@@ -347,17 +347,26 @@ class WindowHandler {
 			return monID
 		}
 	}
-	pos { ; ToDo: Implementation
+	pos {
 	/*! ---------------------------------------------------------------------------------------
 	Property: pos [get/set]
 	Get or Set the position and size of the window (To set the position use class [Rectangle](rectangle.html))	
 	*/
 		get {
-			return this.__getPos()
+			currPos := new Rectangle(0,0,0,0,this._debug)
+			currPos.fromHWnd(this._hWnd)
+			if (this._debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "([" this._hWnd "])] -> (" currPos.dump() ")" ; _DBG_
+			return currPos
 		}
 
 		set {
-			return this.__setPos(value)
+			rect := value
+			this.move(rect.x, rect.y, rect.w, rect.h)
+			newPos := this.pos
+			if (this._debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], pos=" newPos.Dump()")] -> New Value:" newPos.Dump() ; _DBG_
+			return newPos
 		}
 	}
 	processID {
@@ -585,36 +594,6 @@ class WindowHandler {
 
 	; ##################### End of Properties (AHK >1.1.16.x) ##############################################################
 	
-    ; ###################### Helper functions for properties (Getter/Setter implementation) ############################
-	__getPos() {
-/* ===============================================================================
-	Method: __getPos
-		Determine current position of the window (*INTERNAL*)
-	Returns:
-		<Rectangle> - Rectangle containing the current position and size of the window
-*/
-		currPos := new Rectangle(0,0,0,0,this._debug)
-		currPos.fromHWnd(this._hWnd)
-		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "])] -> (" currPos.dump() ")" ; _DBG_
-		return currPos
-	}
-	__setPos(rect) {
-/* ===============================================================================
-	Method: __setPos(rect) 
-		Sets *position* (x,y,w,h) the window. (*INTERNAL*)
-	Parameters:
-		<Rectangle> - Rectangle containing the new position and size of the window
-*/
-		this.move(rect.x, rect.y, rect.w, rect.h)
-		newPos := this.pos
-		
-		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], pos=" newPos.Dump()")] -> New Value:" newPos.Dump() ; _DBG_
-
-		return newPos
-	}
-
 	; ######################## Methods to be called directly ########################################################### 
 	kill() {
 /*! ===============================================================================
