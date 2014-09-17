@@ -491,7 +491,7 @@ class WindowHandler {
 		}
 
 	}
-	style { ; ToDo: Implementation
+	style {
 	/*! ---------------------------------------------------------------------------------------
 	Property: style [get]
 	Returns current window style
@@ -509,13 +509,17 @@ class WindowHandler {
 			return value
 		}
 	}
-	styleEx { ; ToDo: Implementation
+	styleEx { 
 	/*! ---------------------------------------------------------------------------------------
 	Property: styleEx [get]
 	Returns current window extended style
 	*/
 		get {
-			return this.__styleEx()
+			val := this._hWnd
+			WinGet, currExStyle, ExStyle, ahk_id %val%
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> (" currExStyle ")" ; _DBG_		
+			return currExStyle
 		}
 
 		set {
