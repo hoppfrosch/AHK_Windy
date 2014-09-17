@@ -22,7 +22,7 @@
 */
 class WindowHandler {
 	
-	_version := "0.6.1"
+	_version := "0.6.2"
 	_debug := 0
 	_hWnd := 0
 
@@ -81,7 +81,7 @@ class WindowHandler {
 	*/
 
 		get {
-			pos := this.Pos
+			pos := this.posSize
 			x := Round((pos.w)/2 + pos.x)
 			y := Round((pos.h)/2 + pos.y)
 			centerPos := new Point(x,y,this._debug)
@@ -92,7 +92,7 @@ class WindowHandler {
 
 		set {
 			currCenter := this.centercoords
-			currPos := this.pos
+			currPos := this.posSize
 		
 			xoffset := value.x - currCenter.x
 			yoffset := value.y - currCenter.y
@@ -345,7 +345,7 @@ class WindowHandler {
 			oldID := this.monitorID
 			oldMon := obj.monBoundary(oldID)
 		
-			oldPos := this.pos
+			oldPos := this.posSize
 			xnew := newMon.x+(oldPos.x - oldMon.x)
 			ynew := newMon.y+(oldPos.y - oldMon.y)
 			this.Move(xnew,ynew)
@@ -356,7 +356,7 @@ class WindowHandler {
 			return monID
 		}
 	}
-	pos {
+	posSize {
 	/*! ---------------------------------------------------------------------------------------
 	Property: pos [get/set]
 	Get or Set the position and size of the window (To set the position use class [Rectangle](rectangle.html))	
@@ -372,7 +372,7 @@ class WindowHandler {
 		set {
 			rect := value
 			this.move(rect.x, rect.y, rect.w, rect.h)
-			newPos := this.pos
+			newPos := this.posSize
 			if (this._debug) ; _DBG_
 				OutputDebug % "<[" A_ThisFunc "([" this.hwnd "], pos=" newPos.Dump()")] -> New Value:" newPos.Dump() ; _DBG_
 			return newPos
@@ -452,7 +452,7 @@ class WindowHandler {
 				ret := -1
 			}
 			else {
-				currPos := this.pos
+				currPos := this.posSize
 				if (currPos.h <= this.rolledUpHeight) {
 					ret := 1
 				}
@@ -483,7 +483,7 @@ class WindowHandler {
 			MinWinHeight := this.rolledUpHeight
 			; Get size of current window
 			hwnd := this.hwnd
-			currPos := this.pos
+			currPos := this.posSize
 		
 			if (roll == 1) { ; Roll
 	            this.move(currPos.x, currPos.y, currPos.w, MinWinHeight)
@@ -641,7 +641,7 @@ class WindowHandler {
 		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "([" this.hwnd "])(X=" X " ,Y=" Y " ,W=" W " ,H=" H ")]" ; _DBG_		
 		if (X = 99999 || Y = 99999 || W = 99999 || H = 9999)
-			currPos := this.pos
+			currPos := this.posSize
 		
 		if (X = 99999)
 			X := currPos.X
@@ -701,7 +701,7 @@ class WindowHandler {
 		this.move(x,y,w,h)
 		
 		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this.hwnd "], xFactor=" xFactor ", yFactor=" yFactor ", wFactor=" wFactor ", hFactor=" hFactor ")] -> padded to (" this.pos.Dump() ") on Monitor (" monId ")" ; _DBG_
+			OutputDebug % "<[" A_ThisFunc "([" this.hwnd "], xFactor=" xFactor ", yFactor=" yFactor ", wFactor=" wFactor ", hFactor=" hFactor ")] -> padded to (" this.posSize.Dump() ") on Monitor (" monId ")" ; _DBG_
 	}
 	
 	; ######################## Internal Methods - not to be called directly ############################################
@@ -732,7 +732,7 @@ Method: __posPush
 Author(s):
 	20130311 - hoppfrosch@gmx.de - Original
 */
-		this._posStack.Insert(1, this.pos)
+		this._posStack.Insert(1, this.posSize)
 		if (this._debug) { ; _DBG_ 
 			this.__posStackDump() ; _DBG_ 
 			OutputDebug % "<[" A_ThisFunc "([" this.hwnd "])] -> (" this._posStack[1].dump() ")" ; _DBG_
@@ -765,7 +765,7 @@ Author(s):
 		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "([" this.hwnd "], index=" index ")]" ; _DBG_
 		restorePos := this._posStack[index]
-		currPos := this.pos
+		currPos := this.posSize
 		
 		this.__posStackDump()
 		
@@ -818,7 +818,7 @@ Author(s):
 		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "([" this.hwnd "])" ; _DBG_
 		
-		currPos := this.pos
+		currPos := this.posSize
 		lastPos := this._posStack[1]
 		
 		; current size/position is identical with previous Size/position

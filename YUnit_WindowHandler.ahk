@@ -12,7 +12,7 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.6.1"
+ReferenceVersion := "0.6.2"
 debug := 1
 
 
@@ -207,7 +207,7 @@ class MoveResizeTestSuite {
 	
 	MoveViaWinMove()  {
 		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
-		oldPos := this.obj.pos
+		oldPos := this.obj.posSize
 		OutputDebug % "Initial Position: " oldPos.Dump()
 		
 		xnew := oldPos.x+200
@@ -215,7 +215,7 @@ class MoveResizeTestSuite {
 		
 		OutputDebug % "BEFORE - Moving from " oldPos.Dump() " to (" xnew "," ynew "," oldPos.w "," oldPos.h ")"
 		WinMove % "ahk_id" this.obj.hwnd, ,xnew, ynew
-		newPos := this.obj.pos
+		newPos := this.obj.posSize
 		OutputDebug % "AFTER - Moving from " oldPos.Dump() " to " newPos.Dump()
 		Yunit.assert(newPos.x == xnew)
 		Yunit.assert(newPos.y == ynew)
@@ -226,7 +226,7 @@ class MoveResizeTestSuite {
 	
 	MoveViaMoveMethod() {
 		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
-		oldPos := this.obj.pos
+		oldPos := this.obj.posSize
 		OutputDebug % "Initial Position: " oldPos.Dump()
 		
 		xnew := oldPos.x+200
@@ -234,7 +234,7 @@ class MoveResizeTestSuite {
 		
 		OutputDebug % "BEFORE - Moving from " oldPos.Dump() " to (" xnew "," ynew "," oldPos.w "," oldPos.h ")"
 		this.obj.move(xnew, ynew, oldPos.w, oldPos.h)
-		newPos := this.obj.pos
+		newPos := this.obj.posSize
 		OutputDebug % "AFTER - Moving from " oldPos.Dump() " to " newPos.Dump()
 		Yunit.assert(newPos.x == xnew)
 		Yunit.assert(newPos.y == ynew)
@@ -245,15 +245,15 @@ class MoveResizeTestSuite {
 	
 	MoveViaPosProperty() {
 		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
-		oldPos := this.obj.pos
+		oldPos := this.obj.posSize
 		OutputDebug % "Initial Position: " oldPos.Dump()
 		
 		xnew := oldPos.x+200
 		ynew := oldPos.y+200
 		
 		OutputDebug % "BEFORE - Moving from " oldPos.Dump() " to (" xnew "," ynew "," oldPos.w "," oldPos.h ")"
-		this.obj.pos := new Rectangle(xnew,ynew,oldPos.w,oldPos.h)
-		newPos := this.obj.pos
+		this.obj.posSize := new Rectangle(xnew,ynew,oldPos.w,oldPos.h)
+		newPos := this.obj.posSize
 		OutputDebug % "AFTER - Moving from " oldPos.Dump() " to " newPos.Dump()
 		Yunit.assert(newPos.x == xnew)
 		Yunit.assert(newPos.y == ynew)
@@ -264,7 +264,7 @@ class MoveResizeTestSuite {
 	
 	MoveResizeViaWinMove() {
 		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
-		oldPos := this.obj.pos
+		oldPos := this.obj.posSize
 		OutputDebug % "Initial Position: " oldPos.Dump()
         
 		xnew := oldPos.x+10
@@ -273,7 +273,7 @@ class MoveResizeTestSuite {
 		hnew := oldPos.h+20
 		OutputDebug % "BEFORE - Moving from " oldPos.Dump() " to (" xnew "," ynew "," wnew "," hnew ")"
 		WinMove % "ahk_id" this.obj.hwnd, , xnew, ynew, wnew, hnew
-		newPos := this.obj.pos
+		newPos := this.obj.posSize
 		OutputDebug % "AFTER - Moving from " oldPos.Dump() " to " newPos.Dump()
 		Yunit.assert(newPos.x == xnew)
 		Yunit.assert(newPos.y == ynew)
@@ -285,7 +285,7 @@ class MoveResizeTestSuite {
 
 	MoveResizeViaMoveMehod() {
 		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
-		oldPos := this.obj.pos
+		oldPos := this.obj.posSize
 		OutputDebug % "Initial Position: " oldPos.Dump()
         
 		xnew := oldPos.x+10
@@ -294,7 +294,7 @@ class MoveResizeTestSuite {
 		hnew := oldPos.h+20
 		OutputDebug % "BEFORE - Moving from " oldPos.Dump() " to (" xnew "," ynew "," wnew "," hnew ")"
 		this.obj.move(xnew, ynew, wnew, hnew)
-		newPos := this.obj.pos
+		newPos := this.obj.posSize
 		OutputDebug % "AFTER - Moving from " oldPos.Dump() " to " newPos.Dump()
 		Yunit.assert(newPos.x == xnew)
 		Yunit.assert(newPos.y == ynew)
@@ -306,7 +306,7 @@ class MoveResizeTestSuite {
 	
 	MoveResizeViaPosProperty() {
 		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
-		oldPos := this.obj.pos
+		oldPos := this.obj.posSize
 		OutputDebug % "Initial Position: " oldPos.Dump()
         
 		xnew := oldPos.x+10
@@ -314,8 +314,8 @@ class MoveResizeTestSuite {
 		wnew := oldPos.w+10
 		hnew := oldPos.h+20
 		OutputDebug % "BEFORE - Moving from " oldPos.Dump() " to (" xnew "," ynew "," wnew "," hnew ")"
-		this.obj.pos := new Rectangle(xnew, ynew, wnew, hnew)
-		newPos := this.obj.pos
+		this.obj.posSize := new Rectangle(xnew, ynew, wnew, hnew)
+		newPos := this.obj.posSize
 		OutputDebug % "AFTER - Moving from " oldPos.Dump() " to " newPos.Dump()
 		Yunit.assert(newPos.x == xnew)
 		Yunit.assert(newPos.y == ynew)
@@ -327,7 +327,7 @@ class MoveResizeTestSuite {
 	
 	ResizeViaWinMove() {
 		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
-		oldPos := this.obj.pos
+		oldPos := this.obj.posSize
 		OutputDebug % "Initial Position: " oldPos.Dump()
         
 		wnew := oldPos.w+100
@@ -335,7 +335,7 @@ class MoveResizeTestSuite {
 		
 		OutputDebug % "BEFORE - Moving from " oldPos.Dump() " to (" oldPos.x "," oldPos.y "," wnew "," hnew ")"
 		WinMove % "ahk_id" this.obj.hwnd, , oldPos.x, oldPos.y, wnew, hnew
-		newPos := this.obj.pos
+		newPos := this.obj.posSize
 		OutputDebug % "AFTER - Moving from " oldPos.Dump() " to " newPos.Dump()
 		Yunit.assert(newPos.x == oldPos.x)
 		Yunit.assert(newPos.y == oldPos.y)
@@ -347,7 +347,7 @@ class MoveResizeTestSuite {
 	
 	ResizeViaMoveMethod() {
 		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
-		oldPos := this.obj.pos
+		oldPos := this.obj.posSize
 		OutputDebug % "Initial Position: " oldPos.Dump()
         
 		wnew := oldPos.w+100
@@ -355,7 +355,7 @@ class MoveResizeTestSuite {
 		
 		OutputDebug % "BEFORE - Moving from " oldPos.Dump() " to (" oldPos.x "," oldPos.y "," wnew "," hnew ")"
 		this.obj.move(oldPos.x, oldPos.y, wnew, hnew)
-		newPos := this.obj.pos
+		newPos := this.obj.posSize
 		OutputDebug % "AFTER - Moving from " oldPos.Dump() " to " newPos.Dump()
 		Yunit.assert(newPos.x == oldPos.x)
 		Yunit.assert(newPos.y == oldPos.y)
@@ -367,15 +367,15 @@ class MoveResizeTestSuite {
 	
 	ResizeViaPosProperty() {
 		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
-		oldPos := this.obj.pos
+		oldPos := this.obj.posSize
 		OutputDebug % "Initial Position: " oldPos.Dump()
         
 		wnew := oldPos.w+100
 		hnew := oldPos.h+200
 		
 		OutputDebug % "BEFORE - Moving from " oldPos.Dump() " to (" oldPos.x "," oldPos.y "," wnew "," hnew ")"
-		this.obj.pos := new Rectangle(oldPos.x, oldPos.y, wnew, hnew)
-		newPos := this.obj.pos
+		this.obj.posSize := new Rectangle(oldPos.x, oldPos.y, wnew, hnew)
+		newPos := this.obj.posSize
 		OutputDebug % "AFTER - Moving from " oldPos.Dump() " to " newPos.Dump()
 		Yunit.assert(newPos.x == oldPos.x)
 		Yunit.assert(newPos.y == oldPos.y)
@@ -386,10 +386,10 @@ class MoveResizeTestSuite {
 
 	NoMoveResizeViaWinMove() {
 		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
-        oldPos := this.obj.pos
+        oldPos := this.obj.posSize
 		OutputDebug % "Initial Position: " oldPos.Dump()
 		WinMove % "ahk_id" this.obj.hwnd, , oldPos.x, oldPos.y, oldPos.w, oldPos.h
-		newPos := this.obj.pos
+		newPos := this.obj.posSize
         OutputDebug % "AFTER - Moving from " oldPos.Dump() " to " newPos.Dump()
         Yunit.assert(newPos.x == oldPos.x)
 		Yunit.assert(newPos.y == oldPos.y)
@@ -399,10 +399,10 @@ class MoveResizeTestSuite {
 	
 	NoMoveResizeViaMoveMehod() {
 		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
-		oldPos := this.obj.pos
+		oldPos := this.obj.posSize
 		OutputDebug % "Initial Position: " oldPos.Dump()
 		this.obj.move(oldPos.x, oldPos.y, oldPos.w, oldPos.h)
-		newPos := this.obj.pos
+		newPos := this.obj.posSize
 		OutputDebug % "AFTER - Moving from " oldPos.Dump() " to " newPos.Dump()
 		Yunit.assert(newPos.x == oldPos.x)
 		Yunit.assert(newPos.y == oldPos.y)
@@ -412,10 +412,10 @@ class MoveResizeTestSuite {
 
 	NoMoveResizeViaPosProperty() {
 		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
-		oldPos := this.obj.pos
+		oldPos := this.obj.posSize
 		OutputDebug % "Initial Position: " oldPos.Dump()
-		this.obj.pos := new Rectangle(oldPos.x, oldPos.y, oldPos.w, oldPos.h)
-		newPos := this.obj.pos
+		this.obj.posSize := new Rectangle(oldPos.x, oldPos.y, oldPos.w, oldPos.h)
+		newPos := this.obj.posSize
 		OutputDebug % "AFTER - Moving from " oldPos.Dump() " to " newPos.Dump()
 		Yunit.assert(newPos.x == oldPos.x)
 		Yunit.assert(newPos.y == oldPos.y)
@@ -601,7 +601,7 @@ class MiscTestSuite {
 		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
 		hwnd := this.obj.hwnd
 		WinGetPos  x, y, w, h, ahk_id %hwnd%
-		Yunit.assert(1 == ((this.obj.pos.x == x) && (this.obj.pos.y == y) && (this.obj.pos.w == w) && (this.obj.pos.h == h)))
+		Yunit.assert(1 == ((this.obj.posSize.x == x) && (this.obj.posSize.y == y) && (this.obj.posSize.w == w) && (this.obj.posSize.h == h)))
 		OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
 	}
 	
