@@ -403,13 +403,17 @@ class WindowHandler {
 	Property: resizeable [get]
 	Checks whether window is resizeable
 	*/
-		get {
-			return this.__isResizable()
-		}
 
-		set {
-			; 	Todo: Implementation of Setter-functionality**
-			return value
+	; ToDo: Property resizeable - Implementation of Setter-functionality
+		get {
+			ret := true
+			if this.__classname in Chrome_XPFrame,MozillaUIWindowClass
+				ret := true
+			else 
+		    	ret := (this.style & 0x40000) ; WS_SIZEBOX	
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_				
+			return ret
 		}
 	}
 	rolledUp {
@@ -496,6 +500,8 @@ class WindowHandler {
 	Property: style [get]
 	Returns current window style
 	*/
+
+	; ToDo: Property style - Implementation of Setter-functionality
 		get {
 			val := this._hWnd
 			WinGet, currStyle, Style, ahk_id %val%
@@ -503,28 +509,20 @@ class WindowHandler {
 				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> (" currStyle ")" ; _DBG_		
 			return currStyle
 		}
-
-		set {
-			; ToDo: Implementation of Setter-functionality**
-			return value
-		}
 	}
 	styleEx { 
 	/*! ---------------------------------------------------------------------------------------
 	Property: styleEx [get]
 	Returns current window extended style
 	*/
+
+	; ToDo: Property styleEx - Implementation of Setter-functionality
 		get {
 			val := this._hWnd
 			WinGet, currExStyle, ExStyle, ahk_id %val%
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> (" currExStyle ")" ; _DBG_		
 			return currExStyle
-		}
-
-		set {
-			; ToDo: Implementation of Setter-functionality**
-			return value
 		}
 	}
 	title { ; ToDo: Implementation
@@ -588,7 +586,7 @@ class WindowHandler {
 
 		return newPos
 	}
-	__getTitle()	{
+	__getTitle(){
 /* ===============================================================================
 	Method:   __getTitle
 		Determines the Window title (*INTERNAL*)
@@ -759,28 +757,6 @@ class WindowHandler {
 	}
 	
 	; ######################## Internal Methods - not to be called directly ############################################
-	__isResizable() {
-/* ===============================================================================
-Method:   __isResizable
-    Determine whether window can be resized by user (*INTERNAL*)
-
-Returns:
-    True or False
-     
-Author(s):
-    20130308 - hoppfrosch@gmx.de - Original
-*/
-		ret := true
-		if this.__classname in Chrome_XPFrame,MozillaUIWindowClass
-			ret := true
-		else 
-		    ret := (this.style & 0x40000) ; WS_SIZEBOX
-		
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
-		
-		return ret
-}
 	__isWindow(hWnd) {
 /* ===============================================================================
 Method:   __isWindow
