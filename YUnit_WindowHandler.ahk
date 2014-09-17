@@ -12,7 +12,7 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.6.0"
+ReferenceVersion := "0.6.1"
 debug := 1
 
 
@@ -214,7 +214,7 @@ class MoveResizeTestSuite {
 		ynew := oldPos.y+200
 		
 		OutputDebug % "BEFORE - Moving from " oldPos.Dump() " to (" xnew "," ynew "," oldPos.w "," oldPos.h ")"
-		WinMove % "ahk_id" this.obj._hWnd, ,xnew, ynew
+		WinMove % "ahk_id" this.obj.hwnd, ,xnew, ynew
 		newPos := this.obj.pos
 		OutputDebug % "AFTER - Moving from " oldPos.Dump() " to " newPos.Dump()
 		Yunit.assert(newPos.x == xnew)
@@ -272,7 +272,7 @@ class MoveResizeTestSuite {
 		wnew := oldPos.w+10
 		hnew := oldPos.h+20
 		OutputDebug % "BEFORE - Moving from " oldPos.Dump() " to (" xnew "," ynew "," wnew "," hnew ")"
-		WinMove % "ahk_id" this.obj._hWnd, , xnew, ynew, wnew, hnew
+		WinMove % "ahk_id" this.obj.hwnd, , xnew, ynew, wnew, hnew
 		newPos := this.obj.pos
 		OutputDebug % "AFTER - Moving from " oldPos.Dump() " to " newPos.Dump()
 		Yunit.assert(newPos.x == xnew)
@@ -334,7 +334,7 @@ class MoveResizeTestSuite {
 		hnew := oldPos.h+200
 		
 		OutputDebug % "BEFORE - Moving from " oldPos.Dump() " to (" oldPos.x "," oldPos.y "," wnew "," hnew ")"
-		WinMove % "ahk_id" this.obj._hWnd, , oldPos.x, oldPos.y, wnew, hnew
+		WinMove % "ahk_id" this.obj.hwnd, , oldPos.x, oldPos.y, wnew, hnew
 		newPos := this.obj.pos
 		OutputDebug % "AFTER - Moving from " oldPos.Dump() " to " newPos.Dump()
 		Yunit.assert(newPos.x == oldPos.x)
@@ -388,7 +388,7 @@ class MoveResizeTestSuite {
 		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
         oldPos := this.obj.pos
 		OutputDebug % "Initial Position: " oldPos.Dump()
-		WinMove % "ahk_id" this.obj._hWnd, , oldPos.x, oldPos.y, oldPos.w, oldPos.h
+		WinMove % "ahk_id" this.obj.hwnd, , oldPos.x, oldPos.y, oldPos.w, oldPos.h
 		newPos := this.obj.pos
         OutputDebug % "AFTER - Moving from " oldPos.Dump() " to " newPos.Dump()
         Yunit.assert(newPos.x == oldPos.x)
@@ -515,7 +515,7 @@ class MiscTestSuite {
 		Global debug
 		
 		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
-		hwnd := this.obj._hwnd
+		hwnd := this.obj.hwnd
 		WinGetPos  x, y, w, h, ahk_id %hwnd%
 		centerx := round(x+(w)/2)
 		centery := round(y+(h)/2)
@@ -599,7 +599,7 @@ class MiscTestSuite {
     
 	Getter() {
 		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
-		hwnd := this.obj._hwnd
+		hwnd := this.obj.hwnd
 		WinGetPos  x, y, w, h, ahk_id %hwnd%
 		Yunit.assert(1 == ((this.obj.pos.x == x) && (this.obj.pos.y == y) && (this.obj.pos.w == w) && (this.obj.pos.h == h)))
 		OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
@@ -654,14 +654,14 @@ class MoveResizeTestSuite
     {
 		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
 		OutputDebug % "Initial Position: " this.obj._lastPos.Dump() " - Restore: " this.obj._restorePos.Dump()
-		hwnd := this.obj._hWnd
+		hwnd := this.obj.hwnd
         xold := this.obj._lastPos.x
 		yold := this.obj._lastPos.y
 		xnew := xold+10
 		ynew := yold+10
 		
 		OutputDebug % "BEFORE - Moving from x,y(" xold "," yold ") to (" xnew "," ynew ")"
-		WinMove % "ahk_id" this.obj._hWnd, ,xnew, ynew
+		WinMove % "ahk_id" this.obj.hwnd, ,xnew, ynew
         OutputDebug % "AFTER - Moving from x,y(" xold "," yold ") to (" xnew "," ynew ")"
         Yunit.assert(this.obj.isMoved()==1)
         Yunit.assert(this.obj.isResized()==0)
@@ -672,7 +672,7 @@ class MoveResizeTestSuite
     {
         OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
         OutputDebug % "Initial Position: " this.obj._lastPos.Dump() " - Restore: " this.obj._restorePos.Dump()
-        hwnd := this.obj._hWnd
+        hwnd := this.obj.hwnd
         xold := this.obj._lastPos.x
 		yold := this.obj._lastPos.y
         wold := this.obj._lastPos.w
@@ -682,7 +682,7 @@ class MoveResizeTestSuite
         wnew := wold+10
 		hnew := hold+20
         OutputDebug % "BEFORE- Moving/Resizing from x,y,w,h(" xold "," yold "," wold "," hold ") to (" xnew "," ynew "," wnew "," hnew ")"
-        WinMove % "ahk_id" this.obj._hWnd, , xnew, ynew, wnew, hnew
+        WinMove % "ahk_id" this.obj.hwnd, , xnew, ynew, wnew, hnew
         OutputDebug % "AFTER - Moving/Resizing from x,y,w,h(" xold "," yold "," wold "," hold ") to (" xnew "," ynew "," wnew "," hnew ")"
         Yunit.assert(this.obj.isMoved()==1)
         Yunit.assert(this.obj.isResized()==1)
@@ -693,8 +693,8 @@ class MoveResizeTestSuite
     {
         OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
         OutputDebug % "Initial Position: " this.obj._lastPos.Dump() " - Restore: " this.obj._restorePos.Dump()
-        hwnd := this.obj._hWnd
-        hwnd := this.obj._hWnd
+        hwnd := this.obj.hwnd
+        hwnd := this.obj.hwnd
         xold := this.obj._lastPos.x
 		yold := this.obj._lastPos.y
         wold := this.obj._lastPos.w
@@ -702,7 +702,7 @@ class MoveResizeTestSuite
         wnew := wold+10
 		hnew := hold+20
         OutputDebug % "BEFORE- Resizing from w,h(" wold "," hold ") to (" wnew "," hnew ")"
-        WinMove % "ahk_id" this.obj._hWnd, , xold, yold, wnew, hnew
+        WinMove % "ahk_id" this.obj.hwnd, , xold, yold, wnew, hnew
         OutputDebug % "AFTER- Resizing from w,h(" wold "," hold ") to (" wnew "," hnew ")"
         Yunit.assert(this.obj.isMoved()==0)
         Yunit.assert(this.obj.isResized()==1)
