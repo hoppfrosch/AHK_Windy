@@ -497,7 +497,11 @@ class WindowHandler {
 	Returns current window style
 	*/
 		get {
-			return this.__style()
+			val := this._hWnd
+			WinGet, currStyle, Style, ahk_id %val%
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> (" currStyle ")" ; _DBG_		
+			return currStyle
 		}
 
 		set {
@@ -840,23 +844,6 @@ Author(s):
 		this.move(restorePos.x, restorePos.y, restorePos.w, restorePos.h)
 		if (this._debug) ; _DBG_
 			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "])] LastPos: " currPos.Dump() " - RestoredPos: " restorePos.Dump() ; _DBG_
-	}
-	__style() {
-/* ===============================================================================
-Method:   __style
-	Determines the current style of the window (*INTERNAL*)
-	
-Returns:
-	Current Style
-
-Author(s):
-	20130308 - hoppfrosch@gmx.de - Original
-*/
-		val := this._hWnd
-		WinGet, currStyle, Style, ahk_id %val%
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> (" currStyle ")" ; _DBG_		
-		return currStyle
 	}
 	__styleEx() {
 /* ===============================================================================
