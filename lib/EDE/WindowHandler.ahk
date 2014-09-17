@@ -7,6 +7,8 @@
 #include <EDE\MultiMonitorEnv>
 #include <EDE\_WindowHandlerEvent>
 
+
+class WindowHandler {
 ; ******************************************************************************************************************************************
 /*!
 	Class: WindowHandler
@@ -20,9 +22,8 @@
 		### Author
 			[hoppfrosch](hoppfrosch@gmx.de)
 */
-class WindowHandler {
 	
-	_version := "0.6.2"
+	_version := "0.6.3"
 	_debug := 0
 	_hWnd := 0
 
@@ -76,7 +77,7 @@ class WindowHandler {
 	}
 	centercoords {
 	/*! ---------------------------------------------------------------------------------------
-	Property: centercoords [get7SET]
+	Property: centercoords [get/set]
 	Coordinates of the center of the window as a [Point](Point.html)-object
 	*/
 
@@ -358,7 +359,7 @@ class WindowHandler {
 	}
 	posSize {
 	/*! ---------------------------------------------------------------------------------------
-	Property: pos [get/set]
+	Property: posSize [get/set]
 	Get or Set the position and size of the window (To set the position use class [Rectangle](rectangle.html))	
 	*/
 		get {
@@ -512,6 +513,27 @@ class WindowHandler {
 			return ret
 		}
 
+	}
+	size {
+	/*! ---------------------------------------------------------------------------------------
+	Property: size [get/set]
+	Dimensions (Width/Height) of the window as [Point](point.html) object
+	*/
+		get {
+			ps := this.posSize
+			pt := new Point()
+			pt.x := ps.w
+			pt.y := ps.h
+			return pt
+		}
+		set {
+			pt := Value
+			ps := this.posSize
+			ps.w := pt.x
+			ps.h := pt.y
+			this.posSize := ps
+			return pt
+		}
 	}
 	style {
 	/*! ---------------------------------------------------------------------------------------

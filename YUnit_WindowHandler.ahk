@@ -12,7 +12,7 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.6.2"
+ReferenceVersion := "0.6.3"
 debug := 1
 
 
@@ -28,13 +28,22 @@ class TempTestSuite {
 		this.obj := new WindowHandler(0, debug)
 	}
 
-	Processid() {
-		val := this.obj.processID
-		OutputDebug % "|[" A_ThisFunc "] - " val ; _DBG_
-		Yunit.assert( val > 0)
-		sleep, 500
-	}
-	     
+	ResizeViaSizeProperty() {
+		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
+		oldSize:= this.obj.size
+		OutputDebug % "Initial Size: " oldSize.Dump()
+        
+		wnew := oldSize.x+100
+		hnew := oldSize.y+200
+		
+		OutputDebug % "BEFORE - Resizing from " oldSize.Dump() " to (" wnew "," hnew ")"
+		this.obj.size := new Point(wnew, hnew)
+		newSize := this.obj.size
+		OutputDebug % "AFTER - Resizing from " oldSize.Dump() " to " newSize.Dump()
+		Yunit.assert(newSize.x == wnew)
+		Yunit.assert(newSize.y == hnew)	
+		OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
+	}	     
 /*
 	IsResizeable() {
 		val := this.obj.isResizable()
@@ -243,7 +252,7 @@ class MoveResizeTestSuite {
 		OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
 	}
 	
-	MoveViaPosProperty() {
+	MoveViaPosSizeProperty() {
 		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
 		oldPos := this.obj.posSize
 		OutputDebug % "Initial Position: " oldPos.Dump()
@@ -304,7 +313,7 @@ class MoveResizeTestSuite {
 		OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
 	}
 	
-	MoveResizeViaPosProperty() {
+	MoveResizeViaPosSizeProperty() {
 		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
 		oldPos := this.obj.posSize
 		OutputDebug % "Initial Position: " oldPos.Dump()
@@ -365,7 +374,7 @@ class MoveResizeTestSuite {
 		OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
 	}
 	
-	ResizeViaPosProperty() {
+	ResizeViaPosSizeProperty() {
 		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
 		oldPos := this.obj.posSize
 		OutputDebug % "Initial Position: " oldPos.Dump()
@@ -381,6 +390,23 @@ class MoveResizeTestSuite {
 		Yunit.assert(newPos.y == oldPos.y)
 		Yunit.assert(newPos.w == wnew)
 		Yunit.assert(newPos.h == hnew)	
+		OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
+	}
+
+	ResizeViaSizeProperty() {
+		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
+		oldSize:= this.obj.size
+		OutputDebug % "Initial Size: " oldSize.Dump()
+        
+		wnew := oldSize.x+100
+		hnew := oldSize.y+200
+		
+		OutputDebug % "BEFORE - Resizing from " oldSize.Dump() " to (" wnew "," hnew ")"
+		this.obj.size := new Point(wnew, hnew)
+		newSize := this.obj.size
+		OutputDebug % "AFTER - Resizing from " oldSize.Dump() " to " newSize.Dump()
+		Yunit.assert(newSize.x == wnew)
+		Yunit.assert(newSize.y == hnew)	
 		OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
 	}
 
@@ -410,7 +436,7 @@ class MoveResizeTestSuite {
 		Yunit.assert(newPos.h == oldPos.h)		
 	}		
 
-	NoMoveResizeViaPosProperty() {
+	NoMoveResizeViaPosSizeProperty() {
 		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
 		oldPos := this.obj.posSize
 		OutputDebug % "Initial Position: " oldPos.Dump()
@@ -421,6 +447,17 @@ class MoveResizeTestSuite {
 		Yunit.assert(newPos.y == oldPos.y)
 		Yunit.assert(newPos.w == oldPos.w)
 		Yunit.assert(newPos.h == oldPos.h)		
+	}
+
+	NoResizeViaSizeProperty() {
+		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
+		oldSize := this.obj.size
+		OutputDebug % "Initial Size: " oldSize.Dump()
+		this.obj.size := new Point(oldSize.x, oldSize.y)
+		newSize := this.obj.size
+		OutputDebug % "AFTER - Resizing from " oldSize.Dump() " to " newSize.Dump()
+		Yunit.assert(newSize.x == oldSize.x)
+		Yunit.assert(newSize.y == oldSize.y)		
 	}
 	
 	End() {
