@@ -398,7 +398,7 @@ class WindowHandler {
 			return ret
 		}
 	}
-	resizeable { ; ToDo: Implementation
+	resizeable {
 	/*! ---------------------------------------------------------------------------------------
 	Property: resizeable [get]
 	Checks whether window is resizeable
@@ -525,7 +525,7 @@ class WindowHandler {
 			return currExStyle
 		}
 	}
-	title { ; ToDo: Implementation
+	title {
 	/*! ---------------------------------------------------------------------------------------
 	Property: title [get/set]
 	Current window title. 
@@ -534,11 +534,24 @@ class WindowHandler {
 	A change to a window's title might be merely temporary if the application that owns the window frequently changes the title.
 	*/
 		get {
-			return this.__getTitle()
+			val := this._hWnd
+			WinGetTitle, title, ahk_id %val%
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "]) -> (" title ")]" ; _DBG_		
+			return title
 		}
 
 		set {
-			return this.__setTitle(value)
+			title := value
+			val := this._hWnd
+			prevState := A_DetectHiddenWindows
+			DetectHiddenWindows, On
+			WinSetTitle, ahk_id %val%,, %title%
+			DetectHiddenWindows, %prevState%
+			newTitle := this.title
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "], title=" title ")] -> " newTitle ; _DBG_		
+			return newTitle
 		}
 	}
 	transparency { ; ToDo: Implementation
@@ -573,7 +586,7 @@ class WindowHandler {
 	}
 	__setPos(rect) {
 /* ===============================================================================
-	Method: __setPos(rect) {
+	Method: __setPos(rect) 
 		Sets *position* (x,y,w,h) the window. (*INTERNAL*)
 	Parameters:
 		<Rectangle> - Rectangle containing the new position and size of the window
@@ -585,36 +598,6 @@ class WindowHandler {
 			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], pos=" newPos.Dump()")] -> New Value:" newPos.Dump() ; _DBG_
 
 		return newPos
-	}
-	__getTitle(){
-/* ===============================================================================
-	Method:   __getTitle
-		Determines the Window title (*INTERNAL*)
-	Returns:
-		WindowTitle
-*/
-		val := this._hWnd
-		WinGetTitle, title, ahk_id %val%
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "]) -> (" title ")]" ; _DBG_		
-		return title
-	}
-	__setTitle(title) {
-/* ===============================================================================
-	Method: __setTitle(title)
-		Sets the title of the window (*INTERNAL*)
-	Parameters:
-		title - title to be set
-*/	
-		val := this._hWnd
-		prevState := A_DetectHiddenWindows
-		DetectHiddenWindows, On
-		WinSetTitle, ahk_id %val%,, %title%
-		DetectHiddenWindows, %prevState%
-		newTitle := this.title
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "], title=" title ")] -> " newTitle ; _DBG_		
-		return newTitle
 	}
 	__getTransparency() {
 /* ===============================================================================
@@ -824,23 +807,6 @@ Author(s):
 		this.move(restorePos.x, restorePos.y, restorePos.w, restorePos.h)
 		if (this._debug) ; _DBG_
 			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "])] LastPos: " currPos.Dump() " - RestoredPos: " restorePos.Dump() ; _DBG_
-	}
-	__styleEx() {
-/* ===============================================================================
-Method:   __styleEx
-	Determines the current extended style of the window (*INTERNAL*)
-	
-Returns:
-	Current Extended Style
-
-Author(s):
-	20130308 - hoppfrosch@gmx.de - Original
-*/
-		val := this._hWnd
-		WinGet, currExStyle, ExStyle, ahk_id %val%
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> (" currExStyle ")" ; _DBG_		
-		return currExStyle
 	}
 	__SetWinEventHook(eventMin, eventMax, hmodWinEventProc, lpfnWinEventProc, idProcess, idThread, dwFlags) {
 /* ===============================================================================
