@@ -12,7 +12,7 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.6.4"
+ReferenceVersion := "0.6.5"
 debug := 1
 
 
