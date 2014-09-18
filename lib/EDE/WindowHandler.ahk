@@ -7,6 +7,8 @@
 #include <EDE\MultiMonitorEnv>
 #include <EDE\_WindowHandlerEvent>
 
+
+class WindowHandler {
 ; ******************************************************************************************************************************************
 /*!
 	Class: WindowHandler
@@ -20,9 +22,8 @@
 		### Author
 			[hoppfrosch](hoppfrosch@gmx.de)
 */
-class WindowHandler {
 	
-	_version := "0.6.0"
+	_version := "0.6.4"
 	_debug := 0
 	_hWnd := 0
 
@@ -37,30 +38,30 @@ class WindowHandler {
 
 	; ##################### Start of Properties (AHK >1.1.16.x) ############################################################
 	alwaysOnTop {
-		/*! ---------------------------------------------------------------------------------------
-			Property: alwaysOnTop [get/set]
-			Get or Set the *alwaysontop*-Property.  Set/Unset alwaysontop flag of the current window or get the current state
+	/*! ---------------------------------------------------------------------------------------
+	Property: alwaysOnTop [get/set]
+	Get or Set the *alwaysontop*-Property.  Set/Unset alwaysontop flag of the current window or get the current state
 			
-			Value:
-			flag - `true` or `false` (activates/deactivates *alwaysontop*-Property)
+	Value:
+	flag - `true` or `false` (activates/deactivates *alwaysontop*-Property)
 	
-			Remarks:		
-			* To toogle current *alwaysontop*-Property, simply use `obj.alwaysontop := !obj.alwaysontop`
-		*/
+	Remarks:		
+	* To toogle current *alwaysontop*-Property, simply use `obj.alwaysontop := !obj.alwaysontop`
+	*/
 		get {
 			ret := (this.styleEx & 0x08) ; WS_EX_TOPMOST
 			ret := ret>0?1:0
 		
 			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_
 			return ret
 		}
 		
 		set {
 			if (this._debug) ; _DBG_
-				OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], value=" value ")] -> Current Value:" this.alwaysontop ; _DBG_
+				OutputDebug % ">[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> Current Value:" this.alwaysontop ; _DBG_
 		
-			hwnd := this._hWnd
+			hwnd := this.hwnd
 			if (value == true)
 				value := "on"
 			else if (value == false) 
@@ -69,30 +70,30 @@ class WindowHandler {
 			WinSet, AlwaysOnTop, %value%,  ahk_id %hwnd%
 				
 			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], value=" value ")] -> New Value:" this.alwaysontop ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> New Value:" this.alwaysontop ; _DBG_
 		
 			return this.alwaysOnTop
 		}
 	}
 	centercoords {
-		/*! ---------------------------------------------------------------------------------------
-			Property: centercoords [get7SET]
-			Coordinates of the center of the window as a [Point](Point.html)-object
-		*/
+	/*! ---------------------------------------------------------------------------------------
+	Property: centercoords [get/set]
+	Coordinates of the center of the window as a [Point](Point.html)-object
+	*/
 
 		get {
-			pos := this.Pos
+			pos := this.posSize
 			x := Round((pos.w)/2 + pos.x)
 			y := Round((pos.h)/2 + pos.y)
 			centerPos := new Point(x,y,this._debug)
 			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "(pos="pos.dump() " [" this._hWnd "])] -> " centerPos.dump() ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "(pos="pos.dump() " [" this.hwnd "])] -> " centerPos.dump() ; _DBG_
 			return centerPos
 		}
 
 		set {
 			currCenter := this.centercoords
-			currPos := this.pos
+			currPos := this.posSize
 		
 			xoffset := value.x - currCenter.x
 			yoffset := value.y - currCenter.y
@@ -103,7 +104,7 @@ class WindowHandler {
 			this.move(x,y,99999,99999)
 			centerPos := this.centercoords
 			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "(pos=" value.dump() " [" this._hWnd "])] -> " centerPos.dump() ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "(pos=" value.dump() " [" this.hwnd "])] -> " centerPos.dump() ; _DBG_
 			return centerPos
 		}
 	}
@@ -116,27 +117,27 @@ class WindowHandler {
 		There is no setter available, since this is a constant window property
 	*/
 		get {
-			val := this._hWnd
+			val := this.hwnd
 			WinGetClass, __classname, ahk_id %val%
 			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "]) -> (" __classname ")]" ; _DBG_		
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "]) -> (" __classname ")]" ; _DBG_		
 			return __classname
 		}
 	}
-	debug {
-	/*! ---------------------------------------------------------------------------------------
-		Property: debug [get/set]
-			Debug flag
-	*/
-		get {
+	debug {                                                                            ; _DBG_
+	/*! ------------------------------------------------------------------------------ ; _DBG_
+	Property: debug [get/set]                                                          ; _DBG_
+	Debug flag                                                                         ; _DBG_
+	*/                                                                                 ; _DBG_
+		get {                                                                          ; _DBG_ 
 			return this._debug                                                         ; _DBG_
-		}
-		set {
+		}                                                                              ; _DBG_
+		set {                                                                          ; _DBG_
 			mode := value<1?0:1                                                        ; _DBG_
 			this._debug := mode                                                        ; _DBG_
 			return this._debug                                                         ; _DBG_
-		}
-	}
+		}                                                                              ; _DBG_
+	}                                                                                  ; _DBG_
 	exist {
 	/*! ---------------------------------------------------------------------------------------
 	Property: exist [get]
@@ -146,13 +147,13 @@ class WindowHandler {
 	There is no setter available, since this is a constant window property
 	*/
 		get {
-			val := this._hWnd
+			val := this.hwnd
 			_hWnd := WinExist("ahk_id " val)
 			ret := true
 			if (_hWnd = 0)
 				ret := false
 			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_		
 			return ret
 		}
 	}
@@ -189,16 +190,16 @@ class WindowHandler {
 			
 			DetectHiddenWindows, %prevState%
 			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_		
 			return ret
 		}
 
 		set{
 			mode := value
 			if (this._debug) ; _DBG_
-				OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> Current Value:" this.hidden ; _DBG_
+				OutputDebug % ">[" A_ThisFunc "([" this.hwnd "], mode=" mode ")] -> Current Value:" this.hidden ; _DBG_
 
-			val := this._hWnd
+			val := this.hwnd
 			ret := 0
 			if (mode == true) {
 				WinHide ahk_id %val%
@@ -211,24 +212,33 @@ class WindowHandler {
 			
 			isHidden := this.hidden
 			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> New Value:" isHidden ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "([" this.hwnd "], mode=" mode ")] -> New Value:" isHidden ; _DBG_
 			
 			return isHidden
 		}
 	}
+	hwnd {
+	/*! ---------------------------------------------------------------------------------------
+	Property: hwnd [get]
+	Get the window handle of the current window
+	*/
+		get {
+			return this._hwnd
+		}
+	}
 	maximized {
 	/*! ---------------------------------------------------------------------------------------
-		Property: maximized [get/set]
-		Get or Set the *maximized*-Property. Maximizes/Demaximizes the current window or get the current state of maximization
-		
-		Value:
-		flag - `true` or `false` (activates/deactivates *maximized*-Property)
-		
-		Remarks:		
-		* To toogle current *maximized*-Property, simply use `obj.maximized := !obj.maximized`	
+	Property: maximized [get/set]
+	Get or Set the *maximized*-Property. Maximizes/Demaximizes the current window or get the current state of maximization
+	
+	Value:
+	flag - `true` or `false` (activates/deactivates *maximized*-Property)
+	
+	Remarks:		
+	* To toogle current *maximized*-Property, simply use `obj.maximized := !obj.maximized`	
 */
 		get {
-			val := this._hWnd
+			val := this.hwnd
 			WinGet, s, MinMax, ahk_id %val% 
 			ret := 0
 			if (s == 1)
@@ -246,31 +256,31 @@ class WindowHandler {
 			prevState := A_DetectHiddenWindows
 			DetectHiddenWindows, On
 			if (newState == 1 )
-				WinMaximize % "ahk_id" this._hWnd
+				WinMaximize % "ahk_id" this.hwnd
 			else 
-				WinRestore % "ahk_id" this._hWnd
+				WinRestore % "ahk_id" this.hwnd
 			DetectHiddenWindows, %prevState%
 			
 			isMax := this.maximized
 			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> New Value:" isMax ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], mode=" mode ")] -> New Value:" isMax ; _DBG_
 			
 			return isMax
 		}
 	}
 	minimized {
 	/*! ---------------------------------------------------------------------------------------
-		Property: minimized [get/set]
-		Get or Set the *minimized*-Property. Minimizes/Deminimizes the current window or get the current state of minimization
+	Property: minimized [get/set]
+	Get or Set the *minimized*-Property. Minimizes/Deminimizes the current window or get the current state of minimization
 
-		Value:
-		flag - `true` or `false` (activates/deactivates *minimized*-Property)
+	Value:
+	flag - `true` or `false` (activates/deactivates *minimized*-Property)
 
-		Remarks:		
-		* To toogle current *minimized*-Property, simply use `obj.minimized := !obj.minimized`	
+	Remarks:		
+	* To toogle current *minimized*-Property, simply use `obj.minimized := !obj.minimized`	
 	*/
 		get {
-			val := this._hWnd
+			val := this.hwnd
 			WinGet, s, MinMax, ahk_id %val% 
 			ret := 0
 			if (s == -1)
@@ -288,36 +298,36 @@ class WindowHandler {
 			prevState := A_DetectHiddenWindows
 			DetectHiddenWindows, On
 			if (newState == 1 )
-				WinMinimize % "ahk_id" this._hWnd
+				WinMinimize % "ahk_id" this.hwnd
 			else 
-				WinRestore % "ahk_id" this._hWnd
+				WinRestore % "ahk_id" this.hwnd
 			DetectHiddenWindows, %prevState%
 	
 			isMin := this.minimized
 			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> New Value:" isMin ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "([" this.hwnd "], mode=" mode ")] -> New Value:" isMin ; _DBG_
 
 			return isMin
 			}
 	}
 	monitorID {
 	/*! ---------------------------------------------------------------------------------------
-		Property: monitorID [get/set]
-		Get or Set the ID of monitor on which the window is on. Setting the property moves the window to the corresponding monitor, trying to place the window at the same (scaled) position
+	Property: monitorID [get/set]
+	Get or Set the ID of monitor on which the window is on. Setting the property moves the window to the corresponding monitor, trying to place the window at the same (scaled) position
 
-		Value:
-		ID - Monitor-ID (if ID > max(ID) then ID = max(ID) will be used)
+	Value:
+	ID - Monitor-ID (if ID > max(ID) then ID = max(ID) will be used)
 		
-		Remarks
-		* Setting the property moves the window to the corresponding monitor, retaining the (relative) position and size of the window
-*/
+	Remarks
+	* Setting the property moves the window to the corresponding monitor, retaining the (relative) position and size of the window
+	*/
 		get {
 			mon := 1
 			c := this.centercoords
 			mme := new MultiMonitorEnv(this._debug)
 			mon := mme.monGetFromCoord(c.x,c.y,mon)
 			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " mon ; _DBG_		
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " mon ; _DBG_		
 			return mon
 		}
 
@@ -336,13 +346,13 @@ class WindowHandler {
 			oldID := this.monitorID
 			oldMon := obj.monBoundary(oldID)
 		
-			oldPos := this.pos
+			oldPos := this.posSize
 			xnew := newMon.x+(oldPos.x - oldMon.x)
 			ynew := newMon.y+(oldPos.y - oldMon.y)
 			this.Move(xnew,ynew)
 			monID := this.monitorID
 			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], ID=" value ")] -> New Value:" monID " (from: " oldID ")" ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "([" this.hwnd "], ID=" value ")] -> New Value:" monID " (from: " oldID ")" ; _DBG_
 	
 			return monID
 		}
@@ -350,22 +360,43 @@ class WindowHandler {
 	pos {
 	/*! ---------------------------------------------------------------------------------------
 	Property: pos [get/set]
+	Position of the window as [Point](point.html) object
+	*/
+		get {
+			ps := this.posSize
+			pt := new Point()
+			pt.x := ps.x
+			pt.y := ps.y
+			return pt
+		}
+		set {
+			pt := value
+			ps := this.posSize
+			ps.x := pt.x
+			ps.y := pt.y
+			this.posSize := ps
+			return pt
+		}
+	}
+	posSize {
+	/*! ---------------------------------------------------------------------------------------
+	Property: posSize [get/set]
 	Get or Set the position and size of the window (To set the position use class [Rectangle](rectangle.html))	
 	*/
 		get {
 			currPos := new Rectangle(0,0,0,0,this._debug)
-			currPos.fromHWnd(this._hWnd)
+			currPos.fromHWnd(this.hwnd)
 			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "([" this._hWnd "])] -> (" currPos.dump() ")" ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "([" this.hwnd "])] -> (" currPos.dump() ")" ; _DBG_
 			return currPos
 		}
 
 		set {
 			rect := value
 			this.move(rect.x, rect.y, rect.w, rect.h)
-			newPos := this.pos
+			newPos := this.posSize
 			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], pos=" newPos.Dump()")] -> New Value:" newPos.Dump() ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "([" this.hwnd "], pos=" newPos.Dump()")] -> New Value:" newPos.Dump() ; _DBG_
 			return newPos
 		}
 	}
@@ -380,11 +411,11 @@ class WindowHandler {
 		get {
 			ret := ""
 			if this.exist {
-				WinGet, PID, PID, % "ahk_id " this._hWnd
+				WinGet, PID, PID, % "ahk_id " this.hwnd
 				ret := PID
 			}
 			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_		
 			return ret
 		}
 	}
@@ -399,11 +430,11 @@ class WindowHandler {
 		get {
 			ret := ""
 			if this.exist {
-				WinGet, PName, ProcessName, % "ahk_id " this._hWnd
+				WinGet, PName, ProcessName, % "ahk_id " this.hwnd
 				ret := PName
 			}
 			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_		
 			return ret
 		}
 	}
@@ -421,7 +452,7 @@ class WindowHandler {
 			else 
 		    	ret := (this.style & 0x40000) ; WS_SIZEBOX	
 			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_				
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_				
 			return ret
 		}
 	}
@@ -443,13 +474,13 @@ class WindowHandler {
 				ret := -1
 			}
 			else {
-				currPos := this.pos
+				currPos := this.posSize
 				if (currPos.h <= this.rolledUpHeight) {
 					ret := 1
 				}
 			}
 			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_		
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_		
 			return ret
 		}
 
@@ -473,8 +504,8 @@ class WindowHandler {
 			; Determine the minmal height of a window
 			MinWinHeight := this.rolledUpHeight
 			; Get size of current window
-			hwnd := this._hWnd
-			currPos := this.pos
+			hwnd := this.hwnd
+			currPos := this.posSize
 		
 			if (roll == 1) { ; Roll
 	            this.move(currPos.x, currPos.y, currPos.w, MinWinHeight)
@@ -485,7 +516,7 @@ class WindowHandler {
 			
 			isRolled := this.rolledUp
 			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], mode=" mode ")] -> New Value:" isRolled ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "([" this.hwnd "], mode=" mode ")] -> New Value:" isRolled ; _DBG_
 
 			return isRolled
 		}
@@ -504,6 +535,27 @@ class WindowHandler {
 		}
 
 	}
+	size {
+	/*! ---------------------------------------------------------------------------------------
+	Property: size [get/set]
+	Dimensions (Width/Height) of the window as [Point](point.html) object
+	*/
+		get {
+			ps := this.posSize
+			pt := new Point()
+			pt.x := ps.w
+			pt.y := ps.h
+			return pt
+		}
+		set {
+			pt := Value
+			ps := this.posSize
+			ps.w := pt.x
+			ps.h := pt.y
+			this.posSize := ps
+			return pt
+		}
+	}
 	style {
 	/*! ---------------------------------------------------------------------------------------
 	Property: style [get]
@@ -512,10 +564,10 @@ class WindowHandler {
 
 	; ToDo: Property style - Implementation of Setter-functionality
 		get {
-			val := this._hWnd
+			val := this.hwnd
 			WinGet, currStyle, Style, ahk_id %val%
 			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> (" currStyle ")" ; _DBG_		
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> (" currStyle ")" ; _DBG_		
 			return currStyle
 		}
 	}
@@ -527,10 +579,10 @@ class WindowHandler {
 
 	; ToDo: Property styleEx - Implementation of Setter-functionality
 		get {
-			val := this._hWnd
+			val := this.hwnd
 			WinGet, currExStyle, ExStyle, ahk_id %val%
 			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> (" currExStyle ")" ; _DBG_		
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> (" currExStyle ")" ; _DBG_		
 			return currExStyle
 		}
 	}
@@ -543,23 +595,23 @@ class WindowHandler {
 	A change to a window's title might be merely temporary if the application that owns the window frequently changes the title.
 	*/
 		get {
-			val := this._hWnd
+			val := this.hwnd
 			WinGetTitle, title, ahk_id %val%
 			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "]) -> (" title ")]" ; _DBG_		
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "]) -> (" title ")]" ; _DBG_		
 			return title
 		}
 
 		set {
 			title := value
-			val := this._hWnd
+			val := this.hwnd
 			prevState := A_DetectHiddenWindows
 			DetectHiddenWindows, On
 			WinSetTitle, ahk_id %val%,, %title%
 			DetectHiddenWindows, %prevState%
 			newTitle := this.title
 			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "], title=" title ")] -> " newTitle ; _DBG_		
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], title=" title ")] -> " newTitle ; _DBG_		
 			return newTitle
 		}
 	}
@@ -569,25 +621,25 @@ class WindowHandler {
 	Current window transparency. 
 	*/
 		get {
-			val := this._hWnd
+			val := this.hwnd
 			WinGet, s, Transparent, ahk_id %val% 
 			ret := 255
 			if (s != "")
 				ret := s
 			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])] -> " ret ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_
 			return ret
 		}
 
 		set {
-			val := this._hWnd
+			val := this.hwnd
 			transOrig := value
 			if (value == "OFF")
 				value := 255
 			WinSet, Transparent, %value%, ahk_id %val% 
 			trans := this.transparency
 			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], transparency=" transOrig "(" value "))] -> New Value:" trans ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "([" this.hwnd "], transparency=" transOrig "(" value "))] -> New Value:" trans ; _DBG_
 			return trans
 		}
 	}
@@ -607,11 +659,11 @@ class WindowHandler {
 			[close()](#close)
 */
 		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])]" ; _DBG_		
+			OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])]" ; _DBG_		
 
 		prevState := A_DetectHiddenWindows
 		DetectHiddenWindows, On
-		WinKill % "ahk_id" this._hWnd
+		WinKill % "ahk_id" this.hwnd
 		DetectHiddenWindows, %prevState%
 	}	
 	move(X,Y,W="99999",H="99999") {
@@ -630,9 +682,9 @@ class WindowHandler {
 			[movePercental()](movePercental)
 */
 		if (this._debug) ; _DBG_
-			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "])(X=" X " ,Y=" Y " ,W=" W " ,H=" H ")]" ; _DBG_		
+			OutputDebug % ">[" A_ThisFunc "([" this.hwnd "])(X=" X " ,Y=" Y " ,W=" W " ,H=" H ")]" ; _DBG_		
 		if (X = 99999 || Y = 99999 || W = 99999 || H = 9999)
-			currPos := this.pos
+			currPos := this.posSize
 		
 		if (X = 99999)
 			X := currPos.X
@@ -647,8 +699,8 @@ class WindowHandler {
 			H := currPos.H
 		
 		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "])(X=" X " ,Y=" Y " ,W=" W " ,H=" H ")]" ; _DBG_		
-		WinMove % "ahk_id" this._hWnd, , X, Y, W, H
+			OutputDebug % "<[" A_ThisFunc "([" this.hwnd "])(X=" X " ,Y=" Y " ,W=" W " ,H=" H ")]" ; _DBG_		
+		WinMove % "ahk_id" this.hwnd, , X, Y, W, H
 	}
 	movePercental(xFactor=0, yFactor=0, wFactor=100, hFactor=100) {
 /*! ===============================================================================
@@ -675,7 +727,7 @@ class WindowHandler {
 		    * The range of the method parameters is **NOT** checked - so be carefull using any values <0 or >100
 */	
 		if (this._debug) ; _DBG_
-			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], xFactor=" xFactor ", yFactor=" yFactor ", wFactor=" wFactor ", hFactor=" hFactor ")]" ; _DBG_
+			OutputDebug % ">[" A_ThisFunc "([" this.hwnd "], xFactor=" xFactor ", yFactor=" yFactor ", wFactor=" wFactor ", hFactor=" hFactor ")]" ; _DBG_
 			
 		monID := this.monitorID
 		mmv := new MultiMonitorEnv(_debug)
@@ -692,7 +744,7 @@ class WindowHandler {
 		this.move(x,y,w,h)
 		
 		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "], xFactor=" xFactor ", yFactor=" yFactor ", wFactor=" wFactor ", hFactor=" hFactor ")] -> padded to (" this.pos.Dump() ") on Monitor (" monId ")" ; _DBG_
+			OutputDebug % "<[" A_ThisFunc "([" this.hwnd "], xFactor=" xFactor ", yFactor=" yFactor ", wFactor=" wFactor ", hFactor=" hFactor ")] -> padded to (" this.posSize.Dump() ") on Monitor (" monId ")" ; _DBG_
 	}
 	
 	; ######################## Internal Methods - not to be called directly ############################################
@@ -723,10 +775,10 @@ Method: __posPush
 Author(s):
 	20130311 - hoppfrosch@gmx.de - Original
 */
-		this._posStack.Insert(1, this.pos)
+		this._posStack.Insert(1, this.posSize)
 		if (this._debug) { ; _DBG_ 
 			this.__posStackDump() ; _DBG_ 
-			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "])] -> (" this._posStack[1].dump() ")" ; _DBG_
+			OutputDebug % "<[" A_ThisFunc "([" this.hwnd "])] -> (" this._posStack[1].dump() ")" ; _DBG_
 		}
 	}
 	__posStackDump() {
@@ -754,15 +806,15 @@ Author(s):
 	20130308 - hoppfrosch@gmx.de - Original
 */
 		if (this._debug) ; _DBG_
-			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "], index=" index ")]" ; _DBG_
+			OutputDebug % ">[" A_ThisFunc "([" this.hwnd "], index=" index ")]" ; _DBG_
 		restorePos := this._posStack[index]
-		currPos := this.pos
+		currPos := this.posSize
 		
 		this.__posStackDump()
 		
 		this.move(restorePos.x, restorePos.y, restorePos.w, restorePos.h)
 		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "])] LastPos: " currPos.Dump() " - RestoredPos: " restorePos.Dump() ; _DBG_
+			OutputDebug % "<[" A_ThisFunc "([" this.hwnd "])] LastPos: " currPos.Dump() " - RestoredPos: " restorePos.Dump() ; _DBG_
 	}
 	__SetWinEventHook(eventMin, eventMax, hmodWinEventProc, lpfnWinEventProc, idProcess, idThread, dwFlags) {
 /* ===============================================================================
@@ -779,7 +831,7 @@ Author(s):
 	20130311 - hoppfrosch@gmx.de - Original
 */ 
 		if (this._debug) ; _DBG_ 
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])(eventMin=" eventMin ", eventMax=" eventMax ", hmodWinEventProc=" hmodWinEventProc ", lpfnWinEventProc=" lpfnWinEventProc ", idProcess=" idProcess ", idThread=" idThread ", dwFlags=" dwFlags ")"  ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])(eventMin=" eventMin ", eventMax=" eventMax ", hmodWinEventProc=" hmodWinEventProc ", lpfnWinEventProc=" lpfnWinEventProc ", idProcess=" idProcess ", idThread=" idThread ", dwFlags=" dwFlags ")"  ; _DBG_
 		
 		ret := DllCall("ole32\CoInitialize", Uint, 0)
 		; This is a WinEventProc (siehe http://msdn.microsoft.com/en-us/library/windows/desktop/dd373885(v=vs.85).aspx) - this determines parameters which can be handled by "HookProc"
@@ -803,18 +855,18 @@ Method:   __onLocationChange
 Author(s):
 	20130312 - hoppfrosch@gmx.de - AutoHotkey-Implementation
 */
-		if this._hWnd = 0
+		if this.hwnd = 0
 			return
 		
 		if (this._debug) ; _DBG_
-			OutputDebug % ">[" A_ThisFunc "([" this._hWnd "])" ; _DBG_
+			OutputDebug % ">[" A_ThisFunc "([" this.hwnd "])" ; _DBG_
 		
-		currPos := this.pos
+		currPos := this.posSize
 		lastPos := this._posStack[1]
 		
 		; current size/position is identical with previous Size/position
 		if (currPos.equal(lastPos)) {
-			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "])] Position has NOT changed!" ; _DBG_
+			OutputDebug % "<[" A_ThisFunc "([" this.hwnd "])] Position has NOT changed!" ; _DBG_
 			return
 		}
 		
@@ -822,7 +874,7 @@ Author(s):
 		this.__posPush()
 				
 		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this._hWnd "])] LastPos: " lastPos.Dump() " - NewPos: " currPos.Dump() ; _DBG_
+			OutputDebug % "<[" A_ThisFunc "([" this.hwnd "])] LastPos: " lastPos.Dump() " - NewPos: " currPos.Dump() ; _DBG_
 		return
 	}  
 	__Delete() {
@@ -830,12 +882,12 @@ Author(s):
 Method: __Delete
 	Destructor (*INTERNAL*)
 */ 
-		if (this._hwnd <= 0) {
+		if (this.hwnd <= 0) {
 			return
 		}
 		
 		if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])"  ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])"  ; _DBG_
 			
 		if (this.__useEventHook == 1) {
 			if (this.__hWinEventHook1)
@@ -847,7 +899,7 @@ Method: __Delete
 		}
 		
 		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this._hWnd "])"  ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])"  ; _DBG_
 			
 		; Reset all "dangerous" settings (all windows should be left in a user accessable state)
 		if (this.alwaysontop == true) {
@@ -898,14 +950,14 @@ Author(s):
 			MsgBox  16, Error, %A_ThisFunc% :`n Required parameter is missing`nAborting...
 			if (this._debug) ; _DBG_
 				OutputDebug % "<[" A_ThisFunc "(...) -> ()] *ERROR*: Required parameter is missing. Aborting..." ; _DBG_
-			this._hWnd := -1
+			this.hwnd := -1
 			return
 		}
 		
 		if (!this.__isWindow(_hWnd)) {
 			if (this._debug) ; _DBG_
 				OutputDebug % ">[" A_ThisFunc "(hWnd=(" _hWnd "))] is NOT a true window. Aborting..." ; _DBG_
-			this._hWnd := -1
+			this.hwnd := -1
 			return
 		}
 		
