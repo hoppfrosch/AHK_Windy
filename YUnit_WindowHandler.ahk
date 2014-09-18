@@ -12,7 +12,7 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.6.3"
+ReferenceVersion := "0.6.4"
 debug := 1
 
 
@@ -270,6 +270,23 @@ class MoveResizeTestSuite {
 		Yunit.assert(newPos.h == oldPos.h)
 		OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
 	}
+
+	MoveViaPosProperty() {
+		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
+		oldPos := this.obj.pos
+		OutputDebug % "Initial Position: " oldPos.Dump()
+		
+		xnew := oldPos.x+200
+		ynew := oldPos.y+200
+		
+		OutputDebug % "BEFORE - Moving from " oldPos.Dump() " to (" xnew "," ynew  ")"
+		this.obj.pos := new Point(xnew,ynew)
+		newPos := this.obj.pos
+		OutputDebug % "AFTER - Moving from " oldPos.Dump() " to " newPos.Dump()
+		Yunit.assert(newPos.x == xnew)
+		Yunit.assert(newPos.y == ynew)
+		OutputDebug % ">>>>>>>>>>>>>>>>>>>[" A_ThisFunc "]<<<<<<<<<<<<<<<<<<<<<<<<<<"
+	}
 	
 	MoveResizeViaWinMove() {
 		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
@@ -447,6 +464,17 @@ class MoveResizeTestSuite {
 		Yunit.assert(newPos.y == oldPos.y)
 		Yunit.assert(newPos.w == oldPos.w)
 		Yunit.assert(newPos.h == oldPos.h)		
+	}
+
+	NoMoveViaPosProperty() {
+		OutputDebug % "<<<<<<<<<<<<<<<<<<<[" A_ThisFunc "]>>>>>>>>>>>>>>>>>>>>>>>>>>"
+		oldPos := this.obj.pos
+		OutputDebug % "Initial Position: " oldPos.Dump()
+		this.obj.pos := new Point(oldPos.x, oldPos.y)
+		newPos := this.obj.pos
+		OutputDebug % "AFTER - Moving from " oldPos.Dump() " to " newPos.Dump()
+		Yunit.assert(newPos.x == oldPos.x)
+		Yunit.assert(newPos.y == oldPos.y)
 	}
 
 	NoResizeViaSizeProperty() {

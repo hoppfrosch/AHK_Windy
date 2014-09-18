@@ -23,7 +23,7 @@ class WindowHandler {
 			[hoppfrosch](hoppfrosch@gmx.de)
 */
 	
-	_version := "0.6.3"
+	_version := "0.6.4"
 	_debug := 0
 	_hWnd := 0
 
@@ -355,6 +355,27 @@ class WindowHandler {
 				OutputDebug % "<[" A_ThisFunc "([" this.hwnd "], ID=" value ")] -> New Value:" monID " (from: " oldID ")" ; _DBG_
 	
 			return monID
+		}
+	}
+	pos {
+	/*! ---------------------------------------------------------------------------------------
+	Property: pos [get/set]
+	Position of the window as [Point](point.html) object
+	*/
+		get {
+			ps := this.posSize
+			pt := new Point()
+			pt.x := ps.x
+			pt.y := ps.y
+			return pt
+		}
+		set {
+			pt := value
+			ps := this.posSize
+			ps.x := pt.x
+			ps.y := pt.y
+			this.posSize := ps
+			return pt
 		}
 	}
 	posSize {
