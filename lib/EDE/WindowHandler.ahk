@@ -5,6 +5,7 @@
 #include <EDE\Rectangle>
 #include <EDE\Point>
 #include <EDE\MultiMonitorEnv>
+#include <EDE\Const_Windows>
 #include <EDE\_WindowHandlerEvent>
 
 
@@ -23,7 +24,7 @@ class WindowHandler {
 			[hoppfrosch](hoppfrosch@gmx.de)
 */
 	
-	_version := "0.6.4"
+	_version := "0.6.5"
 	_debug := 0
 	_hWnd := 0
 
@@ -450,7 +451,7 @@ class WindowHandler {
 			if this.__classname in Chrome_XPFrame,MozillaUIWindowClass
 				ret := true
 			else 
-		    	ret := (this.style & 0x40000) ; WS_SIZEBOX	
+		    	ret := (this.style & WS_SIZEBOX) ; 	
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_				
 			return ret
