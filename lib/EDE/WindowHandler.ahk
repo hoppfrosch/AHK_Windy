@@ -24,7 +24,7 @@ class WindowHandler {
 			[hoppfrosch](hoppfrosch@gmx.de)
 */
 	
-	_version := "0.6.5"
+	_version := "0.6.6"
 	_debug := 0
 	_hWnd := 0
 
@@ -388,7 +388,7 @@ class WindowHandler {
 			currPos := new Rectangle(0,0,0,0,this._debug)
 			currPos.fromHWnd(this.hwnd)
 			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "([" this.hwnd "])] -> (" currPos.dump() ")" ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> (" currPos.dump() ")" ; _DBG_
 			return currPos
 		}
 
@@ -397,7 +397,7 @@ class WindowHandler {
 			this.move(rect.x, rect.y, rect.w, rect.h)
 			newPos := this.posSize
 			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "([" this.hwnd "], pos=" newPos.Dump()")] -> New Value:" newPos.Dump() ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], pos=" newPos.Dump()")] -> New Value:" newPos.Dump() ; _DBG_
 			return newPos
 		}
 	}
@@ -562,14 +562,21 @@ class WindowHandler {
 	Property: style [get]
 	Returns current window style
 	*/
-
-	; ToDo: Property style - Implementation of Setter-functionality
 		get {
-			val := this.hwnd
-			WinGet, currStyle, Style, ahk_id %val%
+			hwnd := this.hwnd
+			WinGet, currStyle, Style, ahk_id %hwnd%
+			; currStyle := DllCall(A_PtrSize = 4 ? "user32.dll\GetWindowLong" : "user32.dll\GetWindowLong","UInt",hWnd,"UInt",CONST_GWL.STYLE)
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> (" currStyle ")" ; _DBG_		
 			return currStyle
+		}
+		set {
+			hwnd := this.hwnd
+			WinSet, Style, value, ahk_id %hwnd%
+			WinSet, Redraw,, ahk_id %hwnd%
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], style=" value ")] -> (" value ")" ; _DBG_		
+			return value
 		}
 	}
 	styleEx {
@@ -768,6 +775,20 @@ Author(s):
 	
 		return ret
 	}	
+	__hexStr(i) {
+/* ===============================================================================
+Method:   ____hexStr
+	Converts number to hex representation (*INTERNAL*)
+
+Returns:
+	HEX
+*/
+		OldFormat := A_FormatInteger ; save the current format as a string
+		SetFormat, Integer, Hex
+		i += 0 ;forces number into current fomatinteger
+		SetFormat, Integer, %OldFormat% ;if oldformat was either "hex" or "dec" it will restore it to it's previous setting
+		return i
+	}
 	__posPush() {
 /* ===============================================================================
 Method: __posPush
@@ -778,8 +799,8 @@ Author(s):
 */
 		this._posStack.Insert(1, this.posSize)
 		if (this._debug) { ; _DBG_ 
+			OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> (" this._posStack[1].dump() ")" ; _DBG_
 			this.__posStackDump() ; _DBG_ 
-			OutputDebug % "<[" A_ThisFunc "([" this.hwnd "])] -> (" this._posStack[1].dump() ")" ; _DBG_
 		}
 	}
 	__posStackDump() {
@@ -791,7 +812,6 @@ Author(s):
 	20130312 - hoppfrosch@gmx.de - Original
 */	
 		For key,value in this._posStack	; loops through all elements in Stack
-		
 			OutputDebug % "|[" A_ThisFunc "()] -> (" key "): (" Value.dump() ")" ; _DBG_
 		return
 	}
@@ -814,8 +834,10 @@ Author(s):
 		this.__posStackDump()
 		
 		this.move(restorePos.x, restorePos.y, restorePos.w, restorePos.h)
-		if (this._debug) ; _DBG_
+		if (this._debug) { ; _DBG_
 			OutputDebug % "<[" A_ThisFunc "([" this.hwnd "])] LastPos: " currPos.Dump() " - RestoredPos: " restorePos.Dump() ; _DBG_
+			this.__posStackDump() ; _DBG_ 
+		}
 	}
 	__SetWinEventHook(eventMin, eventMax, hmodWinEventProc, lpfnWinEventProc, idProcess, idThread, dwFlags) {
 /* ===============================================================================
