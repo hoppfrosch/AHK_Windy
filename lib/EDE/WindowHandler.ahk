@@ -24,7 +24,7 @@ class WindowHandler {
 			[hoppfrosch](hoppfrosch@gmx.de)
 */
 	
-	_version := "0.6.7"
+	_version := "0.6.8"
 	_debug := 0
 	_hWnd := 0
 
@@ -225,6 +225,18 @@ class WindowHandler {
 	*/
 		get {
 			return this._hwnd
+		}
+	}
+	hangs {
+	/*! ---------------------------------------------------------------------------------------
+	Property: hangs [get]
+	Determines whether the system considers that a specified application is not responding. 
+	*/
+		get {
+			ret := DllCall("user32\IsHungAppWindow", "Ptr", this.hwnd)
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_		
+			return ret
 		}
 	}
 	maximized {
