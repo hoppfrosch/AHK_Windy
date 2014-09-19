@@ -23,7 +23,7 @@ class WindowHandler {
 		### Author
 			[hoppfrosch](hoppfrosch@gmx.de)
 */
-	_version := "0.6.14"
+	_version := "0.6.15"
 	_debug := 0
 	_hWnd := 0
 
@@ -88,6 +88,7 @@ class WindowHandler {
 	*/
 		get {
 			ret := (this.style & WS.CAPTION) > 0 ? 1 : 0
+			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_
 			return ret
 		}
@@ -534,20 +535,33 @@ class WindowHandler {
 	}
 	resizeable[] {
 	/*! ---------------------------------------------------------------------------------------
-	Property: resizeable [get]
-	Checks whether window is resizeable
-	*/
+	Property: resizeable [get/set]
+	Get or Set the *resizeable*-Property (Is window resizeable?)
+	Value:
+	flag - `true` or `false` (activates/deactivates *resizeable*-Property)
 
-	; ToDo: Property resizeable - Implementation of Setter-functionality
+	Remarks:		
+	* To toogle current *resizeable*-Property, simply use `obj.resizeable := !obj.resizeable
+	*/
 		get {
-			ret := true
-			if this.__classname in Chrome_XPFrame,MozillaUIWindowClass
-				ret := true
-			else 
-		    	ret := (this.style & WS.SIZEBOX) ; 	
+	    	ret := (this.style & WS.SIZEBOX) > 0 ? 1 : 0 ; 	
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_				
 			return ret
+		}
+		set {
+			style := "-" this.__hexStr(WS.SIZEBOX)
+			if (value) {
+					style := "+" this.__hexStr(WS.SIZEBOX)
+			}
+		 	prevState := A_DetectHiddenWindows
+			DetectHiddenWindows, on
+			this.style := style
+			this.redraw()
+			DetectHiddenWindows, %prevState%
+			if (this._debug) ; _DBG_
+					OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " value ; _DBG_
+			return value
 		}
 	}
 	rolledUp[] {
@@ -559,7 +573,7 @@ class WindowHandler {
 	flag - `true` or `false` (activates/deactivates *rolledUp*-Property)
 
 	Remarks:		
-	* To toogle current *rolledUp*-Property, simply use `objrolledUp := !obj.rolledUp`
+	* To toogle current *rolledUp*-Property, simply use `obj.rolledUp := !obj.rolledUp`
 	*/
 		get {
 			ret := 0
