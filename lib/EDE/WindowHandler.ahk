@@ -24,7 +24,7 @@ class WindowHandler {
 			[hoppfrosch](hoppfrosch@gmx.de)
 */
 	
-	_version := "0.6.6"
+	_version := "0.6.7"
 	_debug := 0
 	_hWnd := 0
 
@@ -585,13 +585,20 @@ class WindowHandler {
 	Returns current window extended style
 	*/
 
-	; ToDo: Property styleEx - Implementation of Setter-functionality
 		get {
 			val := this.hwnd
 			WinGet, currExStyle, ExStyle, ahk_id %val%
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> (" currExStyle ")" ; _DBG_		
 			return currExStyle
+		}
+		set {
+			hwnd := this.hwnd
+			WinSet, ExStyle, value, ahk_id %hwnd%
+			WinSet, Redraw,, ahk_id %hwnd%
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], style=" value ")] -> (" value ")" ; _DBG_		
+			return value
 		}
 	}
 	title {
