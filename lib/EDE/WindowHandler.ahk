@@ -22,7 +22,7 @@ class WindowHandler {
 		### Author
 			[hoppfrosch](hoppfrosch@gmx.de)
 */
-	_version := "0.6.11"
+	_version := "0.6.12"
 	_debug := 0
 	_hWnd := 0
 
@@ -689,14 +689,24 @@ class WindowHandler {
 			return newTitle
 		}
 	}
-	transparency[] {
+	transparency[increment := 1,delay := 10] {
 	/*! ---------------------------------------------------------------------------------------
 	Property: transparency [get/set]
 	Current window transparency. 
+
+	Parameters: [Setter]
+	transparency - transparency to be set
+	increment - transparency-incrementation while fading
+	delay - delay between each increment (Unit: ms)
+
+	Remarks:
+	* if : transparency > current, increases current transparency [increment+]
+	* if : transparency < current, decreases current transparency [increment-]
+	* if : increment = 0, transparency isset immediately without any fading
 	*/
 		get {
-			val := this.hwnd
-			WinGet, s, Transparent, ahk_id %val% 
+			hwnd := this.hwnd
+			WinGet, s, Transparent, ahk_id %hwnd% 
 			ret := 255
 			if (s != "")
 				ret := s
@@ -706,18 +716,40 @@ class WindowHandler {
 		}
 
 		set {
-			val := this.hwnd
+		/* ### Author(s)
+			* xxxxxxxx - [joedf](http://ahkscript.org/boards/viewtopic.php?f=6&t=512)
+			* 20140922 - [hoppfrosch](hoppfrosch@gmx.de) - Rewritten
+		*/
+			hwnd := this.hwnd
+			transFinal := value
 			transOrig := value
-			if (value == "OFF")
-				value := 255
-			WinSet, Transparent, %value%, ahk_id %val% 
-			trans := this.transparency
+			if (transFinal == "OFF")
+				transFinal := 255
+			transFinal:=(transFinal>255)?255:(transFinal<0)?0:transFinal
+
+			transStart:= this.transparency
+	    	transStart :=(transStart="")?255:transStart ;prevent trans unset bug
+			WinSet,Transparent,%transStart%,ahk_id %hwnd%
+
+			if (increment != 0) {
+				; do the fading animation
+				increment:=(transStart<transFinal)?abs(increment):-1*abs(increment)
+				transCurr := transStart
+	    		while(k:=(increment<0)?(transCurr>transFinal):(transCurr<transFinal)&&this.exist) {
+	        		transCurr:= this.transparency
+	        		transCurr+=increment
+	        		WinSet,Transparent,%transCurr%,ahk_id %hwnd%
+	        		sleep %delay%
+	    		}
+    		}
+    		; Set final transparency
+	    	WinSet,Transparent,%transFinal%,ahk_id %hwnd%
+			transEnd := this.transparency
 			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "([" this.hwnd "], transparency=" transOrig "(" value "))] -> New Value:" trans ; _DBG_
-			return trans
+				OutputDebug % "<[" A_ThisFunc "([" this.hwnd "], transparency=" transOrig "(" transStart "), increment=" increment ", delay=" delay ")] -> New Value:" transEnd ; _DBG_
+			return transEnd
 		}
 	}
-
 	; ##################### End of Properties (AHK >1.1.16.x) ##############################################################
 	
 	; ######################## Methods to be called directly ########################################################### 
@@ -834,7 +866,12 @@ class WindowHandler {
 	A nonzero value indicates success. Zero indicates failure.
 
  	Remarks:
-	This function will update the window for sure, unlike WinSet or InvalidateRect.
+	### Hint
+		This function will update the window for sure, unlike WinSet or InvalidateRect.
+
+	### Author(s)
+		* xxxxxxxx - majkinetor
+		* 20140922 - [hoppfrosch](hoppfrosch@gmx.de) - Rewritten
  */
 		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "([" this.hwnd "], Option=" Option ")]" ; _DBG_

@@ -5,7 +5,7 @@ Functionality for easier work with mouse and windows on desktop. Multi-Monitor s
 
 The idea is based on [WindowPad](http://http://www.autohotkey.com/board/topic/19990-windowpad-window-moving-tool)/[WindowPadX](https://github.com/hoppfrosch/WindowPadX), which basically lacks the ability to provide some windows history. Most of the functionality of [WindowPadX](https://github.com/hoppfrosch/WindowPadX) should be available at the end ...
 
-**Author**: [hoppfrosch@ahk4.me](mailto:hoppfrosch@ahk4.me)
+**Author**: [hoppfrosch@gmx.de](mailto:hoppfrosch@gmx.de)
 
 ----------
 ## Credits
@@ -22,6 +22,8 @@ The idea is based on [WindowPad](http://http://www.autohotkey.com/board/topic/19
  - [XML](https://gist.github.com/cocobelgica/4576128)-Library 
 - [HotKeyIt](http://www.autohotkey.com/board/user/6031-hotkeyit/)
  - [TT](http://www.autohotkey.com/board/topic/60605-ahl-lv2-tt-full-blown-tooltip-library/)-Library 
+- [joedf](http://ahkscript.org/boards/memberlist.php?mode=viewprofile&u=55)
+ - [Smart WinFade](http://ahkscript.org/boards/viewtopic.php?f=6&t=512)
 - [just me](https://github.com/AHK-just-me)
  - [GUI Constants](https://github.com/AHK-just-me/AHK_Gui_Constants)
 - [majkinetor](http://www.autohotkey.com/board/user/1763-majkinetor/)
