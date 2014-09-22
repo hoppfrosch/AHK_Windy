@@ -22,7 +22,7 @@ class WindowHandler {
 		### Author
 			[hoppfrosch](hoppfrosch@gmx.de)
 */
-	_version := "0.6.9"
+	_version := "0.6.10"
 	_debug := 0
 	_hWnd := 0
 
@@ -36,7 +36,7 @@ class WindowHandler {
 	_posStack := 0
 
 	; ##################### Start of Properties (AHK >1.1.16.x) ############################################################
-	alwaysOnTop {
+	alwaysOnTop[] {
 	/*! ---------------------------------------------------------------------------------------
 	Property: alwaysOnTop [get/set]
 	Get or Set the *alwaysontop*-Property.  Set/Unset alwaysontop flag of the current window or get the current state
@@ -74,7 +74,7 @@ class WindowHandler {
 			return this.alwaysOnTop
 		}
 	}
-	centercoords {
+	centercoords[] {
 	/*! ---------------------------------------------------------------------------------------
 	Property: centercoords [get/set]
 	Coordinates of the center of the window as a [Point](Point.html)-object
@@ -107,7 +107,7 @@ class WindowHandler {
 			return centerPos
 		}
 	}
-	classname {
+	classname[] {
 	/*! ---------------------------------------------------------------------------------------
 		Property: classname [get]
 		name of the window class. 
@@ -123,7 +123,7 @@ class WindowHandler {
 			return __classname
 		}
 	}
-	debug {                                                                            ; _DBG_
+	debug[] {                                                                            ; _DBG_
 	/*! ------------------------------------------------------------------------------ ; _DBG_
 	Property: debug [get/set]                                                          ; _DBG_
 	Debug flag                                                                         ; _DBG_
@@ -137,7 +137,7 @@ class WindowHandler {
 			return this._debug                                                         ; _DBG_
 		}                                                                              ; _DBG_
 	}                                                                                  ; _DBG_
-	exist {
+	exist[] {
 	/*! ---------------------------------------------------------------------------------------
 	Property: exist [get]
 	Checks whether the window still exists. 
@@ -156,7 +156,7 @@ class WindowHandler {
 			return ret
 		}
 	}
-	hidden {
+	hidden[] {
 	/*! ---------------------------------------------------------------------------------------
 		Property: hidden [get/set]
 		Get or Set the *hidden*-Property. Hides/Unhide the current window or get the current state of hiding
@@ -216,7 +216,7 @@ class WindowHandler {
 			return isHidden
 		}
 	}
-	hwnd {
+	hwnd[] {
 	/*! ---------------------------------------------------------------------------------------
 	Property: hwnd [get]
 	Get the window handle of the current window
@@ -225,7 +225,7 @@ class WindowHandler {
 			return this._hwnd
 		}
 	}
-	hangs {
+	hangs[] {
 	/*! ---------------------------------------------------------------------------------------
 	Property: hangs [get]
 	Determines whether the system considers that a specified application is not responding. 
@@ -237,7 +237,7 @@ class WindowHandler {
 			return ret
 		}
 	}
-	maximized {
+	maximized[] {
 	/*! ---------------------------------------------------------------------------------------
 	Property: maximized [get/set]
 	Get or Set the *maximized*-Property. Maximizes/Demaximizes the current window or get the current state of maximization
@@ -279,7 +279,7 @@ class WindowHandler {
 			return isMax
 		}
 	}
-	minimized {
+	minimized[] {
 	/*! ---------------------------------------------------------------------------------------
 	Property: minimized [get/set]
 	Get or Set the *minimized*-Property. Minimizes/Deminimizes the current window or get the current state of minimization
@@ -321,7 +321,7 @@ class WindowHandler {
 			return isMin
 			}
 	}
-	monitorID {
+	monitorID[] {
 	/*! ---------------------------------------------------------------------------------------
 	Property: monitorID [get/set]
 	Get or Set the ID of monitor on which the window is on. Setting the property moves the window to the corresponding monitor, trying to place the window at the same (scaled) position
@@ -417,7 +417,7 @@ class WindowHandler {
 			return hwndPar
 		}
 	}
-	pos {
+	pos[] {
 	/*! ---------------------------------------------------------------------------------------
 	Property: pos [get/set]
 	Position of the window as [Point](point.html) object
@@ -438,7 +438,7 @@ class WindowHandler {
 			return pt
 		}
 	}
-	posSize {
+	posSize[] {
 	/*! ---------------------------------------------------------------------------------------
 	Property: posSize [get/set]
 	Get or Set the position and size of the window (To set the position use class [Rectangle](rectangle.html))	
@@ -460,7 +460,7 @@ class WindowHandler {
 			return newPos
 		}
 	}
-	processID {
+	processID[] {
 	/*! ---------------------------------------------------------------------------------------
 	Property: processID [get]
 	Get the ID of the process the window belongs to
@@ -479,7 +479,7 @@ class WindowHandler {
 			return ret
 		}
 	}
-	processname {
+	processname[] {
 	/*! ---------------------------------------------------------------------------------------
 	Property: processname [get]
 	Get the Name of the process the window belongs to
@@ -498,7 +498,7 @@ class WindowHandler {
 			return ret
 		}
 	}
-	resizeable {
+	resizeable[] {
 	/*! ---------------------------------------------------------------------------------------
 	Property: resizeable [get]
 	Checks whether window is resizeable
@@ -516,7 +516,7 @@ class WindowHandler {
 			return ret
 		}
 	}
-	rolledUp {
+	rolledUp[] {
 	/*! ---------------------------------------------------------------------------------------
 	Property: rolledUp [get/set]
 	Get or Set the *RolledUp*-Property (window is rolled up to its title bar).  Rolls/De-Rolls the current window or get the current state of RollUp
@@ -581,7 +581,7 @@ class WindowHandler {
 			return isRolled
 		}
 	}
-	rolledUpHeight {
+	rolledUpHeight[] {
 	/*! ---------------------------------------------------------------------------------------
 	Property:rolledUpHeight [get]
 		Returns the height of the caption bar of windows
@@ -595,7 +595,7 @@ class WindowHandler {
 		}
 
 	}
-	size {
+	size[] {
 	/*! ---------------------------------------------------------------------------------------
 	Property: size [get/set]
 	Dimensions (Width/Height) of the window as [Point](point.html) object
@@ -616,7 +616,7 @@ class WindowHandler {
 			return pt
 		}
 	}
-	style {
+	style[] {
 	/*! ---------------------------------------------------------------------------------------
 	Property: style [get]
 	Returns current window style
@@ -638,7 +638,7 @@ class WindowHandler {
 			return value
 		}
 	}
-	styleEx {
+	styleEx[] {
 	/*! ---------------------------------------------------------------------------------------
 	Property: styleEx [get]
 	Returns current window extended style
@@ -660,7 +660,7 @@ class WindowHandler {
 			return value
 		}
 	}
-	title {
+	title[] {
 	/*! ---------------------------------------------------------------------------------------
 	Property: title [get/set]
 	Current window title. 
@@ -689,7 +689,7 @@ class WindowHandler {
 			return newTitle
 		}
 	}
-	transparency {
+	transparency[] {
 	/*! ---------------------------------------------------------------------------------------
 	Property: transparency [get/set]
 	Current window transparency. 
@@ -779,26 +779,28 @@ class WindowHandler {
 	movePercental(xFactor=0, yFactor=0, wFactor=100, hFactor=100) {
 /*! ===============================================================================
 	Method: movePercental(xFactor=0, yFactor=0, wFactor=100, hFactor=100)
-		move and resize window relative to the size of the current screen.
+	move and resize window relative to the size of the current screen.
 			
-		For example: 
-		 * `obj.movePercental(0,0,100,100)` creates a window with origin 0,0 and a *width=100% of screen width* and *height=100% of screen height*
-		 * `obj.movePercental(25,25,50,50)` creates a window at *x=25% of screen width*, *y =25% of screen height*, and with *width=50% of screen width*, *height=50% of screen height*. The resulting window is a screen centered window with the described width and height
+	For example: 
+	 * `obj.movePercental(0,0,100,100)` creates a window with origin 0,0 and a *width=100% of screen width* and *height=100% of screen height*
+	 * `obj.movePercental(25,25,50,50)` creates a window at *x=25% of screen width*, *y =25% of screen height*, and with *width=50% of screen width*, *height=50% of screen height*. The resulting window is a screen centered window with the described width and height
+	 
 	Parameters:
-		xFactor - x-position factor (percents of current screen width) the window has to be moved to (Range: 0.0 to 100.0)
-		yFactor - y-position factor (percents of current screen height) the window has to be moved to (Range: 0.0 to 100.0)
-		wFactor - *(Optional)* width-size factor (percents of current screen width) the window has to be resized to (Range: 0.0 to 100.0)
-		hFactor - *(Optional)* height-size factor (percents of current screen height) the window has to be resized to (Range: 0.0 to 100.0)
+	xFactor - x-position factor (percents of current screen width) the window has to be moved to (Range: 0.0 to 100.0)
+	yFactor - y-position factor (percents of current screen height) the window has to be moved to (Range: 0.0 to 100.0)
+	wFactor - *(Optional)* width-size factor (percents of current screen width) the window has to be resized to (Range: 0.0 to 100.0)
+	hFactor - *(Optional)* height-size factor (percents of current screen height) the window has to be resized to (Range: 0.0 to 100.0)
+	
 	Remarks:
-		### See also: 
-			[move()](move)
+	### See also: 
+		[move()](move)
+		
+	### Author(s)
+	    * xxxxxxxx - Lexikos - [Original on AHK-Forum](http://www.autohotkey.com/forum/topic21703.html)
+		* 20130402 - [hoppfrosch](hoppfrosch@gmx.de) - Rewritten
 			
-		### Author(s)
-		    * xxxxxxxx - Lexikos - [Original on AHK-Forum](http://www.autohotkey.com/forum/topic21703.html)
-			* 20130402 - [hoppfrosch](hoppfrosch@gmx.de) - Rewritten
-			
-		### Caveats / Known issues
-		    * The range of the method parameters is **NOT** checked - so be carefull using any values <0 or >100
+	### Caveats / Known issues
+	    * The range of the method parameters is **NOT** checked - so be carefull using any values <0 or >100
 */	
 		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "([" this.hwnd "], xFactor=" xFactor ", yFactor=" yFactor ", wFactor=" wFactor ", hFactor=" hFactor ")]" ; _DBG_
