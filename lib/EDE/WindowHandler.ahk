@@ -5,9 +5,8 @@
 #include <EDE\Rectangle>
 #include <EDE\Point>
 #include <EDE\MultiMonitorEnv>
-#include <EDE\Const_Windows>
+#include <EDE\Const_WinUser>
 #include <EDE\_WindowHandlerEvent>
-
 
 class WindowHandler {
 ; ******************************************************************************************************************************************
@@ -23,7 +22,6 @@ class WindowHandler {
 		### Author
 			[hoppfrosch](hoppfrosch@gmx.de)
 */
-	
 	_version := "0.6.9"
 	_debug := 0
 	_hWnd := 0
@@ -50,7 +48,7 @@ class WindowHandler {
 	* To toogle current *alwaysontop*-Property, simply use `obj.alwaysontop := !obj.alwaysontop`
 	*/
 		get {
-			ret := (this.styleEx & 0x08) ; WS_EX_TOPMOST
+			ret := (this.styleEx & WS.EX.TOPMOST)
 			ret := ret>0?1:0
 		
 			if (this._debug) ; _DBG_
@@ -401,17 +399,18 @@ class WindowHandler {
 		; Idea taken from majkinetors Forms Framework (https://github.com/maul-esel/FormsFramework), win.ahk
 			hwndPar := value
 			hwnd := this.hwnd
-			static WS_POPUP=0x80000000, WS_CHILD=0x40000000, WM_CHANGEUISTATE=0x127, UIS_INITIALIZE=3
 			if (bFixStyle) {
 				s1 := hwndPar ? "+" : "-", s2 := hwndPar ? "-" : "+"
-				WinSet, Style, %s1%%WS_CHILD%, ahk_id %hwnd%
-				WinSet, Style, %s2%%WS_POPUP%, ahk_id %hwnd%
+				ws_child := WS.CHILD
+				ws_popup := WS.POPUP
+				WinSet, Style, %s1%%ws_child%, ahk_id %hwnd%
+				WinSet, Style, %s2%%ws_popup%, ahk_id %hwnd%
 			}
 			ret := DllCall("SetParent", "uint", Hwnd, "uint", hwndPar, "Uint")
 			if  ret == 0				
 				hwndPar := 0
 			else
-				SendMessage, WM_CHANGEUISTATE, UIS_INITIALIZE,,,ahk_id %hwndPar%	
+				SendMessage, WM.CHANGEUISTATE, UIS.NITIALIZE,,,ahk_id %hwndPar%	
 			
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], hwndPar= " hwndPar ", bfixStyle=" bFixStyle ")] -> hwnd:" hwndPar ")" ; _DBG_
@@ -511,7 +510,7 @@ class WindowHandler {
 			if this.__classname in Chrome_XPFrame,MozillaUIWindowClass
 				ret := true
 			else 
-		    	ret := (this.style & WS_SIZEBOX) ; 	
+		    	ret := (this.style & WS.SIZEBOX) ; 	
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_				
 			return ret
@@ -835,7 +834,7 @@ Author(s):
 	20080121 - ManaUser - Original (http://www.autohotkey.com/board/topic/25393-appskeys-a-suite-of-simple-utility-hotkeys/)
 */
 		WinGet, s, Style, ahk_id %hWnd% 
-		ret := s & 0xC00000 ? (s & 0x80000000 ? 0 : 1) : 0  ;WS_CAPTION AND !WS_POPUP(for tooltips etc) 
+		ret := s & WS.CAPTION ? (s & WS.POPUP ? 0 : 1) : 0  ;WS_CAPTION AND !WS_POPUP(for tooltips etc) 
 			
 		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "([" hWnd "])] -> " ret ; _DBG_		
