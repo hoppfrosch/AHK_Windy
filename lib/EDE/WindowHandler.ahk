@@ -22,7 +22,7 @@ class WindowHandler {
 		### Author
 			[hoppfrosch](hoppfrosch@gmx.de)
 */
-	_version := "0.6.10"
+	_version := "0.6.11"
 	_debug := 0
 	_hWnd := 0
 
@@ -632,7 +632,7 @@ class WindowHandler {
 		set {
 			hwnd := this.hwnd
 			WinSet, Style, value, ahk_id %hwnd%
-			WinSet, Redraw,, ahk_id %hwnd%
+			this.redraw()
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], style=" value ")] -> (" value ")" ; _DBG_		
 			return value
@@ -654,7 +654,7 @@ class WindowHandler {
 		set {
 			hwnd := this.hwnd
 			WinSet, ExStyle, value, ahk_id %hwnd%
-			WinSet, Redraw,, ahk_id %hwnd%
+			this.redraw()
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], style=" value ")] -> (" value ")" ; _DBG_		
 			return value
@@ -822,7 +822,37 @@ class WindowHandler {
 		if (this._debug) ; _DBG_
 			OutputDebug % "<[" A_ThisFunc "([" this.hwnd "], xFactor=" xFactor ", yFactor=" yFactor ", wFactor=" wFactor ", hFactor=" hFactor ")] -> padded to (" this.posSize.Dump() ") on Monitor (" monId ")" ; _DBG_
 	}
-	
+    redraw(Option="" ) {
+/*! ===============================================================================
+ 	Function:	Redraw
+ 	Redraws the window.
+
+ 	Parameters:
+	Option  - "-" to disable redrawing for the window. "+" to enable it and redraw it. By default empty.
+ 
+ 	Returns:
+	A nonzero value indicates success. Zero indicates failure.
+
+ 	Remarks:
+	This function will update the window for sure, unlike WinSet or InvalidateRect.
+ */
+		if (this._debug) ; _DBG_
+			OutputDebug % ">[" A_ThisFunc "([" this.hwnd "], Option=" Option ")]" ; _DBG_
+
+		hwnd := this.hwnd
+		if (Option != "") {
+			old := A_DetectHiddenWindows
+			DetectHiddenWindows, on
+			bEnable := Option="+"
+			SendMessage, WM.SETREDRAW, bEnable,,,ahk_id %hwnd%
+			DetectHiddenWindows, %old%
+			ifEqual, bEnable, 0, return		
+		}
+		ret := DllCall("RedrawWindow", "uint", hwnd, "uint", 0, "uint", 0, "uint" ,RDW.INVALIDATE | RDW.ERASE | RDW.FRAME | RDW.ERASENOW | RDW.UPDATENOW | RDW.ALLCHILDREN)
+		if (this._debug) ; _DBG_
+			OutputDebug % ">[" A_ThisFunc "([" this.hwnd "], Option=" Option ")] -> ret=" ret ; _DBG_
+		return ret
+	}
 	; ######################## Internal Methods - not to be called directly ############################################
 	__isWindow(hWnd) {
 /* ===============================================================================
