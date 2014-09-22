@@ -23,9 +23,13 @@ The idea is based on [WindowPad](http://http://www.autohotkey.com/board/topic/19
 - [HotKeyIt](http://www.autohotkey.com/board/user/6031-hotkeyit/)
  - [TT](http://www.autohotkey.com/board/topic/60605-ahl-lv2-tt-full-blown-tooltip-library/)-Library 
 - [just me](https://github.com/AHK-just-me)
- - [GUI Constants](https://github.com/AHK-just-me/AHK_Gui_Constants) 
+ - [GUI Constants](https://github.com/AHK-just-me/AHK_Gui_Constants)
+- [majkinetor](http://www.autohotkey.com/board/user/1763-majkinetor/)
+ - [Forms-Framework](https://github.com/maul-esel/FormsFramework)
 - [ManaUser](http://www.autohotkey.com/board/user/3558-manauser/)
  - Function `__isWindow(`) - taken from [AppsKeys](http://www.autohotkey.com/board/topic/25393-appskeys-a-suite-of-simple-utility-hotkeys/)
+- [maul-esel](https://github.com/maul-esel)
+ - porting [Forms Framework](https://github.com/maul-esel/FormsFramework) to AHK_L
 - [Uberi](http://www.autohotkey.com/board/user/12435-uberi/) 
  - for giving [insights in EventHooks and pointing out errors](https://github.com/Uberi/Yunit/issues/5)
  - [Yunit-Framework](https://github.com/Uberi/Yunit)
@@ -33,6 +37,7 @@ The idea is based on [WindowPad](http://http://www.autohotkey.com/board/topic/19
  - [TaskDialog](http://www.autohotkey.com/board/topic/54555-taskdialog-stdlib-compatible/)-Library
 - [Yusuke Kamiyamane](http://p.yusukekamiyamane.com/)
  - All icons used within EDE originate from his fantastic [Fugue-Iconset](http://p.yusukekamiyamane.com/)
+- **and to everyone I might have forgotten** 
 
 ### Competitors / Inspiration taken from ###
 
