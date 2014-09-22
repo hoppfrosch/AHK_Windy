@@ -12,7 +12,7 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.6.8"
+ReferenceVersion := "0.6.9"
 debug := 1
 
 
@@ -28,9 +28,8 @@ class TempTestSuite {
 		this.obj := new WindowHandler(0, debug)
 	}
 
-
 	ResizeViaSizeProperty() {
-		OutputDebug % "<<<<[" A_ThisFunc "]<<<<"
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		oldSize:= this.obj.size
 		OutputDebug % "Initial Size: " oldSize.Dump()
         
@@ -70,7 +69,7 @@ class TileTestSuite {
 	movePercental() {
 		Global debug
 
-		OutputDebug % "<<<<[" A_ThisFunc "]<<<<"
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		this.obj.movePercental(25, 25, 50, 50)
 		MsgBox % A_ThisFunc " - To be done ..."
 		OutputDebug % ">>>>[" A_ThisFunc "]>>>>"
@@ -93,7 +92,7 @@ class TransparencyTestSuite {
 	Transparency() {
 		Global debug
 
-		OutputDebug % "<<<<[" A_ThisFunc "]<<<<"
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		OutputDebug % "**** " A_ThisFunc " 1 ****"
 		t := this.obj.transparency
 		Yunit.assert(t == 255)
@@ -125,7 +124,7 @@ class RollupTestSuite {
 	RollupToggle() {
 		Global debug
 
-		OutputDebug % "<<<<[" A_ThisFunc "]<<<<"
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		OutputDebug % "**** " A_ThisFunc " 1 ****"
 		val := this.obj.rolledUp
 		Yunit.assert(val == false)
@@ -177,7 +176,7 @@ class MoveResizeTestSuite {
 	}
  
 	Maximize() {
-		OutputDebug % "<<<<[" A_ThisFunc "]<<<<"
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		Yunit.assert(this.obj.maximized == false)
 		Yunit.assert(this.obj.minimized == false)
 		this.obj.maximized := true
@@ -197,7 +196,7 @@ class MoveResizeTestSuite {
 	}
 	
 	Minimize() {
-		OutputDebug % "<<<<[" A_ThisFunc "]<<<<"
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		Yunit.assert(this.obj.maximized == false)
 		Yunit.assert(this.obj.minimized == false)
 		this.obj.minimized := true
@@ -217,7 +216,7 @@ class MoveResizeTestSuite {
 	}
 	
 	MoveViaWinMove()  {
-		OutputDebug % "<<<<[" A_ThisFunc "]<<<<"
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		oldPos := this.obj.posSize
 		OutputDebug % "Initial Position: " oldPos.Dump()
 		
@@ -236,7 +235,7 @@ class MoveResizeTestSuite {
 	}
 	
 	MoveViaMoveMethod() {
-		OutputDebug % "<<<<[" A_ThisFunc "]<<<<"
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		oldPos := this.obj.posSize
 		OutputDebug % "Initial Position: " oldPos.Dump()
 		
@@ -255,7 +254,7 @@ class MoveResizeTestSuite {
 	}
 	
 	MoveViaPosSizeProperty() {
-		OutputDebug % "<<<<[" A_ThisFunc "]<<<<"
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		oldPos := this.obj.posSize
 		OutputDebug % "Initial Position: " oldPos.Dump()
 		
@@ -274,7 +273,7 @@ class MoveResizeTestSuite {
 	}
 
 	MoveViaPosProperty() {
-		OutputDebug % "<<<<[" A_ThisFunc "]<<<<"
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		oldPos := this.obj.pos
 		OutputDebug % "Initial Position: " oldPos.Dump()
 		
@@ -291,7 +290,7 @@ class MoveResizeTestSuite {
 	}
 	
 	MoveResizeViaWinMove() {
-		OutputDebug % "<<<<[" A_ThisFunc "]<<<<"
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		oldPos := this.obj.posSize
 		OutputDebug % "Initial Position: " oldPos.Dump()
         
@@ -312,7 +311,7 @@ class MoveResizeTestSuite {
 	}
 
 	MoveResizeViaMoveMehod() {
-		OutputDebug % "<<<<[" A_ThisFunc "]<<<<"
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		oldPos := this.obj.posSize
 		OutputDebug % "Initial Position: " oldPos.Dump()
         
@@ -333,7 +332,7 @@ class MoveResizeTestSuite {
 	}
 	
 	MoveResizeViaPosSizeProperty() {
-		OutputDebug % "<<<<[" A_ThisFunc "]<<<<"
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		oldPos := this.obj.posSize
 		OutputDebug % "Initial Position: " oldPos.Dump()
         
@@ -354,7 +353,7 @@ class MoveResizeTestSuite {
 	}
 	
 	ResizeViaWinMove() {
-		OutputDebug % "<<<<[" A_ThisFunc "]<<<<"
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		oldPos := this.obj.posSize
 		OutputDebug % "Initial Position: " oldPos.Dump()
         
@@ -374,7 +373,7 @@ class MoveResizeTestSuite {
 	}
 	
 	ResizeViaMoveMethod() {
-		OutputDebug % "<<<<[" A_ThisFunc "]<<<<"
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		oldPos := this.obj.posSize
 		OutputDebug % "Initial Position: " oldPos.Dump()
         
@@ -394,7 +393,7 @@ class MoveResizeTestSuite {
 	}
 	
 	ResizeViaPosSizeProperty() {
-		OutputDebug % "<<<<[" A_ThisFunc "]<<<<"
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		oldPos := this.obj.posSize
 		OutputDebug % "Initial Position: " oldPos.Dump()
         
@@ -413,7 +412,7 @@ class MoveResizeTestSuite {
 	}
 
 	ResizeViaSizeProperty() {
-		OutputDebug % "<<<<[" A_ThisFunc "]<<<<"
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		oldSize:= this.obj.size
 		OutputDebug % "Initial Size: " oldSize.Dump()
         
@@ -430,7 +429,7 @@ class MoveResizeTestSuite {
 	}
 
 	NoMoveResizeViaWinMove() {
-		OutputDebug % "<<<<[" A_ThisFunc "]<<<<"
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
         oldPos := this.obj.posSize
 		OutputDebug % "Initial Position: " oldPos.Dump()
 		WinMove % "ahk_id" this.obj.hwnd, , oldPos.x, oldPos.y, oldPos.w, oldPos.h
@@ -443,7 +442,7 @@ class MoveResizeTestSuite {
 	}		
 	
 	NoMoveResizeViaMoveMehod() {
-		OutputDebug % "<<<<[" A_ThisFunc "]<<<<"
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		oldPos := this.obj.posSize
 		OutputDebug % "Initial Position: " oldPos.Dump()
 		this.obj.move(oldPos.x, oldPos.y, oldPos.w, oldPos.h)
@@ -456,7 +455,7 @@ class MoveResizeTestSuite {
 	}		
 
 	NoMoveResizeViaPosSizeProperty() {
-		OutputDebug % "<<<<[" A_ThisFunc "]<<<<"
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		oldPos := this.obj.posSize
 		OutputDebug % "Initial Position: " oldPos.Dump()
 		this.obj.posSize := new Rectangle(oldPos.x, oldPos.y, oldPos.w, oldPos.h)
@@ -469,7 +468,7 @@ class MoveResizeTestSuite {
 	}
 
 	NoMoveViaPosProperty() {
-		OutputDebug % "<<<<[" A_ThisFunc "]<<<<"
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		oldPos := this.obj.pos
 		OutputDebug % "Initial Position: " oldPos.Dump()
 		this.obj.pos := new Point(oldPos.x, oldPos.y)
@@ -480,7 +479,7 @@ class MoveResizeTestSuite {
 	}
 
 	NoResizeViaSizeProperty() {
-		OutputDebug % "<<<<[" A_ThisFunc "]<<<<"
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		oldSize := this.obj.size
 		OutputDebug % "Initial Size: " oldSize.Dump()
 		this.obj.size := new Point(oldSize.x, oldSize.y)
@@ -505,7 +504,7 @@ class HideShowTestSuite {
 	}
 
 	HideShowToggle() {
-		OutputDebug % "<<<<[" A_ThisFunc "]<<<<"
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		Yunit.assert(this.obj.hidden == false)
 		this.obj.hidden := false
 		Yunit.assert(this.obj.hidden == false)
@@ -523,20 +522,20 @@ class HideShowTestSuite {
 	}
         
 	HiddenFalse() {
-		OutputDebug % "<<<<[" A_ThisFunc "]<<<<"
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
         Yunit.assert(this.obj.hidden==false)
 		OutputDebug % ">>>>[" A_ThisFunc "]>>>>"
 	}
       
 	HiddenTrue() {
-		OutputDebug % "<<<<[" A_ThisFunc "]<<<<"
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
         this.obj.hidden := true
         Yunit.assert(this.obj.hidden == true)
 		OutputDebug % ">>>>[" A_ThisFunc "]>>>>"
 	}
 
 	HiddenDoesNotExist() {
-		OutputDebug % "<<<<[" A_ThisFunc "]<<<<"
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
         this.obj.kill()
         Yunit.assert(this.obj.hidden==-1)
 		OutputDebug % ">>>>[" A_ThisFunc "]>>>>"
@@ -572,7 +571,7 @@ class MiscTestSuite {
 	}
         
 	Version() {
-		OutputDebug % "<<<<[" A_ThisFunc "]<<<<"
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		Global ReferenceVersion
 		Yunit.assert(this.obj._version == ReferenceVersion)
 		OutputDebug % ">>>>[" A_ThisFunc "]>>>>"
@@ -581,7 +580,7 @@ class MiscTestSuite {
 	Center() {
 		Global debug
 		
-		OutputDebug % "<<<<[" A_ThisFunc "]<<<<"
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		hwnd := this.obj.hwnd
 		WinGetPos  x, y, w, h, ahk_id %hwnd%
 		centerx := round(x+(w)/2)
@@ -601,35 +600,42 @@ class MiscTestSuite {
 	}
 	
 	Classname() {
-		OutputDebug % "<<<<[" A_ThisFunc "]<<<<"
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
         Yunit.assert(this.obj.classname =="Notepad")
 		OutputDebug % ">>>>[" A_ThisFunc "]>>>>"
 	}
         
 	Title() {
-		OutputDebug % "<<<<[" A_ThisFunc "]<<<<"
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		Yunit.assert(this.obj.title =="Unbenannt - Editor")
 		this.obj.title := "Halllloo"
 		Yunit.assert(this.obj.title =="Halllloo")
 		OutputDebug % ">>>>[" A_ThisFunc "]>>>>"
 	}
 
+	Parent() {
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		parent := this.parent
+		Yunit.assert(parent == )	
+		OutputDebug % ">>>>[" A_ThisFunc "]>>>>"
+	}
+	
 	Processname() {
-		OutputDebug % "<<<<[" A_ThisFunc "]<<<<"
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		val := this.obj.processname
 		Yunit.assert( val == "notepad.exe")
 		OutputDebug % ">>>>[" A_ThisFunc "]>>>>"
 	}
 
 	ProcessID() {
-			OutputDebug % "<<<<[" A_ThisFunc "]<<<<"
+			OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		val := this.obj.processID
 		Yunit.assert( val > 0)
 		OutputDebug % ">>>>[" A_ThisFunc "]>>>>"
 	}
 	
 	AlwaysOnTop() {
-		OutputDebug % "<<<<[" A_ThisFunc "]<<<<"
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		Yunit.assert(this.obj.alwaysontop == false)
 		this.obj.alwaysOnTop := true
 		Yunit.assert(this.obj.alwaysontop == true)
@@ -646,7 +652,7 @@ class MiscTestSuite {
 	
 	MonitorID() {
 		Global debug
-		OutputDebug % "<<<<[" A_ThisFunc "]<<<<"
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		OutputDebug % "**** " A_ThisFunc " 1 ****"
 		this.obj.Move(2,2,300,300)
 		monID := this.obj.monitorID
@@ -665,7 +671,7 @@ class MiscTestSuite {
 	}
 	
 	Hangs() {
-		OutputDebug % "<<<<[" A_ThisFunc "]<<<<"
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		val := this.obj.hangs
 		Yunit.assert(val == false)
 		OutputDebug % ">>>>[" A_ThisFunc "]>>>>"
@@ -673,7 +679,7 @@ class MiscTestSuite {
 	}
     
 	Getter() {
-		OutputDebug % "<<<<[" A_ThisFunc "]<<<<"
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		hwnd := this.obj.hwnd
 		WinGetPos  x, y, w, h, ahk_id %hwnd%
 		Yunit.assert(1 == ((this.obj.posSize.x == x) && (this.obj.posSize.y == y) && (this.obj.posSize.w == w) && (this.obj.posSize.h == h)))
@@ -701,7 +707,7 @@ class ExistTestSuite {
 	}
         
 	ExistExistingWindow() {
-        OutputDebug % "<<<<[" A_ThisFunc "]<<<<"
+        OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
         Yunit.assert(this.obj.exist ==true)
         OutputDebug % ">>>>[" A_ThisFunc "]>>>>"
 	}
@@ -727,7 +733,7 @@ class MoveResizeTestSuite
     
     MoveViaWinMove()
     {
-		OutputDebug % "<<<<[" A_ThisFunc "]<<<<"
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		OutputDebug % "Initial Position: " this.obj._lastPos.Dump() " - Restore: " this.obj._restorePos.Dump()
 		hwnd := this.obj.hwnd
         xold := this.obj._lastPos.x
@@ -745,7 +751,7 @@ class MoveResizeTestSuite
         
     MoveResizeViaWinMove()
     {
-        OutputDebug % "<<<<[" A_ThisFunc "]<<<<"
+        OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
         OutputDebug % "Initial Position: " this.obj._lastPos.Dump() " - Restore: " this.obj._restorePos.Dump()
         hwnd := this.obj.hwnd
         xold := this.obj._lastPos.x
@@ -766,7 +772,7 @@ class MoveResizeTestSuite
         
     ResizeViaWinMove()
     {
-        OutputDebug % "<<<<[" A_ThisFunc "]<<<<"
+        OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
         OutputDebug % "Initial Position: " this.obj._lastPos.Dump() " - Restore: " this.obj._restorePos.Dump()
         hwnd := this.obj.hwnd
         hwnd := this.obj.hwnd

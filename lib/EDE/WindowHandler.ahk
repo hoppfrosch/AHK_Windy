@@ -24,7 +24,7 @@ class WindowHandler {
 			[hoppfrosch](hoppfrosch@gmx.de)
 */
 	
-	_version := "0.6.8"
+	_version := "0.6.9"
 	_debug := 0
 	_hWnd := 0
 
@@ -365,9 +365,57 @@ class WindowHandler {
 			this.Move(xnew,ynew)
 			monID := this.monitorID
 			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "([" this.hwnd "], ID=" value ")] -> New Value:" monID " (from: " oldID ")" ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], ID=" value ")] -> New Value:" monID " (from: " oldID ")" ; _DBG_
 	
 			return monID
+		}
+	}
+	parent[bFixStyle=false]{
+	/*! ---------------------------------------------------------------------------------------
+	Property: parent [get/set]
+	Get or Set the parent of the window.
+	
+	Value:
+	hwndPar	- Handle to the parent window. If this parameter is 0, the desktop window becomes the new parent window.
+	bFixStyle - Set to TRUE to fix WS_CHILD & WS_POPUP styles. SetParent does not modify the WS_CHILD or WS_POPUP window styles of the window whose parent is being changed.
+
+	If hwndPar is 0, you should also clear the WS_CHILD bit and set the WS_POPUP style after calling SetParent (and vice-versa).	
+
+	Returns:
+	If the function succeeds, the return value is a handle to the previous parent window. Otherwise, its 0.
+
+ 	Remarks:
+	If the current window identified by the hwnd parameter is visible, the system performs the appropriate redrawing and repainting.
+	The function sends WM_CHANGEUISTATE to the parent after succesifull operation uncoditionally.
+	See <http://msdn.microsoft.com/en-us/library/ms633541(VS.85).aspx> for more information.
+	*/
+		get {
+			hwndPar := DllCall("GetParent", "uint", hwndPar, "UInt")
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " hwndPar ; _DBG_		
+			return hwndPar
+		}
+
+
+		set {
+		; Idea taken from majkinetors Forms Framework (https://github.com/maul-esel/FormsFramework), win.ahk
+			hwndPar := value
+			hwnd := this.hwnd
+			static WS_POPUP=0x80000000, WS_CHILD=0x40000000, WM_CHANGEUISTATE=0x127, UIS_INITIALIZE=3
+			if (bFixStyle) {
+				s1 := hwndPar ? "+" : "-", s2 := hwndPar ? "-" : "+"
+				WinSet, Style, %s1%%WS_CHILD%, ahk_id %hwnd%
+				WinSet, Style, %s2%%WS_POPUP%, ahk_id %hwnd%
+			}
+			ret := DllCall("SetParent", "uint", Hwnd, "uint", hwndPar, "Uint")
+			if  ret == 0				
+				hwndPar := 0
+			else
+				SendMessage, WM_CHANGEUISTATE, UIS_INITIALIZE,,,ahk_id %hwndPar%	
+			
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], hwndPar= " hwndPar ", bfixStyle=" bFixStyle ")] -> hwnd:" hwndPar ")" ; _DBG_
+			return hwndPar
 		}
 	}
 	pos {
