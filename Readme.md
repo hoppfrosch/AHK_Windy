@@ -20,12 +20,14 @@ The idea is based on [WindowPad](http://http://www.autohotkey.com/board/topic/19
 ### Ideas and libraries
 - [Coco](https://gist.github.com/cocobelgica)
  - [XML](https://gist.github.com/cocobelgica/4576128)-Library 
+ - [SerDes](https://github.com/cocobelgica/AutoHotkey-SerDes)-Function (Serialize / de-serialize an AutoHotkey object structure)
 - [HotKeyIt](http://www.autohotkey.com/board/user/6031-hotkeyit/)
  - [TT](http://www.autohotkey.com/board/topic/60605-ahl-lv2-tt-full-blown-tooltip-library/)-Library 
 - [joedf](http://ahkscript.org/boards/memberlist.php?mode=viewprofile&u=55)
  - [Smart WinFade](http://ahkscript.org/boards/viewtopic.php?f=6&t=512)
 - [just me](https://github.com/AHK-just-me)
  - [GUI Constants](https://github.com/AHK-just-me/AHK_Gui_Constants)
+ - Function [API_GetWindowInfo()](http://www.autohotkey.com/board/topic/69254-func-api-getwindowinfo-ahk-l/)
 - [majkinetor](http://www.autohotkey.com/board/user/1763-majkinetor/)
  - [Forms-Framework](https://github.com/maul-esel/FormsFramework)
 - [ManaUser](http://www.autohotkey.com/board/user/3558-manauser/)

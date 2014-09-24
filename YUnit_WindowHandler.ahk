@@ -12,7 +12,7 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.6.12"
+ReferenceVersion := "0.6.13"
 debug := 1
 
 
@@ -26,6 +26,13 @@ class TempTestSuite {
     Begin() {
 		Global debug
 		this.obj := new WindowHandler(0, debug)
+	}
+
+
+	AAA() {
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		x := this.obj.windowinfo
+		OutputDebug % ">>>>[" A_ThisFunc "]>>>>"
 	}
 
 	ResizeViaSizeProperty() {

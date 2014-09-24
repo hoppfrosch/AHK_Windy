@@ -623,11 +623,11 @@ class WindowHandler {
 	Returns current window style
 	*/
 		get {
-			hwnd := this.hwnd
-			WinGet, currStyle, Style, ahk_id %hwnd%
+			info := this.windowinfo
+			currStyle := info.Styles
 			; currStyle := DllCall(A_PtrSize = 4 ? "user32.dll\GetWindowLong" : "user32.dll\GetWindowLong","UInt",hWnd,"UInt",CONST_GWL.STYLE)
 			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> (" currStyle ")" ; _DBG_		
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> (" this.__hexStr(currStyle) ")" ; _DBG_		
 			return currStyle
 		}
 		set {
@@ -646,10 +646,10 @@ class WindowHandler {
 	*/
 
 		get {
-			val := this.hwnd
-			WinGet, currExStyle, ExStyle, ahk_id %val%
+			info := this.windowinfo
+			currExStyle := info.ExStyles
 			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> (" currExStyle ")" ; _DBG_		
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> (" this.__hexStr(currExStyle) ")" ; _DBG_		
 			return currExStyle
 		}
 		set {
@@ -761,7 +761,7 @@ class WindowHandler {
      * On failure  - False, ErrorLevel = 1 -> Invalid HWN, ErrorLevel = 2 -> DllCall("GetWindowInfo") caused an error
 
     Remarks:          
-    * The returned object contains all keys defined in WINDOWINFO exept "Size".
+    * The returned object contains all keys defined in WINDOWINFO except "Size".
     * The keys "Window" and "Client" contain objects with keynames defined in [5]
     * For more details see http://msdn.microsoft.com/en-us/library/ms633516%28VS.85%29.aspx and http://msdn.microsoft.com/en-us/library/ms632610%28VS.85%29.aspx 
 
@@ -823,7 +823,7 @@ class WindowHandler {
 	      		}
    			}
 
-   			OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] => (" SerDes(Obj_WI) ")" ; _DBG_
+   			;OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] => (" SerDes(Obj_WI) ")" ; _DBG_
    			Return obj_WI
 		}	
 	}
