@@ -7,6 +7,7 @@
 #include <EDE\MultiMonitorEnv>
 #include <EDE\Const_WinUser>
 #include <EDE\_WindowHandlerEvent>
+#include <SerDes>
 
 class WindowHandler {
 ; ******************************************************************************************************************************************
@@ -22,7 +23,7 @@ class WindowHandler {
 		### Author
 			[hoppfrosch](hoppfrosch@gmx.de)
 */
-	_version := "0.6.12"
+	_version := "0.6.13"
 	_debug := 0
 	_hWnd := 0
 
@@ -39,7 +40,7 @@ class WindowHandler {
 	alwaysOnTop[] {
 	/*! ---------------------------------------------------------------------------------------
 	Property: alwaysOnTop [get/set]
-	Get or Set the *alwaysontop*-Property.  Set/Unset alwaysontop flag of the current window or get the current state
+	Set/Unset alwaysontop flag of the current window or get the current state
 			
 	Value:
 	flag - `true` or `false` (activates/deactivates *alwaysontop*-Property)
@@ -444,8 +445,8 @@ class WindowHandler {
 	Get or Set the position and size of the window (To set the position use class [Rectangle](rectangle.html))	
 	*/
 		get {
-			currPos := new Rectangle(0,0,0,0,this._debug)
-			currPos.fromHWnd(this.hwnd)
+			info := this.windowinfo
+			currPos := new Rectangle(info.window.xul,info.window.yul,info.window.xlr-info.window.xul,info.window.ylr-info.window.yul,this._debug)
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> (" currPos.dump() ")" ; _DBG_
 			return currPos
@@ -750,6 +751,82 @@ class WindowHandler {
 			return transEnd
 		}
 	}
+	windowinfo {
+	/*! ---------------------------------------------------------------------------------------
+	Property: windowinfo [get]
+	Current window info. 
+
+	 Return values:    
+	 * On success  - Object containing structure's values (see Remarks)
+     * On failure  - False, ErrorLevel = 1 -> Invalid HWN, ErrorLevel = 2 -> DllCall("GetWindowInfo") caused an error
+
+    Remarks:          
+    * The returned object contains all keys defined in WINDOWINFO exept "Size".
+    * The keys "Window" and "Client" contain objects with keynames defined in [5]
+    * For more details see http://msdn.microsoft.com/en-us/library/ms633516%28VS.85%29.aspx and http://msdn.microsoft.com/en-us/library/ms632610%28VS.85%29.aspx 
+
+    ### Author(s)
+     	* just me (http://www.autohotkey.com/board/topic/69254-func-api-getwindowinfo-ahk-l/)
+	*/
+		get {
+		   ; [1] = Offset, [2] = Length, [3] = Occurrences, [4] = Type, [5] = Key array
+   			Static WINDOWINFO := { Size: [0, 4, 1, "UInt", ""]
+			                        , Window: [4, 4, 4, "Int", ["xul", "yul", "xlr", "ylr"]]
+			                        , Client: [20, 4, 4, "Int", ["xul", "yul", "xlr", "ylr"]]
+			                        , Styles: [36, 4, 1, "UInt", ""]
+			                        , ExStyles: [40, 4, 1, "UInt", ""]
+			                        , Status: [44, 4, 1, "UInt", ""]
+			                        , XBorders: [48, 4, 1, "UInt", ""]
+			                        , YBorders: [52, 4, 1, "UInt", ""]
+			                        , Type: [56, 2, 1, "UShort", ""]
+			                        , Version: [58, 2, 1, "UShort", ""] }
+   			Static WI_Size := 0
+   			If (WI_Size = 0) {
+      			For Key, Value In WINDOWINFO
+         			WI_Size += (Value[2] * Value[3])
+   			}
+   			If !DllCall("User32.dll\IsWindow", "Ptr", this.hwnd) {
+      			ErrorLevel := 1
+      			OutputDebug % "|[" A_ThisFunc "([" this.hwnd "]) => false]" ; _DBG_
+      			Return False
+   			}
+   			struct_WI := ""
+   			NumPut(VarSetCapacity(struct_WI, WI_Size, 0), struct_WI, 0, "UInt")
+   			If !(DllCall("User32.dll\GetWindowInfo", "Ptr", this.hwnd, "Ptr", &struct_WI)) {
+   		   		ErrorLevel := 2
+   		   		OutputDebug % "|[" A_ThisFunc "([" this.hwnd "]) => false]" ; _DBG_
+      			Return False
+   			}
+   			obj_WI := {}
+   			For Key, Value In WINDOWINFO {
+	      		If (Key = "Size")
+	         		Continue
+			    Offset := Value[1]
+	      		If (Value[3] > 1) { ; more than one occurrence
+	         		If IsObject(Value[5]) { ; use keys defined in Value[5] to store the values in
+	            		obj_ := {}
+	            		Loop, % Value[3] {
+	               			obj_.Insert(Value[5][A_Index], NumGet(struct_WI, Offset, Value[4]))
+	               			Offset += Value[2]
+	            		}
+	            		obj_WI[Key] := obj_
+	         		} Else { ; use simple array to store the values in
+	            		arr_ := []
+	            		Loop, % Value[3] {
+	               			arr_[A_Index] := NumGet(struct_WI, Offset, Value[4])
+	               			Offset += Value[2]
+	            		}
+	            		obj_WI[Key] := arr_
+	         		}		
+	      		} Else { ; just one item
+	         		obj_WI[Key] := NumGet(struct_WI, Offset, Value[4])
+	      		}
+   			}
+
+   			OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] => (" SerDes(Obj_WI) ")" ; _DBG_
+   			Return obj_WI
+		}	
+	}
 	; ##################### End of Properties (AHK >1.1.16.x) ##############################################################
 	
 	; ######################## Methods to be called directly ########################################################### 
@@ -873,8 +950,6 @@ class WindowHandler {
 		* xxxxxxxx - majkinetor
 		* 20140922 - [hoppfrosch](hoppfrosch@gmx.de) - Rewritten
  */
-		if (this._debug) ; _DBG_
-			OutputDebug % ">[" A_ThisFunc "([" this.hwnd "], Option=" Option ")]" ; _DBG_
 
 		hwnd := this.hwnd
 		if (Option != "") {
@@ -887,7 +962,7 @@ class WindowHandler {
 		}
 		ret := DllCall("RedrawWindow", "uint", hwnd, "uint", 0, "uint", 0, "uint" ,RDW.INVALIDATE | RDW.ERASE | RDW.FRAME | RDW.ERASENOW | RDW.UPDATENOW | RDW.ALLCHILDREN)
 		if (this._debug) ; _DBG_
-			OutputDebug % ">[" A_ThisFunc "([" this.hwnd "], Option=" Option ")] -> ret=" ret ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], Option=" Option ")] -> ret=" ret ; _DBG_
 		return ret
 	}
 	; ######################## Internal Methods - not to be called directly ############################################
@@ -1175,7 +1250,7 @@ ClassWindowHandler_EventHook(hWinEventHook, Event, hWnd, idObject, idChild, dwEv
 	self := Object(A_EventInfo)
 
 	if (Object(A_EventInfo)._debug) ; _DBG_
-		OutputDebug % ">[" A_ThisFunc "([" Object(A_EventInfo)._hWnd "])(hWinEventHook=" hWinEventHook ", Event=" Event2Str(Event) ", hWnd=" hWnd ", idObject=" idObject ", idChild=" idChild ", dwEventThread=" dwEventThread ", dwmsEventTime=" dwmsEventTime ") -> A_EventInfo: " A_EventInfo ; _DBG_
+		OutputDebug % "|[" A_ThisFunc "([" Object(A_EventInfo)._hWnd "])(hWinEventHook=" hWinEventHook ", Event=" Event2Str(Event) ", hWnd=" hWnd ", idObject=" idObject ", idChild=" idChild ", dwEventThread=" dwEventThread ", dwmsEventTime=" dwmsEventTime ") -> A_EventInfo: " A_EventInfo ; _DBG_
 	
 	; ########## START: Handling window movement ##################################################
 	; We want to detect when the window movement has finished finally, as onLocationChanged() has only to be called at the END of the movement
