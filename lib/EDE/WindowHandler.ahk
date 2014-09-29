@@ -550,13 +550,13 @@ class WindowHandler {
 			roll := 1
 			if (mode == 1) 		
 				roll := 1
-			else if (mode == 0) 
-				if (this.rolledUp == true)
+			else if (mode = 0) 
+				if (this.rolledUp = true)
 					roll := 0 ; Only rolled window can be unrolled
 				else
 					roll := -1 ; As window is not rolled up, you cannot unroll it as requested ....
 			else {
-				if (this.rolledUp == true)
+				if (this.rolledUp = true)
 					roll := 0
 				else
 					roll := 1
@@ -568,7 +568,7 @@ class WindowHandler {
 			hwnd := this.hwnd
 			currPos := this.posSize
 		
-			if (roll == 1) { ; Roll
+			if (roll = 1) { ; Roll
 	            this.move(currPos.x, currPos.y, currPos.w, MinWinHeight)
 			}
 			else if (roll = 0) { ; Unroll
@@ -787,16 +787,16 @@ class WindowHandler {
    			}
    			If !DllCall("User32.dll\IsWindow", "Ptr", this.hwnd) {
       			ErrorLevel := 1
-      			OutputDebug % "|[" A_ThisFunc "([" this.hwnd "]) => false]" ; _DBG_
+      			OutputDebug % "|[" A_ThisFunc "([" this.hwnd "]) -> false (is not a window)]" ; _DBG_
       			Return False
    			}
    			struct_WI := ""
    			NumPut(VarSetCapacity(struct_WI, WI_Size, 0), struct_WI, 0, "UInt")
    			If !(DllCall("User32.dll\GetWindowInfo", "Ptr", this.hwnd, "Ptr", &struct_WI)) {
    		   		ErrorLevel := 2
-   		   		OutputDebug % "|[" A_ThisFunc "([" this.hwnd "]) => false]" ; _DBG_
-      			Return False
-   			}
+   		   		OutputDebug % "|[" A_ThisFunc "([" this.hwnd "]) -> false]" ; _DBG_
+      		 	Return False
+  			}
    			obj_WI := {}
    			For Key, Value In WINDOWINFO {
 	      		If (Key = "Size")
@@ -822,8 +822,8 @@ class WindowHandler {
 	         		obj_WI[Key] := NumGet(struct_WI, Offset, Value[4])
 	      		}
    			}
-
-   			;OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] => (" SerDes(Obj_WI) ")" ; _DBG_
+			if (this._debug) ; _DBG_
+   				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] => (" SerDes(Obj_WI) ")" ; _DBG_
    			Return obj_WI
 		}	
 	}
@@ -950,7 +950,7 @@ class WindowHandler {
 		* xxxxxxxx - majkinetor
 		* 20140922 - [hoppfrosch](hoppfrosch@gmx.de) - Rewritten
  */
-
+		return
 		hwnd := this.hwnd
 		if (Option != "") {
 			old := A_DetectHiddenWindows
@@ -1099,7 +1099,8 @@ Author(s):
 		
 		; current size/position is identical with previous Size/position
 		if (currPos.equal(lastPos)) {
-			OutputDebug % "<[" A_ThisFunc "([" this.hwnd "])] Position has NOT changed!" ; _DBG_
+			if (this._debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "([" this.hwnd "])] Position has NOT changed!" ; _DBG_
 			return
 		}
 		
