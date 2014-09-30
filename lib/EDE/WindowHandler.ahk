@@ -23,7 +23,7 @@ class WindowHandler {
 		### Author
 			[hoppfrosch](hoppfrosch@gmx.de)
 */
-	_version := "0.6.14"
+	_version := "0.6.15"
 	_debug := 0
 	_hWnd := 0
 
@@ -49,28 +49,20 @@ class WindowHandler {
 	* To toogle current *alwaysontop*-Property, simply use `obj.alwaysontop := !obj.alwaysontop`
 	*/
 		get {
-			ret := (this.styleEx & WS.EX.TOPMOST)
-			ret := ret>0?1:0
-		
+			ret := (this.styleEx & WS.EX.TOPMOST) > 0 ? 1 : 0
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_
 			return ret
 		}
-		
 		set {
-			if (this._debug) ; _DBG_
-				OutputDebug % ">[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> Current Value:" this.alwaysontop ; _DBG_
-		
 			hwnd := this.hwnd
 			if (value == true)
 				value := "on"
 			else if (value == false) 
 				value := "off"
-
 			WinSet, AlwaysOnTop, %value%,  ahk_id %hwnd%
-				
 			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> New Value:" this.alwaysontop ; _DBG_
+				OutputDebug % "[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> New Value:" this.alwaysontop ; _DBG_
 		
 			return this.alwaysOnTop
 		}
@@ -88,6 +80,7 @@ class WindowHandler {
 	*/
 		get {
 			ret := (this.style & WS.CAPTION) > 0 ? 1 : 0
+			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_
 			return ret
 		}
@@ -104,7 +97,7 @@ class WindowHandler {
 			this.redraw()
 			DetectHiddenWindows, %prevState%
 			if (this._debug) ; _DBG_
-					OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " value ; _DBG_
+					OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " this.caption ; _DBG_
 			return value
 		}
 	}
@@ -534,20 +527,35 @@ class WindowHandler {
 	}
 	resizeable[] {
 	/*! ---------------------------------------------------------------------------------------
-	Property: resizeable [get]
-	Checks whether window is resizeable
-	*/
+	Property: resizeable [get/set]
+	Get or Set the *resizeable*-Property (Is window resizing possible?)
 
-	; ToDo: Property resizeable - Implementation of Setter-functionality
+	Value:
+	flag - `true` or `false` (activates/deactivates *resizeable*-Property)
+
+	Remarks:		
+	* To toogle current *resizeable*-Property, simply use `obj.resizeable := !obj.resizeable`
+
+	*/
 		get {
-			ret := true
-			if this.__classname in Chrome_XPFrame,MozillaUIWindowClass
-				ret := true
-			else 
-		    	ret := (this.style & WS.SIZEBOX) ; 	
+			ret := this.__hexStr(this.style & WS.SIZEBOX) > 0 ? 1 : 0
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_				
 			return ret
+		}
+		set {
+			style := "-" this.__hexStr(WS.SIZEBOX)
+			if (value) {
+					style := "+" this.__hexStr(WS.SIZEBOX)
+			}
+		 	prevState := A_DetectHiddenWindows
+			DetectHiddenWindows, on
+			this.style := style
+			this.redraw()
+			DetectHiddenWindows, %prevState%
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " this.resizeable ; _DBG_				
+			return value
 		}
 	}
 	rolledUp[] {
@@ -559,7 +567,7 @@ class WindowHandler {
 	flag - `true` or `false` (activates/deactivates *rolledUp*-Property)
 
 	Remarks:		
-	* To toogle current *rolledUp*-Property, simply use `objrolledUp := !obj.rolledUp`
+	* To toogle current *rolledUp*-Property, simply use `obj.rolledUp := !obj.rolledUp`
 	*/
 		get {
 			ret := 0
