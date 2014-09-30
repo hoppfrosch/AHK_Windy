@@ -23,7 +23,7 @@ class WindowHandler {
 		### Author
 			[hoppfrosch](hoppfrosch@gmx.de)
 */
-	_version := "0.6.13"
+	_version := "0.6.14"
 	_debug := 0
 	_hWnd := 0
 
@@ -73,6 +73,39 @@ class WindowHandler {
 				OutputDebug % "<[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> New Value:" this.alwaysontop ; _DBG_
 		
 			return this.alwaysOnTop
+		}
+	}
+	caption[] {
+	/*! ---------------------------------------------------------------------------------------
+	Property: caption [get/set]
+	Set/Unset visibility of the window caption
+			
+	Value:
+	flag - `true` or `false` (activates/deactivates *caption*-Property)
+	
+	Remarks:		
+	* To toogle, simply use `obj.caption := !obj.caption`
+	*/
+		get {
+			ret := (this.style & WS.CAPTION) > 0 ? 1 : 0
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_
+			return ret
+		}
+
+		set {
+		; Idea taken from majkinetors Forms Framework (https://github.com/maul-esel/FormsFramework), win.ahk
+			style := "-" this.__hexStr(WS.CAPTION)
+			if (value) {
+					style := "+" this.__hexStr(WS.CAPTION)
+			}
+		 	prevState := A_DetectHiddenWindows
+			DetectHiddenWindows, on
+			this.style := style
+			this.redraw()
+			DetectHiddenWindows, %prevState%
+			if (this._debug) ; _DBG_
+					OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " value ; _DBG_
+			return value
 		}
 	}
 	centercoords[] {
@@ -550,13 +583,13 @@ class WindowHandler {
 			roll := 1
 			if (mode == 1) 		
 				roll := 1
-			else if (mode == 0) 
-				if (this.rolledUp == true)
+			else if (mode = 0) 
+				if (this.rolledUp = true)
 					roll := 0 ; Only rolled window can be unrolled
 				else
 					roll := -1 ; As window is not rolled up, you cannot unroll it as requested ....
 			else {
-				if (this.rolledUp == true)
+				if (this.rolledUp = true)
 					roll := 0
 				else
 					roll := 1
@@ -568,7 +601,7 @@ class WindowHandler {
 			hwnd := this.hwnd
 			currPos := this.posSize
 		
-			if (roll == 1) { ; Roll
+			if (roll = 1) { ; Roll
 	            this.move(currPos.x, currPos.y, currPos.w, MinWinHeight)
 			}
 			else if (roll = 0) { ; Unroll
@@ -623,21 +656,21 @@ class WindowHandler {
 	Returns current window style
 	*/
 		get {
-			info := this.windowinfo
-			currStyle := info.Styles
-			; currStyle := DllCall(A_PtrSize = 4 ? "user32.dll\GetWindowLong" : "user32.dll\GetWindowLong","UInt",hWnd,"UInt",CONST_GWL.STYLE)
+			hWnd := this._hwnd
+			WinGet, currStyle, Style, ahk_id %hwnd%
 			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> (" this.__hexStr(currStyle) ")" ; _DBG_		
+				OutputDebug % "|[" A_ThisFunc "([" this._hwnd "])] -> (" this.__hexStr(currStyle) ")"
 			return currStyle
 		}
 		set {
 			hwnd := this.hwnd
-			WinSet, Style, value, ahk_id %hwnd%
+			WinSet, Style, %value%, ahk_id %hwnd%
 			this.redraw()
+			WinGet, currStyle, Style, ahk_id %hwnd%
 			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], style=" value ")] -> (" value ")" ; _DBG_		
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], style=" this.__hexStr(value) ")] -> (" this.__hexStr(value) "/" this.__hexStr(currStyle) ")" ; _DBG_		
 			return value
-		}
+		}		
 	}
 	styleEx[] {
 	/*! ---------------------------------------------------------------------------------------
@@ -646,18 +679,19 @@ class WindowHandler {
 	*/
 
 		get {
-			info := this.windowinfo
-			currExStyle := info.ExStyles
+			hWnd := this._hwnd
+			WinGet, currStyle, ExStyle, ahk_id %hwnd%
 			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> (" this.__hexStr(currExStyle) ")" ; _DBG_		
-			return currExStyle
+				OutputDebug % "|[" A_ThisFunc "([" this._hwnd "])] -> (" this.__hexStr(currStyle) ")"
+			return currStyle
 		}
 		set {
 			hwnd := this.hwnd
-			WinSet, ExStyle, value, ahk_id %hwnd%
+			WinSet, ExStyle, %value%, ahk_id %hwnd%
 			this.redraw()
+			WinGet, currStyle, ExStyle, ahk_id %hwnd%
 			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], style=" value ")] -> (" value ")" ; _DBG_		
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], styleEx=" this.__hexStr(value) ")] -> (" this.__hexStr(value) "/" this.__hexStr(currStyle) ")" ; _DBG_		
 			return value
 		}
 	}
@@ -787,16 +821,16 @@ class WindowHandler {
    			}
    			If !DllCall("User32.dll\IsWindow", "Ptr", this.hwnd) {
       			ErrorLevel := 1
-      			OutputDebug % "|[" A_ThisFunc "([" this.hwnd "]) => false]" ; _DBG_
+      			OutputDebug % "|[" A_ThisFunc "([" this.hwnd "]) -> false (is not a window)]" ; _DBG_
       			Return False
    			}
    			struct_WI := ""
    			NumPut(VarSetCapacity(struct_WI, WI_Size, 0), struct_WI, 0, "UInt")
    			If !(DllCall("User32.dll\GetWindowInfo", "Ptr", this.hwnd, "Ptr", &struct_WI)) {
    		   		ErrorLevel := 2
-   		   		OutputDebug % "|[" A_ThisFunc "([" this.hwnd "]) => false]" ; _DBG_
-      			Return False
-   			}
+   		   		OutputDebug % "|[" A_ThisFunc "([" this.hwnd "]) -> false]" ; _DBG_
+      		 	Return False
+  			}
    			obj_WI := {}
    			For Key, Value In WINDOWINFO {
 	      		If (Key = "Size")
@@ -822,8 +856,8 @@ class WindowHandler {
 	         		obj_WI[Key] := NumGet(struct_WI, Offset, Value[4])
 	      		}
    			}
-
-   			;OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] => (" SerDes(Obj_WI) ")" ; _DBG_
+			if (this._debug) ; _DBG_
+   				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] => (" SerDes(Obj_WI) ")" ; _DBG_
    			Return obj_WI
 		}	
 	}
@@ -950,7 +984,7 @@ class WindowHandler {
 		* xxxxxxxx - majkinetor
 		* 20140922 - [hoppfrosch](hoppfrosch@gmx.de) - Rewritten
  */
-
+		return
 		hwnd := this.hwnd
 		if (Option != "") {
 			old := A_DetectHiddenWindows
@@ -1099,7 +1133,8 @@ Author(s):
 		
 		; current size/position is identical with previous Size/position
 		if (currPos.equal(lastPos)) {
-			OutputDebug % "<[" A_ThisFunc "([" this.hwnd "])] Position has NOT changed!" ; _DBG_
+			if (this._debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "([" this.hwnd "])] Position has NOT changed!" ; _DBG_
 			return
 		}
 		
