@@ -12,7 +12,7 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.6.15"
+ReferenceVersion := "0.6.16"
 debug := 1
 
 
@@ -27,6 +27,7 @@ class TempTestSuite {
 		Global debug
 		this.obj := new WindowHandler(0, debug)
 	}
+
 /*
 	ResizeViaSizeProperty() {
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
@@ -574,7 +575,6 @@ class MiscTestSuite {
 	Caption() {
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		OutputDebug % "....[" A_ThisFunc "] > 1"
-		this.obj.debug := 1
 		Yunit.assert(this.obj.caption == 1)
 		OutputDebug % "....[" A_ThisFunc "] > 0"
 		this.obj.caption := 0
@@ -582,7 +582,6 @@ class MiscTestSuite {
 		OutputDebug % "....[" A_ThisFunc "] > 1"
 		this.obj.caption := 1
 		Yunit.assert(this.obj.caption == 1)
-		this.obj.debug := 0
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
 
@@ -656,6 +655,22 @@ class MiscTestSuite {
 		Yunit.assert( this.obj.resizeable == 1)
 		OutputDebug % ">>>>[" A_ThisFunc "]>>>>"
 		sleep, 500
+	}
+
+	vscrollable() {
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		OutputDebug % "....[" A_ThisFunc "] > Initial"
+		Yunit.assert(this.obj.vscrollable == 0)
+		OutputDebug % "....[" A_ThisFunc "] > 1"
+		this.obj.vscrollable := 1
+		Yunit.assert(this.obj.vscrollable == 1)
+		OutputDebug % "....[" A_ThisFunc "] > 0"
+		this.obj.vscrollable := 0
+		Yunit.assert(this.obj.vscrollable == 0)
+		OutputDebug % "....[" A_ThisFunc "] > 1"
+		this.obj.vscrollable := !this.obj.vscrollable
+		Yunit.assert(this.obj.vscrollable == 1)
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
 	
 	AlwaysOnTop() {

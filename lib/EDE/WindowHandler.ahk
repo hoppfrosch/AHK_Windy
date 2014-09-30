@@ -23,7 +23,7 @@ class WindowHandler {
 		### Author
 			[hoppfrosch](hoppfrosch@gmx.de)
 */
-	_version := "0.6.15"
+	_version := "0.6.16"
 	_debug := 0
 	_hWnd := 0
 
@@ -791,6 +791,39 @@ class WindowHandler {
 			if (this._debug) ; _DBG_
 				OutputDebug % "<[" A_ThisFunc "([" this.hwnd "], transparency=" transOrig "(" transStart "), increment=" increment ", delay=" delay ")] -> New Value:" transEnd ; _DBG_
 			return transEnd
+		}
+	}
+	vscrollable[] {
+	/*! ---------------------------------------------------------------------------------------
+	Property: vscrollable [get/set]
+	Get or Set the *vscrollable*-Property (Is vertical scrollbar available?)
+
+	Value:
+	flag - `true` or `false` (activates/deactivates *vscrollable*-Property)
+
+	Remarks:		
+	* To toogle current *vscrollable*-Property, simply use `obj.vscrollable := !obj.vscrollable`
+	*/
+		get {
+			ret := (this.style & WS.VSCROLL) > 0 ? 1 : 0
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_
+			return ret
+		}
+
+		set {
+			style := "-" this.__hexStr(WS.VSCROLL)
+			if (value) {
+				style := "+" this.__hexStr(WS.VSCROLL)
+			}
+		 	prevState := A_DetectHiddenWindows
+			DetectHiddenWindows, on
+			this.style := style
+			this.redraw()
+			DetectHiddenWindows, %prevState%
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " this.vscrollable ; _DBG_
+			return value
 		}
 	}
 	windowinfo {
