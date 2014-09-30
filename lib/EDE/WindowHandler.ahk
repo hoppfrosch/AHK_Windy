@@ -49,28 +49,20 @@ class WindowHandler {
 	* To toogle current *alwaysontop*-Property, simply use `obj.alwaysontop := !obj.alwaysontop`
 	*/
 		get {
-			ret := (this.styleEx & WS.EX.TOPMOST)
-			ret := ret>0?1:0
-		
+			ret := (this.styleEx & WS.EX.TOPMOST) > 0 ? 1 : 0
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_
 			return ret
 		}
-		
 		set {
-			if (this._debug) ; _DBG_
-				OutputDebug % ">[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> Current Value:" this.alwaysontop ; _DBG_
-		
 			hwnd := this.hwnd
 			if (value == true)
 				value := "on"
 			else if (value == false) 
 				value := "off"
-
 			WinSet, AlwaysOnTop, %value%,  ahk_id %hwnd%
-				
 			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> New Value:" this.alwaysontop ; _DBG_
+				OutputDebug % "[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> New Value:" this.alwaysontop ; _DBG_
 		
 			return this.alwaysOnTop
 		}
@@ -105,7 +97,7 @@ class WindowHandler {
 			this.redraw()
 			DetectHiddenWindows, %prevState%
 			if (this._debug) ; _DBG_
-					OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " value ; _DBG_
+					OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " this.caption ; _DBG_
 			return value
 		}
 	}
@@ -536,15 +528,17 @@ class WindowHandler {
 	resizeable[] {
 	/*! ---------------------------------------------------------------------------------------
 	Property: resizeable [get/set]
-	Get or Set the *resizeable*-Property (Is window resizeable?)
+	Get or Set the *resizeable*-Property (Is window resizing possible?)
+
 	Value:
 	flag - `true` or `false` (activates/deactivates *resizeable*-Property)
 
 	Remarks:		
-	* To toogle current *resizeable*-Property, simply use `obj.resizeable := !obj.resizeable
+	* To toogle current *resizeable*-Property, simply use `obj.resizeable := !obj.resizeable`
+
 	*/
 		get {
-	    	ret := (this.style & WS.SIZEBOX) > 0 ? 1 : 0 ; 	
+			ret := this.__hexStr(this.style & WS.SIZEBOX) > 0 ? 1 : 0
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_				
 			return ret
@@ -560,7 +554,7 @@ class WindowHandler {
 			this.redraw()
 			DetectHiddenWindows, %prevState%
 			if (this._debug) ; _DBG_
-					OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " value ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " this.resizeable ; _DBG_				
 			return value
 		}
 	}
