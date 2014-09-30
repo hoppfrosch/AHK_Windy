@@ -12,7 +12,7 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.6.12"
+ReferenceVersion := "0.6.15"
 debug := 1
 
 
@@ -27,7 +27,7 @@ class TempTestSuite {
 		Global debug
 		this.obj := new WindowHandler(0, debug)
 	}
-
+/*
 	ResizeViaSizeProperty() {
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		oldSize:= this.obj.size
@@ -44,14 +44,8 @@ class TempTestSuite {
 		Yunit.assert(newSize.y == hnew)	
 		OutputDebug % ">>>>[" A_ThisFunc "]>>>>"
 	}	     
+*/
 
-/*
-	IsResizeable() {
-		val := this.obj.isResizable()
-		Yunit.assert( val == 1)
-		sleep, 500
-	}
-*/	
 	End() {
 		this.obj.kill()
 		this.remove("obj")
@@ -576,6 +570,22 @@ class MiscTestSuite {
 		Yunit.assert(this.obj._version == ReferenceVersion)
 		OutputDebug % ">>>>[" A_ThisFunc "]>>>>"
 	}
+
+	Caption() {
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		OutputDebug % "....[" A_ThisFunc "] > 1"
+		this.obj.debug := 1
+		Yunit.assert(this.obj.caption == 1)
+		OutputDebug % "....[" A_ThisFunc "] > 0"
+		this.obj.caption := 0
+		Yunit.assert(this.obj.caption == 0)
+		OutputDebug % "....[" A_ThisFunc "] > 1"
+		this.obj.caption := 1
+		Yunit.assert(this.obj.caption == 1)
+		this.obj.debug := 0
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+	}
+
 	
 	Center() {
 		Global debug
@@ -632,6 +642,20 @@ class MiscTestSuite {
 		val := this.obj.processID
 		Yunit.assert( val > 0)
 		OutputDebug % ">>>>[" A_ThisFunc "]>>>>"
+	}
+
+	Resizeable() {
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		OutputDebug % "...[" A_ThisFunc "]> 1"
+		Yunit.assert( this.obj.resizeable == 1)
+		OutputDebug % "...[" A_ThisFunc "]> 0"
+		this.obj.resizeable := 0
+		Yunit.assert( this.obj.resizeable == 0)
+		OutputDebug % "...[" A_ThisFunc "]> toggle"
+		this.obj.resizeable := !this.obj.resizeable
+		Yunit.assert( this.obj.resizeable == 1)
+		OutputDebug % ">>>>[" A_ThisFunc "]>>>>"
+		sleep, 500
 	}
 	
 	AlwaysOnTop() {

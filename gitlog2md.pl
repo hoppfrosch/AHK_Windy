@@ -86,8 +86,8 @@ my $template = <<EOT;
 -----------------------------------------------------------------
 [% FOREACH msg IN logmessages -%]
  * **[% msg.subject %]** (via Commit [[% msg.hash.substr(0, 7) %]](https://github.com/hoppfrosch/AHK_EDE/commit/[% msg.hash %]))
-[% FOREACH line IN msg.body %]   * [% IF (matches = line.match('INTERN')) -%]*[% END %][% line %][% IF (matches = line.match('INTERN')) -%]*[% END %][% END %]
-[%END %]
+[% FOREACH line IN msg.body %]   * [% IF (matches = line.match('INTERN')) -%]*[% END %][% line %][% IF (matches = line.match('INTERN')) -%]*[% END %]
+[% END %][% END %]
 EOT
 
 

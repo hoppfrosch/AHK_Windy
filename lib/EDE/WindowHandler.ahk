@@ -7,6 +7,7 @@
 #include <EDE\MultiMonitorEnv>
 #include <EDE\Const_WinUser>
 #include <EDE\_WindowHandlerEvent>
+#include <SerDes>
 
 class WindowHandler {
 ; ******************************************************************************************************************************************
@@ -22,7 +23,7 @@ class WindowHandler {
 		### Author
 			[hoppfrosch](hoppfrosch@gmx.de)
 */
-	_version := "0.6.12"
+	_version := "0.6.15"
 	_debug := 0
 	_hWnd := 0
 
@@ -39,7 +40,7 @@ class WindowHandler {
 	alwaysOnTop[] {
 	/*! ---------------------------------------------------------------------------------------
 	Property: alwaysOnTop [get/set]
-	Get or Set the *alwaysontop*-Property.  Set/Unset alwaysontop flag of the current window or get the current state
+	Set/Unset alwaysontop flag of the current window or get the current state
 			
 	Value:
 	flag - `true` or `false` (activates/deactivates *alwaysontop*-Property)
@@ -48,30 +49,56 @@ class WindowHandler {
 	* To toogle current *alwaysontop*-Property, simply use `obj.alwaysontop := !obj.alwaysontop`
 	*/
 		get {
-			ret := (this.styleEx & WS.EX.TOPMOST)
-			ret := ret>0?1:0
-		
+			ret := (this.styleEx & WS.EX.TOPMOST) > 0 ? 1 : 0
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_
 			return ret
 		}
-		
 		set {
-			if (this._debug) ; _DBG_
-				OutputDebug % ">[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> Current Value:" this.alwaysontop ; _DBG_
-		
 			hwnd := this.hwnd
 			if (value == true)
 				value := "on"
 			else if (value == false) 
 				value := "off"
-
 			WinSet, AlwaysOnTop, %value%,  ahk_id %hwnd%
-				
 			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> New Value:" this.alwaysontop ; _DBG_
+				OutputDebug % "[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> New Value:" this.alwaysontop ; _DBG_
 		
 			return this.alwaysOnTop
+		}
+	}
+	caption[] {
+	/*! ---------------------------------------------------------------------------------------
+	Property: caption [get/set]
+	Set/Unset visibility of the window caption
+			
+	Value:
+	flag - `true` or `false` (activates/deactivates *caption*-Property)
+	
+	Remarks:		
+	* To toogle, simply use `obj.caption := !obj.caption`
+	*/
+		get {
+			ret := (this.style & WS.CAPTION) > 0 ? 1 : 0
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_
+			return ret
+		}
+
+		set {
+		; Idea taken from majkinetors Forms Framework (https://github.com/maul-esel/FormsFramework), win.ahk
+			style := "-" this.__hexStr(WS.CAPTION)
+			if (value) {
+					style := "+" this.__hexStr(WS.CAPTION)
+			}
+		 	prevState := A_DetectHiddenWindows
+			DetectHiddenWindows, on
+			this.style := style
+			this.redraw()
+			DetectHiddenWindows, %prevState%
+			if (this._debug) ; _DBG_
+					OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " this.caption ; _DBG_
+			return value
 		}
 	}
 	centercoords[] {
@@ -444,8 +471,8 @@ class WindowHandler {
 	Get or Set the position and size of the window (To set the position use class [Rectangle](rectangle.html))	
 	*/
 		get {
-			currPos := new Rectangle(0,0,0,0,this._debug)
-			currPos.fromHWnd(this.hwnd)
+			info := this.windowinfo
+			currPos := new Rectangle(info.window.xul,info.window.yul,info.window.xlr-info.window.xul,info.window.ylr-info.window.yul,this._debug)
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> (" currPos.dump() ")" ; _DBG_
 			return currPos
@@ -500,20 +527,35 @@ class WindowHandler {
 	}
 	resizeable[] {
 	/*! ---------------------------------------------------------------------------------------
-	Property: resizeable [get]
-	Checks whether window is resizeable
-	*/
+	Property: resizeable [get/set]
+	Get or Set the *resizeable*-Property (Is window resizing possible?)
 
-	; ToDo: Property resizeable - Implementation of Setter-functionality
+	Value:
+	flag - `true` or `false` (activates/deactivates *resizeable*-Property)
+
+	Remarks:		
+	* To toogle current *resizeable*-Property, simply use `obj.resizeable := !obj.resizeable`
+
+	*/
 		get {
-			ret := true
-			if this.__classname in Chrome_XPFrame,MozillaUIWindowClass
-				ret := true
-			else 
-		    	ret := (this.style & WS.SIZEBOX) ; 	
+			ret := this.__hexStr(this.style & WS.SIZEBOX) > 0 ? 1 : 0
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_				
 			return ret
+		}
+		set {
+			style := "-" this.__hexStr(WS.SIZEBOX)
+			if (value) {
+					style := "+" this.__hexStr(WS.SIZEBOX)
+			}
+		 	prevState := A_DetectHiddenWindows
+			DetectHiddenWindows, on
+			this.style := style
+			this.redraw()
+			DetectHiddenWindows, %prevState%
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " this.resizeable ; _DBG_				
+			return value
 		}
 	}
 	rolledUp[] {
@@ -525,7 +567,7 @@ class WindowHandler {
 	flag - `true` or `false` (activates/deactivates *rolledUp*-Property)
 
 	Remarks:		
-	* To toogle current *rolledUp*-Property, simply use `objrolledUp := !obj.rolledUp`
+	* To toogle current *rolledUp*-Property, simply use `obj.rolledUp := !obj.rolledUp`
 	*/
 		get {
 			ret := 0
@@ -549,13 +591,13 @@ class WindowHandler {
 			roll := 1
 			if (mode == 1) 		
 				roll := 1
-			else if (mode == 0) 
-				if (this.rolledUp == true)
+			else if (mode = 0) 
+				if (this.rolledUp = true)
 					roll := 0 ; Only rolled window can be unrolled
 				else
 					roll := -1 ; As window is not rolled up, you cannot unroll it as requested ....
 			else {
-				if (this.rolledUp == true)
+				if (this.rolledUp = true)
 					roll := 0
 				else
 					roll := 1
@@ -567,7 +609,7 @@ class WindowHandler {
 			hwnd := this.hwnd
 			currPos := this.posSize
 		
-			if (roll == 1) { ; Roll
+			if (roll = 1) { ; Roll
 	            this.move(currPos.x, currPos.y, currPos.w, MinWinHeight)
 			}
 			else if (roll = 0) { ; Unroll
@@ -622,21 +664,21 @@ class WindowHandler {
 	Returns current window style
 	*/
 		get {
-			hwnd := this.hwnd
+			hWnd := this._hwnd
 			WinGet, currStyle, Style, ahk_id %hwnd%
-			; currStyle := DllCall(A_PtrSize = 4 ? "user32.dll\GetWindowLong" : "user32.dll\GetWindowLong","UInt",hWnd,"UInt",CONST_GWL.STYLE)
 			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> (" currStyle ")" ; _DBG_		
+				OutputDebug % "|[" A_ThisFunc "([" this._hwnd "])] -> (" this.__hexStr(currStyle) ")"
 			return currStyle
 		}
 		set {
 			hwnd := this.hwnd
-			WinSet, Style, value, ahk_id %hwnd%
+			WinSet, Style, %value%, ahk_id %hwnd%
 			this.redraw()
+			WinGet, currStyle, Style, ahk_id %hwnd%
 			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], style=" value ")] -> (" value ")" ; _DBG_		
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], style=" this.__hexStr(value) ")] -> (" this.__hexStr(value) "/" this.__hexStr(currStyle) ")" ; _DBG_		
 			return value
-		}
+		}		
 	}
 	styleEx[] {
 	/*! ---------------------------------------------------------------------------------------
@@ -645,18 +687,19 @@ class WindowHandler {
 	*/
 
 		get {
-			val := this.hwnd
-			WinGet, currExStyle, ExStyle, ahk_id %val%
+			hWnd := this._hwnd
+			WinGet, currStyle, ExStyle, ahk_id %hwnd%
 			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> (" currExStyle ")" ; _DBG_		
-			return currExStyle
+				OutputDebug % "|[" A_ThisFunc "([" this._hwnd "])] -> (" this.__hexStr(currStyle) ")"
+			return currStyle
 		}
 		set {
 			hwnd := this.hwnd
-			WinSet, ExStyle, value, ahk_id %hwnd%
+			WinSet, ExStyle, %value%, ahk_id %hwnd%
 			this.redraw()
+			WinGet, currStyle, ExStyle, ahk_id %hwnd%
 			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], style=" value ")] -> (" value ")" ; _DBG_		
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], styleEx=" this.__hexStr(value) ")] -> (" this.__hexStr(value) "/" this.__hexStr(currStyle) ")" ; _DBG_		
 			return value
 		}
 	}
@@ -749,6 +792,82 @@ class WindowHandler {
 				OutputDebug % "<[" A_ThisFunc "([" this.hwnd "], transparency=" transOrig "(" transStart "), increment=" increment ", delay=" delay ")] -> New Value:" transEnd ; _DBG_
 			return transEnd
 		}
+	}
+	windowinfo {
+	/*! ---------------------------------------------------------------------------------------
+	Property: windowinfo [get]
+	Current window info. 
+
+	 Return values:    
+	 * On success  - Object containing structure's values (see Remarks)
+     * On failure  - False, ErrorLevel = 1 -> Invalid HWN, ErrorLevel = 2 -> DllCall("GetWindowInfo") caused an error
+
+    Remarks:          
+    * The returned object contains all keys defined in WINDOWINFO except "Size".
+    * The keys "Window" and "Client" contain objects with keynames defined in [5]
+    * For more details see http://msdn.microsoft.com/en-us/library/ms633516%28VS.85%29.aspx and http://msdn.microsoft.com/en-us/library/ms632610%28VS.85%29.aspx 
+
+    ### Author(s)
+     	* just me (http://www.autohotkey.com/board/topic/69254-func-api-getwindowinfo-ahk-l/)
+	*/
+		get {
+		   ; [1] = Offset, [2] = Length, [3] = Occurrences, [4] = Type, [5] = Key array
+   			Static WINDOWINFO := { Size: [0, 4, 1, "UInt", ""]
+			                        , Window: [4, 4, 4, "Int", ["xul", "yul", "xlr", "ylr"]]
+			                        , Client: [20, 4, 4, "Int", ["xul", "yul", "xlr", "ylr"]]
+			                        , Styles: [36, 4, 1, "UInt", ""]
+			                        , ExStyles: [40, 4, 1, "UInt", ""]
+			                        , Status: [44, 4, 1, "UInt", ""]
+			                        , XBorders: [48, 4, 1, "UInt", ""]
+			                        , YBorders: [52, 4, 1, "UInt", ""]
+			                        , Type: [56, 2, 1, "UShort", ""]
+			                        , Version: [58, 2, 1, "UShort", ""] }
+   			Static WI_Size := 0
+   			If (WI_Size = 0) {
+      			For Key, Value In WINDOWINFO
+         			WI_Size += (Value[2] * Value[3])
+   			}
+   			If !DllCall("User32.dll\IsWindow", "Ptr", this.hwnd) {
+      			ErrorLevel := 1
+      			OutputDebug % "|[" A_ThisFunc "([" this.hwnd "]) -> false (is not a window)]" ; _DBG_
+      			Return False
+   			}
+   			struct_WI := ""
+   			NumPut(VarSetCapacity(struct_WI, WI_Size, 0), struct_WI, 0, "UInt")
+   			If !(DllCall("User32.dll\GetWindowInfo", "Ptr", this.hwnd, "Ptr", &struct_WI)) {
+   		   		ErrorLevel := 2
+   		   		OutputDebug % "|[" A_ThisFunc "([" this.hwnd "]) -> false]" ; _DBG_
+      		 	Return False
+  			}
+   			obj_WI := {}
+   			For Key, Value In WINDOWINFO {
+	      		If (Key = "Size")
+	         		Continue
+			    Offset := Value[1]
+	      		If (Value[3] > 1) { ; more than one occurrence
+	         		If IsObject(Value[5]) { ; use keys defined in Value[5] to store the values in
+	            		obj_ := {}
+	            		Loop, % Value[3] {
+	               			obj_.Insert(Value[5][A_Index], NumGet(struct_WI, Offset, Value[4]))
+	               			Offset += Value[2]
+	            		}
+	            		obj_WI[Key] := obj_
+	         		} Else { ; use simple array to store the values in
+	            		arr_ := []
+	            		Loop, % Value[3] {
+	               			arr_[A_Index] := NumGet(struct_WI, Offset, Value[4])
+	               			Offset += Value[2]
+	            		}
+	            		obj_WI[Key] := arr_
+	         		}		
+	      		} Else { ; just one item
+	         		obj_WI[Key] := NumGet(struct_WI, Offset, Value[4])
+	      		}
+   			}
+			if (this._debug) ; _DBG_
+   				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] => (" SerDes(Obj_WI) ")" ; _DBG_
+   			Return obj_WI
+		}	
 	}
 	; ##################### End of Properties (AHK >1.1.16.x) ##############################################################
 	
@@ -873,9 +992,7 @@ class WindowHandler {
 		* xxxxxxxx - majkinetor
 		* 20140922 - [hoppfrosch](hoppfrosch@gmx.de) - Rewritten
  */
-		if (this._debug) ; _DBG_
-			OutputDebug % ">[" A_ThisFunc "([" this.hwnd "], Option=" Option ")]" ; _DBG_
-
+		return
 		hwnd := this.hwnd
 		if (Option != "") {
 			old := A_DetectHiddenWindows
@@ -887,7 +1004,7 @@ class WindowHandler {
 		}
 		ret := DllCall("RedrawWindow", "uint", hwnd, "uint", 0, "uint", 0, "uint" ,RDW.INVALIDATE | RDW.ERASE | RDW.FRAME | RDW.ERASENOW | RDW.UPDATENOW | RDW.ALLCHILDREN)
 		if (this._debug) ; _DBG_
-			OutputDebug % ">[" A_ThisFunc "([" this.hwnd "], Option=" Option ")] -> ret=" ret ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], Option=" Option ")] -> ret=" ret ; _DBG_
 		return ret
 	}
 	; ######################## Internal Methods - not to be called directly ############################################
@@ -1024,7 +1141,8 @@ Author(s):
 		
 		; current size/position is identical with previous Size/position
 		if (currPos.equal(lastPos)) {
-			OutputDebug % "<[" A_ThisFunc "([" this.hwnd "])] Position has NOT changed!" ; _DBG_
+			if (this._debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "([" this.hwnd "])] Position has NOT changed!" ; _DBG_
 			return
 		}
 		
@@ -1175,7 +1293,7 @@ ClassWindowHandler_EventHook(hWinEventHook, Event, hWnd, idObject, idChild, dwEv
 	self := Object(A_EventInfo)
 
 	if (Object(A_EventInfo)._debug) ; _DBG_
-		OutputDebug % ">[" A_ThisFunc "([" Object(A_EventInfo)._hWnd "])(hWinEventHook=" hWinEventHook ", Event=" Event2Str(Event) ", hWnd=" hWnd ", idObject=" idObject ", idChild=" idChild ", dwEventThread=" dwEventThread ", dwmsEventTime=" dwmsEventTime ") -> A_EventInfo: " A_EventInfo ; _DBG_
+		OutputDebug % "|[" A_ThisFunc "([" Object(A_EventInfo)._hWnd "])(hWinEventHook=" hWinEventHook ", Event=" Event2Str(Event) ", hWnd=" hWnd ", idObject=" idObject ", idChild=" idChild ", dwEventThread=" dwEventThread ", dwmsEventTime=" dwmsEventTime ") -> A_EventInfo: " A_EventInfo ; _DBG_
 	
 	; ########## START: Handling window movement ##################################################
 	; We want to detect when the window movement has finished finally, as onLocationChanged() has only to be called at the END of the movement
