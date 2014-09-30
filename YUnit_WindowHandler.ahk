@@ -12,8 +12,8 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.6.13"
-debug := 1
+ReferenceVersion := "0.6.14"
+debug := 0
 
 
 ;Yunit.Use(YunitStdOut, YunitWindow).Test(TempTestSuite)
@@ -28,13 +28,7 @@ class TempTestSuite {
 		this.obj := new WindowHandler(0, debug)
 	}
 
-
-	AAA() {
-		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
-		x := this.obj.windowinfo
-		OutputDebug % ">>>>[" A_ThisFunc "]>>>>"
-	}
-
+/*
 	ResizeViaSizeProperty() {
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		oldSize:= this.obj.size
@@ -51,7 +45,7 @@ class TempTestSuite {
 		Yunit.assert(newSize.y == hnew)	
 		OutputDebug % ">>>>[" A_ThisFunc "]>>>>"
 	}	     
-
+*/
 /*
 	IsResizeable() {
 		val := this.obj.isResizable()
@@ -583,6 +577,22 @@ class MiscTestSuite {
 		Yunit.assert(this.obj._version == ReferenceVersion)
 		OutputDebug % ">>>>[" A_ThisFunc "]>>>>"
 	}
+
+	Caption() {
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		OutputDebug % "....[" A_ThisFunc "] > 1"
+		this.obj.debug := 1
+		Yunit.assert(this.obj.caption == 1)
+		OutputDebug % "....[" A_ThisFunc "] > 0"
+		this.obj.caption := 0
+		Yunit.assert(this.obj.caption == 0)
+		OutputDebug % "....[" A_ThisFunc "] > 1"
+		this.obj.caption := 1
+		Yunit.assert(this.obj.caption == 1)
+		this.obj.debug := 0
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+	}
+
 	
 	Center() {
 		Global debug

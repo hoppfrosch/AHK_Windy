@@ -23,7 +23,7 @@ class WindowHandler {
 		### Author
 			[hoppfrosch](hoppfrosch@gmx.de)
 */
-	_version := "0.6.13"
+	_version := "0.6.14"
 	_debug := 0
 	_hWnd := 0
 
@@ -73,6 +73,39 @@ class WindowHandler {
 				OutputDebug % "<[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> New Value:" this.alwaysontop ; _DBG_
 		
 			return this.alwaysOnTop
+		}
+	}
+	caption[] {
+	/*! ---------------------------------------------------------------------------------------
+	Property: caption [get/set]
+	Set/Unset visibility of the window caption
+			
+	Value:
+	flag - `true` or `false` (activates/deactivates *caption*-Property)
+	
+	Remarks:		
+	* To toogle, simply use `obj.caption := !obj.caption`
+	*/
+		get {
+			ret := (this.style & WS.CAPTION) > 0 ? 1 : 0
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_
+			return ret
+		}
+
+		set {
+		; Idea taken from majkinetors Forms Framework (https://github.com/maul-esel/FormsFramework), win.ahk
+			style := "-" this.__hexStr(WS.CAPTION)
+			if (value) {
+					style := "+" this.__hexStr(WS.CAPTION)
+			}
+		 	prevState := A_DetectHiddenWindows
+			DetectHiddenWindows, on
+			this.style := style
+			this.redraw()
+			DetectHiddenWindows, %prevState%
+			if (this._debug) ; _DBG_
+					OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " value ; _DBG_
+			return value
 		}
 	}
 	centercoords[] {
@@ -623,21 +656,21 @@ class WindowHandler {
 	Returns current window style
 	*/
 		get {
-			info := this.windowinfo
-			currStyle := info.Styles
-			; currStyle := DllCall(A_PtrSize = 4 ? "user32.dll\GetWindowLong" : "user32.dll\GetWindowLong","UInt",hWnd,"UInt",CONST_GWL.STYLE)
+			hWnd := this._hwnd
+			WinGet, currStyle, Style, ahk_id %hwnd%
 			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> (" this.__hexStr(currStyle) ")" ; _DBG_		
+				OutputDebug % "|[" A_ThisFunc "([" this._hwnd "])] -> (" this.__hexStr(currStyle) ")"
 			return currStyle
 		}
 		set {
 			hwnd := this.hwnd
-			WinSet, Style, value, ahk_id %hwnd%
+			WinSet, Style, %value%, ahk_id %hwnd%
 			this.redraw()
+			WinGet, currStyle, Style, ahk_id %hwnd%
 			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], style=" value ")] -> (" value ")" ; _DBG_		
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], style=" this.__hexStr(value) ")] -> (" this.__hexStr(value) "/" this.__hexStr(currStyle) ")" ; _DBG_		
 			return value
-		}
+		}		
 	}
 	styleEx[] {
 	/*! ---------------------------------------------------------------------------------------
@@ -646,18 +679,19 @@ class WindowHandler {
 	*/
 
 		get {
-			info := this.windowinfo
-			currExStyle := info.ExStyles
+			hWnd := this._hwnd
+			WinGet, currStyle, ExStyle, ahk_id %hwnd%
 			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> (" this.__hexStr(currExStyle) ")" ; _DBG_		
-			return currExStyle
+				OutputDebug % "|[" A_ThisFunc "([" this._hwnd "])] -> (" this.__hexStr(currStyle) ")"
+			return currStyle
 		}
 		set {
 			hwnd := this.hwnd
-			WinSet, ExStyle, value, ahk_id %hwnd%
+			WinSet, ExStyle, %value%, ahk_id %hwnd%
 			this.redraw()
+			WinGet, currStyle, ExStyle, ahk_id %hwnd%
 			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], style=" value ")] -> (" value ")" ; _DBG_		
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], styleEx=" this.__hexStr(value) ")] -> (" this.__hexStr(value) "/" this.__hexStr(currStyle) ")" ; _DBG_		
 			return value
 		}
 	}
