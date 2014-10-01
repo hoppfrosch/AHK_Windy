@@ -12,7 +12,7 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.6.16"
+ReferenceVersion := "0.6.17"
 debug := 1
 
 ;Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, TempTestSuite)
@@ -624,7 +624,23 @@ class MiscTestSuite {
         Yunit.assert(this.obj.classname =="Notepad")
 		OutputDebug % ">>>>[" A_ThisFunc "]>>>>"
 	}
-        
+
+    hscrollable() {
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		OutputDebug % "....[" A_ThisFunc "] > Initial"
+		Yunit.assert(this.obj.hscrollable == 0)
+		OutputDebug % "....[" A_ThisFunc "] > 1"
+		this.obj.hscrollable := 1
+		Yunit.assert(this.obj.hscrollable == 1)
+		OutputDebug % "....[" A_ThisFunc "] > 0"
+		this.obj.hscrollable := 0
+		Yunit.assert(this.obj.hscrollable == 0)
+		OutputDebug % "....[" A_ThisFunc "] > 1"
+		this.obj.hscrollable := !this.obj.hscrollable
+		Yunit.assert(this.obj.hscrollable == 1)
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+	}
+	
 	Title() {
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		Yunit.assert(this.obj.title =="Unbenannt - Editor")

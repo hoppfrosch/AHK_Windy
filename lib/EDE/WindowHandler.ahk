@@ -23,7 +23,7 @@ class WindowHandler {
 		### Author
 			[hoppfrosch](hoppfrosch@gmx.de)
 */
-	_version := "0.6.16"
+	_version := "0.6.17"
 	_debug := 0
 	_hWnd := 0
 
@@ -262,6 +262,39 @@ class WindowHandler {
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_		
 			return ret
+		}
+	}
+	hscrollable[] {
+	/*! ---------------------------------------------------------------------------------------
+	Property: hscrollable [get/set]
+	Get or Set the *hscrollable*-Property (Is vertical scrollbar available?)
+
+	Value:
+	flag - `true` or `false` (activates/deactivates *hscrollable*-Property)
+
+	Remarks:		
+	* To toogle current *hscrollable*-Property, simply use `obj.hscrollable := !obj.hscrollable`
+	*/
+		get {
+			ret := (this.style & WS.HSCROLL) > 0 ? 1 : 0
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_
+			return ret
+		}
+
+		set {
+			style := "-" this.__hexStr(WS.HSCROLL)
+			if (value) {
+				style := "+" this.__hexStr(WS.HSCROLL)
+			}
+		 	prevState := A_DetectHiddenWindows
+			DetectHiddenWindows, on
+			this.style := style
+			this.redraw()
+			DetectHiddenWindows, %prevState%
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " this.vscrollable ; _DBG_
+			return value
 		}
 	}
 	maximized[] {
