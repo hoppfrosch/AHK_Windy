@@ -23,7 +23,7 @@ class WindowHandler {
 		### Author
 			[hoppfrosch](hoppfrosch@gmx.de)
 */
-	_version := "0.6.18"
+	_version := "0.6.20"
 	_debug := 0
 	_hWnd := 0
 
@@ -297,6 +297,39 @@ class WindowHandler {
 			return value
 		}
 	}
+	maximizebox[] {
+	/*! ---------------------------------------------------------------------------------------
+	Property: maximizebox [get/set]
+	Get or Set the *maximizebox*-Property (Is maximizebox available?)
+
+	Value:
+	flag - `true` or `false` (activates/deactivates *maximizebox*-Property)
+
+	Remarks:		
+	* To toogle current *maximizebox*-Property, simply use `obj.maximizebox := !obj.maximizebox`
+	*/
+		get {
+			ret := (this.style & WS.MAXIMIZEBOX) > 0 ? 1 : 0
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_
+			return ret
+		}
+
+		set {
+			style := "-" this.__hexStr(WS.MAXIMIZEBOX)
+			if (value) {
+				style := "+" this.__hexStr(WS.MAXIMIZEBOX)
+			}
+		 	prevState := A_DetectHiddenWindows
+			DetectHiddenWindows, on
+			this.style := style
+			this.redraw()
+			DetectHiddenWindows, %prevState%
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " this.maximizebox ; _DBG_
+			return value
+		}
+	}
 	maximized[] {
 	/*! ---------------------------------------------------------------------------------------
 	Property: maximized [get/set]
@@ -337,6 +370,39 @@ class WindowHandler {
 				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], mode=" mode ")] -> New Value:" isMax ; _DBG_
 			
 			return isMax
+		}
+	}
+	minimizebox[] {
+	/*! ---------------------------------------------------------------------------------------
+	Property: minimizebox [get/set]
+	Get or Set the *minimizebox*-Property (Is minimizebox available?)
+
+	Value:
+	flag - `true` or `false` (activates/deactivates *minimizebox*-Property)
+
+	Remarks:		
+	* To toogle current *minimizebox*-Property, simply use `obj.minimizebox := !obj.minimizebox`
+	*/
+		get {
+			ret := (this.style & WS.MINIMIZEBOX) > 0 ? 1 : 0
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_
+			return ret
+		}
+
+		set {
+			style := "-" this.__hexStr(WS.MINIMIZEBOX)
+			if (value) {
+				style := "+" this.__hexStr(WS.MINIMIZEBOX)
+			}
+		 	prevState := A_DetectHiddenWindows
+			DetectHiddenWindows, on
+			this.style := style
+			this.redraw()
+			DetectHiddenWindows, %prevState%
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " this.minimizebox ; _DBG_
+			return value
 		}
 	}
 	minimized[] {
