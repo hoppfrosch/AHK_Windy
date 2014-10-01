@@ -23,7 +23,7 @@ class WindowHandler {
 		### Author
 			[hoppfrosch](hoppfrosch@gmx.de)
 */
-	_version := "0.6.18"
+	_version := "0.6.19"
 	_debug := 0
 	_hWnd := 0
 
@@ -294,6 +294,39 @@ class WindowHandler {
 			DetectHiddenWindows, %prevState%
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " this.hscrollable ; _DBG_
+			return value
+		}
+	}
+	maximizebox[] {
+	/*! ---------------------------------------------------------------------------------------
+	Property: maximizebox [get/set]
+	Get or Set the *maximizebox*-Property (Is maximizebox available?)
+
+	Value:
+	flag - `true` or `false` (activates/deactivates *maximizebox*-Property)
+
+	Remarks:		
+	* To toogle current *maximizebox*-Property, simply use `obj.maximizebox := !obj.maximizebox`
+	*/
+		get {
+			ret := (this.style & WS.MAXIMIZEBOX) > 0 ? 1 : 0
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_
+			return ret
+		}
+
+		set {
+			style := "-" this.__hexStr(WS.MAXIMIZEBOX)
+			if (value) {
+				style := "+" this.__hexStr(WS.MAXIMIZEBOX)
+			}
+		 	prevState := A_DetectHiddenWindows
+			DetectHiddenWindows, on
+			this.style := style
+			this.redraw()
+			DetectHiddenWindows, %prevState%
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " this.maximizebox ; _DBG_
 			return value
 		}
 	}

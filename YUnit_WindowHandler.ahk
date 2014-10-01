@@ -12,7 +12,7 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.6.18"
+ReferenceVersion := "0.6.19"
 debug := 1
 
 ;Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, TempTestSuite)
@@ -26,27 +26,6 @@ class TempTestSuite {
 		Global debug
 		this.obj := new WindowHandler(0, debug)
 	}
-
-    sizebox() {
-		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
-		OutputDebug % "....[" A_ThisFunc "] > Initial"
-		Yunit.assert(this.obj.sizebox == 1)
-		Sleep 5000
-		OutputDebug % "....[" A_ThisFunc "] > 0"
-		this.obj.sizebox := 0
-		Yunit.assert(this.obj.sizebox == 0)
-		Sleep 5000
-		OutputDebug % "....[" A_ThisFunc "] > 1"
-		this.obj.sizebox := 1
-		Yunit.assert(this.obj.sizebox == 1)
-		Sleep 5000
-		OutputDebug % "....[" A_ThisFunc "] > 0"
-		this.obj.sizebox := !this.obj.sizebox
-		Yunit.assert(this.obj.sizebox == 0)
-		Sleep 5000
-		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
-	}
-
 	
 /*
 	ResizeViaSizeProperty() {
@@ -616,7 +595,6 @@ class MiscTestSuite {
 		Yunit.assert(this.obj.caption == 1)
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
-
 	
 	Center() {
 		Global debug
@@ -659,6 +637,19 @@ class MiscTestSuite {
 		OutputDebug % "....[" A_ThisFunc "] > 1"
 		this.obj.hscrollable := !this.obj.hscrollable
 		Yunit.assert(this.obj.hscrollable == 1)
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+	}
+	
+	maximizebox() {
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		OutputDebug % "....[" A_ThisFunc "] > Initial"
+		Yunit.assert(this.obj.maximizebox == 1)
+		OutputDebug % "....[" A_ThisFunc "] > 0"
+		this.obj.maximizebox := 0
+		Yunit.assert(this.obj.maximizebox == 0)
+		OutputDebug % "....[" A_ThisFunc "] > 1"
+		this.obj.maximizebox := !this.obj.maximizebox
+		Yunit.assert(this.obj.caption == 1)
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
 	
