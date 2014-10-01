@@ -12,7 +12,7 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.6.17"
+ReferenceVersion := "0.6.18"
 debug := 1
 
 ;Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, TempTestSuite)
@@ -26,6 +26,27 @@ class TempTestSuite {
 		Global debug
 		this.obj := new WindowHandler(0, debug)
 	}
+
+    sizebox() {
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		OutputDebug % "....[" A_ThisFunc "] > Initial"
+		Yunit.assert(this.obj.sizebox == 1)
+		Sleep 5000
+		OutputDebug % "....[" A_ThisFunc "] > 0"
+		this.obj.sizebox := 0
+		Yunit.assert(this.obj.sizebox == 0)
+		Sleep 5000
+		OutputDebug % "....[" A_ThisFunc "] > 1"
+		this.obj.sizebox := 1
+		Yunit.assert(this.obj.sizebox == 1)
+		Sleep 5000
+		OutputDebug % "....[" A_ThisFunc "] > 0"
+		this.obj.sizebox := !this.obj.sizebox
+		Yunit.assert(this.obj.sizebox == 0)
+		Sleep 5000
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+	}
+
 	
 /*
 	ResizeViaSizeProperty() {

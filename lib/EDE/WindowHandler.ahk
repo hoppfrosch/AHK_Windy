@@ -23,7 +23,7 @@ class WindowHandler {
 		### Author
 			[hoppfrosch](hoppfrosch@gmx.de)
 */
-	_version := "0.6.17"
+	_version := "0.6.18"
 	_debug := 0
 	_hWnd := 0
 
@@ -150,7 +150,7 @@ class WindowHandler {
 			return __classname
 		}
 	}
-	debug[] {                                                                            ; _DBG_
+	debug[] { ; _DBG_
 	/*! ------------------------------------------------------------------------------ ; _DBG_
 	Property: debug [get/set]                                                          ; _DBG_
 	Debug flag                                                                         ; _DBG_
@@ -293,7 +293,7 @@ class WindowHandler {
 			this.redraw()
 			DetectHiddenWindows, %prevState%
 			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " this.vscrollable ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " this.hscrollable ; _DBG_
 			return value
 		}
 	}
@@ -568,26 +568,14 @@ class WindowHandler {
 
 	Remarks:		
 	* To toogle current *resizeable*-Property, simply use `obj.resizeable := !obj.resizeable`
+	* Same as property *sizebox*
 
 	*/
 		get {
-			ret := this.__hexStr(this.style & WS.SIZEBOX) > 0 ? 1 : 0
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_				
-			return ret
+			return this.sizebox
 		}
 		set {
-			style := "-" this.__hexStr(WS.SIZEBOX)
-			if (value) {
-					style := "+" this.__hexStr(WS.SIZEBOX)
-			}
-		 	prevState := A_DetectHiddenWindows
-			DetectHiddenWindows, on
-			this.style := style
-			this.redraw()
-			DetectHiddenWindows, %prevState%
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " this.resizeable ; _DBG_				
+			this.sizebox := value
 			return value
 		}
 	}
@@ -689,6 +677,40 @@ class WindowHandler {
 			ps.h := pt.y
 			this.posSize := ps
 			return pt
+		}
+	}
+	sizebox[] {
+	/*! ---------------------------------------------------------------------------------------
+	Property: sizebox [get/set]
+	Get or Set the *sizebox*-Property (Is window resizing possible?)
+
+	Value:
+	flag - `true` or `false` (activates/deactivates *sizebox*-Property)
+
+	Remarks:		
+	* To toogle current *sizebox*-Property, simply use `obj.sizebox := !obj.sizebox`
+	* Same as property *resizeable*
+	*/
+		get {
+			ret := (this.style & WS.SIZEBOX) > 0 ? 1 : 0
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_
+			return ret
+		}
+
+		set {
+			style := "-" this.__hexStr(WS.SIZEBOX)
+			if (value) {
+				style := "+" this.__hexStr(WS.SIZEBOX)
+			}
+		 	prevState := A_DetectHiddenWindows
+			DetectHiddenWindows, on
+			this.style := style
+			this.redraw()
+			DetectHiddenWindows, %prevState%
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " this.sizebox ; _DBG_
+			return value
 		}
 	}
 	style[] {
