@@ -12,7 +12,7 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.6.19"
+ReferenceVersion := "0.6.20"
 debug := 1
 
 ;Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, TempTestSuite)
@@ -649,6 +649,19 @@ class MiscTestSuite {
 		Yunit.assert(this.obj.maximizebox == 0)
 		OutputDebug % "....[" A_ThisFunc "] > 1"
 		this.obj.maximizebox := !this.obj.maximizebox
+		Yunit.assert(this.obj.caption == 1)
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+	}
+
+	minimizebox() {
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		OutputDebug % "....[" A_ThisFunc "] > Initial"
+		Yunit.assert(this.obj.minimizebox == 1)
+		OutputDebug % "....[" A_ThisFunc "] > 0"
+		this.obj.minimizebox := 0
+		Yunit.assert(this.obj.minimizebox == 0)
+		OutputDebug % "....[" A_ThisFunc "] > 1"
+		this.obj.minimizebox := !this.obj.minimizebox
 		Yunit.assert(this.obj.caption == 1)
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
