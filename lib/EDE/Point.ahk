@@ -1,8 +1,8 @@
-﻿; ****** HINT: Documentation can be extracted to HTML using GenDocs (https://github.com/fincs/GenDocs) by fincs************** */
+﻿; ****** HINT: Documentation can be extracted to HTML using NaturalDocs ************** */
 
 ; ******************************************************************************************************************************************
-/*!
-	Class: Pointy
+/*
+	Class: Point
 	Handling points (given through [x, y])
 	
 	Remarks:
