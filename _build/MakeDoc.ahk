@@ -1,12 +1,12 @@
-; Mit dem Skript wird die Dokumentation im Ordner _doc erzeugt
+; Mit dem Skript wird die Dokumentation im Ordner gh_pages erzeugt
 
 #include _inc\BuildTools.ahk
 #NoEnv
 
-srcBaseDir := A_ScriptDir "\..\lib"
-dstBaseDir := A_ScriptDir "\..\gh_pages"
+srcBaseDir := A_ScriptDir "\..\lib\EDE"
+dstBaseDir := A_ScriptDir "\..\..\gh_pages"
 
-makeCopy(srcBaseDir "\..\Ede.ahk", dstBaseDir)
+makeCopy(srcBaseDir "\..\..\Ede.ahk", dstBaseDir)
 makeCopy(srcBaseDir "\WindowHandler.ahk", dstBaseDir)
 makeCopy(srcBaseDir "\Rectangle.ahk", dstBaseDir)
 ;makeCopy(srcBaseDir "\_inc\cJeeBooConfig.ahk", dstBaseDir "\_inc") 
