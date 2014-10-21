@@ -12,7 +12,7 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.6.20"
+ReferenceVersion := "0.6.21"
 debug := 1
 
 ;Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, TempTestSuite)
@@ -25,7 +25,7 @@ class TempTestSuite {
     Begin() {
 		Global debug
 		this.obj := new WindowHandler(0, debug)
-	}
+	}    
 	
 /*
 	ResizeViaSizeProperty() {
@@ -776,6 +776,13 @@ class MiscTestSuite {
 		Yunit.assert(1 == ((this.obj.posSize.x == x) && (this.obj.posSize.y == y) && (this.obj.posSize.w == w) && (this.obj.posSize.h == h)))
 		OutputDebug % ">>>>[" A_ThisFunc "]>>>>"
 	}
+
+	owner() {
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		own:= this.obj.owner
+		Yunit.assert(own == 0)
+		OutputDebug % ">>>>[" A_ThisFunc "]>>>>"
+	}	 
 	
 	End() {
 		this.obj.kill()

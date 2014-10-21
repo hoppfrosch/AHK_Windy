@@ -23,7 +23,7 @@ class WindowHandler {
 		### Author
 			[hoppfrosch](hoppfrosch@gmx.de)
 */
-	_version := "0.6.20"
+	_version := "0.6.21"
 	_debug := 0
 	_hWnd := 0
 
@@ -492,6 +492,37 @@ class WindowHandler {
 				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], ID=" value ")] -> New Value:" monID " (from: " oldID ")" ; _DBG_
 	
 			return monID
+		}
+	}
+	owner[] {
+	/*! ---------------------------------------------------------------------------------------
+	Property: owner [get/set]
+	Get or Set the owner of the window.
+	
+	Value:
+	hwndOwner	- Handle to the owner window. If this parameter is 0, the desktop window becomes the new owner window.
+	
+	Returns:
+	If the function succeeds, the return value is a handle to the owner window. Otherwise, its 0.
+
+ 	Remarks:
+	See <http://msdn.microsoft.com/en-us/library/windows/desktop/ms633584%28v=vs.85%29.aspx> for more information.
+	*/
+		get {
+			hwndOwner := DllCall("GetWindowLong", "uint", this.hwnd, "int", GWL.HWNDPARENT, "UInt")
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " hwndOwner ; _DBG_		
+			return hwndOwner
+		}
+
+		set {
+			hwndOwner := value
+			ret := DllCall("SetWindowLong", "uint", this.hwnd, "int", GWL.HWNDPARENT, "uint", hwndOwner)
+			if  ret == 0				
+				hwndOwner := 0
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], hwndOwner= " hwndOwner ")] -> hwndOwner:" hwndOwner ")" ; _DBG_
+			return hwndOwner	
 		}
 	}
 	parent[bFixStyle=false]{
