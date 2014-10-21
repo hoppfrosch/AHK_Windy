@@ -23,7 +23,7 @@ class WindowHandler {
 		### Author
 			[hoppfrosch](hoppfrosch@gmx.de)
 */
-	_version := "0.6.15"
+	_version := "0.6.21"
 	_debug := 0
 	_hWnd := 0
 
@@ -150,7 +150,7 @@ class WindowHandler {
 			return __classname
 		}
 	}
-	debug[] {                                                                            ; _DBG_
+	debug[] { ; _DBG_
 	/*! ------------------------------------------------------------------------------ ; _DBG_
 	Property: debug [get/set]                                                          ; _DBG_
 	Debug flag                                                                         ; _DBG_
@@ -264,6 +264,72 @@ class WindowHandler {
 			return ret
 		}
 	}
+	hscrollable[] {
+	/*! ---------------------------------------------------------------------------------------
+	Property: hscrollable [get/set]
+	Get or Set the *hscrollable*-Property (Is vertical scrollbar available?)
+
+	Value:
+	flag - `true` or `false` (activates/deactivates *hscrollable*-Property)
+
+	Remarks:		
+	* To toogle current *hscrollable*-Property, simply use `obj.hscrollable := !obj.hscrollable`
+	*/
+		get {
+			ret := (this.style & WS.HSCROLL) > 0 ? 1 : 0
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_
+			return ret
+		}
+
+		set {
+			style := "-" this.__hexStr(WS.HSCROLL)
+			if (value) {
+				style := "+" this.__hexStr(WS.HSCROLL)
+			}
+		 	prevState := A_DetectHiddenWindows
+			DetectHiddenWindows, on
+			this.style := style
+			this.redraw()
+			DetectHiddenWindows, %prevState%
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " this.hscrollable ; _DBG_
+			return value
+		}
+	}
+	maximizebox[] {
+	/*! ---------------------------------------------------------------------------------------
+	Property: maximizebox [get/set]
+	Get or Set the *maximizebox*-Property (Is maximizebox available?)
+
+	Value:
+	flag - `true` or `false` (activates/deactivates *maximizebox*-Property)
+
+	Remarks:		
+	* To toogle current *maximizebox*-Property, simply use `obj.maximizebox := !obj.maximizebox`
+	*/
+		get {
+			ret := (this.style & WS.MAXIMIZEBOX) > 0 ? 1 : 0
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_
+			return ret
+		}
+
+		set {
+			style := "-" this.__hexStr(WS.MAXIMIZEBOX)
+			if (value) {
+				style := "+" this.__hexStr(WS.MAXIMIZEBOX)
+			}
+		 	prevState := A_DetectHiddenWindows
+			DetectHiddenWindows, on
+			this.style := style
+			this.redraw()
+			DetectHiddenWindows, %prevState%
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " this.maximizebox ; _DBG_
+			return value
+		}
+	}
 	maximized[] {
 	/*! ---------------------------------------------------------------------------------------
 	Property: maximized [get/set]
@@ -304,6 +370,39 @@ class WindowHandler {
 				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], mode=" mode ")] -> New Value:" isMax ; _DBG_
 			
 			return isMax
+		}
+	}
+	minimizebox[] {
+	/*! ---------------------------------------------------------------------------------------
+	Property: minimizebox [get/set]
+	Get or Set the *minimizebox*-Property (Is minimizebox available?)
+
+	Value:
+	flag - `true` or `false` (activates/deactivates *minimizebox*-Property)
+
+	Remarks:		
+	* To toogle current *minimizebox*-Property, simply use `obj.minimizebox := !obj.minimizebox`
+	*/
+		get {
+			ret := (this.style & WS.MINIMIZEBOX) > 0 ? 1 : 0
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_
+			return ret
+		}
+
+		set {
+			style := "-" this.__hexStr(WS.MINIMIZEBOX)
+			if (value) {
+				style := "+" this.__hexStr(WS.MINIMIZEBOX)
+			}
+		 	prevState := A_DetectHiddenWindows
+			DetectHiddenWindows, on
+			this.style := style
+			this.redraw()
+			DetectHiddenWindows, %prevState%
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " this.minimizebox ; _DBG_
+			return value
 		}
 	}
 	minimized[] {
@@ -393,6 +492,37 @@ class WindowHandler {
 				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], ID=" value ")] -> New Value:" monID " (from: " oldID ")" ; _DBG_
 	
 			return monID
+		}
+	}
+	owner[] {
+	/*! ---------------------------------------------------------------------------------------
+	Property: owner [get/set]
+	Get or Set the owner of the window.
+	
+	Value:
+	hwndOwner	- Handle to the owner window. If this parameter is 0, the desktop window becomes the new owner window.
+	
+	Returns:
+	If the function succeeds, the return value is a handle to the owner window. Otherwise, its 0.
+
+ 	Remarks:
+	See <http://msdn.microsoft.com/en-us/library/windows/desktop/ms633584%28v=vs.85%29.aspx> for more information.
+	*/
+		get {
+			hwndOwner := DllCall("GetWindowLong", "uint", this.hwnd, "int", GWL.HWNDPARENT, "UInt")
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " hwndOwner ; _DBG_		
+			return hwndOwner
+		}
+
+		set {
+			hwndOwner := value
+			ret := DllCall("SetWindowLong", "uint", this.hwnd, "int", GWL.HWNDPARENT, "uint", hwndOwner)
+			if  ret == 0				
+				hwndOwner := 0
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], hwndOwner= " hwndOwner ")] -> hwndOwner:" hwndOwner ")" ; _DBG_
+			return hwndOwner	
 		}
 	}
 	parent[bFixStyle=false]{
@@ -535,26 +665,14 @@ class WindowHandler {
 
 	Remarks:		
 	* To toogle current *resizeable*-Property, simply use `obj.resizeable := !obj.resizeable`
+	* Same as property *sizebox*
 
 	*/
 		get {
-			ret := this.__hexStr(this.style & WS.SIZEBOX) > 0 ? 1 : 0
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_				
-			return ret
+			return this.sizebox
 		}
 		set {
-			style := "-" this.__hexStr(WS.SIZEBOX)
-			if (value) {
-					style := "+" this.__hexStr(WS.SIZEBOX)
-			}
-		 	prevState := A_DetectHiddenWindows
-			DetectHiddenWindows, on
-			this.style := style
-			this.redraw()
-			DetectHiddenWindows, %prevState%
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " this.resizeable ; _DBG_				
+			this.sizebox := value
 			return value
 		}
 	}
@@ -656,6 +774,40 @@ class WindowHandler {
 			ps.h := pt.y
 			this.posSize := ps
 			return pt
+		}
+	}
+	sizebox[] {
+	/*! ---------------------------------------------------------------------------------------
+	Property: sizebox [get/set]
+	Get or Set the *sizebox*-Property (Is window resizing possible?)
+
+	Value:
+	flag - `true` or `false` (activates/deactivates *sizebox*-Property)
+
+	Remarks:		
+	* To toogle current *sizebox*-Property, simply use `obj.sizebox := !obj.sizebox`
+	* Same as property *resizeable*
+	*/
+		get {
+			ret := (this.style & WS.SIZEBOX) > 0 ? 1 : 0
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_
+			return ret
+		}
+
+		set {
+			style := "-" this.__hexStr(WS.SIZEBOX)
+			if (value) {
+				style := "+" this.__hexStr(WS.SIZEBOX)
+			}
+		 	prevState := A_DetectHiddenWindows
+			DetectHiddenWindows, on
+			this.style := style
+			this.redraw()
+			DetectHiddenWindows, %prevState%
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " this.sizebox ; _DBG_
+			return value
 		}
 	}
 	style[] {
@@ -791,6 +943,39 @@ class WindowHandler {
 			if (this._debug) ; _DBG_
 				OutputDebug % "<[" A_ThisFunc "([" this.hwnd "], transparency=" transOrig "(" transStart "), increment=" increment ", delay=" delay ")] -> New Value:" transEnd ; _DBG_
 			return transEnd
+		}
+	}
+	vscrollable[] {
+	/*! ---------------------------------------------------------------------------------------
+	Property: vscrollable [get/set]
+	Get or Set the *vscrollable*-Property (Is vertical scrollbar available?)
+
+	Value:
+	flag - `true` or `false` (activates/deactivates *vscrollable*-Property)
+
+	Remarks:		
+	* To toogle current *vscrollable*-Property, simply use `obj.vscrollable := !obj.vscrollable`
+	*/
+		get {
+			ret := (this.style & WS.VSCROLL) > 0 ? 1 : 0
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_
+			return ret
+		}
+
+		set {
+			style := "-" this.__hexStr(WS.VSCROLL)
+			if (value) {
+				style := "+" this.__hexStr(WS.VSCROLL)
+			}
+		 	prevState := A_DetectHiddenWindows
+			DetectHiddenWindows, on
+			this.style := style
+			this.redraw()
+			DetectHiddenWindows, %prevState%
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " this.vscrollable ; _DBG_
+			return value
 		}
 	}
 	windowinfo {

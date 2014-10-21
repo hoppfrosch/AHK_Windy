@@ -12,12 +12,11 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.6.15"
+ReferenceVersion := "0.6.21"
 debug := 1
 
-
-;Yunit.Use(YunitStdOut, YunitWindow).Test(TempTestSuite)
-Yunit.Use(YunitStdOut, YunitWindow).Test(MiscTestSuite, NotRealWindowTestSuite, HideShowTestSuite, ExistTestSuite, RollupTestSuite, MoveResizeTestSuite, TransparencyTestSuite)
+;Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, TempTestSuite)
+Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, MiscTestSuite, NotRealWindowTestSuite, HideShowTestSuite, ExistTestSuite, RollupTestSuite, MoveResizeTestSuite, TransparencyTestSuite)
 Return
 
 
@@ -26,7 +25,8 @@ class TempTestSuite {
     Begin() {
 		Global debug
 		this.obj := new WindowHandler(0, debug)
-	}
+	}    
+	
 /*
 	ResizeViaSizeProperty() {
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
@@ -52,6 +52,27 @@ class TempTestSuite {
 		this.obj := 
 	}
 }
+
+class _BaseTestSuite {
+    Begin() {
+		Global debug
+		this.obj := new WindowHandler(0, debug)
+	}
+	
+	Version() {
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		Global ReferenceVersion
+		Yunit.assert(this.obj._version == ReferenceVersion)
+		OutputDebug % ">>>>[" A_ThisFunc "]>>>>"
+	}
+
+	End() {
+		this.obj.kill()
+		this.remove("obj")
+		this.obj := 
+	}
+}
+
 
 ; ###################################################################
 class TileTestSuite {
@@ -84,8 +105,6 @@ class TransparencyTestSuite {
 	}
  
 	Transparency() {
-		Global debug
-
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		OutputDebug % "**** " A_ThisFunc " 1 ****"
 		t := this.obj.transparency
@@ -564,17 +583,9 @@ class MiscTestSuite {
 		this.obj := new WindowHandler(_hWnd, debug)
 	}
         
-	Version() {
-		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
-		Global ReferenceVersion
-		Yunit.assert(this.obj._version == ReferenceVersion)
-		OutputDebug % ">>>>[" A_ThisFunc "]>>>>"
-	}
-
 	Caption() {
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		OutputDebug % "....[" A_ThisFunc "] > 1"
-		this.obj.debug := 1
 		Yunit.assert(this.obj.caption == 1)
 		OutputDebug % "....[" A_ThisFunc "] > 0"
 		this.obj.caption := 0
@@ -582,10 +593,8 @@ class MiscTestSuite {
 		OutputDebug % "....[" A_ThisFunc "] > 1"
 		this.obj.caption := 1
 		Yunit.assert(this.obj.caption == 1)
-		this.obj.debug := 0
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
-
 	
 	Center() {
 		Global debug
@@ -614,7 +623,49 @@ class MiscTestSuite {
         Yunit.assert(this.obj.classname =="Notepad")
 		OutputDebug % ">>>>[" A_ThisFunc "]>>>>"
 	}
-        
+
+    hscrollable() {
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		OutputDebug % "....[" A_ThisFunc "] > Initial"
+		Yunit.assert(this.obj.hscrollable == 0)
+		OutputDebug % "....[" A_ThisFunc "] > 1"
+		this.obj.hscrollable := 1
+		Yunit.assert(this.obj.hscrollable == 1)
+		OutputDebug % "....[" A_ThisFunc "] > 0"
+		this.obj.hscrollable := 0
+		Yunit.assert(this.obj.hscrollable == 0)
+		OutputDebug % "....[" A_ThisFunc "] > 1"
+		this.obj.hscrollable := !this.obj.hscrollable
+		Yunit.assert(this.obj.hscrollable == 1)
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+	}
+	
+	maximizebox() {
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		OutputDebug % "....[" A_ThisFunc "] > Initial"
+		Yunit.assert(this.obj.maximizebox == 1)
+		OutputDebug % "....[" A_ThisFunc "] > 0"
+		this.obj.maximizebox := 0
+		Yunit.assert(this.obj.maximizebox == 0)
+		OutputDebug % "....[" A_ThisFunc "] > 1"
+		this.obj.maximizebox := !this.obj.maximizebox
+		Yunit.assert(this.obj.caption == 1)
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+	}
+
+	minimizebox() {
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		OutputDebug % "....[" A_ThisFunc "] > Initial"
+		Yunit.assert(this.obj.minimizebox == 1)
+		OutputDebug % "....[" A_ThisFunc "] > 0"
+		this.obj.minimizebox := 0
+		Yunit.assert(this.obj.minimizebox == 0)
+		OutputDebug % "....[" A_ThisFunc "] > 1"
+		this.obj.minimizebox := !this.obj.minimizebox
+		Yunit.assert(this.obj.caption == 1)
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+	}
+	
 	Title() {
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		Yunit.assert(this.obj.title =="Unbenannt - Editor")
@@ -656,6 +707,22 @@ class MiscTestSuite {
 		Yunit.assert( this.obj.resizeable == 1)
 		OutputDebug % ">>>>[" A_ThisFunc "]>>>>"
 		sleep, 500
+	}
+
+	vscrollable() {
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		OutputDebug % "....[" A_ThisFunc "] > Initial"
+		Yunit.assert(this.obj.vscrollable == 0)
+		OutputDebug % "....[" A_ThisFunc "] > 1"
+		this.obj.vscrollable := 1
+		Yunit.assert(this.obj.vscrollable == 1)
+		OutputDebug % "....[" A_ThisFunc "] > 0"
+		this.obj.vscrollable := 0
+		Yunit.assert(this.obj.vscrollable == 0)
+		OutputDebug % "....[" A_ThisFunc "] > 1"
+		this.obj.vscrollable := !this.obj.vscrollable
+		Yunit.assert(this.obj.vscrollable == 1)
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
 	
 	AlwaysOnTop() {
@@ -709,6 +776,13 @@ class MiscTestSuite {
 		Yunit.assert(1 == ((this.obj.posSize.x == x) && (this.obj.posSize.y == y) && (this.obj.posSize.w == w) && (this.obj.posSize.h == h)))
 		OutputDebug % ">>>>[" A_ThisFunc "]>>>>"
 	}
+
+	owner() {
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		own:= this.obj.owner
+		Yunit.assert(own == 0)
+		OutputDebug % ">>>>[" A_ThisFunc "]>>>>"
+	}	 
 	
 	End() {
 		this.obj.kill()
