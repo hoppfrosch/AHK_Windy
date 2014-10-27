@@ -3,6 +3,8 @@
 use strict;
 use warnings;
 
+use FindBin qw($Bin);
+
 use Cwd;
 use Template;
 use File::Basename;
@@ -10,6 +12,8 @@ use File::Path;
 use File::Spec;
 use Getopt::Long;
 use FindBin qw($Bin);
+
+chdir $Bin."/..";
 
 my $vars;
 $vars->{startdate} = "2014-10-27";
