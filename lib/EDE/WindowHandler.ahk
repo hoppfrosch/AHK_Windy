@@ -1,6 +1,5 @@
-﻿; ****** HINT: Documentation can be extracted to HTML using GenDocs (https://github.com/fincs/GenDocs) by fincs
+﻿; ****** HINT: Documentation can be extracted to HTML using NaturalDocs
 ; ****** HINT: Debug-lines should contain "; _DBG_" at the end of lines - using this, the debug lines could be automatically removed through scripts before releasing the sourcecode
-
 
 #include <EDE\Rectangle>
 #include <EDE\Point>
@@ -11,17 +10,16 @@
 
 class WindowHandler {
 ; ******************************************************************************************************************************************
-/*!
+/*
 	Class: WindowHandler
 		Perform actions on windows using an unified class based interface
-		
-	Extra:
-		### License
-			This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See [WTFPL](http://www.wtfpl.net/) for more details.
 
-	Remarks:
-		### Author
-			[hoppfrosch](hoppfrosch@gmx.de)
+	Author(s):
+	<hoppfrosch at hoppfrosch@gmx.de>		
+
+	About: License
+	This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See <WTFPL at http://www.wtfpl.net/> for more details.
+
 */
 	_version := "0.6.21"
 	_debug := 0
@@ -38,15 +36,16 @@ class WindowHandler {
 
 	; ##################### Start of Properties (AHK >1.1.16.x) ############################################################
 	alwaysOnTop[] {
-	/*! ---------------------------------------------------------------------------------------
+	/* ---------------------------------------------------------------------------------------
 	Property: alwaysOnTop [get/set]
 	Set/Unset alwaysontop flag of the current window or get the current state
 			
 	Value:
-	flag - `true` or `false` (activates/deactivates *alwaysontop*-Property)
+	flag - *true* or *false* (activates/deactivates *alwaysontop*-Property)
 	
 	Remarks:		
-	* To toogle current *alwaysontop*-Property, simply use `obj.alwaysontop := !obj.alwaysontop`
+	* To toogle, simply use
+	>obj.alwaysontop := !obj.alwaysontop
 	*/
 		get {
 			ret := (this.styleEx & WS.EX.TOPMOST) > 0 ? 1 : 0
@@ -68,15 +67,16 @@ class WindowHandler {
 		}
 	}
 	caption[] {
-	/*! ---------------------------------------------------------------------------------------
+	/* ---------------------------------------------------------------------------------------
 	Property: caption [get/set]
 	Set/Unset visibility of the window caption
 			
 	Value:
-	flag - `true` or `false` (activates/deactivates *caption*-Property)
+	flag - *true* or *false* (activates/deactivates *caption*-Property)
 	
 	Remarks:		
-	* To toogle, simply use `obj.caption := !obj.caption`
+	* To toogle, simply use 
+	> obj.caption := !obj.caption
 	*/
 		get {
 			ret := (this.style & WS.CAPTION) > 0 ? 1 : 0
@@ -102,9 +102,12 @@ class WindowHandler {
 		}
 	}
 	centercoords[] {
-	/*! ---------------------------------------------------------------------------------------
+	/* ---------------------------------------------------------------------------------------
 	Property: centercoords [get/set]
-	Coordinates of the center of the window as a [Point](Point.html)-object
+	Coordinates of the center of the window as a <Point at Point.html>-object
+
+	Value:
+	coords - centercoordinates of the window
 	*/
 
 		get {
@@ -135,12 +138,12 @@ class WindowHandler {
 		}
 	}
 	classname[] {
-	/*! ---------------------------------------------------------------------------------------
-		Property: classname [get]
-		name of the window class. 
+	/* ---------------------------------------------------------------------------------------
+	Property: classname [get]
+	name of the window class. 
 
-		Remarks:
-		There is no setter available, since this is a constant window property
+	Remarks:
+	* There is no setter available, since this is a constant window property
 	*/
 		get {
 			val := this.hwnd
@@ -151,9 +154,12 @@ class WindowHandler {
 		}
 	}
 	debug[] { ; _DBG_
-	/*! ------------------------------------------------------------------------------ ; _DBG_
+	/* ------------------------------------------------------------------------------- ; _DBG_
 	Property: debug [get/set]                                                          ; _DBG_
-	Debug flag                                                                         ; _DBG_
+	Debug flag for debugging the object                                                ; _DBG_
+                                                                                       ; _DBG_
+	Value:                                                                             ; _DBG_
+	flag - *true* or *false*                                                           ; _DBG_
 	*/                                                                                 ; _DBG_
 		get {                                                                          ; _DBG_ 
 			return this._debug                                                         ; _DBG_
@@ -165,12 +171,15 @@ class WindowHandler {
 		}                                                                              ; _DBG_
 	}                                                                                  ; _DBG_
 	exist[] {
-	/*! ---------------------------------------------------------------------------------------
+	/* ---------------------------------------------------------------------------------------
 	Property: exist [get]
 	Checks whether the window still exists. 
 
+	Value:
+	flag - *true* or *false* (activates/deactivates *caption*-Property)
+
 	Remarks:
-	There is no setter available, since this is a constant window property
+	* There is no setter available, since this is a constant window property
 	*/
 		get {
 			val := this.hwnd
@@ -184,16 +193,16 @@ class WindowHandler {
 		}
 	}
 	hidden[] {
-	/*! ---------------------------------------------------------------------------------------
-		Property: hidden [get/set]
-		Get or Set the *hidden*-Property. Hides/Unhide the current window or get the current state of hiding
+	/* ---------------------------------------------------------------------------------------
+	Property: hidden [get/set]
+	Hides/Unhide the current window or get the current state of hiding
 
-		Value:
-		flag - `true` or `false` (activates/deactivates *hidden*-Property)
+	Value:
+	flag - `true` or `false` (activates/deactivates *hidden*-Property)
 
-		Remarks:		
-		* To toogle current *hidden*-Property, simply use `obj.hidden := !obj.hidden`	
-*/
+	Remarks:		
+	* To toogle current *hidden*-Property, simply use `obj.hidden := !obj.hidden`	
+	*/
 		get {
 			prevState := A_DetectHiddenWindows
 			ret := false
@@ -244,18 +253,24 @@ class WindowHandler {
 		}
 	}
 	hwnd[] {
-	/*! ---------------------------------------------------------------------------------------
+	/* ---------------------------------------------------------------------------------------
 	Property: hwnd [get]
 	Get the window handle of the current window
+
+	Remarks:
+	* There is no setter available, since this is a constant window property
 	*/
 		get {
 			return this._hwnd
 		}
 	}
 	hangs[] {
-	/*! ---------------------------------------------------------------------------------------
+	/* ---------------------------------------------------------------------------------------
 	Property: hangs [get]
 	Determines whether the system considers that a specified application is not responding. 
+
+	Remarks:
+	* There is no setter available, since this is a constant window property
 	*/
 		get {
 			ret := DllCall("user32\IsHungAppWindow", "Ptr", this.hwnd)
@@ -265,12 +280,12 @@ class WindowHandler {
 		}
 	}
 	hscrollable[] {
-	/*! ---------------------------------------------------------------------------------------
+	/* ---------------------------------------------------------------------------------------
 	Property: hscrollable [get/set]
-	Get or Set the *hscrollable*-Property (Is vertical scrollbar available?)
+	Is horizontal scrollbar available?
 
 	Value:
-	flag - `true` or `false` (activates/deactivates *hscrollable*-Property)
+	flag - *true* or *false (activates/deactivates *hscrollable*-Property)
 
 	Remarks:		
 	* To toogle current *hscrollable*-Property, simply use `obj.hscrollable := !obj.hscrollable`
@@ -298,15 +313,16 @@ class WindowHandler {
 		}
 	}
 	maximizebox[] {
-	/*! ---------------------------------------------------------------------------------------
+	/* ---------------------------------------------------------------------------------------
 	Property: maximizebox [get/set]
 	Get or Set the *maximizebox*-Property (Is maximizebox available?)
 
 	Value:
-	flag - `true` or `false` (activates/deactivates *maximizebox*-Property)
+	flag - *true* or *false* (activates/deactivates *maximizebox*-Property)
 
 	Remarks:		
-	* To toogle current *maximizebox*-Property, simply use `obj.maximizebox := !obj.maximizebox`
+	* To toogle, simply use 
+	> obj.maximizebox := !obj.maximizebox
 	*/
 		get {
 			ret := (this.style & WS.MAXIMIZEBOX) > 0 ? 1 : 0
@@ -331,15 +347,16 @@ class WindowHandler {
 		}
 	}
 	maximized[] {
-	/*! ---------------------------------------------------------------------------------------
+	/* ---------------------------------------------------------------------------------------
 	Property: maximized [get/set]
-	Get or Set the *maximized*-Property. Maximizes/Demaximizes the current window or get the current state of maximization
+	Maximizes/Demaximizes the current window or get the current state of maximization
 	
 	Value:
-	flag - `true` or `false` (activates/deactivates *maximized*-Property)
+	flag - *true* or *false* (activates/deactivates *maximized*-Property)
 	
 	Remarks:		
-	* To toogle current *maximized*-Property, simply use `obj.maximized := !obj.maximized`	
+	* To toogle, simply use 
+	> obj.maximized := !obj.maximized
 */
 		get {
 			val := this.hwnd
@@ -373,15 +390,16 @@ class WindowHandler {
 		}
 	}
 	minimizebox[] {
-	/*! ---------------------------------------------------------------------------------------
+	/* ---------------------------------------------------------------------------------------
 	Property: minimizebox [get/set]
 	Get or Set the *minimizebox*-Property (Is minimizebox available?)
 
 	Value:
-	flag - `true` or `false` (activates/deactivates *minimizebox*-Property)
+	flag - *true* or *false* (activates/deactivates *minimizebox*-Property)
 
 	Remarks:		
-	* To toogle current *minimizebox*-Property, simply use `obj.minimizebox := !obj.minimizebox`
+	* To toogle, simply use 
+	> obj.minimizebox := !obj.minimizebox
 	*/
 		get {
 			ret := (this.style & WS.MINIMIZEBOX) > 0 ? 1 : 0
@@ -406,15 +424,16 @@ class WindowHandler {
 		}
 	}
 	minimized[] {
-	/*! ---------------------------------------------------------------------------------------
+	/* ---------------------------------------------------------------------------------------
 	Property: minimized [get/set]
-	Get or Set the *minimized*-Property. Minimizes/Deminimizes the current window or get the current state of minimization
+	Minimizes/Deminimizes the current window or get the current state of minimization
 
 	Value:
-	flag - `true` or `false` (activates/deactivates *minimized*-Property)
+	flag - *true* or *false* (activates/deactivates *minimized*-Property)
 
 	Remarks:		
-	* To toogle current *minimized*-Property, simply use `obj.minimized := !obj.minimized`	
+	* To toogle, simply use 
+	> obj.minimized := !obj.minimized
 	*/
 		get {
 			val := this.hwnd
@@ -448,12 +467,12 @@ class WindowHandler {
 			}
 	}
 	monitorID[] {
-	/*! ---------------------------------------------------------------------------------------
+	/* ---------------------------------------------------------------------------------------
 	Property: monitorID [get/set]
 	Get or Set the ID of monitor on which the window is on. Setting the property moves the window to the corresponding monitor, trying to place the window at the same (scaled) position
 
 	Value:
-	ID - Monitor-ID (if ID > max(ID) then ID = max(ID) will be used)
+	ID - Monitor-ID (if *ID > max(ID)* then *ID = max(ID)* will be used)
 		
 	Remarks
 	* Setting the property moves the window to the corresponding monitor, retaining the (relative) position and size of the window
@@ -495,18 +514,18 @@ class WindowHandler {
 		}
 	}
 	owner[] {
-	/*! ---------------------------------------------------------------------------------------
+	/* ---------------------------------------------------------------------------------------
 	Property: owner [get/set]
-	Get or Set the owner of the window.
+	Get or Set the handle of owner window of the window current.
 	
 	Value:
-	hwndOwner	- Handle to the owner window. If this parameter is 0, the desktop window becomes the new owner window.
+	hwndOwner - Handle to the owner window. If this parameter is 0, the desktop window becomes the new owner window.
 	
 	Returns:
 	If the function succeeds, the return value is a handle to the owner window. Otherwise, its 0.
 
  	Remarks:
-	See <http://msdn.microsoft.com/en-us/library/windows/desktop/ms633584%28v=vs.85%29.aspx> for more information.
+	See <MSDN at http://msdn.microsoft.com/en-us/library/windows/desktop/ms633584%28v=vs.85%29.aspx> for more information.
 	*/
 		get {
 			hwndOwner := DllCall("GetWindowLong", "uint", this.hwnd, "int", GWL.HWNDPARENT, "UInt")
@@ -526,23 +545,21 @@ class WindowHandler {
 		}
 	}
 	parent[bFixStyle=false]{
-	/*! ---------------------------------------------------------------------------------------
+	/* ---------------------------------------------------------------------------------------
 	Property: parent [get/set]
 	Get or Set the parent of the window.
 	
 	Value:
 	hwndPar	- Handle to the parent window. If this parameter is 0, the desktop window becomes the new parent window.
-	bFixStyle - Set to TRUE to fix WS_CHILD & WS_POPUP styles. SetParent does not modify the WS_CHILD or WS_POPUP window styles of the window whose parent is being changed.
-
-	If hwndPar is 0, you should also clear the WS_CHILD bit and set the WS_POPUP style after calling SetParent (and vice-versa).	
+	bFixStyle - Set to TRUE to fix WS_CHILD & WS_POPUP styles. SetParent does not modify the WS_CHILD or WS_POPUP window styles of the window whose parent is being changed. 	If hwndPar is 0, you should also clear the WS_CHILD bit and set the WS_POPUP style after calling SetParent (and vice-versa).	
 
 	Returns:
 	If the function succeeds, the return value is a handle to the previous parent window. Otherwise, its 0.
 
  	Remarks:
-	If the current window identified by the hwnd parameter is visible, the system performs the appropriate redrawing and repainting.
+	* If the current window identified by the hwnd parameter is visible, the system performs the appropriate redrawing and repainting.
 	The function sends WM_CHANGEUISTATE to the parent after succesifull operation uncoditionally.
-	See <http://msdn.microsoft.com/en-us/library/ms633541(VS.85).aspx> for more information.
+	* See <http://msdn.microsoft.com/en-us/library/ms633541(VS.85).aspx> for more information.
 	*/
 		get {
 			hwndPar := DllCall("GetParent", "uint", hwndPar, "UInt")
@@ -575,9 +592,12 @@ class WindowHandler {
 		}
 	}
 	pos[] {
-	/*! ---------------------------------------------------------------------------------------
+	/* ---------------------------------------------------------------------------------------
 	Property: pos [get/set]
-	Position of the window as [Point](point.html) object
+	Position of the window as <Point at point.html> object
+
+	Value:
+	pos - position of the window
 	*/
 		get {
 			ps := this.posSize
@@ -596,9 +616,12 @@ class WindowHandler {
 		}
 	}
 	posSize[] {
-	/*! ---------------------------------------------------------------------------------------
+	/* ---------------------------------------------------------------------------------------
 	Property: posSize [get/set]
-	Get or Set the position and size of the window (To set the position use class [Rectangle](rectangle.html))	
+	Get or Set the position and size of the window (To set the position use class <Rectangle at rectangle.html>)	
+
+	Value:
+	ps - position and size of the window
 	*/
 		get {
 			info := this.windowinfo
@@ -618,12 +641,12 @@ class WindowHandler {
 		}
 	}
 	processID[] {
-	/*! ---------------------------------------------------------------------------------------
+	/*---------------------------------------------------------------------------------------
 	Property: processID [get]
 	Get the ID of the process the window belongs to
 	
 	Remarks:		
-	There is no setter available, since this cannot be modified
+	* There is no setter available, since this cannot be modified
 	*/
 		get {
 			ret := ""
@@ -637,12 +660,12 @@ class WindowHandler {
 		}
 	}
 	processname[] {
-	/*! ---------------------------------------------------------------------------------------
+	/* ---------------------------------------------------------------------------------------
 	Property: processname [get]
 	Get the Name of the process the window belongs to
 
 	Remarks:		
-	There is no setter available, since this cannot be modified
+	* There is no setter available, since this cannot be modified
 	*/
 		get {
 			ret := ""
@@ -656,15 +679,16 @@ class WindowHandler {
 		}
 	}
 	resizeable[] {
-	/*! ---------------------------------------------------------------------------------------
+	/* ---------------------------------------------------------------------------------------
 	Property: resizeable [get/set]
-	Get or Set the *resizeable*-Property (Is window resizing possible?)
+	Is window resizing possible?
 
 	Value:
-	flag - `true` or `false` (activates/deactivates *resizeable*-Property)
+	flag - *true* or *false* (activates/deactivates *resizeable*-Property)
 
 	Remarks:		
-	* To toogle current *resizeable*-Property, simply use `obj.resizeable := !obj.resizeable`
+	* To toogle, simply use 
+	> obj.resizeable := !obj.resizeable
 	* Same as property *sizebox*
 
 	*/
@@ -679,13 +703,14 @@ class WindowHandler {
 	rolledUp[] {
 	/*! ---------------------------------------------------------------------------------------
 	Property: rolledUp [get/set]
-	Get or Set the *RolledUp*-Property (window is rolled up to its title bar).  Rolls/De-Rolls the current window or get the current state of RollUp
+	Is (window rolled up to its title bar?  Rolls/De-Rolls the current window or get the current state of RollUp
 
 	Value:
-	flag - `true` or `false` (activates/deactivates *rolledUp*-Property)
+	flag - *true* or *false* (activates/deactivates *rolledUp*-Property)
 
 	Remarks:		
-	* To toogle current *rolledUp*-Property, simply use `obj.rolledUp := !obj.rolledUp`
+	* To toogle, simply use 
+	> obj.rolledUp := !obj.rolledUp
 	*/
 		get {
 			ret := 0
@@ -742,12 +767,12 @@ class WindowHandler {
 		}
 	}
 	rolledUpHeight[] {
-	/*! ---------------------------------------------------------------------------------------
+	/* ---------------------------------------------------------------------------------------
 	Property:rolledUpHeight [get]
-		Returns the height of the caption bar of windows
+	Height of the caption bar of windows
 		
 	Remarks:
-	There is no setter available, since this is a constant window property
+	* There is no setter available, since this is a constant window property
 	*/
 		get {
 			SysGet, ret, 29
@@ -756,9 +781,12 @@ class WindowHandler {
 
 	}
 	size[] {
-	/*! ---------------------------------------------------------------------------------------
+	/* ---------------------------------------------------------------------------------------
 	Property: size [get/set]
-	Dimensions (Width/Height) of the window as [Point](point.html) object
+	Dimensions (Width/Height) of the window as <Point at point.html> object
+
+	Value:
+	size - size of the window
 	*/
 		get {
 			ps := this.posSize
@@ -777,15 +805,16 @@ class WindowHandler {
 		}
 	}
 	sizebox[] {
-	/*! ---------------------------------------------------------------------------------------
+	/*---------------------------------------------------------------------------------------
 	Property: sizebox [get/set]
-	Get or Set the *sizebox*-Property (Is window resizing possible?)
+	Is window resizing possible?
 
 	Value:
-	flag - `true` or `false` (activates/deactivates *sizebox*-Property)
+	flag - *true* or *false* (activates/deactivates *sizebox*-Property)
 
 	Remarks:		
-	* To toogle current *sizebox*-Property, simply use `obj.sizebox := !obj.sizebox`
+	* To toogle, simply use 
+	> obj.sizebox := !obj.sizebox
 	* Same as property *resizeable*
 	*/
 		get {
@@ -811,9 +840,9 @@ class WindowHandler {
 		}
 	}
 	style[] {
-	/*! ---------------------------------------------------------------------------------------
-	Property: style [get]
-	Returns current window style
+	/* ---------------------------------------------------------------------------------------
+	Property: style [get/set]
+	Current window style
 	*/
 		get {
 			hWnd := this._hwnd
@@ -833,9 +862,9 @@ class WindowHandler {
 		}		
 	}
 	styleEx[] {
-	/*! ---------------------------------------------------------------------------------------
-	Property: styleEx [get]
-	Returns current window extended style
+	/* ---------------------------------------------------------------------------------------
+	Property: styleEx [get/set]
+	Current window extended style
 	*/
 
 		get {
@@ -856,7 +885,7 @@ class WindowHandler {
 		}
 	}
 	title[] {
-	/*! ---------------------------------------------------------------------------------------
+	/* ---------------------------------------------------------------------------------------
 	Property: title [get/set]
 	Current window title. 
 
@@ -885,11 +914,11 @@ class WindowHandler {
 		}
 	}
 	transparency[increment := 1,delay := 10] {
-	/*! ---------------------------------------------------------------------------------------
+	/* ---------------------------------------------------------------------------------------
 	Property: transparency [get/set]
 	Current window transparency. 
 
-	Parameters: [Setter]
+	Parameters:
 	transparency - transparency to be set
 	increment - transparency-incrementation while fading
 	delay - delay between each increment (Unit: ms)
@@ -946,15 +975,16 @@ class WindowHandler {
 		}
 	}
 	vscrollable[] {
-	/*! ---------------------------------------------------------------------------------------
+	/* ---------------------------------------------------------------------------------------
 	Property: vscrollable [get/set]
-	Get or Set the *vscrollable*-Property (Is vertical scrollbar available?)
+	Is vertical scrollbar available?
 
 	Value:
-	flag - `true` or `false` (activates/deactivates *vscrollable*-Property)
+	flag - *true* or *false* (activates/deactivates *vscrollable*-Property)
 
 	Remarks:		
-	* To toogle current *vscrollable*-Property, simply use `obj.vscrollable := !obj.vscrollable`
+	* To toogle, simply use 
+	> obj.vscrollable := !obj.vscrollable
 	*/
 		get {
 			ret := (this.style & WS.VSCROLL) > 0 ? 1 : 0
@@ -979,21 +1009,21 @@ class WindowHandler {
 		}
 	}
 	windowinfo {
-	/*! ---------------------------------------------------------------------------------------
+	/* ---------------------------------------------------------------------------------------
 	Property: windowinfo [get]
-	Current window info. 
+	Info about current window 
 
-	 Return values:    
-	 * On success  - Object containing structure's values (see Remarks)
-     * On failure  - False, ErrorLevel = 1 -> Invalid HWN, ErrorLevel = 2 -> DllCall("GetWindowInfo") caused an error
+	Return values:    
+	* On success  - Object containing structure's values (see Remarks)
+    * On failure  - False, ErrorLevel = 1 -> Invalid HWN, ErrorLevel = 2 -> DllCall("GetWindowInfo") caused an error
 
     Remarks:          
     * The returned object contains all keys defined in WINDOWINFO except "Size".
     * The keys "Window" and "Client" contain objects with keynames defined in [5]
     * For more details see http://msdn.microsoft.com/en-us/library/ms633516%28VS.85%29.aspx and http://msdn.microsoft.com/en-us/library/ms632610%28VS.85%29.aspx 
 
-    ### Author(s)
-     	* just me (http://www.autohotkey.com/board/topic/69254-func-api-getwindowinfo-ahk-l/)
+    Author(s)
+    Original - <just me at http://www.autohotkey.com/board/topic/69254-func-api-getwindowinfo-ahk-l/>
 	*/
 		get {
 		   ; [1] = Offset, [2] = Length, [3] = Occurrences, [4] = Type, [5] = Key array
@@ -1058,15 +1088,14 @@ class WindowHandler {
 	
 	; ######################## Methods to be called directly ########################################################### 
 	kill() {
-/*! ===============================================================================
-	Method: kill()
-		Kills the Window (Forces the window to close)
+/* ===============================================================================
+	Method: kill
+	Kills the Window (Forces the window to close)
 			
-		Performs the AHK command `[WinKill](http://www.autohotkey.com/docs/commands/WinKill.htm)`
-			
-	Remarks:
-		### See also: 
-			[close()](#close)
+	Performs the AHK command <WinKill at (http://ahkscript.org/docs/commands/WinKill.htm>
+
+	See also: 
+	* <close at #close>
 */
 		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])]" ; _DBG_		
@@ -1077,19 +1106,24 @@ class WindowHandler {
 		DetectHiddenWindows, %prevState%
 	}	
 	move(X,Y,W="99999",H="99999") {
-/*! ===============================================================================
-	Method: move(X,Y,W=99999,H=99999)
-		Moves and/or resizes the window
+/* ===============================================================================
+	Method: move
+	Moves and/or resizes the window
 			
-		The given coordinates/sizes are absolute coordinates/sizes. If the value of any coordinate is equal *99999* the current value keeps unchanged. For example: Resize-only can be performed by `obj.move(99999,99999,width,height)`
+	The given coordinates/sizes are absolute coordinates/sizes. If the value of any coordinate is equal *99999* the current value keeps unchanged. 
+
+	Examples 
+	* Resize-only can be performed by 
+	> obj.move(99999,99999,width,height)
+	
 	Parameters:
 		x - x-Coordinate (absolute) the window has to be moved to - use *99999* to preserve actual value
 		y - y-Coordinate (absolute) the window has to be moved to - use *99999* to preserve actual value
-		w - *(Optional)* width (absolute) the window has to be resized to - use *99999* to preserve actual value
-		h - *(Optional)* height (absolute) the window has to be resized to - use *99999* to preserve actual value
-	Remarks:
-		### See also: 
-			[movePercental()](movePercental)
+		w -  width (absolute) the window has to be resized to - use *99999* to preserve actual value *(Optional)*
+		h - height (absolute) the window has to be resized to - use *99999* to preserve actual value *(Optional)*
+	
+	See also: 
+	<movePercental at #movePercental>
 */
 		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "([" this.hwnd "])(X=" X " ,Y=" Y " ,W=" W " ,H=" H ")]" ; _DBG_		
@@ -1113,30 +1147,30 @@ class WindowHandler {
 		WinMove % "ahk_id" this.hwnd, , X, Y, W, H
 	}
 	movePercental(xFactor=0, yFactor=0, wFactor=100, hFactor=100) {
-/*! ===============================================================================
-	Method: movePercental(xFactor=0, yFactor=0, wFactor=100, hFactor=100)
+/* ===============================================================================
+	Method: movePercental
 	move and resize window relative to the size of the current screen.
 			
-	For example: 
-	 * `obj.movePercental(0,0,100,100)` creates a window with origin 0,0 and a *width=100% of screen width* and *height=100% of screen height*
-	 * `obj.movePercental(25,25,50,50)` creates a window at *x=25% of screen width*, *y =25% of screen height*, and with *width=50% of screen width*, *height=50% of screen height*. The resulting window is a screen centered window with the described width and height
+	Example(s): 
+	 * create a window with origin 0,0 and a *width=100% of screen width* and *height=100% of screen height*
+	 > obj.movePercental(0,0,100,100)
+	 * create a window at *x=25% of screen width*, *y =25% of screen height*, and with *width=50% of screen width*, *height=50% of screen height*. The resulting window is a screen centered window with the described width and height
+	 > obj.movePercental(25,25,50,50)
 	 
-	Parameters:
-	xFactor - x-position factor (percents of current screen width) the window has to be moved to (Range: 0.0 to 100.0)
-	yFactor - y-position factor (percents of current screen height) the window has to be moved to (Range: 0.0 to 100.0)
-	wFactor - *(Optional)* width-size factor (percents of current screen width) the window has to be resized to (Range: 0.0 to 100.0)
-	hFactor - *(Optional)* height-size factor (percents of current screen height) the window has to be resized to (Range: 0.0 to 100.0)
+	Parameter(s):
+	xFactor - x-position factor (percents of current screen width) the window has to be moved to (Range: 0.0 to 100.0) *(*Optional*, Default = 0)
+	yFactor - y-position factor (percents of current screen height) the window has to be moved to (Range: 0.0 to 100.0) (*Optional*, Default = 0)
+	wFactor - width-size factor (percents of current screen width) the window has to be resized to (Range: 0.0 to 100.0) (*Optional*, Default = 100)
+	hFactor - height-size factor (percents of current screen height) the window has to be resized to (Range: 0.0 to 100.0) (*Optional*, Default = 100)
 	
-	Remarks:
-	### See also: 
+	See also: 
 		[move()](move)
 		
-	### Author(s)
-	    * xxxxxxxx - Lexikos - [Original on AHK-Forum](http://www.autohotkey.com/forum/topic21703.html)
-		* 20130402 - [hoppfrosch](hoppfrosch@gmx.de) - Rewritten
+	Author(s):
+	Original - <Lexikos at http://www.autohotkey.com/forum/topic21703.html>
 			
-	### Caveats / Known issues
-	    * The range of the method parameters is **NOT** checked - so be carefull using any values <0 or >100
+	Caveats / Known issues:
+	    * The range of the method parameters is **NOT** checked - so be carefull using any values *<0* or *>100*
 */	
 		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "([" this.hwnd "], xFactor=" xFactor ", yFactor=" yFactor ", wFactor=" wFactor ", hFactor=" hFactor ")]" ; _DBG_
@@ -1159,23 +1193,21 @@ class WindowHandler {
 			OutputDebug % "<[" A_ThisFunc "([" this.hwnd "], xFactor=" xFactor ", yFactor=" yFactor ", wFactor=" wFactor ", hFactor=" hFactor ")] -> padded to (" this.posSize.Dump() ") on Monitor (" monId ")" ; _DBG_
 	}
     redraw(Option="" ) {
-/*! ===============================================================================
- 	Function:	Redraw
+/* ===============================================================================
+ 	Method:	redraw
  	Redraws the window.
 
  	Parameters:
-	Option  - "-" to disable redrawing for the window. "+" to enable it and redraw it. By default empty.
+	Option  - Enable or disable redrawing (*Optional*, Default = "" (empty)). Use *"-"* to disable redrawing for the window, *"+"* to enable it and redraw it.
  
  	Returns:
 	A nonzero value indicates success. Zero indicates failure.
 
- 	Remarks:
-	### Hint
-		This function will update the window for sure, unlike WinSet or InvalidateRect.
+	Hint:
+		This function will update the window for sure, unlike <WinSet at http://ahkscript.org/docs/commands/WinSet.htm> or InvalidateRect.
 
-	### Author(s)
-		* xxxxxxxx - majkinetor
-		* 20140922 - [hoppfrosch](hoppfrosch@gmx.de) - Rewritten
+	Author(s):
+	Original - majkinetor
  */
 		return
 		hwnd := this.hwnd
@@ -1198,11 +1230,14 @@ class WindowHandler {
 Method:   __isWindow
 	Checks whether the given hWnd refers to a TRUE window (As opposed to the desktop or a menu, etc.) (*INTERNAL*)
 
+Parameters:
+	hwnd  - Handle of window to check (*Obligatory*)
+
 Returns:
 	true (window is a true window), false (window is not a true window)
 
 Author(s):
-	20080121 - ManaUser - Original (http://www.autohotkey.com/board/topic/25393-appskeys-a-suite-of-simple-utility-hotkeys/)
+	Original - <ManaUser at http://www.autohotkey.com/board/topic/25393-appskeys-a-suite-of-simple-utility-hotkeys/>
 */
 		WinGet, s, Style, ahk_id %hWnd% 
 		ret := s & WS.CAPTION ? (s & WS.POPUP ? 0 : 1) : 0  ;WS_CAPTION AND !WS_POPUP(for tooltips etc) 
@@ -1214,11 +1249,8 @@ Author(s):
 	}	
 	__hexStr(i) {
 /* ===============================================================================
-Method:   ____hexStr
+    Method:   ____hexStr
 	Converts number to hex representation (*INTERNAL*)
-
-Returns:
-	HEX
 */
 		OldFormat := A_FormatInteger ; save the current format as a string
 		SetFormat, Integer, Hex
@@ -1230,9 +1262,6 @@ Returns:
 /* ===============================================================================
 Method: __posPush
 	Pushes current position of the window on position stack (*INTERNAL*)
-
-Author(s):
-	20130311 - hoppfrosch@gmx.de - Original
 */
 		this._posStack.Insert(1, this.posSize)
 		if (this._debug) { ; _DBG_ 
@@ -1244,9 +1273,6 @@ Author(s):
 /* ===============================================================================
 Method: __posStackDump
 	Dumps the current position stack via OutputDebug (*INTERNAL*)
-
-Author(s):
-	20130312 - hoppfrosch@gmx.de - Original
 */	
 		For key,value in this._posStack	; loops through all elements in Stack
 			OutputDebug % "|[" A_ThisFunc "()] -> (" key "): (" Value.dump() ")" ; _DBG_
@@ -1258,10 +1284,7 @@ Method: __posRestore
 	Restores position of the window  from Stack(*INTERNAL*)
 
 Parameters:
-	index - Index of position to restore (Default = 2) (1 is the current position)
-
-Author(s):
-	20130308 - hoppfrosch@gmx.de - Original
+	index - Index of position to restore (*Optional*, Default = 2) (1 is the current position)
 */
 		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "([" this.hwnd "], index=" index ")]" ; _DBG_
@@ -1282,13 +1305,10 @@ Method: __SetWinEventHook
 	Set the hook for certain win-events (*INTERNAL*)
 
 Parameters:
-	see siehe http://msdn.microsoft.com/en-us/library/windows/desktop/dd373885(v=vs.85).aspx
+	see <MSDN at http://msdn.microsoft.com/en-us/library/windows/desktop/dd373885(v=vs.85).aspx>
 
 Returns:
 	true or false, depending on result of dllcall
-
-Author(s):
-	20130311 - hoppfrosch@gmx.de - Original
 */ 
 		if (this._debug) ; _DBG_ 
 			OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])(eventMin=" eventMin ", eventMax=" eventMax ", hmodWinEventProc=" hmodWinEventProc ", lpfnWinEventProc=" lpfnWinEventProc ", idProcess=" idProcess ", idThread=" idThread ", dwFlags=" dwFlags ")"  ; _DBG_
@@ -1308,12 +1328,9 @@ Author(s):
 	__onLocationChange() {
 /* ===============================================================================
 Method:   __onLocationChange
-	Callback on Object-Event <CONST_EVENT.OBJECT.LOCATIONCHANGE> or on <CONST_EVENT.SYSTEM.MOVESIZEEND>
+	Callback on Object-Event *CONST_EVENT.OBJECT.LOCATIONCHANGE* or on *CONST_EVENT.SYSTEM.MOVESIZEEND* (*INTERNAL*)
 	
-	Store windows size/pos on each change
-
-Author(s):
-	20130312 - hoppfrosch@gmx.de - AutoHotkey-Implementation
+	* Store windows size/pos on each change
 */
 		if this.hwnd = 0
 			return
@@ -1385,9 +1402,6 @@ Parameters:
 
 Returns:
 	true or false, depending on current value
-
-Author(s):
-	20130308 - hoppfrosch@gmx.de - Original
 */   
 		this._debug := _debug
 		if (this._debug) ; _DBG_
@@ -1453,16 +1467,13 @@ Author(s):
 	End of class
 */
 
-/*! ===============================================================================
+/* ===============================================================================
 Function:   ClassWindowHandler_EventHook
 	Callback on System Events. Used as dispatcher to detect window manipulation and calling the appropriate member-function within class <WindowHandler>
 	
-Author(s):
-	20120629 - hoppfrosch - Original
-
 See also:
-	http://www.autohotkey.com/community/viewtopic.php?t=35659
-	http://www.autohotkey.com/community/viewtopic.php?f=1&t=88156
+	* http://www.autohotkey.com/community/viewtopic.php?t=35659
+	* http://www.autohotkey.com/community/viewtopic.php?f=1&t=88156
 */
 ClassWindowHandler_EventHook(hWinEventHook, Event, hWnd, idObject, idChild, dwEventThread, dwmsEventTime ) {
 	; ClassWindowHandler_EventHook is used as WindowsEventHook - it's registered as callback within <__SetWinEventHook> of class <WindowHandler>.
