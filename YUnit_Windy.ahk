@@ -37,7 +37,7 @@ class TempTestSuite {
 		hnew := oldSize.y+200
 		
 		OutputDebug % "BEFORE - Resizing from " oldSize.Dump() " to (" wnew "," hnew ")"
-		this.obj.size := new Point(wnew, hnew)
+		this.obj.size := new Pointy(wnew, hnew)
 		newSize := this.obj.size
 		OutputDebug % "AFTER - Resizing from " oldSize.Dump() " to " newSize.Dump()
 		Yunit.assert(newSize.x == wnew)
@@ -294,7 +294,7 @@ class MoveResizeTestSuite {
 		ynew := oldPos.y+200
 		
 		OutputDebug % "BEFORE - Moving from " oldPos.Dump() " to (" xnew "," ynew  ")"
-		this.obj.pos := new Point(xnew,ynew)
+		this.obj.pos := new Pointy(xnew,ynew)
 		newPos := this.obj.pos
 		OutputDebug % "AFTER - Moving from " oldPos.Dump() " to " newPos.Dump()
 		Yunit.assert(newPos.x == xnew)
@@ -433,7 +433,7 @@ class MoveResizeTestSuite {
 		hnew := oldSize.y+200
 		
 		OutputDebug % "BEFORE - Resizing from " oldSize.Dump() " to (" wnew "," hnew ")"
-		this.obj.size := new Point(wnew, hnew)
+		this.obj.size := new Pointy(wnew, hnew)
 		newSize := this.obj.size
 		OutputDebug % "AFTER - Resizing from " oldSize.Dump() " to " newSize.Dump()
 		Yunit.assert(newSize.x == wnew)
@@ -484,7 +484,7 @@ class MoveResizeTestSuite {
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		oldPos := this.obj.pos
 		OutputDebug % "Initial Position: " oldPos.Dump()
-		this.obj.pos := new Point(oldPos.x, oldPos.y)
+		this.obj.pos := new Pointy(oldPos.x, oldPos.y)
 		newPos := this.obj.pos
 		OutputDebug % "AFTER - Moving from " oldPos.Dump() " to " newPos.Dump()
 		Yunit.assert(newPos.x == oldPos.x)
@@ -495,7 +495,7 @@ class MoveResizeTestSuite {
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		oldSize := this.obj.size
 		OutputDebug % "Initial Size: " oldSize.Dump()
-		this.obj.size := new Point(oldSize.x, oldSize.y)
+		this.obj.size := new Pointy(oldSize.x, oldSize.y)
 		newSize := this.obj.size
 		OutputDebug % "AFTER - Resizing from " oldSize.Dump() " to " newSize.Dump()
 		Yunit.assert(newSize.x == oldSize.x)
@@ -610,7 +610,7 @@ class MiscTestSuite {
 		Yunit.assert(center.y == centery)
 		
 		OutputDebug % "**** " A_ThisFunc " 2 ****"
-		newCenter := new Point(205,205,debug)
+		newCenter := new Pointy(205,205,debug)
 		this.obj.centercoords := newCenter
 		center := this.obj.centercoords
 		Yunit.assert(center.x == 205)

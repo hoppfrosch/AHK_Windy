@@ -1,6 +1,6 @@
 ﻿; ****** HINT: Documentation can be extracted to HTML using NaturalDocs (http://www.naturaldocs.org/) ************** 
 
-#include <Windy\Point>
+#include <Windy\Pointy>
 #include <Windy\MultiMonitorEnv>
 
 class Mouse {
@@ -170,7 +170,7 @@ class Mouse {
 			Get or Set position of mouse
 		*/
 		get {
-			pt := new Point()
+			pt := new Pointy()
 			return pt.fromMouse()
 		}
 		

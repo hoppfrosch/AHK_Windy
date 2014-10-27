@@ -12,7 +12,7 @@
 */
 
 #include <Windy\Rectangle>
-#include <Windy\Point>
+#include <Windy\Pointy>
 
 ; ******************************************************************************************************************************************
 class MultiMonitorEnv {

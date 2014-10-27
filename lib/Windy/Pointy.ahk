@@ -2,7 +2,7 @@
 
 ; ******************************************************************************************************************************************
 /*
-	Class: Point
+	Class: Pointy
 	Handling points (given through [x, y])
 	
 	Remarks:
@@ -12,7 +12,7 @@
 	[hoppfrosch](hoppfrosch@gmx.me)		
 	@UseShortForm
 */
-class Point {
+class Pointy {
 	
 	_version := "0.1.1"
 	_debug := 0 ; _DBG_	
@@ -38,7 +38,7 @@ class Point {
 			Method: equal(comp)
 			Compares currrent point to given point
 			Parameters:
-			comp - [Point](Point.html) to compare with
+			comp - [Point](Pointy.html) to compare with
 			Returns:
 			true or false
 			Remarks:
@@ -88,7 +88,7 @@ class Point {
 	fromPoint(new) {
 		/*! ===============================================================================
 			Method: fromPoint(new)
-			Fills values from given [Point](Point.html)
+			Fills values from given [Point](Pointy.html)
 			Parameters:
 			new - Point
 			Remarks:

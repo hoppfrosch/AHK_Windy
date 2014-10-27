@@ -3,7 +3,7 @@
 ; ****** HINT: Debug-lines should contain "; _DBG_" at the end of lines - using this, the debug lines could be automatically removed through scripts before releasing the sourcecode
 
 #include <Windy\Rectangle>
-#include <Windy\Point>
+#include <Windy\Pointy>
 #include <Windy\MultiMonitorEnv>
 #include <Windy\Const_WinUser>
 #include <Windy\_WindowHandlerEvent>
@@ -105,7 +105,7 @@ class Windy {
 	centercoords[] {
 	/* ---------------------------------------------------------------------------------------
 	Property: centercoords [get/set]
-	Coordinates of the center of the window as a <Point at Point.html>-object
+	Coordinates of the center of the window as a <Point at Pointy.html>-object
 
 	Value:
 	coords - centercoordinates of the window
@@ -115,7 +115,7 @@ class Windy {
 			pos := this.posSize
 			x := Round((pos.w)/2 + pos.x)
 			y := Round((pos.h)/2 + pos.y)
-			centerPos := new Point(x,y,this._debug)
+			centerPos := new Pointy(x,y,this._debug)
 			if (this._debug) ; _DBG_
 				OutputDebug % "<[" A_ThisFunc "(pos="pos.dump() " [" this.hwnd "])] -> " centerPos.dump() ; _DBG_
 			return centerPos
@@ -595,14 +595,14 @@ class Windy {
 	pos[] {
 	/* ---------------------------------------------------------------------------------------
 	Property: pos [get/set]
-	Position of the window as <Point at point.html> object
+	Position of the window as <Point at Pointy.html> object
 
 	Value:
 	pos - position of the window
 	*/
 		get {
 			ps := this.posSize
-			pt := new Point()
+			pt := new Pointy()
 			pt.x := ps.x
 			pt.y := ps.y
 			return pt
@@ -784,14 +784,14 @@ class Windy {
 	size[] {
 	/* ---------------------------------------------------------------------------------------
 	Property: size [get/set]
-	Dimensions (Width/Height) of the window as <Point at point.html> object
+	Dimensions (Width/Height) of the window as <Point at Pointy.html> object
 
 	Value:
 	size - size of the window
 	*/
 		get {
 			ps := this.posSize
-			pt := new Point()
+			pt := new Pointy()
 			pt.x := ps.w
 			pt.y := ps.h
 			return pt
