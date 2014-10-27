@@ -17,7 +17,7 @@ class Mousy {
 		@UseShortForm
 	*/
 	
-	_version := "0.1.4"
+	_version := "0.2.0"
 	_debug := 0 ; _DBG_	
 	_showLocatorAfterMove := 1
 	

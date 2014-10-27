@@ -14,7 +14,7 @@
 */
 class Pointy {
 	
-	_version := "0.1.1"
+	_version := "0.2.0"
 	_debug := 0 ; _DBG_	
 	x := 0
 	y := 0
