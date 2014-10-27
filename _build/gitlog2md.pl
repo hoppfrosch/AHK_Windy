@@ -3,6 +3,8 @@
 use strict;
 use warnings;
 
+use FindBin qw($Bin);
+
 use Cwd;
 use Template;
 use File::Basename;
@@ -11,10 +13,12 @@ use File::Spec;
 use Getopt::Long;
 use FindBin qw($Bin);
 
+chdir $Bin."/..";
+
 my $vars;
-$vars->{startdate} = "2014-02-15";
+$vars->{startdate} = "2014-10-27";
 $vars->{branch}    = "master";
-$vars->{title}     = "AHK-EDE";
+$vars->{title}     = "AHK-Windy";
 
 my $outfile = File::Spec->rel2abs( ".\\ChangeLog.md" );
 my $file    = "";
@@ -85,7 +89,7 @@ my $template = <<EOT;
 
 -----------------------------------------------------------------
 [% FOREACH msg IN logmessages -%]
- * **[% msg.subject %]** (via Commit [[% msg.hash.substr(0, 7) %]](https://github.com/hoppfrosch/AHK_EDE/commit/[% msg.hash %]))
+ * **[% msg.subject %]** (via Commit [[% msg.hash.substr(0, 7) %]](https://github.com/hoppfrosch/AHK_Windy/commit/[% msg.hash %]))
 [% FOREACH line IN msg.body %]   * [% IF (matches = line.match('INTERN')) -%]*[% END %][% line %][% IF (matches = line.match('INTERN')) -%]*[% END %]
 [% END %][% END %]
 EOT

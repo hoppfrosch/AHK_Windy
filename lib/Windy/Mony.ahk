@@ -1,5 +1,7 @@
-﻿/*
-	Title: MultiMonitorEnv
+﻿; ****** HINT: Documentation can be extracted to HTML using NaturalDocs (http://www.naturaldocs.org/) ************** 
+
+/*
+	Title: Mony
 	Helper Class to handle Multimonitor-Environments
 	
 	Author:
@@ -9,13 +11,13 @@
 	This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See http://www.wtfpl.net/ for more details.
 */
 
-#include <EDE\Rectangle>
-#include <EDE\Point>
+#include <Windy\Recty>
+#include <Windy\Pointy>
 
 ; ******************************************************************************************************************************************
-class MultiMonitorEnv {
+class Mony {
 	_debug := 0
-	_version := "0.1.6"
+	_version := "0.2.0"
 	
 	monCoordAbsToRel(x,y) {
 	/*! ===============================================================================
@@ -68,7 +70,7 @@ class MultiMonitorEnv {
 	Rectangle containing monitor boundaries
 	*/
 		SysGet, size, Monitor, %mon%
-		rect := new Rectangle(sizeLeft, sizeTop, sizeRight, sizeBottom, this._debug)
+		rect := new Recty(sizeLeft, sizeTop, sizeRight, sizeBottom, this._debug)
 		if (this._debug) ; _DBG_
 			OutputDebug % "<[" A_ThisFunc "(" mon ")] -> (" rect.dump() ")" ; _DBG_
 		return rect
@@ -88,7 +90,7 @@ class MultiMonitorEnv {
 		boundary := this.monBoundary(mon)
 		xcenter := floor(boundary.x+(boundary.w-boundary.x)/2)
 		ycenter := floor(boundary.y+(boundary.h-boundary.y)/2)
-		rect := new Rectangle(xcenter, ycenter, 0, 0, this._debug)
+		rect := new Recty(xcenter, ycenter, 0, 0, this._debug)
 		if (this._debug) ; _DBG_
 			OutputDebug % "<[" A_ThisFunc "(" mon ")] -> (" rect.dump() ")" ; _DBG_
 		return rect
@@ -265,7 +267,7 @@ class MultiMonitorEnv {
 	*/
 		
 		SysGet, size, Monitor, %mon%
-		rect := new Rectangle(0,0, sizeRight-sizeLeft, sizeBottom-sizeTop, this._debug)
+		rect := new Recty(0,0, sizeRight-sizeLeft, sizeBottom-sizeTop, this._debug)
 		if (this._debug) ; _DBG_
 			OutputDebug % "<[" A_ThisFunc "(" mon ")] -> (" rect.dump() ")" ; _DBG_
 		return rect
@@ -282,7 +284,7 @@ class MultiMonitorEnv {
 	Rectangle containing monitor working area
 	*/	
 		SysGet, size, MonitorWorkArea , %mon%
-		rect := new Rectangle(0,0, sizeRight-sizeLeft, sizeBottom-sizeTop, this._debug)
+		rect := new Recty(0,0, sizeRight-sizeLeft, sizeBottom-sizeTop, this._debug)
 		if (this._debug) ; _DBG_
 			OutputDebug % "<[" A_ThisFunc "(" mon ")] -> (" rect.dump() ")" ; _DBG_
 		return rect
@@ -305,7 +307,7 @@ class MultiMonitorEnv {
 		SysGet, y, 77
 		SysGet, w, 78
 		SysGet, h, 79
-		rect := new Rectangle(x,y,w,h, this._debug)
+		rect := new Recty(x,y,w,h, this._debug)
 		if (this._debug) ; _DBG_
 			OutputDebug % "<[" A_ThisFunc "()] -> (" rect.dump() ")" ; _DBG_
 		return rect

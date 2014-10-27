@@ -5,14 +5,14 @@
 #Include %A_ScriptDir%\Yunit\Window.ahk
 #Include %A_ScriptDir%\Yunit\StdOut.ahk
 #include %A_ScriptDir%
-#include lib\EDE
-#include WindowHandler.ahk
+#include lib\Windy
+#include Windy.ahk
 
 ; #Warn All
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.6.21"
+ReferenceVersion := "0.7.0"
 debug := 1
 
 ;Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, TempTestSuite)
@@ -24,7 +24,7 @@ Return
 class TempTestSuite {
     Begin() {
 		Global debug
-		this.obj := new WindowHandler(0, debug)
+		this.obj := new Windy(0, debug)
 	}    
 	
 /*
@@ -37,7 +37,7 @@ class TempTestSuite {
 		hnew := oldSize.y+200
 		
 		OutputDebug % "BEFORE - Resizing from " oldSize.Dump() " to (" wnew "," hnew ")"
-		this.obj.size := new Point(wnew, hnew)
+		this.obj.size := new Pointy(wnew, hnew)
 		newSize := this.obj.size
 		OutputDebug % "AFTER - Resizing from " oldSize.Dump() " to " newSize.Dump()
 		Yunit.assert(newSize.x == wnew)
@@ -56,7 +56,7 @@ class TempTestSuite {
 class _BaseTestSuite {
     Begin() {
 		Global debug
-		this.obj := new WindowHandler(0, debug)
+		this.obj := new Windy(0, debug)
 	}
 	
 	Version() {
@@ -78,7 +78,7 @@ class _BaseTestSuite {
 class TileTestSuite {
 	Begin() {
 		Global debug
-		this.obj := new WindowHandler(0, debug)
+		this.obj := new Windy(0, debug)
 	}
 	
 	movePercental() {
@@ -101,7 +101,7 @@ class TileTestSuite {
 class TransparencyTestSuite {
 	Begin() {
 		Global debug
-		this.obj := new WindowHandler(0, debug)
+		this.obj := new Windy(0, debug)
 	}
  
 	Transparency() {
@@ -131,7 +131,7 @@ class TransparencyTestSuite {
 class RollupTestSuite {
 	Begin() {
 		Global debug
-		this.obj := new WindowHandler(0, debug)
+		this.obj := new Windy(0, debug)
 	}
 	
 	RollupToggle() {
@@ -185,7 +185,7 @@ class RollupTestSuite {
 class MoveResizeTestSuite {
 	Begin() {
 		Global debug
-		this.obj := new WindowHandler(0, debug)
+		this.obj := new Windy(0, debug)
 	}
  
 	Maximize() {
@@ -275,7 +275,7 @@ class MoveResizeTestSuite {
 		ynew := oldPos.y+200
 		
 		OutputDebug % "BEFORE - Moving from " oldPos.Dump() " to (" xnew "," ynew "," oldPos.w "," oldPos.h ")"
-		this.obj.posSize := new Rectangle(xnew,ynew,oldPos.w,oldPos.h)
+		this.obj.posSize := new Recty(xnew,ynew,oldPos.w,oldPos.h)
 		newPos := this.obj.posSize
 		OutputDebug % "AFTER - Moving from " oldPos.Dump() " to " newPos.Dump()
 		Yunit.assert(newPos.x == xnew)
@@ -294,7 +294,7 @@ class MoveResizeTestSuite {
 		ynew := oldPos.y+200
 		
 		OutputDebug % "BEFORE - Moving from " oldPos.Dump() " to (" xnew "," ynew  ")"
-		this.obj.pos := new Point(xnew,ynew)
+		this.obj.pos := new Pointy(xnew,ynew)
 		newPos := this.obj.pos
 		OutputDebug % "AFTER - Moving from " oldPos.Dump() " to " newPos.Dump()
 		Yunit.assert(newPos.x == xnew)
@@ -354,7 +354,7 @@ class MoveResizeTestSuite {
 		wnew := oldPos.w+10
 		hnew := oldPos.h+20
 		OutputDebug % "BEFORE - Moving from " oldPos.Dump() " to (" xnew "," ynew "," wnew "," hnew ")"
-		this.obj.posSize := new Rectangle(xnew, ynew, wnew, hnew)
+		this.obj.posSize := new Recty(xnew, ynew, wnew, hnew)
 		newPos := this.obj.posSize
 		OutputDebug % "AFTER - Moving from " oldPos.Dump() " to " newPos.Dump()
 		Yunit.assert(newPos.x == xnew)
@@ -414,7 +414,7 @@ class MoveResizeTestSuite {
 		hnew := oldPos.h+200
 		
 		OutputDebug % "BEFORE - Moving from " oldPos.Dump() " to (" oldPos.x "," oldPos.y "," wnew "," hnew ")"
-		this.obj.posSize := new Rectangle(oldPos.x, oldPos.y, wnew, hnew)
+		this.obj.posSize := new Recty(oldPos.x, oldPos.y, wnew, hnew)
 		newPos := this.obj.posSize
 		OutputDebug % "AFTER - Moving from " oldPos.Dump() " to " newPos.Dump()
 		Yunit.assert(newPos.x == oldPos.x)
@@ -433,7 +433,7 @@ class MoveResizeTestSuite {
 		hnew := oldSize.y+200
 		
 		OutputDebug % "BEFORE - Resizing from " oldSize.Dump() " to (" wnew "," hnew ")"
-		this.obj.size := new Point(wnew, hnew)
+		this.obj.size := new Pointy(wnew, hnew)
 		newSize := this.obj.size
 		OutputDebug % "AFTER - Resizing from " oldSize.Dump() " to " newSize.Dump()
 		Yunit.assert(newSize.x == wnew)
@@ -471,7 +471,7 @@ class MoveResizeTestSuite {
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		oldPos := this.obj.posSize
 		OutputDebug % "Initial Position: " oldPos.Dump()
-		this.obj.posSize := new Rectangle(oldPos.x, oldPos.y, oldPos.w, oldPos.h)
+		this.obj.posSize := new Recty(oldPos.x, oldPos.y, oldPos.w, oldPos.h)
 		newPos := this.obj.posSize
 		OutputDebug % "AFTER - Moving from " oldPos.Dump() " to " newPos.Dump()
 		Yunit.assert(newPos.x == oldPos.x)
@@ -484,7 +484,7 @@ class MoveResizeTestSuite {
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		oldPos := this.obj.pos
 		OutputDebug % "Initial Position: " oldPos.Dump()
-		this.obj.pos := new Point(oldPos.x, oldPos.y)
+		this.obj.pos := new Pointy(oldPos.x, oldPos.y)
 		newPos := this.obj.pos
 		OutputDebug % "AFTER - Moving from " oldPos.Dump() " to " newPos.Dump()
 		Yunit.assert(newPos.x == oldPos.x)
@@ -495,7 +495,7 @@ class MoveResizeTestSuite {
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		oldSize := this.obj.size
 		OutputDebug % "Initial Size: " oldSize.Dump()
-		this.obj.size := new Point(oldSize.x, oldSize.y)
+		this.obj.size := new Pointy(oldSize.x, oldSize.y)
 		newSize := this.obj.size
 		OutputDebug % "AFTER - Resizing from " oldSize.Dump() " to " newSize.Dump()
 		Yunit.assert(newSize.x == oldSize.x)
@@ -513,7 +513,7 @@ class MoveResizeTestSuite {
 class HideShowTestSuite {
 	Begin() {
 		Global debug
-		this.obj := new WindowHandler(0, debug)
+		this.obj := new Windy(0, debug)
 	}
 
 	HideShowToggle() {
@@ -566,7 +566,7 @@ class NotRealWindowTestSuite {
 	Test() {
 		Global debug
 		HDesktop := DllCall("User32.dll\GetDesktopWindow", "UPtr")
-		this.obj := new WindowHandler(HDesktop, debug)
+		this.obj := new Windy(HDesktop, debug)
 		Yunit.assert(this.obj==)
 	}
 }
@@ -580,7 +580,7 @@ class MiscTestSuite {
 		WinWait, ahk_class Notepad, , 2
 		WinMove, ahk_class Notepad,, 10, 10, 300, 300
 		_hWnd := WinExist("ahk_class Notepad")
-		this.obj := new WindowHandler(_hWnd, debug)
+		this.obj := new Windy(_hWnd, debug)
 	}
         
 	Caption() {
@@ -610,7 +610,7 @@ class MiscTestSuite {
 		Yunit.assert(center.y == centery)
 		
 		OutputDebug % "**** " A_ThisFunc " 2 ****"
-		newCenter := new Point(205,205,debug)
+		newCenter := new Pointy(205,205,debug)
 		this.obj.centercoords := newCenter
 		center := this.obj.centercoords
 		Yunit.assert(center.x == 205)
@@ -749,7 +749,7 @@ class MiscTestSuite {
 		monID := this.obj.monitorID
 		Yunit.assert(monId == 1)
 		OutputDebug % "**** " A_ThisFunc " 2 - via Move ****"
-		obj := new MultiMonitorEnv(debug)
+		obj := new Mony(debug)
 		rect2 := obj.monBoundary(2)
 		this.obj.Move(rect2.x+10,rect2.y+10,300,300)
 		monID := this.obj.monitorID
@@ -796,7 +796,7 @@ class MiscTestSuite {
 class ExistTestSuite {
 	Begin() {
 		Global debug
-		this.obj := new WindowHandler(0, debug)
+		this.obj := new Windy(0, debug)
 	}
         
 	ExistNonExistingWindow() {
@@ -825,7 +825,7 @@ class MoveResizeTestSuite
     Begin()
     {
 		Global debug
-		this.obj := new WindowHandler(0, debug)
+		this.obj := new Windy(0, debug)
 		sleep 1000
     }
     
@@ -891,7 +891,7 @@ class MoveResizeTestSuite
 	NoMoveResize() {
 		Global debug
 		success := 1
-		l := new WindowHandler(0, debug)
+		l := new Windy(0, debug)
 		WinMove % "ahk_id" l._hWnd, , l._lastPos.x, l._lastPos.y, l._lastPos.w, l._lastPos.h
 		isMoved := l.isMoved()
 		isResized := l.isResized()

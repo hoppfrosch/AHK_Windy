@@ -1,7 +1,7 @@
-﻿; ****** HINT: Documentation can be extracted to HTML using GenDocs (https://github.com/fincs/GenDocs) by fincs************** */
+﻿; ****** HINT: Documentation can be extracted to HTML using NaturalDocs (http://www.naturaldocs.org/) ************** 
 
 ; ******************************************************************************************************************************************
-/*!
+/*
 	Class: Pointy
 	Handling points (given through [x, y])
 	
@@ -12,9 +12,9 @@
 	[hoppfrosch](hoppfrosch@gmx.me)		
 	@UseShortForm
 */
-class Point {
+class Pointy {
 	
-	_version := "0.1.1"
+	_version := "0.2.0"
 	_debug := 0 ; _DBG_	
 	x := 0
 	y := 0
@@ -38,7 +38,7 @@ class Point {
 			Method: equal(comp)
 			Compares currrent point to given point
 			Parameters:
-			comp - [Point](Point.html) to compare with
+			comp - [Point](Pointy.html) to compare with
 			Returns:
 			true or false
 			Remarks:
@@ -88,7 +88,7 @@ class Point {
 	fromPoint(new) {
 		/*! ===============================================================================
 			Method: fromPoint(new)
-			Fills values from given [Point](Point.html)
+			Fills values from given [Point](Pointy.html)
 			Parameters:
 			new - Point
 			Remarks:

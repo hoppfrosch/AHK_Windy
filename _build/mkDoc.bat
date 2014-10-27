@@ -5,11 +5,11 @@ echo.
 
 SET WORK=MKDOC_TEMP
 mkdir %WORK%
-copy EDE\MultiMonitorEnv.ahk %WORK%
-copy EDE\Rectangle.ahk %WORK%
-copy EDE\Point.ahk %WORK%
-copy EDE\Mouse.ahk %WORK%
-copy EDE\WindowHandler.ahk %WORK%
+copy ..\lib\Windy\Mony.ahk %WORK%
+copy ..\lib\Windy\Recty.ahk %WORK%
+copy ..\lib\Windy\Pointy.ahk %WORK%
+REM copy ..\lib\Windy\Mousy.ahk %WORK%
+copy ..\lib\Windy\Windy.ahk %WORK%
 
 ::path to the natural doc folder
 SET NDPATH=D:\Portable\PortableApps\AutoHotkey\App\Tools\NaturalDocs\NaturalDocs
@@ -41,7 +41,7 @@ echo.
 popd
 
 .. Publish documentation to gh-page branch ...
-pushd ..\..\AHK_EDE_gh-pages
+pushd ..\..\AHK_Windy_gh-pages
 xcopy /E /Y %ROOT%\%DOC% .
 popd
 rmdir /S /Q %WORK%
