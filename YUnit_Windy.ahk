@@ -749,7 +749,7 @@ class MiscTestSuite {
 		monID := this.obj.monitorID
 		Yunit.assert(monId == 1)
 		OutputDebug % "**** " A_ThisFunc " 2 - via Move ****"
-		obj := new MultiMonitorEnv(debug)
+		obj := new Mony(debug)
 		rect2 := obj.monBoundary(2)
 		this.obj.Move(rect2.x+10,rect2.y+10,300,300)
 		monID := this.obj.monitorID

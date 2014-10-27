@@ -1,7 +1,7 @@
 ﻿; ****** HINT: Documentation can be extracted to HTML using NaturalDocs (http://www.naturaldocs.org/) ************** 
 
 /*
-	Title: MultiMonitorEnv
+	Title: Mony
 	Helper Class to handle Multimonitor-Environments
 	
 	Author:
@@ -15,7 +15,7 @@
 #include <Windy\Pointy>
 
 ; ******************************************************************************************************************************************
-class MultiMonitorEnv {
+class Mony {
 	_debug := 0
 	_version := "0.1.6"
 	

@@ -4,7 +4,7 @@
 
 #include <Windy\Rectangle>
 #include <Windy\Pointy>
-#include <Windy\MultiMonitorEnv>
+#include <Windy\Mony>
 #include <Windy\Const_WinUser>
 #include <Windy\_WindowHandlerEvent>
 #include <SerDes>
@@ -481,7 +481,7 @@ class Windy {
 		get {
 			mon := 1
 			c := this.centercoords
-			mme := new MultiMonitorEnv(this._debug)
+			mme := new Mony(this._debug)
 			mon := mme.monGetFromCoord(c.x,c.y,mon)
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " mon ; _DBG_		
@@ -489,7 +489,7 @@ class Windy {
 		}
 
 		set {
-			obj := new MultiMonitorEnv(this._debug)
+			obj := new Mony(this._debug)
 		
 			realID := value
 			if (realID > obj.monCount()) {
@@ -1177,7 +1177,7 @@ class Windy {
 			OutputDebug % ">[" A_ThisFunc "([" this.hwnd "], xFactor=" xFactor ", yFactor=" yFactor ", wFactor=" wFactor ", hFactor=" hFactor ")]" ; _DBG_
 			
 		monID := this.monitorID
-		mmv := new MultiMonitorEnv(_debug)
+		mmv := new Mony(_debug)
 		monWorkArea := mmv.monWorkArea(monID)
 		monBound := mmv.monBoundary(monID)
 		xrel := monWorkArea.w * xFactor/100
