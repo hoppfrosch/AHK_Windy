@@ -4,7 +4,7 @@
 #Include %A_ScriptDir%\Yunit\Window.ahk
 #Include %A_ScriptDir%\Yunit\StdOut.ahk
 #include lib\Windy\Mony.ahk
-#include lib\Windy\Rectangle.ahk
+#include lib\Windy\Recty.ahk
 
 #Warn All
 ;#Warn LocalSameAsGlobal, Off

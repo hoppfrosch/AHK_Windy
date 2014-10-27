@@ -2,7 +2,7 @@
 
 ; ****** HINT: Debug-lines should contain "; _DBG_" at the end of lines - using this, the debug lines could be automatically removed through scripts before releasing the sourcecode
 
-#include <Windy\Rectangle>
+#include <Windy\Recty>
 #include <Windy\Pointy>
 #include <Windy\Mony>
 #include <Windy\Const_WinUser>
@@ -619,14 +619,14 @@ class Windy {
 	posSize[] {
 	/* ---------------------------------------------------------------------------------------
 	Property: posSize [get/set]
-	Get or Set the position and size of the window (To set the position use class <Rectangle at rectangle.html>)	
+	Get or Set the position and size of the window (To set the position use class <Rectangle at Recty.html>)	
 
 	Value:
 	ps - position and size of the window
 	*/
 		get {
 			info := this.windowinfo
-			currPos := new Rectangle(info.window.xul,info.window.yul,info.window.xlr-info.window.xul,info.window.ylr-info.window.yul,this._debug)
+			currPos := new Recty(info.window.xul,info.window.yul,info.window.xlr-info.window.xul,info.window.ylr-info.window.yul,this._debug)
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> (" currPos.dump() ")" ; _DBG_
 			return currPos

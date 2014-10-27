@@ -11,7 +11,7 @@
 	This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See http://www.wtfpl.net/ for more details.
 */
 
-#include <Windy\Rectangle>
+#include <Windy\Recty>
 #include <Windy\Pointy>
 
 ; ******************************************************************************************************************************************
@@ -70,7 +70,7 @@ class Mony {
 	Rectangle containing monitor boundaries
 	*/
 		SysGet, size, Monitor, %mon%
-		rect := new Rectangle(sizeLeft, sizeTop, sizeRight, sizeBottom, this._debug)
+		rect := new Recty(sizeLeft, sizeTop, sizeRight, sizeBottom, this._debug)
 		if (this._debug) ; _DBG_
 			OutputDebug % "<[" A_ThisFunc "(" mon ")] -> (" rect.dump() ")" ; _DBG_
 		return rect
@@ -90,7 +90,7 @@ class Mony {
 		boundary := this.monBoundary(mon)
 		xcenter := floor(boundary.x+(boundary.w-boundary.x)/2)
 		ycenter := floor(boundary.y+(boundary.h-boundary.y)/2)
-		rect := new Rectangle(xcenter, ycenter, 0, 0, this._debug)
+		rect := new Recty(xcenter, ycenter, 0, 0, this._debug)
 		if (this._debug) ; _DBG_
 			OutputDebug % "<[" A_ThisFunc "(" mon ")] -> (" rect.dump() ")" ; _DBG_
 		return rect
@@ -267,7 +267,7 @@ class Mony {
 	*/
 		
 		SysGet, size, Monitor, %mon%
-		rect := new Rectangle(0,0, sizeRight-sizeLeft, sizeBottom-sizeTop, this._debug)
+		rect := new Recty(0,0, sizeRight-sizeLeft, sizeBottom-sizeTop, this._debug)
 		if (this._debug) ; _DBG_
 			OutputDebug % "<[" A_ThisFunc "(" mon ")] -> (" rect.dump() ")" ; _DBG_
 		return rect
@@ -284,7 +284,7 @@ class Mony {
 	Rectangle containing monitor working area
 	*/	
 		SysGet, size, MonitorWorkArea , %mon%
-		rect := new Rectangle(0,0, sizeRight-sizeLeft, sizeBottom-sizeTop, this._debug)
+		rect := new Recty(0,0, sizeRight-sizeLeft, sizeBottom-sizeTop, this._debug)
 		if (this._debug) ; _DBG_
 			OutputDebug % "<[" A_ThisFunc "(" mon ")] -> (" rect.dump() ")" ; _DBG_
 		return rect
@@ -307,7 +307,7 @@ class Mony {
 		SysGet, y, 77
 		SysGet, w, 78
 		SysGet, h, 79
-		rect := new Rectangle(x,y,w,h, this._debug)
+		rect := new Recty(x,y,w,h, this._debug)
 		if (this._debug) ; _DBG_
 			OutputDebug % "<[" A_ThisFunc "()] -> (" rect.dump() ")" ; _DBG_
 		return rect

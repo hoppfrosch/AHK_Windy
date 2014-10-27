@@ -1,9 +1,9 @@
 ﻿; ****** HINT: Documentation can be extracted to HTML using NaturalDocs (http://www.naturaldocs.org/) ************** 
 
-class Rectangle {
+class Recty {
 ; ******************************************************************************************************************************************
 /*
-	Class: Rectangle
+	Class: Recty
 		Handling rectangles (given through [x, y (upper-left corner), w, h] or [x, y (upper-left corner), x, y (lower-right corner)])
 		
 	Author(s):
@@ -37,7 +37,7 @@ class Rectangle {
 		Compares currrent rectangle to given rectangle
 
 	Parameters:
-		comp - <Rectangle at Rectangle.html> to compare with
+		comp - <Rectangle at Recty.html> to compare with
 
 	Returns:
 		true or false
@@ -54,7 +54,7 @@ class Rectangle {
 		Compares currrent rectangle position to given rectangle position
 		
 	Parameters:
-		comp - <Rectangle at Rectangle.html> to compare with
+		comp - <Rectangle at Recty.html> to compare with
 
 	Returns:
 		true or false
@@ -71,7 +71,7 @@ class Rectangle {
 		Compares currrent rectangle size to given rectangle size
 		
 	Parameters:
-		comp - <Rectangle at Rectangle.html> to compare with
+		comp - <Rectangle at Recty.html> to compare with
 		
 	Returns:
 		true or false
@@ -104,7 +104,7 @@ class Rectangle {
 	fromRectangle(new) {
 	/*! ===============================================================================
 	Method: fromRectangle(new)
-		Fills values from given <Rectangle at Rectangle.html>
+		Fills values from given <Rectangle at Recty.html>
 
 	Parameters:
 		new - Rectangle
