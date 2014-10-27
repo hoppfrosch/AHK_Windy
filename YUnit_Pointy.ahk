@@ -4,7 +4,7 @@
 #Include %A_ScriptDir%\Yunit\Yunit.ahk
 #Include %A_ScriptDir%\Yunit\Window.ahk
 #Include %A_ScriptDir%\Yunit\StdOut.ahk
-#include <EDE\Point>
+#include <Windy\Pointy>
 
 #Warn All
 #Warn LocalSameAsGlobal, Off
@@ -19,7 +19,7 @@ class MiscTestSuite
 	Begin()
     {
 		debug := 1
-		this.r := new Point(100,100,debug)
+		this.r := new Pointy(100,100,debug)
     }
 	
 	Version()
@@ -48,18 +48,18 @@ class CompareTestSuite
 	Begin()
     {
 		debug := 1
-		this.r := new Point(100,100,debug)
+		this.r := new Pointy(100,100,debug)
     }
 	
 	
 	Equal() {
-		comp := new Point(this.r.x, this.r.y, 0)
+		comp := new Pointy(this.r.x, this.r.y, 0)
 		Yunit.assert(this.r.equal(comp) == true)
 		return
 	}
 	
 	NonEqual() {
-		comp := new Point(this.r.x + 10, this.r.y, 0)
+		comp := new Pointy(this.r.x + 10, this.r.y, 0)
 		Yunit.assert(this.r.equal(comp) == false)
 		return
 	}

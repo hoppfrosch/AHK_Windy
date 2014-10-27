@@ -1,12 +1,12 @@
-﻿; ****** HINT: Documentation can be extracted to HTML using GenDocs (https://github.com/fincs/GenDocs) by fincs************** */
+﻿; ****** HINT: Documentation can be extracted to HTML using NaturalDocs (http://www.naturaldocs.org/) ************** 
 
-#include <EDE\Point>
-#include <EDE\MultiMonitorEnv>
+#include <Windy\Pointy>
+#include <Windy\Mony>
 
-class Mouse {
+class Mousy {
 	; ******************************************************************************************************************************************
 	/*!
-		Class: Mouse
+		Class: Mousy
 		toolset to handle mousecursor within a MultiMonitorEnvironment
 		
 		Remarks:
@@ -140,14 +140,14 @@ class Mouse {
 			Get or Set the monitor the mouse is currently on
 		*/
 		get {
-			mme := new MultiMonitorEnv()
+			mme := new Mony()
 			return mme.monGetFromMouse()
 		}
 		set {
 			currMon := this.monitorID
 			OutputDebug % "<[" A_ThisFunc "()] - >New:" value "<-> Current:" CurrMon ; _DBG_
 			if (value != currMon) {
-				mme := new MultiMonitorEnv(true)
+				mme := new Mony(true)
 				; Determine relative Coordinates relative to current monitor
 				curr := mme.monCoordAbsToRel(this.x,this.y) 
 				; Determine scaling factors from current monitor to destination monitor
@@ -170,7 +170,7 @@ class Mouse {
 			Get or Set position of mouse
 		*/
 		get {
-			pt := new Point()
+			pt := new Pointy()
 			return pt.fromMouse()
 		}
 		

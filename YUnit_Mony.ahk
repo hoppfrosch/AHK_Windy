@@ -3,27 +3,27 @@
 #Include %A_ScriptDir%\Yunit\Yunit.ahk
 #Include %A_ScriptDir%\Yunit\Window.ahk
 #Include %A_ScriptDir%\Yunit\StdOut.ahk
-#include lib\EDE\MultiMonitorEnv.ahk
-#include lib\EDE\Rectangle.ahk
+#include lib\Windy\Mony.ahk
+#include lib\Windy\Recty.ahk
 
 #Warn All
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
 
-ReferenceVersion := "0.1.5"
+ReferenceVersion := "0.1.6"
 debug := 1
 
-Yunit.Use(YunitStdOut, YunitWindow).Test(MultiMonitorEnvTestSuite)
+Yunit.Use(YunitStdOut, YunitWindow).Test(MonyTestSuite)
 Return
 
 ExitApp
 
-class MultiMonitorEnvTestSuite2
+class MonyTestSuite2
 {
 	Begin() {
 		Global debug
-		this.obj := new MultiMonitorEnv(debug)
+		this.obj := new Mony(debug)
 		this.monCount := 2
 		this.mon1Width := 1920
 		this.mon1Height := 1080
@@ -58,11 +58,11 @@ class MultiMonitorEnvTestSuite2
     }
 }
 
-class MultiMonitorEnvTestSuite
+class MonyTestSuite
 {
 	Begin() {
 		Global debug
-		this.obj := new MultiMonitorEnv(debug)
+		this.obj := new Mony(debug)
 		this.monCount := 2
 		this.mon1Width := 1920
 		this.mon1Height := 1080

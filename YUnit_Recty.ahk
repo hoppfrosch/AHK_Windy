@@ -4,7 +4,7 @@
 #Include %A_ScriptDir%\Yunit\Yunit.ahk
 #Include %A_ScriptDir%\Yunit\Window.ahk
 #Include %A_ScriptDir%\Yunit\StdOut.ahk
-#include <EDE\Rectangle>
+#include <Windy\Recty>
 
 #Warn All
 #Warn LocalSameAsGlobal, Off
@@ -19,7 +19,7 @@ class MiscTestSuite
 	Begin()
     {
 		debug := 1
-		this.r := new Rectangle(100,100,100,100,debug)
+		this.r := new Recty(100,100,100,100,debug)
     }
 	
 	Version()
@@ -68,12 +68,12 @@ class CompareTestSuite
 	Begin()
     {
 		debug := 1
-		this.r := new Rectangle(100,100,100,100,debug)
+		this.r := new Recty(100,100,100,100,debug)
     }
 	
 	
 	Equal() {
-		comp := new Rectangle(this.r.x, this.r.y, this.r.w, this.r.h, 0)
+		comp := new Recty(this.r.x, this.r.y, this.r.w, this.r.h, 0)
 		Yunit.assert(this.r.equal(comp) == true)
 		Yunit.assert(this.r.equalPos(comp) == true)
 		Yunit.assert(this.r.equalSize(comp) == true)
@@ -81,17 +81,17 @@ class CompareTestSuite
 	}
 	
 	NonEqualPos() {
-		comp := new Rectangle(this.r.x + 10, this.r.y, this.r.w, this.r.h, 0)
+		comp := new Recty(this.r.x + 10, this.r.y, this.r.w, this.r.h, 0)
 		Yunit.assert(this.r.equal(comp) == false)
 		Yunit.assert(this.r.equalPos(comp) == false)
 		Yunit.assert(this.r.equalSize(comp) == true)
 		comp :=
-		comp := new Rectangle(this.r.x, this.r.y + 10, this.r.w, this.r.h, 0)
+		comp := new Recty(this.r.x, this.r.y + 10, this.r.w, this.r.h, 0)
 		Yunit.assert(this.r.equal(comp) == false)
 		Yunit.assert(this.r.equalPos(comp) == false)
 		Yunit.assert(this.r.equalSize(comp) == true)
 		comp :=
-		comp := new Rectangle(this.r.x + 10, this.r.y + 10, this.r.w, this.r.h, 0)
+		comp := new Recty(this.r.x + 10, this.r.y + 10, this.r.w, this.r.h, 0)
 		Yunit.assert(this.r.equal(comp) == false)
 		Yunit.assert(this.r.equalPos(comp) == false)
 		Yunit.assert(this.r.equalSize(comp) == true)
@@ -99,17 +99,17 @@ class CompareTestSuite
 	}
 	
 	NonEqualSize() {
-		comp := new Rectangle(this.r.x , this.r.y, this.r.w+10, this.r.h, 0)
+		comp := new Recty(this.r.x , this.r.y, this.r.w+10, this.r.h, 0)
 		Yunit.assert(this.r.equal(comp) == false)
 		Yunit.assert(this.r.equalPos(comp) == true)
 		Yunit.assert(this.r.equalSize(comp) == false)
 		comp :=
-		comp := new Rectangle(this.r.x , this.r.y, this.r.w, this.r.h+10, 0)
+		comp := new Recty(this.r.x , this.r.y, this.r.w, this.r.h+10, 0)
 		Yunit.assert(this.r.equal(comp) == false)
 		Yunit.assert(this.r.equalPos(comp) == true)
 		Yunit.assert(this.r.equalSize(comp) == false)
 		comp :=
-		comp := new Rectangle(this.r.x , this.r.y, this.r.w+10, this.r.h+10, 0)
+		comp := new Recty(this.r.x , this.r.y, this.r.w+10, this.r.h+10, 0)
 		Yunit.assert(this.r.equal(comp) == false)
 		Yunit.assert(this.r.equalPos(comp) == true)
 		Yunit.assert(this.r.equalSize(comp) == false)
@@ -117,7 +117,7 @@ class CompareTestSuite
 	}
 	
 	NonEqual() {
-		comp := new Rectangle(this.r.x+1, this.r.y, this.r.w-1, this.r.h, 0)
+		comp := new Recty(this.r.x+1, this.r.y, this.r.w-1, this.r.h, 0)
 		Yunit.assert(this.r.equal(comp) == false)
 		Yunit.assert(this.r.equalPos(comp) == false)
 		Yunit.assert(this.r.equalSize(comp) == false)
