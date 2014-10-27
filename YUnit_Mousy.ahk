@@ -4,7 +4,7 @@
 #Include %A_ScriptDir%\Yunit\Yunit.ahk
 #Include %A_ScriptDir%\Yunit\Window.ahk
 #Include %A_ScriptDir%\Yunit\StdOut.ahk
-#include <Windy\Mouse>
+#include <Windy\Mousy>
 
 #Warn All
 #Warn LocalSameAsGlobal, Off
@@ -18,7 +18,7 @@ class MiscTestSuite
 {
 	Begin()  {
 		debug := 1
-		this.r := new Mouse(debug)
+		this.r := new Mousy(debug)
     }
 	
 	Version() {

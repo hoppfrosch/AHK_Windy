@@ -3,10 +3,10 @@
 #include <Windy\Pointy>
 #include <Windy\Mony>
 
-class Mouse {
+class Mousy {
 	; ******************************************************************************************************************************************
 	/*!
-		Class: Mouse
+		Class: Mousy
 		toolset to handle mousecursor within a MultiMonitorEnvironment
 		
 		Remarks:
