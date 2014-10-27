@@ -1,4 +1,4 @@
-﻿; ****** HINT: Documentation can be extracted to HTML using GenDocs (https://github.com/fincs/GenDocs) by fincs************** */
+﻿; ****** HINT: Documentation can be extracted to HTML using NaturalDocs (http://www.naturaldocs.org/) ************** 
 
 class Rectangle {
 ; ******************************************************************************************************************************************

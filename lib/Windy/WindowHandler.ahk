@@ -1,11 +1,12 @@
-﻿; ****** HINT: Documentation can be extracted to HTML using NaturalDocs
+﻿; ****** HINT: Documentation can be extracted to HTML using NaturalDocs (http://www.naturaldocs.org/) **************
+
 ; ****** HINT: Debug-lines should contain "; _DBG_" at the end of lines - using this, the debug lines could be automatically removed through scripts before releasing the sourcecode
 
-#include <EDE\Rectangle>
-#include <EDE\Point>
-#include <EDE\MultiMonitorEnv>
-#include <EDE\Const_WinUser>
-#include <EDE\_WindowHandlerEvent>
+#include <Windy\Rectangle>
+#include <Windy\Point>
+#include <Windy\MultiMonitorEnv>
+#include <Windy\Const_WinUser>
+#include <Windy\_WindowHandlerEvent>
 #include <SerDes>
 
 class WindowHandler {

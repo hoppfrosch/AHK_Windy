@@ -5,7 +5,7 @@
 #Include %A_ScriptDir%\Yunit\Window.ahk
 #Include %A_ScriptDir%\Yunit\StdOut.ahk
 #include %A_ScriptDir%
-#include lib\EDE
+#include lib\Windy
 #include WindowHandler.ahk
 
 ; #Warn All

@@ -4,7 +4,7 @@
 #Include %A_ScriptDir%\Yunit\Yunit.ahk
 #Include %A_ScriptDir%\Yunit\Window.ahk
 #Include %A_ScriptDir%\Yunit\StdOut.ahk
-#include <EDE\Rectangle>
+#include <Windy\Rectangle>
 
 #Warn All
 #Warn LocalSameAsGlobal, Off

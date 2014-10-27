@@ -5,11 +5,11 @@ echo.
 
 SET WORK=MKDOC_TEMP
 mkdir %WORK%
-copy ..\lib\EDE\MultiMonitorEnv.ahk %WORK%
-copy ..\lib\EDE\Rectangle.ahk %WORK%
-REM copy EDE\Point.ahk %WORK%
-REM copy EDE\Mouse.ahk %WORK%
-copy ..\lib\EDE\WindowHandler.ahk %WORK%
+copy ..\lib\Windy\MultiMonitorEnv.ahk %WORK%
+copy ..\lib\Windy\Rectangle.ahk %WORK%
+copy ..\lib\Windy\Point.ahk %WORK%
+REM copy ..\lib\Windy\Mouse.ahk %WORK%
+copy ..\lib\Windy\WindowHandler.ahk %WORK%
 
 ::path to the natural doc folder
 SET NDPATH=D:\Portable\PortableApps\AutoHotkey\App\Tools\NaturalDocs\NaturalDocs

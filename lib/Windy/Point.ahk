@@ -1,4 +1,4 @@
-﻿; ****** HINT: Documentation can be extracted to HTML using NaturalDocs ************** */
+﻿; ****** HINT: Documentation can be extracted to HTML using NaturalDocs (http://www.naturaldocs.org/) ************** 
 
 ; ******************************************************************************************************************************************
 /*

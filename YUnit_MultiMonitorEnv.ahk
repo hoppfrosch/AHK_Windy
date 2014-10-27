@@ -3,8 +3,8 @@
 #Include %A_ScriptDir%\Yunit\Yunit.ahk
 #Include %A_ScriptDir%\Yunit\Window.ahk
 #Include %A_ScriptDir%\Yunit\StdOut.ahk
-#include lib\EDE\MultiMonitorEnv.ahk
-#include lib\EDE\Rectangle.ahk
+#include lib\Windy\MultiMonitorEnv.ahk
+#include lib\Windy\Rectangle.ahk
 
 #Warn All
 ;#Warn LocalSameAsGlobal, Off
