@@ -6,7 +6,7 @@
 #Include %A_ScriptDir%\Yunit\StdOut.ahk
 #include %A_ScriptDir%
 #include lib\Windy
-#include WindowHandler.ahk
+#include Windy.ahk
 
 ; #Warn All
 ;#Warn LocalSameAsGlobal, Off
@@ -24,7 +24,7 @@ Return
 class TempTestSuite {
     Begin() {
 		Global debug
-		this.obj := new WindowHandler(0, debug)
+		this.obj := new Windy(0, debug)
 	}    
 	
 /*
@@ -56,7 +56,7 @@ class TempTestSuite {
 class _BaseTestSuite {
     Begin() {
 		Global debug
-		this.obj := new WindowHandler(0, debug)
+		this.obj := new Windy(0, debug)
 	}
 	
 	Version() {
@@ -78,7 +78,7 @@ class _BaseTestSuite {
 class TileTestSuite {
 	Begin() {
 		Global debug
-		this.obj := new WindowHandler(0, debug)
+		this.obj := new Windy(0, debug)
 	}
 	
 	movePercental() {
@@ -101,7 +101,7 @@ class TileTestSuite {
 class TransparencyTestSuite {
 	Begin() {
 		Global debug
-		this.obj := new WindowHandler(0, debug)
+		this.obj := new Windy(0, debug)
 	}
  
 	Transparency() {
@@ -131,7 +131,7 @@ class TransparencyTestSuite {
 class RollupTestSuite {
 	Begin() {
 		Global debug
-		this.obj := new WindowHandler(0, debug)
+		this.obj := new Windy(0, debug)
 	}
 	
 	RollupToggle() {
@@ -185,7 +185,7 @@ class RollupTestSuite {
 class MoveResizeTestSuite {
 	Begin() {
 		Global debug
-		this.obj := new WindowHandler(0, debug)
+		this.obj := new Windy(0, debug)
 	}
  
 	Maximize() {
@@ -513,7 +513,7 @@ class MoveResizeTestSuite {
 class HideShowTestSuite {
 	Begin() {
 		Global debug
-		this.obj := new WindowHandler(0, debug)
+		this.obj := new Windy(0, debug)
 	}
 
 	HideShowToggle() {
@@ -566,7 +566,7 @@ class NotRealWindowTestSuite {
 	Test() {
 		Global debug
 		HDesktop := DllCall("User32.dll\GetDesktopWindow", "UPtr")
-		this.obj := new WindowHandler(HDesktop, debug)
+		this.obj := new Windy(HDesktop, debug)
 		Yunit.assert(this.obj==)
 	}
 }
@@ -580,7 +580,7 @@ class MiscTestSuite {
 		WinWait, ahk_class Notepad, , 2
 		WinMove, ahk_class Notepad,, 10, 10, 300, 300
 		_hWnd := WinExist("ahk_class Notepad")
-		this.obj := new WindowHandler(_hWnd, debug)
+		this.obj := new Windy(_hWnd, debug)
 	}
         
 	Caption() {
@@ -796,7 +796,7 @@ class MiscTestSuite {
 class ExistTestSuite {
 	Begin() {
 		Global debug
-		this.obj := new WindowHandler(0, debug)
+		this.obj := new Windy(0, debug)
 	}
         
 	ExistNonExistingWindow() {
@@ -825,7 +825,7 @@ class MoveResizeTestSuite
     Begin()
     {
 		Global debug
-		this.obj := new WindowHandler(0, debug)
+		this.obj := new Windy(0, debug)
 		sleep 1000
     }
     
@@ -891,7 +891,7 @@ class MoveResizeTestSuite
 	NoMoveResize() {
 		Global debug
 		success := 1
-		l := new WindowHandler(0, debug)
+		l := new Windy(0, debug)
 		WinMove % "ahk_id" l._hWnd, , l._lastPos.x, l._lastPos.y, l._lastPos.w, l._lastPos.h
 		isMoved := l.isMoved()
 		isResized := l.isResized()

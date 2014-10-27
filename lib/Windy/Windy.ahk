@@ -9,10 +9,10 @@
 #include <Windy\_WindowHandlerEvent>
 #include <SerDes>
 
-class WindowHandler {
+class Windy {
 ; ******************************************************************************************************************************************
 /*
-	Class: WindowHandler
+	Class: Windy
 		Perform actions on windows using an unified class based interface
 
 	Author(s):
@@ -1449,7 +1449,7 @@ Returns:
 		; Registering global callback and storing adress (&this) within A_EventInfo
 		if (this.__useEventHook == 1) {
 			ObjAddRef(&this)
-			this._HookProcAdr := RegisterCallback("ClassWindowHandler_EventHook", "", "", &this)
+			this._HookProcAdr := RegisterCallback("ClassWindy_EventHook", "", "", &this)
 			; Setting Callback on Adress <_HookProcAdr> on appearance of any event out of certain range
 			this._hWinEventHook1 := this.__SetWinEventHook( CONST_EVENT.SYSTEM.SOUND, CONST_EVENT.SYSTEM.DESKTOPSWITCH, 0, this._HookProcAdr, 0, 0, 0 )	
 			this._hWinEventHook2 := this.__SetWinEventHook( CONST_EVENT.OBJECT.SHOW, CONST_EVENT.OBJECT.CONTENTSCROLLED, 0, this._HookProcAdr, 0, 0, 0 )	
@@ -1469,19 +1469,19 @@ Returns:
 */
 
 /* ===============================================================================
-Function:   ClassWindowHandler_EventHook
+Function:   ClassWindy_EventHook
 	Callback on System Events. Used as dispatcher to detect window manipulation and calling the appropriate member-function within class <WindowHandler>
 	
 See also:
 	* http://www.autohotkey.com/community/viewtopic.php?t=35659
 	* http://www.autohotkey.com/community/viewtopic.php?f=1&t=88156
 */
-ClassWindowHandler_EventHook(hWinEventHook, Event, hWnd, idObject, idChild, dwEventThread, dwmsEventTime ) {
-	; ClassWindowHandler_EventHook is used as WindowsEventHook - it's registered as callback within <__SetWinEventHook> of class <WindowHandler>.
-	; ClassWindowHandler_EventHook is a WinEventProc (see http://msdn.microsoft.com/en-us/library/windows/desktop/dd373885(v=vs.85).aspx) and has those Parameter ...	
+ClassWindy_EventHook(hWinEventHook, Event, hWnd, idObject, idChild, dwEventThread, dwmsEventTime ) {
+	; ClassWindy_EventHook is used as WindowsEventHook - it's registered as callback within <__SetWinEventHook> of class <Windy>.
+	; ClassWindy_EventHook is a WinEventProc (see http://msdn.microsoft.com/en-us/library/windows/desktop/dd373885(v=vs.85).aspx) and has those Parameter ...	
 
 	; This function is called on the registered event(s) on every window - regardless whether it's an object instance or not
-	; We have to check whether the current call refers to the current instance of the class WindowHandler
+	; We have to check whether the current call refers to the current instance of the class Windy
 	; HINT: A_EventInfo currently holds the address of the current WindowsHandler object instance (set during RegisterCallback ... see <__New>)
 	
 	; Don't handle any windows, that are not class instances ...
