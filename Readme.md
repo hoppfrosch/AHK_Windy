@@ -2,6 +2,8 @@
 
 Functionality for easier work with mouse and windows on desktop. Multi-Monitor support is also provided ...
 
+Documentation is available on [gh_pages](http://http://hoppfrosch.github.io/AHK_Windy)
+
 **Author**: [hoppfrosch@gmx.de](mailto:hoppfrosch@gmx.de)
 
 ----------
@@ -33,9 +35,15 @@ Functionality for easier work with mouse and windows on desktop. Multi-Monitor s
  - [Yunit-Framework](https://github.com/Uberi/Yunit)
 - **and to everyone I might have forgotten** 
 
-### Ideass / Inspiration taken from ###
+### Inspiration taken from ###
 
 - [WindowPad](http://http://www.autohotkey.com/board/topic/19990-windowpad-window-moving-tool)/[WindowPadX](https://github.com/hoppfrosch/WindowPadX) - free - based on AutoHotkey as well
 - [WindowMenuPlus](http://www.moo0.com/?top=http://www.moo0.com/software/WindowMenuPlus/) - Free (Non-Commercial Use Only)  
 - [WindowSpace](http://www.ntwind.com/software/windowspace.html) - commercial
 - [Winsplit-Revolution](http://winsplit-revolution.com/) - Freeware
+
+### History
+
+This project was split of [AHK_EDE](https://github.com/hoppfrosch/AHK_EDE/).
+
+ChangeLog is available [here](https://github.com/hoppfrosch/AHK_Windy/blob/master/ChangeLog.md)
