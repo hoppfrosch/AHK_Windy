@@ -928,6 +928,9 @@ class Windy {
 	* if : transparency > current, increases current transparency [increment+]
 	* if : transparency < current, decreases current transparency [increment-]
 	* if : increment = 0, transparency isset immediately without any fading
+
+	Author(s)
+    Original - <joedf at http://ahkscript.org/boards/viewtopic.php?f=6&t=512>
 	*/
 		get {
 			hwnd := this.hwnd
@@ -941,10 +944,6 @@ class Windy {
 		}
 
 		set {
-		/* ### Author(s)
-			* xxxxxxxx - [joedf](http://ahkscript.org/boards/viewtopic.php?f=6&t=512)
-			* 20140922 - [hoppfrosch](hoppfrosch@gmx.de) - Rewritten
-		*/
 			hwnd := this.hwnd
 			transFinal := value
 			transOrig := value
