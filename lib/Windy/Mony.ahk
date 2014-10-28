@@ -1,16 +1,18 @@
 ﻿; ****** HINT: Documentation can be extracted to HTML using NaturalDocs (http://www.naturaldocs.org/) ************** 
 
+; ****** HINT: Debug-lines should contain "; _DBG_" at the end of lines - using this, the debug lines could be automatically removed through scripts before releasing the sourcecode
+
 /*
 	Title: Mony
-	Helper Class to handle Multimonitor-Environments
+	Helper Class to handle Multi-Monitor Environments
 	
-	Author:
-	hoppfrosch (hoppfrosch@gmx.de)
-	
-	License: 
-	This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See http://www.wtfpl.net/ for more details.
-*/
+	Author(s):
+	<hoppfrosch at hoppfrosch@gmx.de>		
 
+	About: License
+	This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See <WTFPL at http://www.wtfpl.net/> for more details.
+
+*/
 #include <Windy\Recty>
 #include <Windy\Pointy>
 
@@ -56,25 +58,6 @@ class Mony {
 		ret.x := x + r.x
 		ret.y := y + r.y
 		return ret
-	}
-	monBoundary(mon=1) {
-	/*! ===============================================================================
-	function: 	monBoundary
-	Get the boundaries of a monitor in Pixel, related to virtual screen. 
-			
-	The virtual screen is the bounding rectangle of all display monitors
-			
-	Parameters:
-	mon - Monitor number
-			
-	Returns:
-	Rectangle containing monitor boundaries
-	*/
-		SysGet, size, Monitor, %mon%
-		rect := new Recty(sizeLeft, sizeTop, sizeRight, sizeBottom, this._debug)
-		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "(" mon ")] -> (" rect.dump() ")" ; _DBG_
-		return rect
 	}
 	monCenter(mon=1) {
 	/*! ===============================================================================
@@ -295,10 +278,27 @@ class Mony {
 			return this._debug                                                         ; _DBG_
 		}                                                                              ; _DBG_
 	}
+	monBoundary[mon :=1 ] {
+	/* ---------------------------------------------------------------------------------------
+	Property: monBoundary [get]
+	Get the boundaries of a monitor in Pixel (related to virtual screen) as a <rectangle at http://hoppfrosch.github.io/AHK_Windy/files/Recty-ahk.html>.
+
+			
+	Parameters:
+	mon - Monitor number
+	*/
+		get {
+			SysGet, size, Monitor, %mon%
+			rect := new Recty(sizeLeft, sizeTop, sizeRight, sizeBottom, this._debug)
+			if (this._debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "(" mon ")] -> (" rect.dump() ")" ; _DBG_
+			return rect
+		}
+	}
 	monCount[] {
 	/* ---------------------------------------------------------------------------------------
 	Property: monCount [get]
-	Number of available monitor. 
+	Number of available monitors. 
 
 	Remarks:
 	* There is no setter available, since this is a constant window property
@@ -314,7 +314,7 @@ class Mony {
 	virtualScreenSize[] {
 	/* ---------------------------------------------------------------------------------------
 	Property: virtualScreenSize [get]
-	Get the size of virtual screen in Pixel
+	Get the size of virtual screen in Pixel as a <rectangle at http://hoppfrosch.github.io/AHK_Windy/files/Recty-ahk.html>.
 	
 	The virtual screen is the bounding rectangle of all display monitors
 	
@@ -336,7 +336,7 @@ class Mony {
 	; ===== Internal Methods =========================================================
 	__New(_debug=false) {
 	/* ===============================================================================
-	Function: __New
+	Function: __New  (*INTERNAL*)
 	Constructor
 		
 	Parameters:
