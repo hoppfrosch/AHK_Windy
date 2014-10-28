@@ -192,12 +192,12 @@ class Mony {
 	}
 	monScaleX(mon1=1, mon2=1) {
 	/* ===============================================================================
-	Function:  monSize
+	Function:  monScaleX
 	Determines the scaling factor in x-direction for coordinates when moving from mon1 to mon2
 			
 	Parameters:
-	mon1 - Monitor number of first monitor
-	mon2 - Monitor number of second monitor
+	mon1 - Monitor number of first monitor (*Optonal*, Default:1)
+	mon2 - Monitor number of second monitor (*Optonal*, Default:1)
 			
 	Returns:
 	Scaling factor
@@ -209,12 +209,12 @@ class Mony {
 	}
 	monScaleY(mon1=1, mon2=1) {
 	/* ===============================================================================
-	Function:  monSize
+	Function:  monScaleY
 	Determines the scaling factor in y-direction for coordinates when moving from mon1 to mon2
 			
 	Parameters:
-	mon1 - Monitor number of first monitor
-	mon2 - Monitor number of second monitor
+	mon1 - Monitor number of first monitor (*Optonal*, Default:1)
+	mon2 - Monitor number of second monitor (*Optonal*, Default:1)
 			
 	Returns:
 	Scaling factor
@@ -224,41 +224,7 @@ class Mony {
 		scaleY := size2.h / size1.h
 		return scaleY
 	}
-	monSize(mon=1) {
-	/* ===============================================================================
-	Function:  monSize
-	Get the size of a monitor in Pixel
-			
-	Parameters:
-	mon - Monitor number
-	
-	Returns:
-	Rectangle containing monitor size
-	*/
-		
-		SysGet, size, Monitor, %mon%
-		rect := new Recty(0,0, sizeRight-sizeLeft, sizeBottom-sizeTop, this._debug)
-		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "(" mon ")] -> (" rect.dump() ")" ; _DBG_
-		return rect
-	}
-	monWorkArea(mon=1) {
-	/* ===============================================================================
-	Function:  monWorkArea
-	Same as <monSize>, except the area is reduced to exclude the area occupied by the taskbar and other registered desktop toolbars.
-	
-	Parameters:
-	mon - Monitor number
-	
-	Returns:
-	Rectangle containing monitor working area
-	*/	
-		SysGet, size, MonitorWorkArea , %mon%
-		rect := new Recty(0,0, sizeRight-sizeLeft, sizeBottom-sizeTop, this._debug)
-		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "(" mon ")] -> (" rect.dump() ")" ; _DBG_
-		return rect
-	}
+
 
     ; ===== Properties ==============================================================
     debug[] { ; _DBG_
@@ -283,9 +249,11 @@ class Mony {
 	Property: monBoundary [get]
 	Get the boundaries of a monitor in Pixel (related to virtual screen) as a <rectangle at http://hoppfrosch.github.io/AHK_Windy/files/Recty-ahk.html>.
 
-			
 	Parameters:
-	mon - Monitor number
+	mon - Monitor number (*Optional*, Default: 1)
+
+	Remarks:
+	* There is no setter available, since this is a constant system property
 	*/
 		get {
 			SysGet, size, Monitor, %mon%
@@ -301,7 +269,7 @@ class Mony {
 	Number of available monitors. 
 
 	Remarks:
-	* There is no setter available, since this is a constant window property
+	* There is no setter available, since this is a constant system property
 	*/
 		get {
 			CoordMode, Mouse, Screen
@@ -309,6 +277,54 @@ class Mony {
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "() -> (" mCnt ")]" ; _DBG_		
 					return mCnt
+		}
+	}
+	monSize[ mon :=1 ] {
+	/* ---------------------------------------------------------------------------------------
+	Property:  monSize [get]
+	Get the size of a monitor in Pixel as a <rectangle at http://hoppfrosch.github.io/AHK_Windy/files/Recty-ahk.html>.
+			
+	Parameters:
+	mon - Monitor number (*Optional*, Default: 1)
+
+	Remarks:
+	* There is no setter available, since this is a constant system property
+
+	See also: 
+	<monWorkArea [get]>
+	*/
+
+		get {
+			SysGet, size, Monitor, %mon%
+			rect := new Recty(0,0, sizeRight-sizeLeft, sizeBottom-sizeTop, this._debug)
+			if (this._debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "(" mon ")] -> (" rect.dump() ")" ; _DBG_
+			return rect
+		}
+	}
+	monWorkArea[ mon := 1 ] {
+	/* ===============================================================================
+	Property:  monWorkArea [get]
+	Get the working area of a monitor in Pixel as a <rectangle at http://hoppfrosch.github.io/AHK_Windy/files/Recty-ahk.html>.
+	
+	Same as <monSize [get]>, except the area is reduced to exclude the area occupied by the taskbar and other registered desktop toolbars.
+	The working area is given as a <rectangle at http://hoppfrosch.github.io/AHK_Windy/files/Recty-ahk.html>.
+	
+	Parameters:
+	mon - Monitor number  (*Optional*, Default: 1)
+	
+	Remarks:
+	* There is no setter available, since this is a constant system property
+
+	See also: 
+	<monSize [get]>
+	*/
+		get {
+			SysGet, size, MonitorWorkArea , %mon%
+			rect := new Recty(0,0, sizeRight-sizeLeft, sizeBottom-sizeTop, this._debug)
+			if (this._debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "(" mon ")] -> (" rect.dump() ")" ; _DBG_
+			return rect
 		}
 	}
 	virtualScreenSize[] {
@@ -319,7 +335,7 @@ class Mony {
 	The virtual screen is the bounding rectangle of all display monitors
 	
 	Remarks:
-	* There is no setter available, since this is a constant window property
+	* There is no setter available, since this is a constant system property
 	*/
 		get {
 			SysGet, x, 76
@@ -336,8 +352,8 @@ class Mony {
 	; ===== Internal Methods =========================================================
 	__New(_debug=false) {
 	/* ===============================================================================
-	Function: __New  (*INTERNAL*)
-	Constructor
+	Function: __New
+	Constructor (*INTERNAL*)
 		
 	Parameters:
 	_debug - Flag to enable debugging (Optional - Default: 0)
