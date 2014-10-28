@@ -2,7 +2,7 @@
 
 Functionality for easier work with mouse and windows on desktop. Multi-Monitor support is also provided ...
 
-Documentation is available on [gh_pages](http://http://hoppfrosch.github.io/AHK_Windy)
+Documentation is available on [gh_pages](http://hoppfrosch.github.io/AHK_Windy)
 
 **Author**: [hoppfrosch@gmx.de](mailto:hoppfrosch@gmx.de)
 
