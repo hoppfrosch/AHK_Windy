@@ -16,7 +16,7 @@ use FindBin qw($Bin);
 chdir $Bin."/..";
 
 my $vars;
-$vars->{startdate} = "2014-10-27";
+$vars->{startdate} = "2014-10-26";
 $vars->{branch}    = "master";
 $vars->{title}     = "AHK-Windy";
 
