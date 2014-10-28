@@ -18,7 +18,8 @@
 class Mony {
 	_debug := 0
 	_version := "0.2.1"
-	
+
+	; ===== Methods ==================================================================
 	monCoordAbsToRel(x,y) {
 	/*! ===============================================================================
 	function: 	monCoordAbsToRel
@@ -297,6 +298,25 @@ class Mony {
 		if (this._debug) ; _DBG_
 			OutputDebug % "<[" A_ThisFunc "()] -> (" rect.dump() ")" ; _DBG_
 		return rect
+	}
+
+    ; ===== Properties ==============================================================
+    debug[] { ; _DBG_
+	/* ------------------------------------------------------------------------------- ; _DBG_
+	Property: debug [get/set]                                                          ; _DBG_
+	Debug flag for debugging the object                                                ; _DBG_
+                                                                                       ; _DBG_
+	Value:                                                                             ; _DBG_
+	flag - *true* or *false*                                                           ; _DBG_
+	*/                                                                                 ; _DBG_
+		get {                                                                          ; _DBG_ 
+			return this._debug                                                         ; _DBG_
+		}                                                                              ; _DBG_
+		set {                                                                          ; _DBG_
+			mode := value<1?0:1                                                        ; _DBG_
+			this._debug := mode                                                        ; _DBG_
+			return this._debug                                                         ; _DBG_
+		}                                                                              ; _DBG_
 	}
 	monCount[] {
 	/* ---------------------------------------------------------------------------------------
