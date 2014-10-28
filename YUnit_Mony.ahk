@@ -11,7 +11,7 @@
 #SingleInstance force
 
 
-ReferenceVersion := "0.2.2"
+ReferenceVersion := "0.2.3"
 debug := 1
 
 Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, MonyTestSuite)
@@ -71,6 +71,10 @@ class MonyTestSuite
 		
 		this.monvirtWidth := this.mon1Width + this.mon2Width
 		this.monvirtHeight := this.mon2Height
+    }
+
+    identify(){
+    	this.obj.identify(1500,"00FF00",400)
     }
 		
 	VirtualScreenSize() {

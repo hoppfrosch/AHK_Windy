@@ -19,9 +19,46 @@
 ; ******************************************************************************************************************************************
 class Mony {
 	_debug := 0
-	_version := "0.2.2"
+	_version := "0.2.3"
 
 	; ===== Methods ==================================================================
+	identify(disptime := 1500, txtcolor := "000000", txtsize := 300) {
+	/*! ===============================================================================
+	function: 	identify
+	Identify monitors by displaying the monitor id on each monitor
+	
+	Parameters:
+	disptime - time to display the monitor id (*Optional*, Default: 1500[ms])
+	txtcolor - color of the displayed monitor id(*Optional*, Default: "000000")
+	txtsize - size of the displayed monitor id(*Optional*, Default: 300[px])
+	
+	Author(s)
+    Original - <Bkid at http://ahkscript.org/boards/viewtopic.php?f=6&t=3761&p=19836&hilit=Monitor#p19836>
+	*/
+		monCnt := this.monCount
+
+		TPColor = AABBCC
+		GuiNum = 50
+		Loop %monCnt%
+		{
+    		SysGet, Mon%A_Index%, Monitor, %A_Index%
+    		x := Mon%A_Index%Left
+    		Gui, %GuiNum%:+LastFound +AlwaysOnTop -Caption +ToolWindow
+    		Gui, %GuiNum%:Color, %TPColor%
+    		WinSet, TransColor, %TPColor%
+    		Gui, %GuiNum%:Font, s%txtsize% w700
+    		Gui, %GuiNum%:Add, Text, x0 y0 c%txtcolor%, %A_Index%
+    		Gui, %GuiNum%:Show, x%x% y0 NoActivate
+    		GuiNum++
+		}
+		Sleep, %disptime%
+		GuiNum = 50
+		Loop %monCnt% {
+    		Gui, %GuiNum%:Destroy
+    		GuiNum++
+		}
+		return
+	}
 	monCoordAbsToRel(x,y) {
 	/*! ===============================================================================
 	function: 	monCoordAbsToRel
@@ -250,7 +287,7 @@ class Mony {
 			return nextMon
 		}
 	}
-	monPrev(mon=0, cycle=1) {
+	monPrev[mon=0, cycle=1] {
 	/* ===============================================================================
 	Property:	monPrev [get]
 	Gets the previous monitor starting from given monitor. As default the starting monitor will be taken from current mousepos.
