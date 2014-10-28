@@ -11,7 +11,7 @@
 #SingleInstance force
 
 
-ReferenceVersion := "0.2.0"
+ReferenceVersion := "0.2.1"
 debug := 1
 
 Yunit.Use(YunitStdOut, YunitWindow).Test(MonyTestSuite)

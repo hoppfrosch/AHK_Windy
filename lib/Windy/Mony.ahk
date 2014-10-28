@@ -17,7 +17,7 @@
 ; ******************************************************************************************************************************************
 class Mony {
 	_debug := 0
-	_version := "0.2.0"
+	_version := "0.2.1"
 	
 	monCoordAbsToRel(x,y) {
 	/*! ===============================================================================
@@ -94,20 +94,6 @@ class Mony {
 		if (this._debug) ; _DBG_
 			OutputDebug % "<[" A_ThisFunc "(" mon ")] -> (" rect.dump() ")" ; _DBG_
 		return rect
-	}
-	monCount() {
-	/* ===============================================================================
-	function:   monCount
-	Determines the number of monitors currently attached
-	
-	Returns:
-	Number of monitors
-	*/
-		CoordMode, Mouse, Screen
-		SysGet, mCnt, MonitorCount
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "()] -> " mCnt ; _DBG_
-		return mCnt
 	}
 	monGetFromCoord(x, y, default=1) {
 	/* ===============================================================================
@@ -312,18 +298,21 @@ class Mony {
 			OutputDebug % "<[" A_ThisFunc "()] -> (" rect.dump() ")" ; _DBG_
 		return rect
 	}
-	
-	/* 	===============================================================================
-	Function: __Get
-	Custom Getter for attributes
-	*/    
-	__Get(aName) {
-		if (this._debug) ; _DBG_
-			OutputDebug % ">[" A_ThisFunc "(" aName ")]" ; _DBG_
-		if (aName = "monCount") { ; current position
-			return this.monCount()
+	monCount[] {
+	/* ---------------------------------------------------------------------------------------
+	Property: monCount [get]
+	Number of available monitor. 
+
+	Remarks:
+	* There is no setter available, since this is a constant window property
+	*/
+		get {
+			CoordMode, Mouse, Screen
+			SysGet, mCnt, MonitorCount
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "() -> (" mCnt ")]" ; _DBG_		
+					return mCnt
 		}
-		return
 	}
 	
 	/* ===============================================================================
