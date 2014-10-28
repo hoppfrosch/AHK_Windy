@@ -19,7 +19,7 @@
 ; ******************************************************************************************************************************************
 class Mony {
 	_debug := 0
-	_version := "0.2.3"
+	_version := "0.2.4"
 
 	; ===== Methods ==================================================================
 	identify(disptime := 1500, txtcolor := "000000", txtsize := 300) {
@@ -95,26 +95,6 @@ class Mony {
 		ret.x := x + r.x
 		ret.y := y + r.y
 		return ret
-	}
-	monCenter(mon=1) {
-	/*! ===============================================================================
-	function:	monCenter
-	Get the center coordinates of a monitor in Pixel, related to virtual screen. 
-	The virtual screen is the bounding rectangle of all display monitors
-
-	Parameters:
-	mon - Monitor number
-			
-	Returns:
-	Center coordinates of monitor
-	*/
-		boundary := this.monBoundary(mon)
-		xcenter := floor(boundary.x+(boundary.w-boundary.x)/2)
-		ycenter := floor(boundary.y+(boundary.h-boundary.y)/2)
-		rect := new Recty(xcenter, ycenter, 0, 0, this._debug)
-		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "(" mon ")] -> (" rect.dump() ")" ; _DBG_
-		return rect
 	}
 	monGetFromCoord(x, y, default=1) {
 	/* ===============================================================================
@@ -212,6 +192,27 @@ class Mony {
 			this._debug := mode                                                        ; _DBG_
 			return this._debug                                                         ; _DBG_
 		}                                                                              ; _DBG_
+	}
+	monCenter[ mon:= 1 ] {
+	/*! ===============================================================================
+	Property: monCenter [get]
+	Get the center coordinates of a monitor in Pixel, related to virtual screen as a <point at http://hoppfrosch.github.io/AHK_Windy/files/Pointy-ahk.html>.
+
+	Parameters:
+	mon - Monitor number (*Optional*, Default: 1)
+
+	Remarks:
+	* There is no setter available, since this is a constant system property
+	*/	
+		get {
+			boundary := this.monBoundary(mon)
+			xcenter := floor(boundary.x+(boundary.w-boundary.x)/2)
+			ycenter := floor(boundary.y+(boundary.h-boundary.y)/2)
+			pt := new Pointy(xcenter, ycenter, this._debug)
+			if (this._debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "(" mon ")] -> (" pt.dump() ")" ; _DBG_
+			return pt
+		}
 	}
 	monBoundary[mon :=1 ] {
 	/* ---------------------------------------------------------------------------------------

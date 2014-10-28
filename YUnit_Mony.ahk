@@ -11,7 +11,7 @@
 #SingleInstance force
 
 
-ReferenceVersion := "0.2.3"
+ReferenceVersion := "0.2.4"
 debug := 1
 
 Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, MonyTestSuite)
@@ -74,7 +74,7 @@ class MonyTestSuite
     }
 
     identify(){
-    	this.obj.identify(1500,"00FF00",400)
+    	this.obj.identify(250,"00FF00",400)
     }
 		
 	VirtualScreenSize() {
@@ -151,15 +151,12 @@ class MonyTestSuite
 	}
 
 	MonCenter() {
-		rect1 := this.obj.monCenter(1)
-		Yunit.assert(rect1.x == this.mon1Width/2)
-		Yunit.assert(rect1.y == this.mon1Height/2)
-		;success := success && (rect1.x = 960) && (rect1.y = 540)	
-		rect2 := this.obj.monCenter(2)
-		Yunit.assert(rect2.x == (this.mon1Width+(this.mon2Width/2)))
-		Yunit.assert(rect2.y == this.mon2Height/2)		
-		;success := success && (rect2.x = 2720) && (rect2.y = 600)
-
+		pt1 := this.obj.monCenter(1)
+		Yunit.assert(pt1.x == this.mon1Width/2)
+		Yunit.assert(pt1.y == this.mon1Height/2)
+		pt2 := this.obj.monCenter(2)
+		Yunit.assert(pt2.x == (this.mon1Width+(this.mon2Width/2)))
+		Yunit.assert(pt2.y == this.mon2Height/2)
 	}
 	
 	MonNextPrev() {
