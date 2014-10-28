@@ -17,7 +17,7 @@
 ; ******************************************************************************************************************************************
 class Mony {
 	_debug := 0
-	_version := "0.2.1"
+	_version := "0.2.2"
 
 	; ===== Methods ==================================================================
 	monCoordAbsToRel(x,y) {
@@ -276,29 +276,6 @@ class Mony {
 			OutputDebug % "<[" A_ThisFunc "(" mon ")] -> (" rect.dump() ")" ; _DBG_
 		return rect
 	}
-	virtualScreenSize() {
-	/* ===============================================================================
-	Function:  virtualScreenSize
-	Get the size of virtual screen in Pixel
-	
-	The virtual screen is the bounding rectangle of all display monitors
-	
-	Parameters:
-	mon - Monitor number
-	
-	Returns:
-	Rectangle containing monitor size
-	*/
-		; Get position and size of virtual screen.
-		SysGet, x, 76
-		SysGet, y, 77
-		SysGet, w, 78
-		SysGet, h, 79
-		rect := new Recty(x,y,w,h, this._debug)
-		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "()] -> (" rect.dump() ")" ; _DBG_
-		return rect
-	}
 
     ; ===== Properties ==============================================================
     debug[] { ; _DBG_
@@ -334,17 +311,40 @@ class Mony {
 					return mCnt
 		}
 	}
+	virtualScreenSize[] {
+	/* ---------------------------------------------------------------------------------------
+	Property: virtualScreenSize [get]
+	Get the size of virtual screen in Pixel
 	
+	The virtual screen is the bounding rectangle of all display monitors
+	
+	Remarks:
+	* There is no setter available, since this is a constant window property
+	*/
+		get {
+			SysGet, x, 76
+			SysGet, y, 77
+			SysGet, w, 78
+			SysGet, h, 79
+			rect := new Recty(x,y,w,h, this._debug)
+			if (this._debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "()] -> (" rect.dump() ")" ; _DBG_
+			return rect
+		}
+	}
+
+	; ===== Internal Methods =========================================================
+	__New(_debug=false) {
 	/* ===============================================================================
 	Function: __New
 	Constructor
 		
 	Parameters:
 	_debug - Flag to enable debugging (Optional - Default: 0)
-	*/     
-	__New(_debug=false) {
+	*/  
 		this._debug := _debug ; _DBG_
 		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "(_debug=" _debug ")] (version: " this._version ")" ; _DBG_
 	}
+
 }

@@ -11,10 +11,10 @@
 #SingleInstance force
 
 
-ReferenceVersion := "0.2.1"
+ReferenceVersion := "0.2.2"
 debug := 1
 
-Yunit.Use(YunitStdOut, YunitWindow).Test(MonyTestSuite)
+Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, MonyTestSuite)
 Return
 
 ExitApp
@@ -72,13 +72,7 @@ class MonyTestSuite
 		this.monvirtWidth := this.mon1Width + this.mon2Width
 		this.monvirtHeight := this.mon2Height
     }
-	
-	
-    Version() {
-		Global ReferenceVersion
-		Yunit.assert(this.obj._version == ReferenceVersion)
-    }
-	
+		
 	VirtualScreenSize() {
 		rect := this.obj.virtualScreenSize()
 		rectMon2 := this.obj.monBoundary(2)
@@ -191,4 +185,23 @@ class MonyTestSuite
         this.remove("obj")
 		this.obj := 
     }
+}
+
+class _BaseTestSuite {
+    Begin() {
+		Global debug
+		this.obj := new Mony(debug)
+	}
+	
+	Version() {
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		Global ReferenceVersion
+		Yunit.assert(this.obj._version == ReferenceVersion)
+		OutputDebug % ">>>>[" A_ThisFunc "]>>>>"
+	}
+
+	End() {
+		this.remove("obj")
+		this.obj := 
+	}
 }
