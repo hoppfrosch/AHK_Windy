@@ -11,7 +11,7 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.1.0"
+ReferenceVersion := "0.1.1"
 
 debug := 1
 
@@ -34,6 +34,14 @@ class MultiDispyTestSuite
 		this.monvirtWidth := this.mon1Width + this.mon2Width
 		this.monvirtHeight := this.mon2Height
     }
+
+   	monitorsCount() {
+    	Global debug
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		cnt := this.obj.monitorsCount
+		Yunit.assert(cnt == this.monCount)
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+	}
 
 	End()  {
         this.remove("obj")

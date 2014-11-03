@@ -18,7 +18,7 @@
 */
 class MultiDispy {
 	_debug := 0
-	_version := "0.1.0"
+	_version := "0.1.1"
 
 	; ===== Properties ==============================================================	
     debug[] { ; _DBG_
@@ -39,6 +39,22 @@ class MultiDispy {
 			return this._debug                                                         ; _DBG_
 		}                                                                              ; _DBG_
 	}
+	monitorsCount[] {
+	/* ---------------------------------------------------------------------------------------
+	Property: monitorsCount [get]
+	Number of available monitors. 
+
+	Remarks:
+	* There is no setter available, since this is a constant system property
+	*/
+		get {
+			CoordMode, Mouse, Screen
+			SysGet, mCnt, MonitorCount
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "()) -> (" mCnt ")]" ; _DBG_		
+			return mCnt
+		}
+	}
 	 version[] {
     /* -------------------------------------------------------------------------------
 	Property: version [get]
@@ -48,7 +64,7 @@ class MultiDispy {
 	* There is no setter available, since this is a constant system property
 	*/
 		get {
-			OutputDebug % "|[]" A_ThisFunc "]([" this.id "]) -> (" this._version ")" ; _DBG_
+			OutputDebug % "|[]" A_ThisFunc "]() -> (" this._version ")" ; _DBG_
 			return this._version
 		}
 	}

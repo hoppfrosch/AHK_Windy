@@ -4,6 +4,7 @@
 
 #include <Windy\Recty>
 #include <Windy\Pointy>
+#include <Windy\MultiDispy>
 
 /* ******************************************************************************************************************************************
 	Class: Dispy
@@ -17,7 +18,7 @@
 */
 class Dispy {
 	_debug := 0
-	_version := "0.1.9"
+	_version := "0.1.10"
 	_id := 0
 
     ; ===== Properties ===============================================================
@@ -112,8 +113,8 @@ class Dispy {
 	* There is no setter available, since this is a constant system property
 	*/
 		get {
-			CoordMode, Mouse, Screen
-			SysGet, mCnt, MonitorCount
+			md := new MultiDispy(this._debug)
+			mcnt := md.monitorsCount
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.id "]) -> (" mCnt ")]" ; _DBG_		
 			return mCnt
