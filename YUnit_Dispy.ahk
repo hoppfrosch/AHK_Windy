@@ -11,7 +11,7 @@
 #SingleInstance force
 
 
-ReferenceVersion := "0.1.1"
+ReferenceVersion := "0.1.2"
 debug := 1
 
 Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, DispyTestSuite)
@@ -53,6 +53,16 @@ class DispyTestSuite
 		rect := mon2.size
 		Yunit.assert(rect.w == this.mon2Width)
 		Yunit.assert(rect.h == this.mon2Height)
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+	}
+
+	workingArea() {
+    	Global debug
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+    	mon1 := new Dispy(1, debug)
+		rect := mon1.workingArea
+		Yunit.assert(rect.w <= this.mon1Width)
+		Yunit.assert(rect.h <= this.mon1Height)	
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
 

@@ -17,18 +17,18 @@
 */
 class Dispy {
 	_debug := 0
-	_version := "0.1.1"
+	_version := "0.1.2"
 	_id := 0
 
     ; ===== Properties ==============================================================0	
-    /* ------------------------------------------------------------------------------- ; _DBG_
+    debug[] { ; _DBG_
+	/* ------------------------------------------------------------------------------- ; _DBG_
 	Property: debug [get/set]                                                          ; _DBG_
 	Debug flag for debugging the object                                                ; _DBG_
                                                                                        ; _DBG_
 	Value:                                                                             ; _DBG_
 	flag - *true* or *false*                                                           ; _DBG_
 	*/                                                                                 ; _DBG_
-    debug[] { ; _DBG_
 		get {                                                                          ; _DBG_ 
 			return this._debug                                                         ; _DBG_
 		}                                                                              ; _DBG_
@@ -37,16 +37,13 @@ class Dispy {
 			this._debug := mode                                                        ; _DBG_
 			return this._debug                                                         ; _DBG_
 		}                                                                              ; _DBG_
-	}
-	
+	}	
+	id[] {
 	/* -------------------------------------------------------------------------------
 	Property: id [get/set]
 	ID of the monitor
-
-	Remarks:
-	* There is no setter available, since this is a constant system property
 	*/
-    id[] {
+    
 		get {
 			return this._id
 		}
@@ -68,7 +65,7 @@ class Dispy {
 			return ret
 		}
 	}
-
+	size[ ] {
 	/* ---------------------------------------------------------------------------------------
 	Property:  size [get]
 	Get the size of a monitor in Pixel as a <rectangle at http://hoppfrosch.github.io/AHK_Windy/files/Recty-ahk.html>.
@@ -77,9 +74,8 @@ class Dispy {
 	* There is no setter available, since this is a constant system property
 
 	See also: 
-	<workArea [get]>
+	<workingArea [get]>
 	*/
-	size[ ] {
 		get {
 			mon := this.id
 			SysGet, size, Monitor, %mon%
@@ -88,19 +84,40 @@ class Dispy {
 				OutputDebug % "|[" A_ThisFunc "()] -> (" rect.dump() ")" ; _DBG_
 			return rect
 		}
-	}
-	
-	/* -------------------------------------------------------------------------------
+	}	
+    version[] {
+    /* -------------------------------------------------------------------------------
 	Property: version [get]
 	Version of the class
 	*/
-    version[] {
 		get {
 			OutputDebug % "<[" A_ThisFunc "] -> (" this._version ")" ; _DBG_
 			return this._version
 		}
 	}
+	workingArea[] {
+/* -------------------------------------------------------------------------------
+	Property:  workingArea [get]
+	Get the working area of a monitor in Pixel as a <rectangle at http://hoppfrosch.github.io/AHK_Windy/files/Recty-ahk.html>.
+	
+	Same as <size [get]>, except the area is reduced to exclude the area occupied by the taskbar and other registered desktop toolbars.
+	The working area is given as a <rectangle at http://hoppfrosch.github.io/AHK_Windy/files/Recty-ahk.html>.
+		
+	Remarks:
+	* There is no setter available, since this is a constant system property
 
+	See also: 
+	<size [get]>
+	*/
+		get {
+			mon := this.id
+			SysGet, size, MonitorWorkArea , %mon%
+			rect := new Recty(0,0, sizeRight-sizeLeft, sizeBottom-sizeTop, this._debug)
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "()] -> (" rect.dump() ")" ; _DBG_
+			return rect
+		}
+	}
 
 	; ===== Methods ==================================================================
 	
