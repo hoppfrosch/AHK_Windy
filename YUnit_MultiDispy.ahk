@@ -11,7 +11,7 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.1.3"
+ReferenceVersion := "0.1.4"
 
 debug := 1
 
@@ -35,6 +35,13 @@ class MultiDispyTestSuite
 		this.monvirtHeight := this.mon2Height
     }
 
+	identify() {
+    	Global debug
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+    	this.obj.identify(250, "00FF00")
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+	}
+	
    	monitorsCount() {
     	Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"

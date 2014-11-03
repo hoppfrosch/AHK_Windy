@@ -18,7 +18,7 @@
 */
 class MultiDispy {
 	_debug := 0
-	_version := "0.1.3"
+	_version := "0.1.4"
 
 	; ===== Properties ==============================================================	
     debug[] { ; _DBG_
@@ -114,7 +114,38 @@ class MultiDispy {
 		}
 	}
 	
-	; ===== Methods ==================================================================
+	; ===== Methods ===================================================================
+	/* ===============================================================================
+	method: 	identify
+	Identify monitors by displaying the monitor id on each monitor
+	
+	Parameters:
+	disptime - time to display the monitor id (*Optional*, Default: 1500[ms])
+	txtcolor - color of the displayed monitor id(*Optional*, Default: "000000")
+	txtsize - size of the displayed monitor id(*Optional*, Default: 300[px])
+	*/
+	identify(disptime := 1500, txtcolor := "000000", txtsize := 300) {
+
+		if (this._debug) ; _DBG_
+			OutputDebug % ">[" A_ThisFunc "(disptime := " disptime ", txtcolor := " txtcolor ", txtsize := " txtsize ")]" ; _DBG_
+				
+		monCnt := this.monitorsCount
+		Loop %monCnt%
+		{
+			mon := new Dispy(A_Index, this._debug)
+			mon.__idShow(txtcolor, txtsize)
+		}
+		Sleep, %disptime%
+		Loop %monCnt% {
+    		mon := new Dispy(A_Index, this._debug)
+			mon.__idHide()
+		}
+
+		if (this._debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "(disptime := " disptime ", txtcolor := " txtcolor ", txtsize := " txtsize ")]" ; _DBG_
+				
+		return
+	}
 
 	; ====== Internal Methods =========================================================
 	
