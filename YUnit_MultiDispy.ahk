@@ -11,7 +11,7 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.1.5"
+ReferenceVersion := "0.1.8"
 
 debug := 1
 
@@ -34,8 +34,8 @@ class ExpMultiDispyTestSuite {
 		this.monvirtWidth := this.mon1Width + this.mon2Width
 		this.monvirtHeight := this.mon2Height
     }
-	
-	End()  {
+
+   	End()  {
         this.remove("obj")
 		this.obj := 
     }
@@ -55,6 +55,32 @@ class MultiDispyTestSuite
 		
 		this.monvirtWidth := this.mon1Width + this.mon2Width
 		this.monvirtHeight := this.mon2Height
+    }
+
+	coordDisplayToVirtualScreen() {
+		Global debug
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		pt := this.obj.coordDisplayToVirtualScreen(1, 10, 10)
+		Yunit.assert(pt.x == 10)
+		Yunit.assert(pt.y == 10)
+		pt := this.obj.coordDisplayToVirtualScreen(2, 10, 10)
+		Yunit.assert(pt.x == this.mon1Width + 10)
+		Yunit.assert(pt.y == 10)
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+	}
+
+    coordVirtualScreenToDisplay() {
+    	Global debug
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		x := this.obj.coordVirtualScreenToDisplay(10,10)
+		Yunit.assert(x.monID == 1)
+		Yunit.assert(x.pt.x == 10)
+		Yunit.assert(x.pt.y == 10)
+    	x := this.obj.coordVirtualScreenToDisplay(1930,10)
+		Yunit.assert(x.monID == 2)
+		Yunit.assert(x.pt.x == 10)
+		Yunit.assert(x.pt.y == 10)
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
     }
 
 	identify() {

@@ -18,7 +18,7 @@
 */
 class MultiDispy {
 	_debug := 0
-	_version := "0.1.5"
+	_version := "0.1.8"
 
 	; ===== Properties ==============================================================	
     debug[] { ; _DBG_
@@ -114,6 +114,53 @@ class MultiDispy {
 	}
 	
 	; ===== Methods ==================================================================
+	/* -------------------------------------------------------------------------------
+	Method: 	coordDisplayToVirtualScreen
+	Transforms coordinates relative to given monitor into absolute (virtual) coordinates. Returns object of type <point at http://hoppfrosch.github.io/AHK_Windy/files/Pointy-ahk.html>.
+	
+	Parameters:
+	id - id of the monitor 
+	x,y - relative coordinates on given monitor
+	
+	Returns:
+	<point at http://hoppfrosch.github.io/AHK_Windy/files/Pointy-ahk.html>.
+	*/
+	coordDisplayToVirtualScreen( id := 1, x := 0, y := 0) {
+		oMon := new Dispy(id, this._debug)
+		r := oMon.boundary()
+		xout := x + r.x
+		yout := y + r.y
+		pt := new Pointy(xout, yout ,this._debug)
+		if (this._debug) ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "(id:=" id ", x:=" x ", y:=" y ")] -> (" pt.dump() ")" ; _DBG_
+		return pt
+	}
+	
+	/* -------------------------------------------------------------------------------
+	Method: 	coordVirtualScreenToDisplay
+	Transforms absolute coordinates from Virtual Screen into coordinates relative to screen. 
+			
+	Parameters:
+	x,y - absolute coordinates
+	
+	Returns:
+	Object containing relative coordinates and monitorID
+	*/
+	coordVirtualScreenToDisplay(x,y) {
+		ret := Object()
+		ret.monID := this.idFromCoord(x,y)
+
+		oMon := new Dispy(ret.monId, this._debug)
+		r := oMon.boundary
+		xret := x - r.x
+		yret := y - r.y
+		pt := new Pointy(xret, yret, this._debug)
+		ret.pt := pt
+		if (this._debug) ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "( x:=" x ", y:=" y ")] -> ( " ret.monId ",(" ret.pt.dump() "))" ; _DBG_
+		return ret
+	}
+
 	/* -------------------------------------------------------------------------------
 	method: 	identify
 	Identify monitors by displaying the monitor id on each monitor
