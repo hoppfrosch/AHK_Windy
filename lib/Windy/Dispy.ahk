@@ -17,7 +17,7 @@
 */
 class Dispy {
 	_debug := 0
-	_version := "0.1.6"
+	_version := "0.1.7"
 	_id := 0
 
     ; ===== Properties ===============================================================
@@ -37,7 +37,7 @@ class Dispy {
 			SysGet, size, Monitor, %mon%
 			rect := new Recty(sizeLeft, sizeTop, sizeRight, sizeBottom, this._debug)
 			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "()] -> (" rect.dump() ")" ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "([" this.id "])] -> (" rect.dump() ")" ; _DBG_
 			return rect
 		}
 	}
@@ -55,7 +55,7 @@ class Dispy {
 			ycenter := floor(boundary.y+(boundary.h-boundary.y)/2)
 			pt := new Pointy(xcenter, ycenter, this._debug)
 			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "()] -> (" pt.dump() ")" ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.id "])] -> (" pt.dump() ")" ; _DBG_
 			return pt
 		}
 	}
@@ -81,13 +81,13 @@ class Dispy {
 	Property: id [get/set]
 	ID of the monitor
 	*/
-    
+  
 		get {
 			return this._id
 		}
 		set {
 			if (this._debug) ; _DBG_
-				OutputDebug % ">[" A_ThisFunc "(value:=" value ")]" ; _DBG_
+				OutputDebug % ">[" A_ThisFunc "([" this.id "],value:=" value ")]" ; _DBG_
 			ret := 0
 			; Existiert der Monitor mit der uebergebenen ID?
 			CoordMode, Mouse, Screen
@@ -99,8 +99,90 @@ class Dispy {
 				}
 			}
 			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "(value:=" value ")] -> (" ret ")" ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "([" this.id "],value:=" value ")] -> (" ret ")" ; _DBG_
 			return ret
+		}
+	}
+	monitorsCount[] {
+	/* ---------------------------------------------------------------------------------------
+	Property: monitorsCount [get]
+	Number of available monitors. 
+
+	Remarks:
+	* There is no setter available, since this is a constant system property
+	*/
+		get {
+			CoordMode, Mouse, Screen
+			SysGet, mCnt, MonitorCount
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.id "]) -> (" mCnt ")]" ; _DBG_		
+			return mCnt
+		}
+	}
+	next[ cycle := true ] {
+	/* -------------------------------------------------------------------------------
+	Property:	next [get]
+	Gets the id of the next monitor.
+			
+	Parameters:
+	cycle - == 1 cycle through monitors; == 0 stop at last monitor (*Optional*, Default: 1)
+			
+	Remarks:
+	* There is no setter available, since this is a constant system property
+
+	See also: 
+	<prev [get]>
+	*/
+		get {
+			currMon := this.id
+			nextMon := currMon + 1
+			if (cycle == false) {
+				if (nextMon > this.monitorsCount) {
+					nextMon := this.monitorsCount
+				}
+			}
+			else {
+				if (nextMon >  this.monitorsCount) {
+					nextMon := Mod(nextMon, this.monitorsCount)
+				}
+			}
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.id "],cycle=" cycle ")] -> " nextMon ; _DBG_
+			
+			return nextMon
+		}
+	}
+	prev[ cycle := true ] {
+	/* -------------------------------------------------------------------------------
+	Property:	prev [get]
+	Gets the id of the previous monitor
+			
+	Parameters:
+	cycle - == true cycle through monitors; == false stop at last monitor (*Optional*, Default: true)
+			
+	Remarks:
+	* There is no setter available, since this is a constant system property
+
+	See also: 
+	<next [get]>
+	*/
+		get {
+			currMon := this.id			
+			prevMon := currMon - 1
+			if (cycle == false) {
+				if (prevMon < 1) {
+					prevMon := 1
+				}
+			}
+			else {
+				if (prevMon < 1) {
+					prevMon := this.monitorsCount
+				}
+			}
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.id "],cycle=" cycle ")] -> " prevMon ; _DBG_
+			
+			return prevMon
 		}
 	}
 	size[ ] {
@@ -119,7 +201,7 @@ class Dispy {
 			SysGet, size, Monitor, %mon%
 			rect := new Recty(0,0, sizeRight-sizeLeft, sizeBottom-sizeTop, this.debug)
 			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "()] -> (" rect.dump() ")" ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.id "])] -> (" rect.dump() ")" ; _DBG_
 			return rect
 		}
 	}	
@@ -127,9 +209,12 @@ class Dispy {
     /* -------------------------------------------------------------------------------
 	Property: version [get]
 	Version of the class
+
+	Remarks:
+	* There is no setter available, since this is a constant system property
 	*/
 		get {
-			OutputDebug % "|[]" A_ThisFunc "] -> (" this._version ")" ; _DBG_
+			OutputDebug % "|[]" A_ThisFunc "]([" this.id "]) -> (" this._version ")" ; _DBG_
 			return this._version
 		}
 	}
@@ -153,7 +238,7 @@ class Dispy {
 			SysGet, h, 79
 			rect := new Recty(x,y,w,h, this._debug)
 			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "()] -> (" rect.dump() ")" ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "([" this.id "])] -> (" rect.dump() ")" ; _DBG_
 			return rect
 		}
 	}
@@ -176,7 +261,7 @@ class Dispy {
 			SysGet, size, MonitorWorkArea , %mon%
 			rect := new Recty(0,0, sizeRight-sizeLeft, sizeBottom-sizeTop, this._debug)
 			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "()] -> (" rect.dump() ")" ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.id "])] -> (" rect.dump() ")" ; _DBG_
 			return rect
 		}
 	}
@@ -193,12 +278,12 @@ class Dispy {
 	*/
 	identify( disptime := 1500, txtcolor := "000000", txtsize := 300 ) {
 		if (this._debug) ; _DBG_
-				OutputDebug % ">[" A_ThisFunc "(txtcolor := " txtcolor ", txtsize := " txtsize ")]" ; _DBG_
+			OutputDebug % ">[" A_ThisFunc "([" this.id "], disptime := " disptime ", txtcolor := " txtcolor ", txtsize := " txtsize ")]" ; _DBG_
 		this.__idShow(txtcolor, txtsize)
     	Sleep, %disptime%
     	this.__idHide()
     	if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "(disptime := " disptime ", txtcolor := " txtcolor ", txtsize := " txtsize ")]" ; _DBG_
+			OutputDebug % "<[" A_ThisFunc "([" this.id "], disptime := " disptime ", txtcolor := " txtcolor ", txtsize := " txtsize ")]" ; _DBG_
 		return
 	}
 	
@@ -216,14 +301,14 @@ class Dispy {
     	Gui, %GuiNum%:Destroy
 
     	if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "()]" ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.id "])]" ; _DBG_
 		
 		return
 	}
 	
 	/* -------------------------------------------------------------------------------
 	method: __idShow
-	Helper function for <identify>: Identify monitor by displaying the monitor id. The id can be gidden again via <__idHide> (*INTERNAL*)
+	Helper function for <identify>: Identify monitor by displaying the monitor id, hidden via <__idHide> (*INTERNAL*)
 	
 	Parameters:
 	txtcolor - color of the displayed monitor id (*Optional*, Default: "000000")
@@ -248,7 +333,7 @@ class Dispy {
     	Gui, %GuiNum%:Add, Text, x0 y0 c%txtcolor%, %mon%
     	Gui, %GuiNum%:Show, x%x% y0 NoActivate
     	if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "(txtcolor := " txtcolor ", txtsize := " txtsize ")]" ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.id "], txtcolor := " txtcolor ", txtsize := " txtsize ")]" ; _DBG_
 		return
 	}
 	

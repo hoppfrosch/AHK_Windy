@@ -11,14 +11,34 @@
 #SingleInstance force
 
 
-ReferenceVersion := "0.1.6"
+ReferenceVersion := "0.1.7"
 debug := 1
 
+;Yunit.Use(YunitStdOut, YunitWindow).Test(ExpDispyTestSuite)
 Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, DispyTestSuite)
 Return
 
 ExitApp
 
+
+class ExpDispyTestSuite
+{
+	Begin() {
+		Global debug
+;		this.obj := new Dispy(1, debug)
+		this.monCount := 2
+		this.mon1Width := 1920
+		this.mon1Height := 1080
+  		this.mon2Width := 1600
+		this.mon2Height := 1200		
+    }
+
+	End()  {
+;        this.remove("obj")
+;		this.obj := 
+    }
+
+}
 
 class DispyTestSuite
 {
@@ -81,6 +101,55 @@ class DispyTestSuite
 		mon2.identify(250)
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
+
+	monitorsCount() {
+    	Global debug
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+    	mon1 := new Dispy(1, debug)
+		cnt := mon1.monitorsCount
+		Yunit.assert(cnt == this.monCount)
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+	}
+	
+	nextPrev() {
+		Global debug
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+
+		; Monitor 1
+    	mon1 := new Dispy(1, debug)
+		monNxt := mon1.next
+		Yunit.assert(monNxt == 2)
+		monNxt := mon1.next(0)
+		Yunit.assert(monNxt == 2)
+		monNxt := mon1.next(1)
+		Yunit.assert(monNxt == 2)
+		
+		monPrv := mon1.prev
+		Yunit.assert(monPrv == 2)
+		monPrv := mon1.prev(0)
+		Yunit.assert(monPrv == 1)
+		monPrv := mon1.prev(1)
+		Yunit.assert(monPrv == 2)
+
+		; Monitor 2 ....
+		mon2 := new Dispy(2, debug)
+		monNxt := mon2.next
+		Yunit.assert(monNxt == 1)
+		monNxt := mon2.next(0)
+		Yunit.assert(monNxt == 2)
+		monNxt := mon2.next(1)
+		Yunit.assert(monNxt == 1)
+		
+		monPrv := mon2.prev
+		Yunit.assert(monPrv == 1)
+		monPrv := mon2.prev(0)
+		Yunit.assert(monPrv == 1)
+		monPrv := mon2.prev(1)
+		Yunit.assert(monPrv == 1)
+		
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+	}
+
 		
     size() {
     	Global debug
