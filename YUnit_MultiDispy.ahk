@@ -11,14 +11,36 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.1.4"
+ReferenceVersion := "0.1.5"
 
 debug := 1
 
+;Yunit.Use(YunitStdOut, YunitWindow).Test(ExpMultiDispyTestSuite)
 Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, MultiDispyTestSuite)
 Return
 
 ExitApp
+
+class ExpMultiDispyTestSuite {
+	Begin() {
+		Global debug
+		this.obj := new MultiDispy(debug)
+		this.monCount := 2
+		this.mon1Width := 1920
+		this.mon1Height := 1080
+		this.mon2Width := 1600
+		this.mon2Height := 1200
+		
+		this.monvirtWidth := this.mon1Width + this.mon2Width
+		this.monvirtHeight := this.mon2Height
+    }
+	
+	End()  {
+        this.remove("obj")
+		this.obj := 
+    }
+}
+
 
 class MultiDispyTestSuite
 {
@@ -39,6 +61,34 @@ class MultiDispyTestSuite
     	Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
     	this.obj.identify(250, "00FF00")
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+	}
+
+	idFromCoord() {
+		Global debug
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		mon := this.obj.idFromCoord(10,10)
+		Yunit.assert(mon == 1)
+		mon1 := new Dispy(1, debug)
+		rect := mon1.size
+		mon := this.obj.idFromCoord(rect.w+10,10)
+		Yunit.assert(mon == 2)
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+	}
+
+	idFromMouse() {	
+		Global debug
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		MouseGetPos,x_back,y_back 
+		MouseMove,10,10
+		mon := this.obj.idFromMouse()
+		Yunit.assert(mon == 1)
+		mon1 := new Dispy(1, debug)
+		rect := mon1.size
+		MouseMove,rect.w+10,10
+		mon := this.obj.idFromMouse()
+		Yunit.assert(mon == 2)
+		MouseMove,x_back, y_back
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
 	

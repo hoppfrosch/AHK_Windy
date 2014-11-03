@@ -18,7 +18,7 @@
 */
 class MultiDispy {
 	_debug := 0
-	_version := "0.1.4"
+	_version := "0.1.5"
 
 	; ===== Properties ==============================================================	
     debug[] { ; _DBG_
@@ -30,14 +30,14 @@ class MultiDispy {
 	flag - *true* or *false*
 	*/
 
-		get {                                                                          ; _DBG_ 
+		get {
 			return this._debug                                                         ; _DBG_
-		}                                                                              ; _DBG_
-		set {                                                                          ; _DBG_
+		}
+		set {
 			mode := value<1?0:1                                                        ; _DBG_
 			this._debug := mode                                                        ; _DBG_
 			return this._debug                                                         ; _DBG_
-		}                                                                              ; _DBG_
+		}
 	}
 	monitorsCount[] {
 	/* ---------------------------------------------------------------------------------------
@@ -55,8 +55,9 @@ class MultiDispy {
 			return mCnt
 		}
 	}
-		/* ---------------------------------------------------------------------------------------
-	Property: virtualScreenSize [get]
+	size[] {
+	/* ---------------------------------------------------------------------------------------
+	Property: size [get]
 	Get the size of virtual screen in Pixel as a <rectangle at http://hoppfrosch.github.io/AHK_Windy/files/Recty-ahk.html>.
 	
 	The virtual screen is the bounding rectangle of all display monitors
@@ -67,7 +68,6 @@ class MultiDispy {
 	See also: 
 	<virtualScreenSize [get]>
 	*/
-	size[] {
 		get {
 			rect := this.virtualScreenSize
 			if (this._debug) ; _DBG_
@@ -75,8 +75,7 @@ class MultiDispy {
 			return rect
 		}
 	}
-
-	 version[] {
+	version[] {
     /* -------------------------------------------------------------------------------
 	Property: version [get]
 	Version of the class
@@ -114,8 +113,8 @@ class MultiDispy {
 		}
 	}
 	
-	; ===== Methods ===================================================================
-	/* ===============================================================================
+	; ===== Methods ==================================================================
+	/* -------------------------------------------------------------------------------
 	method: 	identify
 	Identify monitors by displaying the monitor id on each monitor
 	
@@ -147,6 +146,51 @@ class MultiDispy {
 		return
 	}
 
+	/* -------------------------------------------------------------------------------
+	Method:  idFromCoord
+	Get the index of the monitor containing the specified x and y coordinates.
+	
+	Parameters:
+	x,y - Coordinates
+	default - Default monitor
+
+	Returns:
+	Index of the monitor at specified coordinates
+	*/
+	idFromCoord(x, y, default := 1) {
+		m := this.monitorsCount
+		mon := default
+		; Iterate through all monitors.
+		Loop, %m%
+		{  
+			oMon := new Dispy(A_Index, this._debug)
+			rect := oMon.boundary
+			if (x >= rect.x && x <= rect.w && y >= rect.y && y <= rect.h)
+				mon := A_Index
+		}
+		if (this._debug) ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "(x=" x ",y=" y ")] -> " mon ; _DBG_
+		return mon
+	}
+
+	/* -------------------------------------------------------------------------------
+	Method:   idFromMouse
+	Get the index of the monitor where the mouse is
+			
+	Parameters:
+	default - Default monitor
+			
+	Returns:
+	Index of the monitor where the mouse is
+	*/
+	idFromMouse(default:=1) {
+		MouseGetPos,x,y 
+		mon := this.idFromCoord(x,y,default)
+		if (this._debug) ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "()] -> " mon ; _DBG_
+		return mon
+	}
+	
 	; ====== Internal Methods =========================================================
 	
 	/*! ===============================================================================
