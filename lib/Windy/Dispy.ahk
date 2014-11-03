@@ -17,11 +17,12 @@
 */
 class Dispy {
 	_debug := 0
-	_version := "0.1.5"
+	_version := "0.1.6"
 	_id := 0
 
     ; ===== Properties ===============================================================
-     /* -------------------------------------------------------------------------------
+    boundary[] {
+    /* -------------------------------------------------------------------------------
 	Property: boundary [get]
 	Get the boundaries of a monitor in Pixel (related to Virtual Screen) as a <rectangle at http://hoppfrosch.github.io/AHK_Windy/files/Recty-ahk.html>.
 
@@ -31,8 +32,6 @@ class Dispy {
 	See also: 
 	<virtualScreenSize [get]>
 	*/
-    boundary[] {
-
 		get {
 			mon := this.id
 			SysGet, size, Monitor, %mon%
@@ -40,6 +39,24 @@ class Dispy {
 			if (this._debug) ; _DBG_
 				OutputDebug % "<[" A_ThisFunc "()] -> (" rect.dump() ")" ; _DBG_
 			return rect
+		}
+	}
+	center[] {
+	/* -------------------------------------------------------------------------------
+	Property: center [get]
+	Get the center coordinates of a monitor in Pixel, related to virtual screen as a <point at http://hoppfrosch.github.io/AHK_Windy/files/Pointy-ahk.html>.
+
+	Remarks:
+	* There is no setter available, since this is a constant system property
+	*/	
+		get {
+			boundary := this.boundary
+			xcenter := floor(boundary.x+(boundary.w-boundary.x)/2)
+			ycenter := floor(boundary.y+(boundary.h-boundary.y)/2)
+			pt := new Pointy(xcenter, ycenter, this._debug)
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "()] -> (" pt.dump() ")" ; _DBG_
+			return pt
 		}
 	}
     debug[] { ; _DBG_
