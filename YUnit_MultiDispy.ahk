@@ -11,7 +11,7 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.1.2"
+ReferenceVersion := "0.1.3"
 
 debug := 1
 
@@ -43,11 +43,21 @@ class MultiDispyTestSuite
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
 
+	size() {
+		Global debug
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		rect :=  this.obj.virtualScreenSize
+		Yunit.assert(rect.x == 0)
+		Yunit.assert(rect.y == 0)
+		Yunit.assert(rect.w == this.monvirtWidth)
+		Yunit.assert(rect.h == this.monvirtHeight)
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+	}
+	
 	virtualScreenSize() {
 		Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
-		mon1 := new Dispy(1, debug)
-		rect := mon1.virtualScreenSize()
+		rect :=  this.obj.size
 		Yunit.assert(rect.x == 0)
 		Yunit.assert(rect.y == 0)
 		Yunit.assert(rect.w == this.monvirtWidth)
