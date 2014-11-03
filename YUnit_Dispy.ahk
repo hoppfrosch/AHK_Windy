@@ -11,7 +11,7 @@
 #SingleInstance force
 
 
-ReferenceVersion := "0.1.0"
+ReferenceVersion := "0.1.1"
 debug := 1
 
 Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, DispyTestSuite)
@@ -41,6 +41,20 @@ class DispyTestSuite
     	Yunit.assert(mon99 = false)
     	OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
     }
+
+    size() {
+    	Global debug
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+    	mon1 := new Dispy(1, debug)
+		rect := mon1.size
+		Yunit.assert(rect.w == this.mon1Width)
+		Yunit.assert(rect.h == this.mon1Height)	
+		mon2 := new Dispy(2, debug)
+		rect := mon2.size
+		Yunit.assert(rect.w == this.mon2Width)
+		Yunit.assert(rect.h == this.mon2Height)
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+	}
 
 	End()  {
 ;        this.remove("obj")

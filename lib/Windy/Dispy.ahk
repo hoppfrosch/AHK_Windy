@@ -17,8 +17,8 @@
 */
 class Dispy {
 	_debug := 0
-	_version := "0.1.0"
-	_id := 1
+	_version := "0.1.1"
+	_id := 0
 
     ; ===== Properties ==============================================================0	
     /* ------------------------------------------------------------------------------- ; _DBG_
@@ -66,6 +66,27 @@ class Dispy {
 			if (this._debug) ; _DBG_
 				OutputDebug % "<[" A_ThisFunc "(value:=" value ")] -> (" ret ")" ; _DBG_
 			return ret
+		}
+	}
+
+	/* ---------------------------------------------------------------------------------------
+	Property:  size [get]
+	Get the size of a monitor in Pixel as a <rectangle at http://hoppfrosch.github.io/AHK_Windy/files/Recty-ahk.html>.
+			
+	Remarks:
+	* There is no setter available, since this is a constant system property
+
+	See also: 
+	<workArea [get]>
+	*/
+	size[ ] {
+		get {
+			mon := this.id
+			SysGet, size, Monitor, %mon%
+			rect := new Recty(0,0, sizeRight-sizeLeft, sizeBottom-sizeTop, this.debug)
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "()] -> (" rect.dump() ")" ; _DBG_
+			return rect
 		}
 	}
 	
