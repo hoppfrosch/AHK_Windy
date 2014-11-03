@@ -17,10 +17,31 @@
 */
 class Dispy {
 	_debug := 0
-	_version := "0.1.4"
+	_version := "0.1.5"
 	_id := 0
 
     ; ===== Properties ===============================================================
+     /* -------------------------------------------------------------------------------
+	Property: boundary [get]
+	Get the boundaries of a monitor in Pixel (related to Virtual Screen) as a <rectangle at http://hoppfrosch.github.io/AHK_Windy/files/Recty-ahk.html>.
+
+	Remarks:
+	* There is no setter available, since this is a constant system property
+
+	See also: 
+	<virtualScreenSize [get]>
+	*/
+    boundary[] {
+
+		get {
+			mon := this.id
+			SysGet, size, Monitor, %mon%
+			rect := new Recty(sizeLeft, sizeTop, sizeRight, sizeBottom, this._debug)
+			if (this._debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "()] -> (" rect.dump() ")" ; _DBG_
+			return rect
+		}
+	}
     debug[] { ; _DBG_
 	/* ------------------------------------------------------------------------------- ; _DBG_
 	Property: debug [get/set]                                                          ; _DBG_
@@ -106,7 +127,7 @@ class Dispy {
 	* There is no setter available, since this is a constant system property
 
 	See also: 
-	<size [get]>
+	<size [get]>, <boundary [get]>
 	*/
 		get {
 			SysGet, x, 76
