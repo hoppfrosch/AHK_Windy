@@ -60,13 +60,13 @@ class Dispy {
 		}
 	}
     debug[] { ; _DBG_
-	/* ------------------------------------------------------------------------------- ; _DBG_
-	Property: debug [get/set]                                                          ; _DBG_
-	Debug flag for debugging the object                                                ; _DBG_
-                                                                                       ; _DBG_
-	Value:                                                                             ; _DBG_
-	flag - *true* or *false*                                                           ; _DBG_
-	*/                                                                                 ; _DBG_
+   	/* -------------------------------------------------------------------------------
+	Property: debug [get/set]
+	Debug flag for debugging the object
+
+	Value:
+	flag - *true* or *false*
+	*/
 		get {                                                                          ; _DBG_ 
 			return this._debug                                                         ; _DBG_
 		}                                                                              ; _DBG_
