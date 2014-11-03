@@ -17,7 +17,7 @@
 */
 class Dispy {
 	_debug := 0
-	_version := "0.1.7"
+	_version := "0.1.8"
 	_id := 0
 
     ; ===== Properties ===============================================================
@@ -44,7 +44,7 @@ class Dispy {
 	center[] {
 	/* -------------------------------------------------------------------------------
 	Property: center [get]
-	Get the center coordinates of a monitor in Pixel, related to virtual screen as a <point at http://hoppfrosch.github.io/AHK_Windy/files/Pointy-ahk.html>.
+	Get the center coordinates of a monitor in Pixel (related to Virtual Screen)  as a <point at http://hoppfrosch.github.io/AHK_Windy/files/Pointy-ahk.html>.
 
 	Remarks:
 	* There is no setter available, since this is a constant system property
@@ -183,6 +183,87 @@ class Dispy {
 				OutputDebug % "|[" A_ThisFunc "([" this.id "],cycle=" cycle ")] -> " prevMon ; _DBG_
 			
 			return prevMon
+		}
+	}
+	scale[ monDest := 1 ] {
+	/* -------------------------------------------------------------------------------
+	Property:  scale [get]
+	Determines the scaling factors in x/y-direction for coordinates when moving to monDest as a <point at http://hoppfrosch.github.io/AHK_Windy/files/Pointy-ahk.html>.
+			
+	Parameters:
+	monDest - Destination Monitor number (*Required*, Default := 1)
+			
+	Returns:
+	Scaling factor for x/y -coordinates as a <point at http://hoppfrosch.github.io/AHK_Windy/files/Pointy-ahk.html>.
+
+	Remarks:
+	* There is no setter available, since this is a constant system property
+
+	See also: 
+	<scaleX [get]>, <scaleY [get]>
+	*/
+		get {
+			scaleX := this.scaleX(monDest)
+			scaleY := this.scaleY(monDest)
+			pt := new Pointy(scaleX,scaleY,this._debug)
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.id "],monDest:= " monDest "] -> (" pt.dump() ")" ; _DBG_
+			return pt
+		}
+	}
+	scaleX[ monDest := 1 ] {
+	/* -------------------------------------------------------------------------------
+	Property:  scaleX [get]
+	Determines the scaling factor in x and -direction for coordinates when moving to monDest
+			
+	Parameters:
+	monDest - Destination Monitor number (*Required*, Default := 1)
+			
+	Returns:
+	Scaling factor for x-coordinates as a <point at http://hoppfrosch.github.io/AHK_Windy/files/Pointy-ahk.html>.
+
+	Remarks:
+	* There is no setter available, since this is a constant system property
+
+	See also: 
+	<scale [get]>, <scaleY [get]>
+	*/
+		get {
+			size1 := this.size
+			md := new Dispy(monDest, this.debug)
+			size2 := md.size
+			scaleX := size2.w / size1.w
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.id "],monDest:=" monDest ") -> (" scaleX ")]" ; _DBG_		
+			return scaleX
+		}
+	}
+	scaleY[ monDest := 1 ] {
+	/* -------------------------------------------------------------------------------
+	Property:  scaleY [get]
+	Determines the scaling factor in y-direction for coordinates when moving to monDest
+			
+	Parameters:
+	
+	monDest - Destination Monitor number (*Required*, Default := 1)
+			
+	Returns:
+	Scaling factor for y-coordinates
+
+	Remarks:
+	* There is no setter available, since this is a constant system property
+
+	See also: 
+	<scale [get]>, <scaleX [get]>
+	*/
+		get {
+			size1 := this.size
+			md := new Dispy(monDest, this.debug)
+			size2 := md.size
+			scaleY := size2.h / size1.h
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.id "],monDest:=" monDest ") -> (" scaleY ")]" ; _DBG_		
+			return scaleY
 		}
 	}
 	size[ ] {

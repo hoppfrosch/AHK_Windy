@@ -11,7 +11,7 @@
 #SingleInstance force
 
 
-ReferenceVersion := "0.1.7"
+ReferenceVersion := "0.1.8"
 debug := 1
 
 ;Yunit.Use(YunitStdOut, YunitWindow).Test(ExpDispyTestSuite)
@@ -33,6 +33,7 @@ class ExpDispyTestSuite
 		this.mon2Height := 1200		
     }
 
+	
 	End()  {
 ;        this.remove("obj")
 ;		this.obj := 
@@ -149,19 +150,30 @@ class DispyTestSuite
 		
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
-
 		
     size() {
     	Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
     	mon1 := new Dispy(1, debug)
-		rect := mon1.size
-		Yunit.assert(rect.w == this.mon1Width)
-		Yunit.assert(rect.h == this.mon1Height)	
-		mon2 := new Dispy(2, debug)
-		rect := mon2.size
-		Yunit.assert(rect.w == this.mon2Width)
-		Yunit.assert(rect.h == this.mon2Height)
+		sx := mon1.scaleX(1)
+		Yunit.assert(sx == 1)
+		sy := mon1.scaleY(1)
+		Yunit.assert(sy == 1)
+		sc := mon1.scale(1)
+		Yunit.assert(sc.x == 1)
+		Yunit.assert(sc.y == 1)
+
+		sx := mon1.scaleX(2)
+		sx := Round(sx*1000)/1000
+		dx := this.mon2Width/this.mon1Width
+		dx := Round(dx*1000)/1000
+		Yunit.assert(Round(sx*1000)/1000 == Round(dx*1000)/1000)
+		sy := mon1.scaleY(2)
+		dy := this.mon2Height/this.mon1Height
+		Yunit.assert(Round(sy*1000)/1000 == Round(dy*1000)/1000)
+		sc := mon1.scale(2)
+		Yunit.assert(Round(sx*1000)/1000 == Round(dx*1000)/1000)
+		Yunit.assert(Round(sy*1000)/1000 == Round(dy*1000)/1000)
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
 
