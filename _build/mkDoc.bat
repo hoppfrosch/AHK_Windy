@@ -5,7 +5,8 @@ echo.
 
 SET WORK=MKDOC_TEMP
 mkdir %WORK%
-copy ..\lib\Windy\Mony.ahk %WORK%
+REM copy ..\lib\Windy\Mony.ahk %WORK%
+copy ..\lib\Windy\Dispy.ahk %WORK%
 copy ..\lib\Windy\Recty.ahk %WORK%
 copy ..\lib\Windy\Pointy.ahk %WORK%
 REM copy ..\lib\Windy\Mousy.ahk %WORK%

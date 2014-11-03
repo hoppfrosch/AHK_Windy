@@ -11,7 +11,7 @@
 #SingleInstance force
 
 
-ReferenceVersion := "0.1.2"
+ReferenceVersion := "0.1.3"
 debug := 1
 
 Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, DispyTestSuite)
@@ -42,6 +42,16 @@ class DispyTestSuite
     	OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
     }
 
+	identify() {
+    	Global debug
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+    	mon1 := new Dispy(1, debug)
+		mon1.identify(250)
+		mon2 := new Dispy(2, debug)
+		mon2.identify(250)
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+	}
+		
     size() {
     	Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"

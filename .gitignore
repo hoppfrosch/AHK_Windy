@@ -12,3 +12,4 @@ backup/
 *.bak
 AHK-EDE.tdl
 xx.ahk
+_build/Net-Github/

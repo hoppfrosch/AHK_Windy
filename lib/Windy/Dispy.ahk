@@ -17,7 +17,7 @@
 */
 class Dispy {
 	_debug := 0
-	_version := "0.1.2"
+	_version := "0.1.3"
 	_id := 0
 
     ; ===== Properties ==============================================================0	
@@ -120,10 +120,80 @@ class Dispy {
 	}
 
 	; ===== Methods ==================================================================
+	/* -------------------------------------------------------------------------------
+	method: identify
+	Identify monitor by displaying the monitor id
+	
+	Parameters:
+	disptime - time to display the monitor id (*Optional*, Default: 1500[ms])
+	txtcolor - color of the displayed monitor id (*Optional*, Default: "000000")
+	txtsize - size of the displayed monitor id (*Optional*, Default: 300[px])
+	*/
+	identify( disptime := 1500, txtcolor := "000000", txtsize := 300 ) {
+		if (this._debug) ; _DBG_
+				OutputDebug % ">[" A_ThisFunc "(txtcolor := " txtcolor ", txtsize := " txtsize ")]" ; _DBG_
+		this.__idShow(txtcolor, txtsize)
+    	Sleep, %disptime%
+    	this.__idHide()
+    	if (this._debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "(disptime := " disptime ", txtcolor := " txtcolor ", txtsize := " txtsize ")]" ; _DBG_
+		return
+	}
 	
 	; ===== Internal Methods =========================================================
 	/* -------------------------------------------------------------------------------
-	Function: __New
+	method: __idHide
+	Helper function for <identify>: Hides the Id, shown with <__idShow> (*INTERNAL*)
+		
+    See also: 
+	<identify>, <__idShow>
+	*/
+	__idHide() {
+		mon := this.id
+		GuiNum := 80 + mon
+    	Gui, %GuiNum%:Destroy
+
+    	if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "()]" ; _DBG_
+		
+		return
+	}
+	
+	/* -------------------------------------------------------------------------------
+	method: __idShow
+	Helper function for <identify>: Identify monitor by displaying the monitor id. The id can be gidden again via <__idHide> (*INTERNAL*)
+	
+	Parameters:
+	txtcolor - color of the displayed monitor id (*Optional*, Default: "000000")
+	txtsize - size of the displayed monitor id (*Optional*, Default: 300[px])
+	
+	Author(s):
+    Original - <Bkid at http://ahkscript.org/boards/viewtopic.php?f=6&t=3761&p=19836&hilit=Monitor#p19836>
+
+    See also: 
+	<identify>, <__idHide>
+	*/
+	__idShow( txtcolor := "000000", txtsize := 300 ) {
+		mon := this.id
+		if (this._debug) ; _DBG_
+				OutputDebug % ">[" A_ThisFunc "(txtcolor := " txtcolor ", txtsize := " txtsize ")]" ; _DBG_
+		TPColor = AABBCC
+		GuiNum := 80 + mon
+   		SysGet, out, Monitor, %mon%
+    	x := outLeft
+    	Gui, %GuiNum%:+LastFound +AlwaysOnTop -Caption +ToolWindow
+    	Gui, %GuiNum%:Color, %TPColor%
+    	WinSet, TransColor, %TPColor%
+    	Gui, %GuiNum%:Font, s%txtsize% w700
+    	Gui, %GuiNum%:Add, Text, x0 y0 c%txtcolor%, %mon%
+    	Gui, %GuiNum%:Show, x%x% y0 NoActivate
+    	if (this._debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "(txtcolor := " txtcolor ", txtsize := " txtsize ")]" ; _DBG_
+		return
+	}
+	
+	/* -------------------------------------------------------------------------------
+	Constructor: __New
 	Constructor (*INTERNAL*)
 		
 	Parameters:
