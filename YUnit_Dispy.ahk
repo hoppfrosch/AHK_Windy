@@ -11,7 +11,7 @@
 #SingleInstance force
 
 
-ReferenceVersion := "0.1.10"
+ReferenceVersion := "0.1.11"
 debug := 1
 
 ;Yunit.Use(YunitStdOut, YunitWindow).Test(ExpDispyTestSuite)

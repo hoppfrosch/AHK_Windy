@@ -18,7 +18,7 @@
 */
 class MultiDispy {
 	_debug := 0
-	_version := "0.1.1"
+	_version := "0.1.2"
 
 	; ===== Properties ==============================================================	
     debug[] { ; _DBG_
@@ -66,6 +66,27 @@ class MultiDispy {
 		get {
 			OutputDebug % "|[]" A_ThisFunc "]() -> (" this._version ")" ; _DBG_
 			return this._version
+		}
+	}
+	virtualScreenSize[] {
+	/* ---------------------------------------------------------------------------------------
+	Property: virtualScreenSize [get]
+	Get the size of virtual screen in Pixel as a <rectangle at http://hoppfrosch.github.io/AHK_Windy/files/Recty-ahk.html>.
+	
+	The virtual screen is the bounding rectangle of all display monitors
+	
+	Remarks:
+	* There is no setter available, since this is a constant system property
+	*/
+		get {
+			SysGet, x, 76
+			SysGet, y, 77
+			SysGet, w, 78
+			SysGet, h, 79
+			rect := new Recty(x,y,w,h, this._debug)
+			if (this._debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "()] -> (" rect.dump() ")" ; _DBG_
+			return rect
 		}
 	}
 	

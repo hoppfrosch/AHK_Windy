@@ -11,7 +11,7 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.1.1"
+ReferenceVersion := "0.1.2"
 
 debug := 1
 
@@ -40,6 +40,18 @@ class MultiDispyTestSuite
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		cnt := this.obj.monitorsCount
 		Yunit.assert(cnt == this.monCount)
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+	}
+
+	virtualScreenSize() {
+		Global debug
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		mon1 := new Dispy(1, debug)
+		rect := mon1.virtualScreenSize()
+		Yunit.assert(rect.x == 0)
+		Yunit.assert(rect.y == 0)
+		Yunit.assert(rect.w == this.monvirtWidth)
+		Yunit.assert(rect.h == this.monvirtHeight)
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
 

@@ -18,7 +18,7 @@
 */
 class Dispy {
 	_debug := 0
-	_version := "0.1.10"
+	_version := "0.1.11"
 	_id := 0
 
     ; ===== Properties ===============================================================
@@ -314,11 +314,8 @@ class Dispy {
 	<size [get]>, <boundary [get]>
 	*/
 		get {
-			SysGet, x, 76
-			SysGet, y, 77
-			SysGet, w, 78
-			SysGet, h, 79
-			rect := new Recty(x,y,w,h, this._debug)
+			md := new MultiDispy(this._debug)
+			rect := md.virtualScreenSize
 			if (this._debug) ; _DBG_
 				OutputDebug % "<[" A_ThisFunc "([" this.id "])] -> (" rect.dump() ")" ; _DBG_
 			return rect
