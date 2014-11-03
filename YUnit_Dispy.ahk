@@ -11,7 +11,7 @@
 #SingleInstance force
 
 
-ReferenceVersion := "0.1.8"
+ReferenceVersion := "0.1.9"
 debug := 1
 
 ;Yunit.Use(YunitStdOut, YunitWindow).Test(ExpDispyTestSuite)
@@ -33,6 +33,28 @@ class ExpDispyTestSuite
 		this.mon2Height := 1200		
     }
 
+	coordRelToAbs() {
+		Global debug
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+    	mon1 := new Dispy(1, debug)
+		;x := this.obj.monCoordAbsToRel(10,10)
+		;Yunit.assert(x.monID == 1)
+		;Yunit.assert(x.x == 10)
+		;Yunit.assert(x.y == 10)
+    	;x := this.obj.monCoordAbsToRel(1930,10)
+		;Yunit.assert(x.monID == 2)
+		;Yunit.assert(x.x == 10)
+		;Yunit.assert(x.y == 10)
+		pt := mon1.coordRelToAbs(10, 10)
+		Yunit.assert(pt.x == 10)
+		Yunit.assert(pt.y == 10)
+		mon2 := new Dispy(2, debug)
+		pt := mon2.coordRelToAbs(10, 10)
+		Yunit.assert(pt.x == this.mon1Width + 10)
+		Yunit.assert(pt.y == 10)
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+    	return
+    }
 	
 	End()  {
 ;        this.remove("obj")
@@ -93,6 +115,21 @@ class DispyTestSuite
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
 
+	coordRelToAbs() {
+		Global debug
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+    	mon1 := new Dispy(1, debug)
+		pt := mon1.coordRelToAbs(10, 10)
+		Yunit.assert(pt.x == 10)
+		Yunit.assert(pt.y == 10)
+		mon2 := new Dispy(2, debug)
+		pt := mon2.coordRelToAbs(10, 10)
+		Yunit.assert(pt.x == this.mon1Width + 10)
+		Yunit.assert(pt.y == 10)
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+    	return
+    }
+    
 	identify() {
     	Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"

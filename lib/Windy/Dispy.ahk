@@ -17,7 +17,7 @@
 */
 class Dispy {
 	_debug := 0
-	_version := "0.1.8"
+	_version := "0.1.9"
 	_id := 0
 
     ; ===== Properties ===============================================================
@@ -266,7 +266,7 @@ class Dispy {
 			return scaleY
 		}
 	}
-	size[ ] {
+	size[] {
 	/* ---------------------------------------------------------------------------------------
 	Property:  size [get]
 	Get the size of a monitor in Pixel as a <rectangle at http://hoppfrosch.github.io/AHK_Windy/files/Recty-ahk.html>.
@@ -349,6 +349,25 @@ class Dispy {
 
 	; ===== Methods ==================================================================
 	/* -------------------------------------------------------------------------------
+	function: 	coordRelToAbs
+	Transforms coordinates relative to given monitor into absolute (virtual) coordinates. Returns object of type <point at http://hoppfrosch.github.io/AHK_Windy/files/Pointy-ahk.html>.
+	
+	Parameters:
+	x,y - relative coordinates on given monitor
+	
+	Returns:
+	<point at http://hoppfrosch.github.io/AHK_Windy/files/Pointy-ahk.html>.
+	*/
+	coordRelToAbs( x := 0, y := 0) {
+		r := this.boundary()
+		xout := x + r.x
+		yout := y + r.y
+		pt := new Pointy(xout, yout ,this._debug)
+		if (this._debug) ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "()] -> (" pt.dump() ")" ; _DBG_
+		return pt
+	}
+	/* -------------------------------------------------------------------------------
 	method: identify
 	Identify monitor by displaying the monitor id
 	
@@ -386,7 +405,6 @@ class Dispy {
 		
 		return
 	}
-	
 	/* -------------------------------------------------------------------------------
 	method: __idShow
 	Helper function for <identify>: Identify monitor by displaying the monitor id, hidden via <__idHide> (*INTERNAL*)
@@ -417,7 +435,6 @@ class Dispy {
 				OutputDebug % "|[" A_ThisFunc "([" this.id "], txtcolor := " txtcolor ", txtsize := " txtsize ")]" ; _DBG_
 		return
 	}
-	
 	/* -------------------------------------------------------------------------------
 	Constructor: __New
 	Constructor (*INTERNAL*)
