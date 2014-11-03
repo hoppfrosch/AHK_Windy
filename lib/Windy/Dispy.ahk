@@ -17,10 +17,10 @@
 */
 class Dispy {
 	_debug := 0
-	_version := "0.1.3"
+	_version := "0.1.4"
 	_id := 0
 
-    ; ===== Properties ==============================================================0	
+    ; ===== Properties ===============================================================
     debug[] { ; _DBG_
 	/* ------------------------------------------------------------------------------- ; _DBG_
 	Property: debug [get/set]                                                          ; _DBG_
@@ -74,7 +74,7 @@ class Dispy {
 	* There is no setter available, since this is a constant system property
 
 	See also: 
-	<workingArea [get]>
+	<virtualScreenSize [get]>, <workingArea [get]>
 	*/
 		get {
 			mon := this.id
@@ -91,8 +91,32 @@ class Dispy {
 	Version of the class
 	*/
 		get {
-			OutputDebug % "<[" A_ThisFunc "] -> (" this._version ")" ; _DBG_
+			OutputDebug % "|[]" A_ThisFunc "] -> (" this._version ")" ; _DBG_
 			return this._version
+		}
+	}
+	virtualScreenSize[] {
+	/* ---------------------------------------------------------------------------------------
+	Property: virtualScreenSize [get]
+	Get the size of virtual screen in Pixel as a <rectangle at http://hoppfrosch.github.io/AHK_Windy/files/Recty-ahk.html>.
+	
+	The virtual screen is the bounding rectangle of all display monitors
+	
+	Remarks:
+	* There is no setter available, since this is a constant system property
+
+	See also: 
+	<size [get]>
+	*/
+		get {
+			SysGet, x, 76
+			SysGet, y, 77
+			SysGet, w, 78
+			SysGet, h, 79
+			rect := new Recty(x,y,w,h, this._debug)
+			if (this._debug) ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "()] -> (" rect.dump() ")" ; _DBG_
+			return rect
 		}
 	}
 	workingArea[] {
@@ -175,8 +199,6 @@ class Dispy {
 	*/
 	__idShow( txtcolor := "000000", txtsize := 300 ) {
 		mon := this.id
-		if (this._debug) ; _DBG_
-				OutputDebug % ">[" A_ThisFunc "(txtcolor := " txtcolor ", txtsize := " txtsize ")]" ; _DBG_
 		TPColor = AABBCC
 		GuiNum := 80 + mon
    		SysGet, out, Monitor, %mon%
@@ -188,7 +210,7 @@ class Dispy {
     	Gui, %GuiNum%:Add, Text, x0 y0 c%txtcolor%, %mon%
     	Gui, %GuiNum%:Show, x%x% y0 NoActivate
     	if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "(txtcolor := " txtcolor ", txtsize := " txtsize ")]" ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "(txtcolor := " txtcolor ", txtsize := " txtsize ")]" ; _DBG_
 		return
 	}
 	

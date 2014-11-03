@@ -11,7 +11,7 @@
 #SingleInstance force
 
 
-ReferenceVersion := "0.1.3"
+ReferenceVersion := "0.1.4"
 debug := 1
 
 Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, DispyTestSuite)
@@ -62,6 +62,18 @@ class DispyTestSuite
 		mon2 := new Dispy(2, debug)
 		rect := mon2.size
 		Yunit.assert(rect.w == this.mon2Width)
+		Yunit.assert(rect.h == this.mon2Height)
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+	}
+
+	virtualScreenSize() {
+		Global debug
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		mon1 := new Dispy(1, debug)
+		rect := mon1.virtualScreenSize()
+		Yunit.assert(rect.x == 0)
+		Yunit.assert(rect.y == 0)
+		Yunit.assert(rect.w == (this.mon1Width + this.mon2Width))
 		Yunit.assert(rect.h == this.mon2Height)
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
