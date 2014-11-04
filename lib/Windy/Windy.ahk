@@ -4,7 +4,8 @@
 
 #include <Windy\Recty>
 #include <Windy\Pointy>
-#include <Windy\Mony>
+#include <Windy\MultiDispy>
+#include <Windy\Dispy>
 #include <Windy\Const_WinUser>
 #include <Windy\_WindowHandlerEvent>
 #include <SerDes>
@@ -22,7 +23,7 @@ class Windy {
 	This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See <WTFPL at http://www.wtfpl.net/> for more details.
 
 */
-	_version := "0.7.0"
+	_version := "0.7.1"
 	_debug := 0
 	_hWnd := 0
 
@@ -105,7 +106,7 @@ class Windy {
 	centercoords[] {
 	/* ---------------------------------------------------------------------------------------
 	Property: centercoords [get/set]
-	Coordinates of the center of the window as a <Point at Pointy.html>-object
+	Coordinates of the center of the window as a <point at http://hoppfrosch.github.io/AHK_Windy/files/Pointy-ahk.html>
 
 	Value:
 	coords - centercoordinates of the window
@@ -481,27 +482,30 @@ class Windy {
 		get {
 			mon := 1
 			c := this.centercoords
-			mme := new Mony(this._debug)
-			mon := mme.monGetFromCoord(c.x,c.y,mon)
+			md := new MultiDispy(this._debug)
+			mon := md.idFromCoord(c.x,c.y,mon)
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " mon ; _DBG_		
 			return mon
 		}
 
 		set {
-			obj := new Mony(this._debug)
+			md := new MultiDispy(this._debug)
 		
 			realID := value
-			if (realID > obj.monCount()) {
-				realID := obj.monCount()
+			if (realID > md.monitorsCount) {
+				realID := md.monitorsCount
 			}	
 			if (realID < 1) {
 				realID := 1
 			}
-			newMon := obj.monBoundary(realID)
-		
+
+			monNew := new Dispy(realID, this._debug)
+			newMon := monNew.boundary
+
 			oldID := this.monitorID
-			oldMon := obj.monBoundary(oldID)
+			monOld := new Dispy(oldID, this._debug)
+			oldMon := monOld.boundary
 		
 			oldPos := this.posSize
 			xnew := newMon.x+(oldPos.x - oldMon.x)
@@ -526,7 +530,7 @@ class Windy {
 	If the function succeeds, the return value is a handle to the owner window. Otherwise, its 0.
 
  	Remarks:
-	See <MSDN at http://msdn.microsoft.com/en-us/library/windows/desktop/ms633584%28v=vs.85%29.aspx> for more information.
+	See <http://msdn.microsoft.com/en-us/library/windows/desktop/ms633584%28v=vs.85%29.aspx> for more information.
 	*/
 		get {
 			hwndOwner := DllCall("GetWindowLong", "uint", this.hwnd, "int", GWL.HWNDPARENT, "UInt")
@@ -595,7 +599,7 @@ class Windy {
 	pos[] {
 	/* ---------------------------------------------------------------------------------------
 	Property: pos [get/set]
-	Position of the window as <Point at Pointy.html> object
+	Position of the window as <point at http://hoppfrosch.github.io/AHK_Windy/files/Pointy-ahk.html>
 
 	Value:
 	pos - position of the window
@@ -619,7 +623,7 @@ class Windy {
 	posSize[] {
 	/* ---------------------------------------------------------------------------------------
 	Property: posSize [get/set]
-	Get or Set the position and size of the window (To set the position use class <Rectangle at Recty.html>)	
+	Get or Set the position and size of the window (To set the position use class <rectangle at http://hoppfrosch.github.io/AHK_Windy/files/Recty-ahk.html>.)	
 
 	Value:
 	ps - position and size of the window
@@ -784,7 +788,7 @@ class Windy {
 	size[] {
 	/* ---------------------------------------------------------------------------------------
 	Property: size [get/set]
-	Dimensions (Width/Height) of the window as <Point at Pointy.html> object
+	Dimensions (Width/Height) of the window as <point at http://hoppfrosch.github.io/AHK_Windy/files/Pointy-ahk.html>
 
 	Value:
 	size - size of the window
@@ -1020,7 +1024,7 @@ class Windy {
     Remarks:          
     * The returned object contains all keys defined in WINDOWINFO except "Size".
     * The keys "Window" and "Client" contain objects with keynames defined in [5]
-    * For more details see http://msdn.microsoft.com/en-us/library/ms633516%28VS.85%29.aspx and http://msdn.microsoft.com/en-us/library/ms632610%28VS.85%29.aspx 
+    * For more details see <http://msdn.microsoft.com/en-us/library/ms633516%28VS.85%29.aspx> and <http://msdn.microsoft.com/en-us/library/ms632610%28VS.85%29.aspx>
 
     Author(s)
     Original - <just me at http://www.autohotkey.com/board/topic/69254-func-api-getwindowinfo-ahk-l/>
@@ -1087,8 +1091,7 @@ class Windy {
 	; ##################### End of Properties (AHK >1.1.16.x) ##############################################################
 	
 	; ######################## Methods to be called directly ########################################################### 
-	kill() {
-/* ===============================================================================
+	/* ---------------------------------------------------------------------------------------
 	Method: kill
 	Kills the Window (Forces the window to close)
 			
@@ -1096,7 +1099,8 @@ class Windy {
 
 	See also: 
 	* <close at #close>
-*/
+	*/
+	kill() {
 		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])]" ; _DBG_		
 
@@ -1105,8 +1109,7 @@ class Windy {
 		WinKill % "ahk_id" this.hwnd
 		DetectHiddenWindows, %prevState%
 	}	
-	move(X,Y,W="99999",H="99999") {
-/* ===============================================================================
+	/* ---------------------------------------------------------------------------------------
 	Method: move
 	Moves and/or resizes the window
 			
@@ -1123,8 +1126,9 @@ class Windy {
 		h - height (absolute) the window has to be resized to - use *99999* to preserve actual value *(Optional)*
 	
 	See also: 
-	<movePercental at #movePercental>
-*/
+	<movePercental>
+	*/
+	move(X,Y,W="99999",H="99999") {
 		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "([" this.hwnd "])(X=" X " ,Y=" Y " ,W=" W " ,H=" H ")]" ; _DBG_		
 		if (X = 99999 || Y = 99999 || W = 99999 || H = 9999)
@@ -1146,8 +1150,7 @@ class Windy {
 			OutputDebug % "<[" A_ThisFunc "([" this.hwnd "])(X=" X " ,Y=" Y " ,W=" W " ,H=" H ")]" ; _DBG_		
 		WinMove % "ahk_id" this.hwnd, , X, Y, W, H
 	}
-	movePercental(xFactor=0, yFactor=0, wFactor=100, hFactor=100) {
-/* ===============================================================================
+	/* ---------------------------------------------------------------------------------------
 	Method: movePercental
 	move and resize window relative to the size of the current screen.
 			
@@ -1171,14 +1174,14 @@ class Windy {
 			
 	Caveats / Known issues:
 	    * The range of the method parameters is **NOT** checked - so be carefull using any values *<0* or *>100*
-*/	
+	*/	
+	movePercental(xFactor=0, yFactor=0, wFactor=100, hFactor=100) {
 		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "([" this.hwnd "], xFactor=" xFactor ", yFactor=" yFactor ", wFactor=" wFactor ", hFactor=" hFactor ")]" ; _DBG_
-			
-		monID := this.monitorID
-		mmv := new Mony(_debug)
-		monWorkArea := mmv.monWorkArea(monID)
-		monBound := mmv.monBoundary(monID)
+
+		mon := new Dispy(this.monitorID, this._debug)
+		monWorkArea := mon.workingArea
+		monBound := mon.boundary
 		xrel := monWorkArea.w * xFactor/100
 		yrel := monWorkArea.h * yFactor/100
 		w := monWorkArea.w * wFactor/100
@@ -1190,10 +1193,9 @@ class Windy {
 		this.move(x,y,w,h)
 		
 		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this.hwnd "], xFactor=" xFactor ", yFactor=" yFactor ", wFactor=" wFactor ", hFactor=" hFactor ")] -> padded to (" this.posSize.Dump() ") on Monitor (" monId ")" ; _DBG_
+			OutputDebug % "<[" A_ThisFunc "([" this.hwnd "], xFactor=" xFactor ", yFactor=" yFactor ", wFactor=" wFactor ", hFactor=" hFactor ")] -> padded to (" this.posSize.Dump() ") on Monitor (" this.monitorID ")" ; _DBG_
 	}
-    redraw(Option="" ) {
-/* ===============================================================================
+	/* ---------------------------------------------------------------------------------------
  	Method:	redraw
  	Redraws the window.
 
@@ -1208,7 +1210,8 @@ class Windy {
 
 	Author(s):
 	Original - majkinetor
- */
+ 	*/
+    redraw(Option="" ) {
 		return
 		hwnd := this.hwnd
 		if (Option != "") {
@@ -1225,20 +1228,20 @@ class Windy {
 		return ret
 	}
 	; ######################## Internal Methods - not to be called directly ############################################
+	/* ---------------------------------------------------------------------------------------
+	Method:   __isWindow
+		Checks whether the given hWnd refers to a TRUE window (As opposed to the desktop or a menu, etc.) (*INTERNAL*)
+
+	Parameters:
+		hwnd  - Handle of window to check (*Obligatory*)
+
+	Returns:
+		true (window is a true window), false (window is not a true window)
+
+	Author(s):
+		Original - <ManaUser at http://www.autohotkey.com/board/topic/25393-appskeys-a-suite-of-simple-utility-hotkeys/>
+	*/
 	__isWindow(hWnd) {
-/* ===============================================================================
-Method:   __isWindow
-	Checks whether the given hWnd refers to a TRUE window (As opposed to the desktop or a menu, etc.) (*INTERNAL*)
-
-Parameters:
-	hwnd  - Handle of window to check (*Obligatory*)
-
-Returns:
-	true (window is a true window), false (window is not a true window)
-
-Author(s):
-	Original - <ManaUser at http://www.autohotkey.com/board/topic/25393-appskeys-a-suite-of-simple-utility-hotkeys/>
-*/
 		WinGet, s, Style, ahk_id %hWnd% 
 		ret := s & WS.CAPTION ? (s & WS.POPUP ? 0 : 1) : 0  ;WS_CAPTION AND !WS_POPUP(for tooltips etc) 
 			
@@ -1247,45 +1250,45 @@ Author(s):
 	
 		return ret
 	}	
-	__hexStr(i) {
-/* ===============================================================================
+	/* ---------------------------------------------------------------------------------------
     Method:   ____hexStr
 	Converts number to hex representation (*INTERNAL*)
-*/
+	*/
+	__hexStr(i) {
 		OldFormat := A_FormatInteger ; save the current format as a string
 		SetFormat, Integer, Hex
 		i += 0 ;forces number into current fomatinteger
 		SetFormat, Integer, %OldFormat% ;if oldformat was either "hex" or "dec" it will restore it to it's previous setting
 		return i
 	}
+	/* ---------------------------------------------------------------------------------------
+	Method: __posPush
+		Pushes current position of the window on position stack (*INTERNAL*)
+	*/
 	__posPush() {
-/* ===============================================================================
-Method: __posPush
-	Pushes current position of the window on position stack (*INTERNAL*)
-*/
-		this._posStack.Insert(1, this.posSize)
+			this._posStack.Insert(1, this.posSize)
 		if (this._debug) { ; _DBG_ 
 			OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> (" this._posStack[1].dump() ")" ; _DBG_
 			this.__posStackDump() ; _DBG_ 
 		}
 	}
+	/* ---------------------------------------------------------------------------------------
+	Method: __posStackDump
+		Dumps the current position stack via OutputDebug (*INTERNAL*)
+	*/	
 	__posStackDump() {
-/* ===============================================================================
-Method: __posStackDump
-	Dumps the current position stack via OutputDebug (*INTERNAL*)
-*/	
 		For key,value in this._posStack	; loops through all elements in Stack
 			OutputDebug % "|[" A_ThisFunc "()] -> (" key "): (" Value.dump() ")" ; _DBG_
 		return
 	}
-	__posRestore(index="2") {
-/* ===============================================================================
-Method: __posRestore
-	Restores position of the window  from Stack(*INTERNAL*)
+	/* ---------------------------------------------------------------------------------------
+	Method: __posRestore
+		Restores position of the window  from Stack(*INTERNAL*)
 
-Parameters:
-	index - Index of position to restore (*Optional*, Default = 2) (1 is the current position)
-*/
+	Parameters:
+		index - Index of position to restore (*Optional*, Default = 2) (1 is the current position)
+	*/
+	__posRestore(index="2") {
 		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "([" this.hwnd "], index=" index ")]" ; _DBG_
 		restorePos := this._posStack[index]
@@ -1299,22 +1302,22 @@ Parameters:
 			this.__posStackDump() ; _DBG_ 
 		}
 	}
+	/* ---------------------------------------------------------------------------------------
+	Method: __SetWinEventHook
+		Set the hook for certain win-events (*INTERNAL*)
+
+	Parameters:
+		see <http://msdn.microsoft.com/en-us/library/windows/desktop/dd373885(v=vs.85).aspx>
+
+	Returns:
+		true or false, depending on result of dllcall
+	*/ 
 	__SetWinEventHook(eventMin, eventMax, hmodWinEventProc, lpfnWinEventProc, idProcess, idThread, dwFlags) {
-/* ===============================================================================
-Method: __SetWinEventHook
-	Set the hook for certain win-events (*INTERNAL*)
-
-Parameters:
-	see <MSDN at http://msdn.microsoft.com/en-us/library/windows/desktop/dd373885(v=vs.85).aspx>
-
-Returns:
-	true or false, depending on result of dllcall
-*/ 
-		if (this._debug) ; _DBG_ 
+			if (this._debug) ; _DBG_ 
 			OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])(eventMin=" eventMin ", eventMax=" eventMax ", hmodWinEventProc=" hmodWinEventProc ", lpfnWinEventProc=" lpfnWinEventProc ", idProcess=" idProcess ", idThread=" idThread ", dwFlags=" dwFlags ")"  ; _DBG_
 		
 		ret := DllCall("ole32\CoInitialize", Uint, 0)
-		; This is a WinEventProc (siehe http://msdn.microsoft.com/en-us/library/windows/desktop/dd373885(v=vs.85).aspx) - this determines parameters which can be handled by "HookProc"
+		; This is a WinEventProc (siehe <http://msdn.microsoft.com/en-us/library/windows/desktop/dd373885(v=vs.85).aspx>) - this determines parameters which can be handled by "HookProc"
 		ret := DllCall("user32\SetWinEventHook"
 			, Uint,eventMin   
 			, Uint,eventMax   
@@ -1325,14 +1328,14 @@ Returns:
 			, Uint,dwFlags)   
 		return ret
 	}	
+	/* ---------------------------------------------------------------------------------------
+	Method:   __onLocationChange
+		Callback on Object-Event *CONST_EVENT.OBJECT.LOCATIONCHANGE* or on *CONST_EVENT.SYSTEM.MOVESIZEEND* (*INTERNAL*)
+		
+		* Store windows size/pos on each change
+	*/
 	__onLocationChange() {
-/* ===============================================================================
-Method:   __onLocationChange
-	Callback on Object-Event *CONST_EVENT.OBJECT.LOCATIONCHANGE* or on *CONST_EVENT.SYSTEM.MOVESIZEEND* (*INTERNAL*)
-	
-	* Store windows size/pos on each change
-*/
-		if this.hwnd = 0
+			if this.hwnd = 0
 			return
 		
 		if (this._debug) ; _DBG_
@@ -1355,11 +1358,11 @@ Method:   __onLocationChange
 			OutputDebug % "<[" A_ThisFunc "([" this.hwnd "])] LastPos: " lastPos.Dump() " - NewPos: " currPos.Dump() ; _DBG_
 		return
 	}  
-	__Delete() {
-/* ===============================================================================
-Method: __Delete
+	/* ---------------------------------------------------------------------------------------
+	Method: __Delete
 	Destructor (*INTERNAL*)
-*/ 
+	*/ 
+	__Delete() {
 		if (this.hwnd <= 0) {
 			return
 		}
@@ -1391,18 +1394,18 @@ Method: __Delete
 			ObjRelease(&this)
 		}
 	}
+	/* ---------------------------------------------------------------------------------------
+	Method: __New
+		Constructor (*INTERNAL*)
+
+	Parameters:
+		hWnd - Window handle (*Obligatory*). If hWnd=0 a test window is created ...
+		_debug - Flag to enable debugging (Optional - Default: 0)
+
+	Returns:
+		true or false, depending on current value
+	*/   
 	__New(_hWnd=-1, _debug=0, _test=0) {
-/* ===============================================================================
-Method: __New
-	Constructor (*INTERNAL*)
-
-Parameters:
-	hWnd - Window handle (*Obligatory*). If hWnd=0 a test window is created ...
-	_debug - Flag to enable debugging (Optional - Default: 0)
-
-Returns:
-	true or false, depending on current value
-*/   
 		this._debug := _debug
 		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "(hWnd=(" _hWnd "))] (version: " this._version ")" ; _DBG_
@@ -1463,10 +1466,6 @@ Returns:
 	
 }
 
-/*!
-	End of class
-*/
-
 /* ===============================================================================
 Function:   ClassWindy_EventHook
 	Callback on System Events. Used as dispatcher to detect window manipulation and calling the appropriate member-function within class <WindowHandler>
@@ -1524,7 +1523,3 @@ ClassWindy_EventHook(hWinEventHook, Event, hWnd, idObject, idChild, dwEventThrea
 	; ########## END: Handling window movement ####################################################
 	return
 }
-
-/*!
-	End of class
-*/

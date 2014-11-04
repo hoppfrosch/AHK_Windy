@@ -12,7 +12,7 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.7.0"
+ReferenceVersion := "0.7.1"
 debug := 1
 
 ;Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, TempTestSuite)
@@ -26,26 +26,16 @@ class TempTestSuite {
 		Global debug
 		this.obj := new Windy(0, debug)
 	}    
-	
-/*
-	ResizeViaSizeProperty() {
-		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
-		oldSize:= this.obj.size
-		OutputDebug % "Initial Size: " oldSize.Dump()
-        
-		wnew := oldSize.x+100
-		hnew := oldSize.y+200
-		
-		OutputDebug % "BEFORE - Resizing from " oldSize.Dump() " to (" wnew "," hnew ")"
-		this.obj.size := new Pointy(wnew, hnew)
-		newSize := this.obj.size
-		OutputDebug % "AFTER - Resizing from " oldSize.Dump() " to " newSize.Dump()
-		Yunit.assert(newSize.x == wnew)
-		Yunit.assert(newSize.y == hnew)	
-		OutputDebug % ">>>>[" A_ThisFunc "]>>>>"
-	}	     
-*/
 
+	movePercental() {
+		Global debug
+
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		this.obj.movePercental(25, 25, 50, 50)
+		MsgBox % A_ThisFunc " - To be done ..."
+		OutputDebug % ">>>>[" A_ThisFunc "]>>>>"
+	}
+		
 	End() {
 		this.obj.kill()
 		this.remove("obj")
@@ -749,8 +739,8 @@ class MiscTestSuite {
 		monID := this.obj.monitorID
 		Yunit.assert(monId == 1)
 		OutputDebug % "**** " A_ThisFunc " 2 - via Move ****"
-		obj := new Mony(debug)
-		rect2 := obj.monBoundary(2)
+		obj := new Dispy(2, debug)
+		rect2 := obj.boundary
 		this.obj.Move(rect2.x+10,rect2.y+10,300,300)
 		monID := this.obj.monitorID
 		Yunit.assert(monId == 2)
