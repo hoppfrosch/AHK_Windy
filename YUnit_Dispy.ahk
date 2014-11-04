@@ -11,7 +11,7 @@
 #SingleInstance force
 
 
-ReferenceVersion := "0.1.9"
+ReferenceVersion := "0.1.13"
 debug := 1
 
 ;Yunit.Use(YunitStdOut, YunitWindow).Test(ExpDispyTestSuite)
@@ -33,7 +33,7 @@ class ExpDispyTestSuite
 		this.mon2Height := 1200		
     }
 
-	coordRelToAbs() {
+	coordDisplayToVirtualScreen() {
 		Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
     	mon1 := new Dispy(1, debug)
@@ -45,11 +45,11 @@ class ExpDispyTestSuite
 		;Yunit.assert(x.monID == 2)
 		;Yunit.assert(x.x == 10)
 		;Yunit.assert(x.y == 10)
-		pt := mon1.coordRelToAbs(10, 10)
+		pt := mon1.coordDisplayToVirtualScreen(10, 10)
 		Yunit.assert(pt.x == 10)
 		Yunit.assert(pt.y == 10)
 		mon2 := new Dispy(2, debug)
-		pt := mon2.coordRelToAbs(10, 10)
+		pt := mon2.coordDisplayToVirtualScreen(10, 10)
 		Yunit.assert(pt.x == this.mon1Width + 10)
 		Yunit.assert(pt.y == 10)
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
@@ -115,15 +115,15 @@ class DispyTestSuite
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
 
-	coordRelToAbs() {
+	coordDisplayToVirtualScreen() {
 		Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
     	mon1 := new Dispy(1, debug)
-		pt := mon1.coordRelToAbs(10, 10)
+		pt := mon1.coordDisplayToVirtualScreen(10, 10)
 		Yunit.assert(pt.x == 10)
 		Yunit.assert(pt.y == 10)
 		mon2 := new Dispy(2, debug)
-		pt := mon2.coordRelToAbs(10, 10)
+		pt := mon2.coordDisplayToVirtualScreen(10, 10)
 		Yunit.assert(pt.x == this.mon1Width + 10)
 		Yunit.assert(pt.y == 10)
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
@@ -149,40 +149,40 @@ class DispyTestSuite
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
 	
-	nextPrev() {
+	idNextPrev() {
 		Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 
 		; Monitor 1
     	mon1 := new Dispy(1, debug)
-		monNxt := mon1.next
+		monNxt := mon1.idNext
 		Yunit.assert(monNxt == 2)
-		monNxt := mon1.next(0)
+		monNxt := mon1.idNext(0)
 		Yunit.assert(monNxt == 2)
-		monNxt := mon1.next(1)
+		monNxt := mon1.idNext(1)
 		Yunit.assert(monNxt == 2)
 		
-		monPrv := mon1.prev
+		monPrv := mon1.idPrev
 		Yunit.assert(monPrv == 2)
-		monPrv := mon1.prev(0)
+		monPrv := mon1.idPrev(0)
 		Yunit.assert(monPrv == 1)
-		monPrv := mon1.prev(1)
+		monPrv := mon1.idPrev(1)
 		Yunit.assert(monPrv == 2)
 
 		; Monitor 2 ....
 		mon2 := new Dispy(2, debug)
-		monNxt := mon2.next
+		monNxt := mon2.idNext
 		Yunit.assert(monNxt == 1)
-		monNxt := mon2.next(0)
+		monNxt := mon2.idNext(0)
 		Yunit.assert(monNxt == 2)
-		monNxt := mon2.next(1)
+		monNxt := mon2.idNext(1)
 		Yunit.assert(monNxt == 1)
 		
-		monPrv := mon2.prev
+		monPrv := mon2.idPrev
 		Yunit.assert(monPrv == 1)
-		monPrv := mon2.prev(0)
+		monPrv := mon2.idPrev(0)
 		Yunit.assert(monPrv == 1)
-		monPrv := mon2.prev(1)
+		monPrv := mon2.idPrev(1)
 		Yunit.assert(monPrv == 1)
 		
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"

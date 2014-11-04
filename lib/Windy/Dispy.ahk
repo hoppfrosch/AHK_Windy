@@ -4,6 +4,7 @@
 
 #include <Windy\Recty>
 #include <Windy\Pointy>
+#include <Windy\MultiDispy>
 
 /* ******************************************************************************************************************************************
 	Class: Dispy
@@ -17,7 +18,7 @@
 */
 class Dispy {
 	_debug := 0
-	_version := "0.1.9"
+	_version := "0.1.13"
 	_id := 0
 
     ; ===== Properties ===============================================================
@@ -60,13 +61,13 @@ class Dispy {
 		}
 	}
     debug[] { ; _DBG_
-	/* ------------------------------------------------------------------------------- ; _DBG_
-	Property: debug [get/set]                                                          ; _DBG_
-	Debug flag for debugging the object                                                ; _DBG_
-                                                                                       ; _DBG_
-	Value:                                                                             ; _DBG_
-	flag - *true* or *false*                                                           ; _DBG_
-	*/                                                                                 ; _DBG_
+   	/* -------------------------------------------------------------------------------
+	Property: debug [get/set]
+	Debug flag for debugging the object
+
+	Value:
+	flag - *true* or *false*
+	*/
 		get {                                                                          ; _DBG_ 
 			return this._debug                                                         ; _DBG_
 		}                                                                              ; _DBG_
@@ -103,25 +104,9 @@ class Dispy {
 			return ret
 		}
 	}
-	monitorsCount[] {
-	/* ---------------------------------------------------------------------------------------
-	Property: monitorsCount [get]
-	Number of available monitors. 
-
-	Remarks:
-	* There is no setter available, since this is a constant system property
-	*/
-		get {
-			CoordMode, Mouse, Screen
-			SysGet, mCnt, MonitorCount
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.id "]) -> (" mCnt ")]" ; _DBG_		
-			return mCnt
-		}
-	}
-	next[ cycle := true ] {
+	idNext[ cycle := true ] {
 	/* -------------------------------------------------------------------------------
-	Property:	next [get]
+	Property:	idNext [get]
 	Gets the id of the next monitor.
 			
 	Parameters:
@@ -131,30 +116,20 @@ class Dispy {
 	* There is no setter available, since this is a constant system property
 
 	See also: 
-	<prev [get]>
+	<idPrev [get]>
 	*/
 		get {
-			currMon := this.id
-			nextMon := currMon + 1
-			if (cycle == false) {
-				if (nextMon > this.monitorsCount) {
-					nextMon := this.monitorsCount
-				}
-			}
-			else {
-				if (nextMon >  this.monitorsCount) {
-					nextMon := Mod(nextMon, this.monitorsCount)
-				}
-			}
+			md := new MultiDispy(this._debug)
+			nextMon := md.idNext(this.id, cycle)
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.id "],cycle=" cycle ")] -> " nextMon ; _DBG_
 			
 			return nextMon
 		}
 	}
-	prev[ cycle := true ] {
+	idPrev[ cycle := true ] {
 	/* -------------------------------------------------------------------------------
-	Property:	prev [get]
+	Property:	idPrev [get]
 	Gets the id of the previous monitor
 			
 	Parameters:
@@ -164,25 +139,31 @@ class Dispy {
 	* There is no setter available, since this is a constant system property
 
 	See also: 
-	<next [get]>
+	<idNext [get]>
 	*/
 		get {
-			currMon := this.id			
-			prevMon := currMon - 1
-			if (cycle == false) {
-				if (prevMon < 1) {
-					prevMon := 1
-				}
-			}
-			else {
-				if (prevMon < 1) {
-					prevMon := this.monitorsCount
-				}
-			}
+			md := new MultiDispy(this._debug)
+			prevMon := md.idPrev(this.id, cycle)
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.id "],cycle=" cycle ")] -> " prevMon ; _DBG_
 			
 			return prevMon
+		}
+	}
+	monitorsCount[] {
+	/* ---------------------------------------------------------------------------------------
+	Property: monitorsCount [get]
+	Number of available monitors. 
+
+	Remarks:
+	* There is no setter available, since this is a constant system property
+	*/
+		get {
+			md := new MultiDispy(this._debug)
+			mcnt := md.monitorsCount
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.id "]) -> (" mCnt ")]" ; _DBG_		
+			return mCnt
 		}
 	}
 	scale[ monDest := 1 ] {
@@ -295,7 +276,6 @@ class Dispy {
 	* There is no setter available, since this is a constant system property
 	*/
 		get {
-			OutputDebug % "|[]" A_ThisFunc "]([" this.id "]) -> (" this._version ")" ; _DBG_
 			return this._version
 		}
 	}
@@ -313,11 +293,8 @@ class Dispy {
 	<size [get]>, <boundary [get]>
 	*/
 		get {
-			SysGet, x, 76
-			SysGet, y, 77
-			SysGet, w, 78
-			SysGet, h, 79
-			rect := new Recty(x,y,w,h, this._debug)
+			md := new MultiDispy(this._debug)
+			rect := md.virtualScreenSize
 			if (this._debug) ; _DBG_
 				OutputDebug % "<[" A_ThisFunc "([" this.id "])] -> (" rect.dump() ")" ; _DBG_
 			return rect
@@ -349,7 +326,7 @@ class Dispy {
 
 	; ===== Methods ==================================================================
 	/* -------------------------------------------------------------------------------
-	function: 	coordRelToAbs
+	Method:	coordDisplayToVirtualScreen
 	Transforms coordinates relative to given monitor into absolute (virtual) coordinates. Returns object of type <point at http://hoppfrosch.github.io/AHK_Windy/files/Pointy-ahk.html>.
 	
 	Parameters:
@@ -358,15 +335,14 @@ class Dispy {
 	Returns:
 	<point at http://hoppfrosch.github.io/AHK_Windy/files/Pointy-ahk.html>.
 	*/
-	coordRelToAbs( x := 0, y := 0) {
-		r := this.boundary()
-		xout := x + r.x
-		yout := y + r.y
-		pt := new Pointy(xout, yout ,this._debug)
+	coordDisplayToVirtualScreen( x := 0, y := 0) {
+		md := new MultiDispy(this._debug)
+		pt := md.coordDisplayToVirtualScreen(this.id, x, y)
 		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "()] -> (" pt.dump() ")" ; _DBG_
 		return pt
 	}
+	
 	/* -------------------------------------------------------------------------------
 	method: identify
 	Identify monitor by displaying the monitor id

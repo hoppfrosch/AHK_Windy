@@ -7,9 +7,10 @@ SET WORK=MKDOC_TEMP
 mkdir %WORK%
 REM copy ..\lib\Windy\Mony.ahk %WORK%
 copy ..\lib\Windy\Dispy.ahk %WORK%
+copy ..\lib\Windy\MultiDispy.ahk %WORK%
 copy ..\lib\Windy\Recty.ahk %WORK%
 copy ..\lib\Windy\Pointy.ahk %WORK%
-REM copy ..\lib\Windy\Mousy.ahk %WORK%
+copy ..\lib\Windy\Mousy.ahk %WORK%
 copy ..\lib\Windy\Windy.ahk %WORK%
 
 ::path to the natural doc folder
