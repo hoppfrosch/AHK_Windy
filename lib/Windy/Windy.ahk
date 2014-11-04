@@ -4,7 +4,8 @@
 
 #include <Windy\Recty>
 #include <Windy\Pointy>
-#include <Windy\Mony>
+#include <Windy\MultiDispy>
+#include <Windy\Dispy>
 #include <Windy\Const_WinUser>
 #include <Windy\_WindowHandlerEvent>
 #include <SerDes>
@@ -22,7 +23,7 @@ class Windy {
 	This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See <WTFPL at http://www.wtfpl.net/> for more details.
 
 */
-	_version := "0.7.0"
+	_version := "0.7.1"
 	_debug := 0
 	_hWnd := 0
 
@@ -481,27 +482,30 @@ class Windy {
 		get {
 			mon := 1
 			c := this.centercoords
-			mme := new Mony(this._debug)
-			mon := mme.monGetFromCoord(c.x,c.y,mon)
+			md := new MultiDispy(this._debug)
+			mon := md.idFromCoord(c.x,c.y,mon)
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " mon ; _DBG_		
 			return mon
 		}
 
 		set {
-			obj := new Mony(this._debug)
+			md := new MultiDispy(this._debug)
 		
 			realID := value
-			if (realID > obj.monCount()) {
-				realID := obj.monCount()
+			if (realID > md.monitorsCount) {
+				realID := md.monitorsCount
 			}	
 			if (realID < 1) {
 				realID := 1
 			}
-			newMon := obj.monBoundary(realID)
-		
+
+			monNew := new Dispy(realID, this._debug)
+			newMon := monNew.boundary
+
 			oldID := this.monitorID
-			oldMon := obj.monBoundary(oldID)
+			monOld := new Dispy(oldID, this._debug)
+			oldMon := monOld.boundary
 		
 			oldPos := this.posSize
 			xnew := newMon.x+(oldPos.x - oldMon.x)
@@ -1174,11 +1178,10 @@ class Windy {
 */	
 		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "([" this.hwnd "], xFactor=" xFactor ", yFactor=" yFactor ", wFactor=" wFactor ", hFactor=" hFactor ")]" ; _DBG_
-			
-		monID := this.monitorID
-		mmv := new Mony(_debug)
-		monWorkArea := mmv.monWorkArea(monID)
-		monBound := mmv.monBoundary(monID)
+
+		mon := new Dispy(this.monitorID, this._debug)
+		monWorkArea := mon.workingArea
+		monBound := mon.boundary
 		xrel := monWorkArea.w * xFactor/100
 		yrel := monWorkArea.h * yFactor/100
 		w := monWorkArea.w * wFactor/100
@@ -1190,7 +1193,7 @@ class Windy {
 		this.move(x,y,w,h)
 		
 		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this.hwnd "], xFactor=" xFactor ", yFactor=" yFactor ", wFactor=" wFactor ", hFactor=" hFactor ")] -> padded to (" this.posSize.Dump() ") on Monitor (" monId ")" ; _DBG_
+			OutputDebug % "<[" A_ThisFunc "([" this.hwnd "], xFactor=" xFactor ", yFactor=" yFactor ", wFactor=" wFactor ", hFactor=" hFactor ")] -> padded to (" this.posSize.Dump() ") on Monitor (" this.monitorID ")" ; _DBG_
 	}
     redraw(Option="" ) {
 /* ===============================================================================
