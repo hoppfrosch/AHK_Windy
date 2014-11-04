@@ -18,7 +18,7 @@
 */
 class Dispy {
 	_debug := 0
-	_version := "0.1.11"
+	_version := "0.1.12"
 	_id := 0
 
     ; ===== Properties ===============================================================
@@ -347,7 +347,7 @@ class Dispy {
 
 	; ===== Methods ==================================================================
 	/* -------------------------------------------------------------------------------
-	function: 	coordRelToAbs
+	Method:	coordDisplayToVirtualScreen
 	Transforms coordinates relative to given monitor into absolute (virtual) coordinates. Returns object of type <point at http://hoppfrosch.github.io/AHK_Windy/files/Pointy-ahk.html>.
 	
 	Parameters:
@@ -356,15 +356,14 @@ class Dispy {
 	Returns:
 	<point at http://hoppfrosch.github.io/AHK_Windy/files/Pointy-ahk.html>.
 	*/
-	coordRelToAbs( x := 0, y := 0) {
-		r := this.boundary()
-		xout := x + r.x
-		yout := y + r.y
-		pt := new Pointy(xout, yout ,this._debug)
+	coordDisplayToVirtualScreen( x := 0, y := 0) {
+		md := new MultiDispy(this._debug)
+		pt := md.coordDisplayToVirtualScreen(this.id, x, y)
 		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "()] -> (" pt.dump() ")" ; _DBG_
 		return pt
 	}
+	
 	/* -------------------------------------------------------------------------------
 	method: identify
 	Identify monitor by displaying the monitor id
