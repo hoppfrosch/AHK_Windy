@@ -18,7 +18,7 @@
 */
 class Dispy {
 	_debug := 0
-	_version := "0.1.12"
+	_version := "0.1.13"
 	_id := 0
 
     ; ===== Properties ===============================================================
@@ -104,6 +104,52 @@ class Dispy {
 			return ret
 		}
 	}
+	idNext[ cycle := true ] {
+	/* -------------------------------------------------------------------------------
+	Property:	idNext [get]
+	Gets the id of the next monitor.
+			
+	Parameters:
+	cycle - == 1 cycle through monitors; == 0 stop at last monitor (*Optional*, Default: 1)
+			
+	Remarks:
+	* There is no setter available, since this is a constant system property
+
+	See also: 
+	<idPrev [get]>
+	*/
+		get {
+			md := new MultiDispy(this._debug)
+			nextMon := md.idNext(this.id, cycle)
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.id "],cycle=" cycle ")] -> " nextMon ; _DBG_
+			
+			return nextMon
+		}
+	}
+	idPrev[ cycle := true ] {
+	/* -------------------------------------------------------------------------------
+	Property:	idPrev [get]
+	Gets the id of the previous monitor
+			
+	Parameters:
+	cycle - == true cycle through monitors; == false stop at last monitor (*Optional*, Default: true)
+			
+	Remarks:
+	* There is no setter available, since this is a constant system property
+
+	See also: 
+	<idNext [get]>
+	*/
+		get {
+			md := new MultiDispy(this._debug)
+			prevMon := md.idPrev(this.id, cycle)
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.id "],cycle=" cycle ")] -> " prevMon ; _DBG_
+			
+			return prevMon
+		}
+	}
 	monitorsCount[] {
 	/* ---------------------------------------------------------------------------------------
 	Property: monitorsCount [get]
@@ -118,72 +164,6 @@ class Dispy {
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.id "]) -> (" mCnt ")]" ; _DBG_		
 			return mCnt
-		}
-	}
-	next[ cycle := true ] {
-	/* -------------------------------------------------------------------------------
-	Property:	next [get]
-	Gets the id of the next monitor.
-			
-	Parameters:
-	cycle - == 1 cycle through monitors; == 0 stop at last monitor (*Optional*, Default: 1)
-			
-	Remarks:
-	* There is no setter available, since this is a constant system property
-
-	See also: 
-	<prev [get]>
-	*/
-		get {
-			currMon := this.id
-			nextMon := currMon + 1
-			if (cycle == false) {
-				if (nextMon > this.monitorsCount) {
-					nextMon := this.monitorsCount
-				}
-			}
-			else {
-				if (nextMon >  this.monitorsCount) {
-					nextMon := Mod(nextMon, this.monitorsCount)
-				}
-			}
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.id "],cycle=" cycle ")] -> " nextMon ; _DBG_
-			
-			return nextMon
-		}
-	}
-	prev[ cycle := true ] {
-	/* -------------------------------------------------------------------------------
-	Property:	prev [get]
-	Gets the id of the previous monitor
-			
-	Parameters:
-	cycle - == true cycle through monitors; == false stop at last monitor (*Optional*, Default: true)
-			
-	Remarks:
-	* There is no setter available, since this is a constant system property
-
-	See also: 
-	<next [get]>
-	*/
-		get {
-			currMon := this.id			
-			prevMon := currMon - 1
-			if (cycle == false) {
-				if (prevMon < 1) {
-					prevMon := 1
-				}
-			}
-			else {
-				if (prevMon < 1) {
-					prevMon := this.monitorsCount
-				}
-			}
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.id "],cycle=" cycle ")] -> " prevMon ; _DBG_
-			
-			return prevMon
 		}
 	}
 	scale[ monDest := 1 ] {

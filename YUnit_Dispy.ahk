@@ -11,7 +11,7 @@
 #SingleInstance force
 
 
-ReferenceVersion := "0.1.12"
+ReferenceVersion := "0.1.13"
 debug := 1
 
 ;Yunit.Use(YunitStdOut, YunitWindow).Test(ExpDispyTestSuite)
@@ -149,40 +149,40 @@ class DispyTestSuite
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
 	
-	nextPrev() {
+	idNextPrev() {
 		Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 
 		; Monitor 1
     	mon1 := new Dispy(1, debug)
-		monNxt := mon1.next
+		monNxt := mon1.idNext
 		Yunit.assert(monNxt == 2)
-		monNxt := mon1.next(0)
+		monNxt := mon1.idNext(0)
 		Yunit.assert(monNxt == 2)
-		monNxt := mon1.next(1)
+		monNxt := mon1.idNext(1)
 		Yunit.assert(monNxt == 2)
 		
-		monPrv := mon1.prev
+		monPrv := mon1.idPrev
 		Yunit.assert(monPrv == 2)
-		monPrv := mon1.prev(0)
+		monPrv := mon1.idPrev(0)
 		Yunit.assert(monPrv == 1)
-		monPrv := mon1.prev(1)
+		monPrv := mon1.idPrev(1)
 		Yunit.assert(monPrv == 2)
 
 		; Monitor 2 ....
 		mon2 := new Dispy(2, debug)
-		monNxt := mon2.next
+		monNxt := mon2.idNext
 		Yunit.assert(monNxt == 1)
-		monNxt := mon2.next(0)
+		monNxt := mon2.idNext(0)
 		Yunit.assert(monNxt == 2)
-		monNxt := mon2.next(1)
+		monNxt := mon2.idNext(1)
 		Yunit.assert(monNxt == 1)
 		
-		monPrv := mon2.prev
+		monPrv := mon2.idPrev
 		Yunit.assert(monPrv == 1)
-		monPrv := mon2.prev(0)
+		monPrv := mon2.idPrev(0)
 		Yunit.assert(monPrv == 1)
-		monPrv := mon2.prev(1)
+		monPrv := mon2.idPrev(1)
 		Yunit.assert(monPrv == 1)
 		
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
