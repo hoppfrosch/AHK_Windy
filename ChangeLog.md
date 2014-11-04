@@ -3,7 +3,9 @@
 (on Branch: **master**, since **2014-10-26**)
 
 -----------------------------------------------------------------
- * **Windy 0.10.1** (via Commit [9f8560d](https://github.com/hoppfrosch/AHK_Windy/commit/9f8560df552150691eb36e7f1333365a3c74d1fd))
+ * **Windy 0.11.0** (via Commit [55072e3](https://github.com/hoppfrosch/AHK_Windy/commit/55072e30cd986939773988644a53a4af0cdb7cfc))
+   * [#7](https://github.com/hoppfrosch/AHK_EDE/issues/7) - Mony/Dispy/MultiDispy: Replaced Mony.ahk with MultiDispy.ahk and Dispy.ahk
+ * **Windy 0.10.1** (via Commit [f4bfda4](https://github.com/hoppfrosch/AHK_Windy/commit/f4bfda498d64f02496e0020cdcb74ab3835f8c85))
    * *[#4](https://github.com/hoppfrosch/AHK_EDE/issues/4) - Add link to gh-pages in Readme.md (INTERN)*
    * *[#5](https://github.com/hoppfrosch/AHK_EDE/issues/5) - Mony: Use new property feature from AutoHotkey 1.1.16 (INTERN)*
    * [#6](https://github.com/hoppfrosch/AHK_EDE/issues/6) - Mony: Show MonitorIds
