@@ -9,37 +9,74 @@
 #Warn All
 #Warn LocalSameAsGlobal, Off
 
-ReferenceVersion := "0.2.0"
 
-Yunit.Use(YunitStdOut, YunitWindow).Test(MiscTestSuite)
+debug := 1
+ReferenceVersion := "1.0.0"
+
+;Yunit.Use(YunitStdOut, YunitWindow).Test(TempTestSuite)
+Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, MiscTestSuite)
 Return
+
+class TempTestSuite
+{
+	Begin()  {
+		Global debug
+		this.r := new Mousy(debug)
+    }
+		
+	
+	End() {
+        this.remove("r")
+		this.r := 
+    }
+
+}
+
 
 class MiscTestSuite
 {
 	Begin()  {
-		debug := 1
+		Global debug
 		this.r := new Mousy(debug)
-    }
-	
-	Version() {
-		Global ReferenceVersion
-		Yunit.assert(this.r._version == ReferenceVersion)
     }
 		
 	Locate() {
+		Global debug
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		this.r.locate()
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
 
 	Pos() {
+		Global debug
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		this.r.monitorID := 1
 		Yunit.assert(this.r.monitorID == 1)
 		this.r.monitorID := 2
 		Yunit.assert(this.r.monitorID == 2)
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
 
 	End() {
         this.remove("r")
 		this.r := 
     }
+}
 
+class _BaseTestSuite {
+    Begin() {
+	}
+	
+	Version() {
+		Global debug
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		Global ReferenceVersion
+		obj := new Mousy(debug)
+		OutputDebug % "Mousy Version <" obj.version "> <-> Required <" ReferenceVersion ">"
+		Yunit.assert(obj.version == ReferenceVersion)
+		OutputDebug % ">>>>[" A_ThisFunc "]>>>>"
+	}
+
+	End() {
+	}
 }
