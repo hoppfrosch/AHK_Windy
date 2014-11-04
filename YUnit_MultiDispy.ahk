@@ -11,7 +11,7 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.1.8"
+ReferenceVersion := "0.1.9"
 
 debug := 1
 
@@ -34,6 +34,7 @@ class ExpMultiDispyTestSuite {
 		this.monvirtWidth := this.mon1Width + this.mon2Width
 		this.monvirtHeight := this.mon2Height
     }
+
 
    	End()  {
         this.remove("obj")
@@ -115,6 +116,43 @@ class MultiDispyTestSuite
 		mon := this.obj.idFromMouse()
 		Yunit.assert(mon == 2)
 		MouseMove,x_back, y_back
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+	}
+
+	idNextPrev() {
+		Global debug
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+
+		; Monitor 1
+		monNxt := this.obj.idNext(1)
+		Yunit.assert(monNxt == 2)
+		monNxt := this.obj.idNext(1,0)
+		Yunit.assert(monNxt == 2)
+		monNxt := this.obj.idNext(1,1)
+		Yunit.assert(monNxt == 2)
+		
+		monPrv := this.obj.idPrev(1)
+		Yunit.assert(monPrv == 2)
+		monPrv := this.obj.idPrev(1,0)
+		Yunit.assert(monPrv == 1)
+		monPrv := this.obj.idPrev(1, 1)
+		Yunit.assert(monPrv == 2)
+
+		; Monitor 2 ....
+		monNxt :=this.obj.idNext(2)
+		Yunit.assert(monNxt == 1)
+		monNxt := this.obj.idNext(2,0)
+		Yunit.assert(monNxt == 2)
+		monNxt := this.obj.idNext(2,1)
+		Yunit.assert(monNxt == 1)
+		
+		monPrv := this.obj.idPrev(2)
+		Yunit.assert(monPrv == 1)
+		monPrv := this.obj.idPrev(2,0)
+		Yunit.assert(monPrv == 1)
+		monPrv := this.obj.idPrev(2,1)
+		Yunit.assert(monPrv == 1)
+		
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
 	

@@ -18,7 +18,7 @@
 */
 class MultiDispy {
 	_debug := 0
-	_version := "0.1.8"
+	_version := "0.1.9"
 
 	; ===== Properties ==============================================================	
     debug[] { ; _DBG_
@@ -114,6 +114,7 @@ class MultiDispy {
 	}
 	
 	; ===== Methods ==================================================================
+	
 	/* -------------------------------------------------------------------------------
 	Method: 	coordDisplayToVirtualScreen
 	Transforms coordinates relative to given monitor into absolute (virtual) coordinates. Returns object of type <point at http://hoppfrosch.github.io/AHK_Windy/files/Pointy-ahk.html>.
@@ -237,7 +238,65 @@ class MultiDispy {
 			OutputDebug % "|[" A_ThisFunc "()] -> " mon ; _DBG_
 		return mon
 	}
-	
+
+	/* -------------------------------------------------------------------------------
+	Method:	idNext
+	Gets the id of the next monitor.
+			
+	Parameters:
+	id - monitor, whose next monitorid has to be determined
+	cycle - == 1 cycle through monitors; == 0 stop at last monitor (*Optional*, Default: 1)
+			
+	See also: 
+	<idPrev>
+	*/
+	idNext( currMon := 1, cycle := true ) {
+		nextMon := currMon + 1
+		if (cycle == false) {
+			if (nextMon > this.monitorsCount) {
+				nextMon := this.monitorsCount
+			}
+		}
+		else {
+			if (nextMon >  this.monitorsCount) {
+				nextMon := Mod(nextMon, this.monitorsCount)
+			}
+		}
+		if (this._debug) ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "(currMon=" currMon ", cycle=" cycle ")] -> " nextMon ; _DBG_
+		
+		return nextMon
+	}
+
+	/* -------------------------------------------------------------------------------
+	Method:	idPrev
+	Gets the id of the previous monitor
+			
+	Parameters:
+	id - monitor, whose previous monitor id has to be determined
+	cycle - == true cycle through monitors; == false stop at last monitor (*Optional*, Default: true)
+
+	See also: 
+	<idNext>
+	*/
+	idPrev( currMon := 1, cycle := true ) {
+		prevMon := currMon - 1
+		if (cycle == false) {
+			if (prevMon < 1) {
+				prevMon := 1
+			}
+		}
+		else {
+			if (prevMon < 1) {
+				prevMon := this.monitorsCount
+			}
+		}
+		if (this._debug) ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "(currMon=" currMon ", cycle=" cycle ")] -> " prevMon ; _DBG_
+		
+		return prevMon
+	}
+
 	; ====== Internal Methods =========================================================
 	
 	/*! ===============================================================================
