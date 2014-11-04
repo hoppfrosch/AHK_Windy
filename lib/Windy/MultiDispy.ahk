@@ -84,7 +84,6 @@ class MultiDispy {
 	* There is no setter available, since this is a constant system property
 	*/
 		get {
-			OutputDebug % "|[]" A_ThisFunc "]() -> (" this._version ")" ; _DBG_
 			return this._version
 		}
 	}
