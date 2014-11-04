@@ -18,8 +18,9 @@
 */
 class Dispy {
 	_debug := 0
-	_version := "0.1.13"
+	_version := "0.2.0"
 	_id := 0
+	_hmon := 0
 
     ; ===== Properties ===============================================================
     boundary[] {
@@ -77,12 +78,31 @@ class Dispy {
 			return this._debug                                                         ; _DBG_
 		}                                                                              ; _DBG_
 	}	
+	hmon[] {
+	/* -------------------------------------------------------------------------------
+	Property: hmon [get]
+	Get the handle of the monitor
+
+	Remarks:
+	* There is no setter available, since this is a constant system property
+	*/	
+		get {
+			md := new MultiDispy(this._debug)
+			rect := this.boundary
+			X := rect.x + 1
+			Y := rect.y + 1
+			hmon := DllCall("User32.dll\MonitorFromPoint", "Int64", (X & 0xFFFFFFFF) | (Y << 32), "UInt", 0, "UPtr")
+			this._hmon := hmon
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.id "])] -> (" this._hmon ")" ; _DBG_
+			return this._hmon
+		}
+	}
 	id[] {
 	/* -------------------------------------------------------------------------------
 	Property: id [get/set]
 	ID of the monitor
 	*/
-  
 		get {
 			return this._id
 		}
@@ -420,6 +440,7 @@ class Dispy {
 	_debug - Flag to enable debugging (Optional - Default: 0)
 	*/  
 	__New(_id := 1, _debug := false) {
+		this._debug := _debug ; _DBG_
 		ret := true
 		CoordMode, Mouse, Screen
 		SysGet, mCnt, MonitorCount

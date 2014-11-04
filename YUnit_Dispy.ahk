@@ -11,7 +11,7 @@
 #SingleInstance force
 
 
-ReferenceVersion := "0.1.13"
+ReferenceVersion := "0.2.0"
 debug := 1
 
 ;Yunit.Use(YunitStdOut, YunitWindow).Test(ExpDispyTestSuite)
@@ -31,29 +31,6 @@ class ExpDispyTestSuite
 		this.mon1Height := 1080
   		this.mon2Width := 1600
 		this.mon2Height := 1200		
-    }
-
-	coordDisplayToVirtualScreen() {
-		Global debug
-		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
-    	mon1 := new Dispy(1, debug)
-		;x := this.obj.monCoordAbsToRel(10,10)
-		;Yunit.assert(x.monID == 1)
-		;Yunit.assert(x.x == 10)
-		;Yunit.assert(x.y == 10)
-    	;x := this.obj.monCoordAbsToRel(1930,10)
-		;Yunit.assert(x.monID == 2)
-		;Yunit.assert(x.x == 10)
-		;Yunit.assert(x.y == 10)
-		pt := mon1.coordDisplayToVirtualScreen(10, 10)
-		Yunit.assert(pt.x == 10)
-		Yunit.assert(pt.y == 10)
-		mon2 := new Dispy(2, debug)
-		pt := mon2.coordDisplayToVirtualScreen(10, 10)
-		Yunit.assert(pt.x == this.mon1Width + 10)
-		Yunit.assert(pt.y == 10)
-		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
-    	return
     }
 	
 	End()  {
@@ -126,6 +103,17 @@ class DispyTestSuite
 		pt := mon2.coordDisplayToVirtualScreen(10, 10)
 		Yunit.assert(pt.x == this.mon1Width + 10)
 		Yunit.assert(pt.y == 10)
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+    	return
+    }
+
+    hmon() {
+		Global debug
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+    	mon1 := new Dispy(1, debug)
+		Yunit.assert(mon1.hmon > 0)
+		mon2 := new Dispy(2, debug)
+		Yunit.assert(mon2.hmon > 0)
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
     	return
     }
