@@ -18,7 +18,7 @@
 */
 class Dispy {
 	_debug := 0
-	_version := "0.2.1"
+	_version := "0.2.2"
 	_id := 0
 	_hmon := 0
 
@@ -241,6 +241,22 @@ class Dispy {
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.id "]) -> (" mCnt ")]" ; _DBG_		
 			return mCnt
+		}
+	}
+	primary[] {
+	/* ---------------------------------------------------------------------------------------
+	Property: primary [get]
+	Is the monitor the primary monitor? 
+
+	Remarks:
+	* There is no setter available, since this is a constant system property
+	*/
+		get {
+			info := this.info
+			ret := info.primary
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.id "]) -> (" ret ")]" ; _DBG_		
+			return ret
 		}
 	}
 	scale[ monDest := 1 ] {

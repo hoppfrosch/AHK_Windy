@@ -11,7 +11,7 @@
 #SingleInstance force
 
 
-ReferenceVersion := "0.2.1"
+ReferenceVersion := "0.2.2"
 debug := 1
 
 ;Yunit.Use(YunitStdOut, YunitWindow).Test(ExpDispyTestSuite)
@@ -32,7 +32,17 @@ class ExpDispyTestSuite
   		this.mon2Width := 1600
 		this.mon2Height := 1200		
     }
-	
+
+	primary() {
+		Global debug
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+    	mon1 := new Dispy(1, debug)
+    	Yunit.assert(mon1.primary = true)
+    	mon2 := new Dispy(2, debug)
+    	Yunit.assert(mon2.primary = false)
+    	OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+    }
+    
 	End()  {
 ;        this.remove("obj")
 ;		this.obj := 
@@ -196,6 +206,16 @@ class DispyTestSuite
 		Yunit.assert(cnt == this.monCount)
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
+
+	primary() {
+		Global debug
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+    	mon1 := new Dispy(1, debug)
+    	Yunit.assert(mon1.primary = true)
+    	mon2 := new Dispy(2, debug)
+    	Yunit.assert(mon2.primary = false)
+    	OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+    }
 		
     size() {
     	Global debug
