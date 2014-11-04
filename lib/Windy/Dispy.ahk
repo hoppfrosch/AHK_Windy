@@ -18,7 +18,7 @@
 */
 class Dispy {
 	_debug := 0
-	_version := "0.2.0"
+	_version := "0.2.1"
 	_id := 0
 	_hmon := 0
 
@@ -169,6 +169,63 @@ class Dispy {
 			
 			return prevMon
 		}
+	}
+	info[] {
+	/* -------------------------------------------------------------------------------
+	Property:	info [get]
+	Gets info about monitor by calling Win32-API GetMonitorInfo() . 
+
+	More infos on GetMonitorInfo see <http://msdn.microsoft.com/de-de/library/windows/desktop/dd144901%28v=vs.85%29.aspx>
+
+	The return value is an object containing 
+	 * Monitor handle
+	 * Monitor name
+	 * Monitor Id 
+	 * Rectangle containing the Monitor Boundaries (relative to Virtual Screen)
+	 * Rectangle containing the Monitor WorkingArea (relative to Virtual Screen)
+	 * Flag to indicate whether monitor is primary monitor or not ...
+	 
+	Remarks:
+	* There is no setter available, since this is a constant system property
+
+	Authors:
+	Original - <just me at http://ahkscript.org/boards/viewtopic.php?f=6&t=4606>
+	*/
+		get {
+			hmon := this.hmon
+			ret := false
+	   		NumPut(VarSetCapacity(MIEX, 40 + (32 << !!A_IsUnicode)), MIEX, 0, "UInt")
+	   		If DllCall("User32.dll\GetMonitorInfo", "Ptr", hmon, "Ptr", &MIEX) {
+	      		MonName := StrGet(&MIEX + 40, 32)    ; CCHDEVICENAME = 32
+	      		MonNum := RegExReplace(MonName, ".*(\d+)$", "$1")
+
+				x := NumGet(MIEX, 4, "Int")
+				y := NumGet(MIEX, 8, "Int")
+				w := NumGet(MIEX, 12, "Int")
+				h := NumGet(MIEX, 16, "Int")
+	      		rectBound := new Recty(x,y,w,h,this.debug)
+
+	      		x := NumGet(MIEX, 20, "Int")
+				y := NumGet(MIEX, 24, "Int")
+				w := NumGet(MIEX, 28, "Int")
+				h := NumGet(MIEX, 32, "Int")
+	      		rectWA := new Recty(x,y,w,h,this.debug)
+	      		
+	      		ret := { hmon:         hmon
+	      			, Name:          MonName
+	            	, Id:            MonNum
+	            	, Boundary:      rectBound    ; display rectangle
+	            	, WorkingAreaVS: rectWA  ; work area
+	            	, Primary:       NumGet(MIEX, 36, "UInt")} ; contains a non-zero value for the primary monitor.
+	       		if (this._debug) ; _DBG_
+					OutputDebug % "|[" A_ThisFunc "([" this.id "])] -> (hmon=" ret.hmon ", Name=" ret.Name ", id=" ret.Id ", Boundary=" ret.Boundary.dump() ", WorkingArea" ret.WorkingArea.dump() ", Primary=" ret.Primary ")" ; _DBG_
+	   		}
+	   		else {
+	   			if (this._debug) ; _DBG_
+					OutputDebug % "|[" A_ThisFunc "([" this.id "])] -> " ret ; _DBG_
+	   		}
+	   		Return ret
+   		}
 	}
 	monitorsCount[] {
 	/* ---------------------------------------------------------------------------------------

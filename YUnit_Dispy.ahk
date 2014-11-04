@@ -11,7 +11,7 @@
 #SingleInstance force
 
 
-ReferenceVersion := "0.2.0"
+ReferenceVersion := "0.2.1"
 debug := 1
 
 ;Yunit.Use(YunitStdOut, YunitWindow).Test(ExpDispyTestSuite)
@@ -114,6 +114,7 @@ class DispyTestSuite
 		Yunit.assert(mon1.hmon > 0)
 		mon2 := new Dispy(2, debug)
 		Yunit.assert(mon2.hmon > 0)
+		Yunit.assert(mon2.hmon != mon1.hmon)
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
     	return
     }
@@ -125,15 +126,6 @@ class DispyTestSuite
 		mon1.identify(250)
 		mon2 := new Dispy(2, debug)
 		mon2.identify(250)
-		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
-	}
-
-	monitorsCount() {
-    	Global debug
-		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
-    	mon1 := new Dispy(1, debug)
-		cnt := mon1.monitorsCount
-		Yunit.assert(cnt == this.monCount)
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
 	
@@ -173,6 +165,35 @@ class DispyTestSuite
 		monPrv := mon2.idPrev(1)
 		Yunit.assert(monPrv == 1)
 		
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+	}
+
+	info() {
+		Global debug
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+    	mon1 := new Dispy(1, debug)
+    	info := mon1.info
+    	bound := mon1.boundary
+    	Yunit.assert(info.boundary.x = bound.x)
+    	Yunit.assert(info.boundary.y = bound.y)
+    	Yunit.assert(info.boundary.w = bound.w)
+    	Yunit.assert(info.boundary.h = bound.h)
+    	mon2 := new Dispy(2, debug)
+    	info := mon2.info
+    	bound := mon2.boundary
+    	Yunit.assert(info.boundary.x = bound.x)
+    	Yunit.assert(info.boundary.y = bound.y)
+    	Yunit.assert(info.boundary.w = bound.w)
+    	Yunit.assert(info.boundary.h = bound.h)
+    	OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+    }
+
+	monitorsCount() {
+    	Global debug
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+    	mon1 := new Dispy(1, debug)
+		cnt := mon1.monitorsCount
+		Yunit.assert(cnt == this.monCount)
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
 		
