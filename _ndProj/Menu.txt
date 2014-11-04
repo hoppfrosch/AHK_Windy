@@ -46,7 +46,9 @@ Format: 1.52
 # --------------------------------------------------------------------------
 
 
-File: Mony  (Mony.ahk)
+File: Dispy  (Dispy.ahk)
+File: Mousy  (Mousy.ahk)
+File: MultiDispy  (MultiDispy.ahk)
 File: Pointy  (Pointy.ahk)
 File: Recty  (Recty.ahk)
 File: Windy  (Windy.ahk)
