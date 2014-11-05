@@ -18,7 +18,7 @@
 */
 class MultiDispy {
 	_debug := 0
-	_version := "0.2.0"
+	_version := "0.2.1"
 
 	; ===== Properties ==============================================================	
     debug[] { ; _DBG_
@@ -188,9 +188,32 @@ class MultiDispy {
    		}
    		hmon := DllCall("User32.dll\MonitorFromPoint", "Int64", (X & 0xFFFFFFFF) | (Y << 32), "UInt", 0, "UPtr")
 		if (this._debug) ; _DBG_
-			OutputDebug % ">[" A_ThisFunc "(x:=" x ", y:=" y ")] -> " hmon ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "(x:=" x ", y:=" y ")] -> " hmon ; _DBG_
 		
    		return hmon
+	}
+
+	/* -------------------------------------------------------------------------------
+	Method:  hmonFromHwnd
+	Get the handle of the monitor containing the swindow with given window handle.
+	
+	Parameters:
+	hwnd - Window Handle
+
+	Returns:
+	Handle of the monitor containing the specified window
+
+	Authors:
+	Original - <just me at http://ahkscript.org/boards/viewtopic.php?f=6&t=4606>
+
+	See also:
+	<idFromHwnd>
+	*/
+	hmonFromHwnd(hwnd) {
+		hmon := DllCall("User32.dll\MonitorFromWindow", "Ptr", HWND, "UInt", 0, "UPtr")
+		if (this._debug) ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "(hwnd:=" hwnd ")] -> " hmon ; _DBG_
+		return hmon
 	}
 
 	/* -------------------------------------------------------------------------------
@@ -210,7 +233,7 @@ class MultiDispy {
 		oMon := new Dispy(id, this._debug)
 		hmon := oMon.hmon
 		if (this._debug) ; _DBG_
-			OutputDebug % ">[" A_ThisFunc "(id:=" id ")] -> " hmon ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "(id:=" id ")] -> " hmon ; _DBG_
    		return hmon
 	}
 
@@ -274,6 +297,27 @@ class MultiDispy {
 		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "(x=" x ",y=" y ")] -> " mon ; _DBG_
 		return mon
+	}
+
+	/* -------------------------------------------------------------------------------
+	Method:  idFromHwnd
+	Get the ID of the monitor containing the swindow with given window handle.
+	
+	Parameters:
+	hwnd - Window Handle
+
+	Returns:
+	ID of the monitor containing the specified window
+
+	See also:
+	<hmonFromHwnd>
+	*/
+	idFromHwnd(hwnd) {
+		hmon := this.hmonFromHwnd(hwnd)
+		id := this.idFromHmon(hmon)
+		if (this._debug) ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "(hwnd:=" hwnd ")] -> " id ; _DBG_
+		return id
 	}
 
 	/* -------------------------------------------------------------------------------

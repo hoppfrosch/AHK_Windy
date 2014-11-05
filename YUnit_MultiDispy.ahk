@@ -6,16 +6,17 @@
 #include lib\Windy\MultiDispy.ahk
 #include lib\Windy\Dispy.ahk
 #include lib\Windy\Recty.ahk
+#include lib\Windy\Windy.ahk
 
 #Warn All
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.2.0"
+ReferenceVersion := "0.2.1"
 
 debug := 1
 
-;Yunit.Use(YunitStdOut, YunitWindow).Test(ExpMultiDispyTestSuite)
+;Yunit.use(YunitStdOut, YunitWindow).Test(ExpMultiDispyTestSuite)
 Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, MultiDispyTestSuite)
 Return
 
@@ -35,13 +36,16 @@ class ExpMultiDispyTestSuite {
 		this.monvirtHeight := this.mon2Height
     }
 
-    hmonFromId() {
+	hmonFromHwnd() {
 		Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
-		hmonRef := this.obj.hmonFromCoord(10,10)
-		monId := this.obj.idFromCoord(10,10)
-		hmon := this.obj.hmonFromId(monId)
+		hmonRef := this.obj.hmonFromId(1)
+		win := new Windy(0, debug)
+		win.move(10,10)
+		hwnd := win.hwnd
+		hmon := this.obj.hmonFromHwnd(hwnd)
 		Yunit.assert(hmon == hmonRef)
+		win.kill()
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
 	
@@ -112,6 +116,19 @@ class MultiDispyTestSuite
 		Yunit.assert(hmon == hmonRef)
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
+
+	hmonFromHwnd() {
+		Global debug
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		hmonRef := this.obj.hmonFromId(1)
+		win := new Windy(0, debug)
+		win.move(10,10)
+		hwnd := win.hwnd
+		hmon := this.obj.hmonFromHwnd(hwnd)
+		Yunit.assert(hmon == hmonRef)
+		win.kill()
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+	}
 	
 	identify() {
     	Global debug
@@ -142,6 +159,17 @@ class MultiDispyTestSuite
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
 
+	idFromHwnd() {
+		Global debug
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		win := new Windy(0, debug)
+		win.move(10,10)
+		hwnd := win.hwnd
+		id := this.obj.idFromHwnd(hwnd)
+		Yunit.assert(id == 1)
+		win.kill()
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+	}
 	idFromMouse() {	
 		Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
