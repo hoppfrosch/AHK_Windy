@@ -18,7 +18,7 @@
 */
 class MultiDispy {
 	_debug := 0
-	_version := "0.1.9"
+	_version := "0.2.0"
 
 	; ===== Properties ==============================================================	
     debug[] { ; _DBG_
@@ -162,6 +162,59 @@ class MultiDispy {
 	}
 
 	/* -------------------------------------------------------------------------------
+	Method:  hmonFromCoord
+	Get the handle of the monitor containing the specified x and y coordinates.
+	
+	Parameters:
+	x,y - Coordinates
+
+	Returns:
+	Handle of the monitor at specified coordinates
+
+	Authors:
+	Original - <just me at http://ahkscript.org/boards/viewtopic.php?f=6&t=4606>
+
+	See also:
+	<idFromCoord>
+	*/
+	hmonFromCoord(x := "", y := "") {
+		VarSetCapacity(PT, 8, 0)
+ 	  	If (X = "") || (Y = "") {
+      		DllCall("User32.dll\GetCursorPos", "Ptr", &PT)
+      		If (X = "")
+        		X := NumGet(PT, 0, "Int")
+      		If (Y = "")
+        		Y := NumGet(PT, 4, "Int")
+   		}
+   		hmon := DllCall("User32.dll\MonitorFromPoint", "Int64", (X & 0xFFFFFFFF) | (Y << 32), "UInt", 0, "UPtr")
+		if (this._debug) ; _DBG_
+			OutputDebug % ">[" A_ThisFunc "(x:=" x ", y:=" y ")] -> " hmon ; _DBG_
+		
+   		return hmon
+	}
+
+	/* -------------------------------------------------------------------------------
+	Method:  hmonFromId
+	Get the handle of the monitor from monitor id.
+	
+	Parameters:
+	id - Monitor ID
+
+	Returns:
+	Monitor Handle
+
+	See also:
+	<idFromHmon>
+	*/
+	hmonFromid(id := 1) {
+		oMon := new Dispy(id, this._debug)
+		hmon := oMon.hmon
+		if (this._debug) ; _DBG_
+			OutputDebug % ">[" A_ThisFunc "(id:=" id ")] -> " hmon ; _DBG_
+   		return hmon
+	}
+
+	/* -------------------------------------------------------------------------------
 	method: 	identify
 	Identify monitors by displaying the monitor id on each monitor
 	
@@ -203,6 +256,9 @@ class MultiDispy {
 
 	Returns:
 	Index of the monitor at specified coordinates
+
+	See also:
+	<hmonFromCoord>
 	*/
 	idFromCoord(x, y, default := 1) {
 		m := this.monitorsCount
@@ -236,6 +292,29 @@ class MultiDispy {
 		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "()] -> " mon ; _DBG_
 		return mon
+	}
+
+	/* -------------------------------------------------------------------------------
+	Method:   idFromHmon
+	Get the index of the monitor from monitor handle
+				
+	Parameters:
+	hmon - monitor handle
+			
+	Returns:
+	Index of the monitor
+
+	See also:
+	<hmonFromId>
+	*/
+	idFromHmon(hmon) {
+		MonNum := 0
+   		NumPut(VarSetCapacity(MIEX, 40 + (32 << !!A_IsUnicode)), MIEX, 0, "UInt")
+   		If DllCall("User32.dll\GetMonitorInfo", "Ptr", hmon, "Ptr", &MIEX) {
+      		MonName := StrGet(&MIEX + 40, 32)    ; CCHDEVICENAME = 32
+      		MonNum := RegExReplace(MonName, ".*(\d+)$", "$1")
+  		}
+  		return MonNum
 	}
 
 	/* -------------------------------------------------------------------------------

@@ -11,7 +11,7 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.1.9"
+ReferenceVersion := "0.2.0"
 
 debug := 1
 
@@ -35,7 +35,16 @@ class ExpMultiDispyTestSuite {
 		this.monvirtHeight := this.mon2Height
     }
 
-
+    hmonFromId() {
+		Global debug
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		hmonRef := this.obj.hmonFromCoord(10,10)
+		monId := this.obj.idFromCoord(10,10)
+		hmon := this.obj.hmonFromId(monId)
+		Yunit.assert(hmon == hmonRef)
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+	}
+	
    	End()  {
         this.remove("obj")
 		this.obj := 
@@ -83,7 +92,27 @@ class MultiDispyTestSuite
 		Yunit.assert(x.pt.y == 10)
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
     }
-
+	
+	hmonFromCoord() {
+		Global debug
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		monId := this.obj.idFromCoord(10,10)
+		hmonRef := this.obj.hmonFromId(monId)
+		hmon := this.obj.hmonFromCoord(10,10)
+		Yunit.assert(hmon == hmonRef)
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+	}
+	
+	hmonFromId() {
+		Global debug
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		hmonRef := this.obj.hmonFromCoord(10,10)
+		monId := this.obj.idFromCoord(10,10)
+		hmon := this.obj.hmonFromId(monId)
+		Yunit.assert(hmon == hmonRef)
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+	}
+	
 	identify() {
     	Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
@@ -100,6 +129,16 @@ class MultiDispyTestSuite
 		rect := mon1.size
 		mon := this.obj.idFromCoord(rect.w+10,10)
 		Yunit.assert(mon == 2)
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+	}
+	
+	idFromHmon() {
+		Global debug
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		monId := this.obj.idFromCoord(10,10)
+		monH := this.obj.hmonFromCoord(10,10)
+		monID2 := this.obj.idFromHmon(monH)
+		Yunit.assert(monId == monId2)
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
 
