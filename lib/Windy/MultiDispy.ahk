@@ -18,7 +18,7 @@
 */
 class MultiDispy {
 	_debug := 0
-	_version := "0.2.1"
+	_version := "0.2.2"
 
 	; ===== Properties ==============================================================	
     debug[] { ; _DBG_
@@ -135,7 +135,6 @@ class MultiDispy {
 			OutputDebug % "|[" A_ThisFunc "(id:=" id ", x:=" x ", y:=" y ")] -> (" pt.dump() ")" ; _DBG_
 		return pt
 	}
-	
 	/* -------------------------------------------------------------------------------
 	Method: 	coordVirtualScreenToDisplay
 	Transforms absolute coordinates from Virtual Screen into coordinates relative to screen. 
@@ -160,7 +159,6 @@ class MultiDispy {
 			OutputDebug % "|[" A_ThisFunc "( x:=" x ", y:=" y ")] -> ( " ret.monId ",(" ret.pt.dump() "))" ; _DBG_
 		return ret
 	}
-
 	/* -------------------------------------------------------------------------------
 	Method:  hmonFromCoord
 	Get the handle of the monitor containing the specified x and y coordinates.
@@ -192,7 +190,6 @@ class MultiDispy {
 		
    		return hmon
 	}
-
 	/* -------------------------------------------------------------------------------
 	Method:  hmonFromHwnd
 	Get the handle of the monitor containing the swindow with given window handle.
@@ -215,7 +212,6 @@ class MultiDispy {
 			OutputDebug % "|[" A_ThisFunc "(hwnd:=" hwnd ")] -> " hmon ; _DBG_
 		return hmon
 	}
-
 	/* -------------------------------------------------------------------------------
 	Method:  hmonFromId
 	Get the handle of the monitor from monitor id.
@@ -236,7 +232,33 @@ class MultiDispy {
 			OutputDebug % "|[" A_ThisFunc "(id:=" id ")] -> " hmon ; _DBG_
    		return hmon
 	}
+	/* -------------------------------------------------------------------------------
+	Method:  hmonFromRect
+	Get the handle of the monitor that has the largest area of intersection with a specified rectangle.
+	
+	Parameters:
+	x,y, w,h - rectangle
 
+	Returns:
+	Monitor Handle
+
+	Authors:
+	Original - <just me at http://ahkscript.org/boards/viewtopic.php?f=6&t=4606>
+
+	See also:
+	<idFromRect>
+	*/
+	hmonFromRect(x, y, w, h) { 
+	   	VarSetCapacity(RC, 16, 0)
+   		NumPut(x, RC, 0, "Int")
+   		NumPut(y, RC, 4, "Int")
+   		NumPut(x + w, RC, 8, "Int")
+   		NumPut(y + h, RC, 12, "Int")
+		hmon := DllCall("User32.dll\MonitorFromRect", "Ptr", &RC, "UInt", 0, "UPtr")
+		if (this._debug) ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "(x:=" x ", y:=" y ",w:=" w ", h:=" h ")] -> " hmon ; _DBG_
+		return hmon
+	}
 	/* -------------------------------------------------------------------------------
 	method: 	identify
 	Identify monitors by displaying the monitor id on each monitor
@@ -268,7 +290,6 @@ class MultiDispy {
 				
 		return
 	}
-
 	/* -------------------------------------------------------------------------------
 	Method:  idFromCoord
 	Get the index of the monitor containing the specified x and y coordinates.
@@ -298,7 +319,6 @@ class MultiDispy {
 			OutputDebug % "|[" A_ThisFunc "(x=" x ",y=" y ")] -> " mon ; _DBG_
 		return mon
 	}
-
 	/* -------------------------------------------------------------------------------
 	Method:  idFromHwnd
 	Get the ID of the monitor containing the swindow with given window handle.
@@ -319,7 +339,6 @@ class MultiDispy {
 			OutputDebug % "|[" A_ThisFunc "(hwnd:=" hwnd ")] -> " id ; _DBG_
 		return id
 	}
-
 	/* -------------------------------------------------------------------------------
 	Method:   idFromMouse
 	Get the index of the monitor where the mouse is
@@ -337,7 +356,6 @@ class MultiDispy {
 			OutputDebug % "|[" A_ThisFunc "()] -> " mon ; _DBG_
 		return mon
 	}
-
 	/* -------------------------------------------------------------------------------
 	Method:   idFromHmon
 	Get the index of the monitor from monitor handle
@@ -360,7 +378,26 @@ class MultiDispy {
   		}
   		return MonNum
 	}
+	/* -------------------------------------------------------------------------------
+	Method:  idFromRect
+	Get the ID of the monitor that has the largest area of intersection with a specified rectangle.
+	
+	Parameters:
+	x,y, w,h - rectangle
 
+	Returns:
+	Monitor Handle
+
+	See also:
+	<hmonFromRect>
+	*/
+	idFromRect(x, y, w, h) { 
+	   	hmon := this.hmonFromRect(x,y,w,h)
+		id := this.idFromHmon(hmon)
+	   	if (this._debug) ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "(x:=" x ", y:=" y ",w:=" w ", h:=" h ")] -> " id ; _DBG_
+		return id
+	}
 	/* -------------------------------------------------------------------------------
 	Method:	idNext
 	Gets the id of the next monitor.
@@ -389,7 +426,6 @@ class MultiDispy {
 		
 		return nextMon
 	}
-
 	/* -------------------------------------------------------------------------------
 	Method:	idPrev
 	Gets the id of the previous monitor
@@ -420,8 +456,7 @@ class MultiDispy {
 	}
 
 	; ====== Internal Methods =========================================================
-	
-	/*! ===============================================================================
+	/* -------------------------------------------------------------------------------
 	Function: __New
 	Constructor (*INTERNAL*)
 		

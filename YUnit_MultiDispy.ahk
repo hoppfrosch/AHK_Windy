@@ -7,19 +7,15 @@
 #include lib\Windy\Dispy.ahk
 #include lib\Windy\Recty.ahk
 #include lib\Windy\Windy.ahk
-
 #Warn All
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.2.1"
-
+ReferenceVersion := "0.2.2"
 debug := 1
 
 ;Yunit.use(YunitStdOut, YunitWindow).Test(ExpMultiDispyTestSuite)
 Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, MultiDispyTestSuite)
-Return
-
 ExitApp
 
 class ExpMultiDispyTestSuite {
@@ -36,14 +32,14 @@ class ExpMultiDispyTestSuite {
 		this.monvirtHeight := this.mon2Height
     }
 
-	hmonFromHwnd() {
+	hmonFromRect() {
 		Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		hmonRef := this.obj.hmonFromId(1)
 		win := new Windy(0, debug)
 		win.move(10,10)
-		hwnd := win.hwnd
-		hmon := this.obj.hmonFromHwnd(hwnd)
+		rect := win.possize
+		hmon := this.obj.hmonFromRect(rect.x, rect.y, rect.w, rect.h)
 		Yunit.assert(hmon == hmonRef)
 		win.kill()
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
@@ -54,7 +50,6 @@ class ExpMultiDispyTestSuite {
 		this.obj := 
     }
 }
-
 
 class MultiDispyTestSuite
 {
@@ -82,7 +77,6 @@ class MultiDispyTestSuite
 		Yunit.assert(pt.y == 10)
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
-
     coordVirtualScreenToDisplay() {
     	Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
@@ -96,7 +90,6 @@ class MultiDispyTestSuite
 		Yunit.assert(x.pt.y == 10)
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
     }
-	
 	hmonFromCoord() {
 		Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
@@ -106,7 +99,6 @@ class MultiDispyTestSuite
 		Yunit.assert(hmon == hmonRef)
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
-	
 	hmonFromId() {
 		Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
@@ -116,7 +108,18 @@ class MultiDispyTestSuite
 		Yunit.assert(hmon == hmonRef)
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
-
+	hmonFromRect() {
+		Global debug
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		hmonRef := this.obj.hmonFromId(1)
+		win := new Windy(0, debug)
+		win.move(10,10)
+		rect := win.possize
+		hmon := this.obj.hmonFromRect(rect.x, rect.y, rect.w, rect.h)
+		Yunit.assert(hmon == hmonRef)
+		win.kill()
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+	}
 	hmonFromHwnd() {
 		Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
@@ -128,15 +131,13 @@ class MultiDispyTestSuite
 		Yunit.assert(hmon == hmonRef)
 		win.kill()
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
-	}
-	
+	}	
 	identify() {
     	Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
     	this.obj.identify(250, "00FF00")
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
-
 	idFromCoord() {
 		Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
@@ -148,7 +149,6 @@ class MultiDispyTestSuite
 		Yunit.assert(mon == 2)
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
-	
 	idFromHmon() {
 		Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
@@ -158,7 +158,18 @@ class MultiDispyTestSuite
 		Yunit.assert(monId == monId2)
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
-
+	idFromRect() {
+		Global debug
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		win := new Windy(0, debug)
+		idRef := 1
+		win.move(10,10)
+		rect := win.possize
+		id := this.obj.idFromRect(rect.x, rect.y, rect.w, rect.h)
+		Yunit.assert(id == idRef)
+		win.kill()
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+	}
 	idFromHwnd() {
 		Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
@@ -185,7 +196,6 @@ class MultiDispyTestSuite
 		MouseMove,x_back, y_back
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
-
 	idNextPrev() {
 		Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
@@ -222,7 +232,6 @@ class MultiDispyTestSuite
 		
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
-	
    	monitorsCount() {
     	Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
@@ -230,7 +239,6 @@ class MultiDispyTestSuite
 		Yunit.assert(cnt == this.monCount)
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
-
 	size() {
 		Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
@@ -241,7 +249,6 @@ class MultiDispyTestSuite
 		Yunit.assert(rect.h == this.monvirtHeight)
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
-	
 	virtualScreenSize() {
 		Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
@@ -269,7 +276,7 @@ class _BaseTestSuite {
 		Global ReferenceVersion
 		md := new MultiDispy(debug)
 		Yunit.assert(md.version == ReferenceVersion)
-		OutputDebug % "MultiDispy Version <" md.version "> <-> Required <" ReferenceVersion ">"
+		OutputDebug % A_ThisFunc " <" md.version "> <-> Required <" ReferenceVersion ">"
 		OutputDebug % ">>>>[" A_ThisFunc "]>>>>"
 	}
 
