@@ -11,7 +11,7 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.2.2"
+ReferenceVersion := "0.2.3"
 debug := 1
 
 ;Yunit.use(YunitStdOut, YunitWindow).Test(ExpMultiDispyTestSuite)
@@ -32,16 +32,14 @@ class ExpMultiDispyTestSuite {
 		this.monvirtHeight := this.mon2Height
     }
 
-	hmonFromRect() {
+	monitors() {
 		Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
-		hmonRef := this.obj.hmonFromId(1)
-		win := new Windy(0, debug)
-		win.move(10,10)
-		rect := win.possize
-		hmon := this.obj.hmonFromRect(rect.x, rect.y, rect.w, rect.h)
-		Yunit.assert(hmon == hmonRef)
-		win.kill()
+		mcRef := this.obj.monitorsCount
+		; HINT: Test is valid - but makes YUnit to terminate. Therefore it's disabled
+		mons := this.obj.monitors()
+		mc := mons.MaxIndex()
+		Yunit.assert( mcRef == mc)
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
 	
@@ -230,6 +228,15 @@ class MultiDispyTestSuite
 		monPrv := this.obj.idPrev(2,1)
 		Yunit.assert(monPrv == 1)
 		
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+	}
+	monitors() {
+		Global debug
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		mcRef := this.obj.monitorsCount
+		mons := this.obj.monitors()
+		mc := mons.MaxIndex()
+		Yunit.assert( mcRef == mc)
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
    	monitorsCount() {

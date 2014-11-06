@@ -18,7 +18,7 @@
 */
 class MultiDispy {
 	_debug := 0
-	_version := "0.2.2"
+	_version := "0.2.3"
 
 	; ===== Properties ==============================================================	
     debug[] { ; _DBG_
@@ -454,7 +454,24 @@ class MultiDispy {
 		
 		return prevMon
 	}
-
+	/* -------------------------------------------------------------------------------
+	Method:	Enumerates display monitors and returns an object all monitors (list of <Dispy at http://hoppfrosch.github.io/AHK_Windy/files/Dispy-ahk.html> -object )
+			
+	Returns: 
+	monitors - associative array with monitor id as key and <Dispy at http://hoppfrosch.github.io/AHK_Windy/files/Dispy-ahk.html>-objects as values
+	*/
+	monitors() {
+		Monis := {}
+		mc := this.monitorsCount
+		id := 1
+		while ( id <= mc) {
+			Monis[id] :=new Dispy(id)
+			id++
+		}    
+		if (this._debug) ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "()] -> " Monis.MaxIndex() " Monitors" ; _DBG_
+   		Return Monis
+	}
 	; ====== Internal Methods =========================================================
 	/* -------------------------------------------------------------------------------
 	Function: __New
@@ -470,5 +487,5 @@ class MultiDispy {
 
 		return this
 	}
-
 }
+
