@@ -1,8 +1,8 @@
 ﻿; ****** HINT: Documentation can be extracted to HTML using NaturalDocs (http://www.naturaldocs.org/) ************** 
 
 #include <Windy\Pointy>
-#include <Windy\Dispy>
-#include <Windy\MultiDispy>
+#include <Windy\Mony>
+#include <Windy\MultiMony>
 
 /* ******************************************************************************************************************************************
 	Class: Mousy
@@ -44,21 +44,21 @@ class Mousy {
 	Get or Set the monitor the mouse is currently on
 	*/
 		get {
-			md := new MultiDispy(this._debug)
+			md := new MultiMony(this._debug)
 			return md.idFromMouse()
 		}
 		set {
 			currMon := this.monitorID
 			OutputDebug % "<[" A_ThisFunc "()] - >New:" value "<-> Current:" CurrMon ; _DBG_
 			if (value != currMon) {
-				md := new MultiDispy(this._debug)
+				md := new MultiMony(this._debug)
 				; Determine relative Coordinates relative to current monitor
 				curr := md.coordVirtualScreenToDisplay(this.x,this.y) 
 				; Determine scaling factors from current monitor to destination monitor
-				monCurr := new Dispy(currMon, this._debug)
+				monCurr := new Mony(currMon, this._debug)
 				scaleX := monCurr.scaleX(value)
 				scaleY := monCurr.scaleY(value)
-				mon := new Dispy(value, this._debug)
+				mon := new Mony(value, this._debug)
 				r := mon.boundary
 				; Scale the relative coordinates and add them to the origin of destination monitor
 				x := r.x + scaleX*curr.pt.x

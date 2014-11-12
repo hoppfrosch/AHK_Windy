@@ -4,10 +4,10 @@
 
 #include <Windy\Recty>
 #include <Windy\Pointy>
-#include <Windy\Dispy>
+#include <Windy\Mony>
 
 /* ******************************************************************************************************************************************
-	Class: MultiDispy
+	Class: MultiMony
 	Handling Multiple Display-Monitor Environments
 
 	Author(s):
@@ -16,9 +16,9 @@
 	About: License
 	This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See <WTFPL at http://www.wtfpl.net/> for more details.
 */
-class MultiDispy {
+class MultiMony {
 	_debug := 0
-	_version := "0.2.3"
+	_version := "1.0.0"
 
 	; ===== Properties ==============================================================	
     debug[] { ; _DBG_
@@ -126,7 +126,7 @@ class MultiDispy {
 	<point at http://hoppfrosch.github.io/AHK_Windy/files/Pointy-ahk.html>.
 	*/
 	coordDisplayToVirtualScreen( id := 1, x := 0, y := 0) {
-		oMon := new Dispy(id, this._debug)
+		oMon := new Mony(id, this._debug)
 		r := oMon.boundary()
 		xout := x + r.x
 		yout := y + r.y
@@ -149,7 +149,7 @@ class MultiDispy {
 		ret := Object()
 		ret.monID := this.idFromCoord(x,y)
 
-		oMon := new Dispy(ret.monId, this._debug)
+		oMon := new Mony(ret.monId, this._debug)
 		r := oMon.boundary
 		xret := x - r.x
 		yret := y - r.y
@@ -226,7 +226,7 @@ class MultiDispy {
 	<idFromHmon>
 	*/
 	hmonFromid(id := 1) {
-		oMon := new Dispy(id, this._debug)
+		oMon := new Mony(id, this._debug)
 		hmon := oMon.hmon
 		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "(id:=" id ")] -> " hmon ; _DBG_
@@ -276,12 +276,12 @@ class MultiDispy {
 		monCnt := this.monitorsCount
 		Loop %monCnt%
 		{
-			mon := new Dispy(A_Index, this._debug)
+			mon := new Mony(A_Index, this._debug)
 			mon.__idShow(txtcolor, txtsize)
 		}
 		Sleep, %disptime%
 		Loop %monCnt% {
-    		mon := new Dispy(A_Index, this._debug)
+    		mon := new Mony(A_Index, this._debug)
 			mon.__idHide()
 		}
 
@@ -310,7 +310,7 @@ class MultiDispy {
 		; Iterate through all monitors.
 		Loop, %m%
 		{  
-			oMon := new Dispy(A_Index, this._debug)
+			oMon := new Mony(A_Index, this._debug)
 			rect := oMon.boundary
 			if (x >= rect.x && x <= rect.w && y >= rect.y && y <= rect.h)
 				mon := A_Index
@@ -455,17 +455,17 @@ class MultiDispy {
 		return prevMon
 	}
 	/* -------------------------------------------------------------------------------
-	Method:	Enumerates display monitors and returns an object all monitors (list of <Dispy at http://hoppfrosch.github.io/AHK_Windy/files/Dispy-ahk.html> -object )
+	Method:	Enumerates display monitors and returns an object all monitors (list of <Mony at http://hoppfrosch.github.io/AHK_Windy/files/Mony-ahk.html> -object )
 			
 	Returns: 
-	monitors - associative array with monitor id as key and <Dispy at http://hoppfrosch.github.io/AHK_Windy/files/Dispy-ahk.html>-objects as values
+	monitors - associative array with monitor id as key and <Mony at http://hoppfrosch.github.io/AHK_Windy/files/Mony-ahk.html>-objects as values
 	*/
 	monitors() {
 		Monis := {}
 		mc := this.monitorsCount
 		id := 1
 		while ( id <= mc) {
-			Monis[id] :=new Dispy(id)
+			Monis[id] :=new Mony(id)
 			id++
 		}    
 		if (this._debug) ; _DBG_

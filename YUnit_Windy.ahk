@@ -12,7 +12,7 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.7.1"
+ReferenceVersion := "0.8.0"
 debug := 1
 
 ;Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, TempTestSuite)
@@ -739,7 +739,7 @@ class MiscTestSuite {
 		monID := this.obj.monitorID
 		Yunit.assert(monId == 1)
 		OutputDebug % "**** " A_ThisFunc " 2 - via Move ****"
-		obj := new Dispy(2, debug)
+		obj := new Mony(2, debug)
 		rect2 := obj.boundary
 		this.obj.Move(rect2.x+10,rect2.y+10,300,300)
 		monID := this.obj.monitorID

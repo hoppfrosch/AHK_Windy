@@ -3,25 +3,25 @@
 #Include %A_ScriptDir%\Yunit\Yunit.ahk
 #Include %A_ScriptDir%\Yunit\Window.ahk
 #Include %A_ScriptDir%\Yunit\StdOut.ahk
-#include lib\Windy\MultiDispy.ahk
-#include lib\Windy\Dispy.ahk
+#include lib\Windy\MultiMony.ahk
+#include lib\Windy\Mony.ahk
 #include lib\Windy\Recty.ahk
 #include lib\Windy\Windy.ahk
 #Warn All
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.2.3"
+ReferenceVersion := "1.0.0"
 debug := 1
 
-;Yunit.use(YunitStdOut, YunitWindow).Test(ExpMultiDispyTestSuite)
-Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, MultiDispyTestSuite)
+;Yunit.use(YunitStdOut, YunitWindow).Test(ExpMultiMonyTestSuite)
+Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, MultiMonyTestSuite)
 ExitApp
 
-class ExpMultiDispyTestSuite {
+class ExpMultiMonyTestSuite {
 	Begin() {
 		Global debug
-		this.obj := new MultiDispy(debug)
+		this.obj := new MultiMony(debug)
 		this.monCount := 2
 		this.mon1Width := 1920
 		this.mon1Height := 1080
@@ -49,11 +49,11 @@ class ExpMultiDispyTestSuite {
     }
 }
 
-class MultiDispyTestSuite
+class MultiMonyTestSuite
 {
 	Begin() {
 		Global debug
-		this.obj := new MultiDispy(debug)
+		this.obj := new MultiMony(debug)
 		this.monCount := 2
 		this.mon1Width := 1920
 		this.mon1Height := 1080
@@ -141,7 +141,7 @@ class MultiDispyTestSuite
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		mon := this.obj.idFromCoord(10,10)
 		Yunit.assert(mon == 1)
-		mon1 := new Dispy(1, debug)
+		mon1 := new Mony(1, debug)
 		rect := mon1.size
 		mon := this.obj.idFromCoord(rect.w+10,10)
 		Yunit.assert(mon == 2)
@@ -186,7 +186,7 @@ class MultiDispyTestSuite
 		MouseMove,10,10
 		mon := this.obj.idFromMouse()
 		Yunit.assert(mon == 1)
-		mon1 := new Dispy(1, debug)
+		mon1 := new Mony(1, debug)
 		rect := mon1.size
 		MouseMove,rect.w+10,10
 		mon := this.obj.idFromMouse()
@@ -281,7 +281,7 @@ class _BaseTestSuite {
 		Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		Global ReferenceVersion
-		md := new MultiDispy(debug)
+		md := new MultiMony(debug)
 		Yunit.assert(md.version == ReferenceVersion)
 		OutputDebug % A_ThisFunc " <" md.version "> <-> Required <" ReferenceVersion ">"
 		OutputDebug % ">>>>[" A_ThisFunc "]>>>>"
