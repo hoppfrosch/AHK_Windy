@@ -1,14 +1,15 @@
 ﻿/*
-	Library: Windy, v0.11.0
-		Windy provides a collection of classes, which allow a class based approach of handling windows, monitors, etc.
+	Title: _ Windy, v0.11.1
+	
+	Windy provides a collection of classes, which allow a class based approach of handling windows, monitors, etc.
 		
-		Windy provides tools and classes for following purposes:
-		* Pointy - Points (geometric 2D-points)
-		* Recty - Rectangles (consisting of two points)
-		* Windy - Windows
-		* Dispy - single Displays(Monitors)
-		* MultiDispy - Multi Display Environments
-		* Mousy - Mouse
+	Following classes exist:
+	* <Pointy at http://hoppfrosch.github.io/AHK_Windy/files/Pointy-ahk.html> - Points (geometric 2D-points)
+	* <Recty at http://hoppfrosch.github.io/AHK_Windy/files/Recty-ahk.html> - Rectangles (consisting of two points)
+	* <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html> - Windows
+	* <Dispy at http://hoppfrosch.github.io/AHK_Windy/files/Dispy-ahk.html> - single Displays(Monitors)
+	* <MultiDispy at http://hoppfrosch.github.io/AHK_Windy/files/MultiDispy-ahk.html> - Multi Display Environments
+	* <Mousy at http://hoppfrosch.github.io/AHK_Windy/files/Mousy-ahk.html> - Mouse
 		
 	Author(s):
 	<hoppfrosch at hoppfrosch@gmx.de>		
@@ -19,4 +20,4 @@
 */
 #include lib\Windy
 
-Version := "0.11.0"
+Version := "0.11.1"

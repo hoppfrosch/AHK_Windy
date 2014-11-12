@@ -11,7 +11,7 @@
 #SingleInstance force
 
 
-ReferenceVersion := "0.1.13"
+ReferenceVersion := "0.2.2"
 debug := 1
 
 ;Yunit.Use(YunitStdOut, YunitWindow).Test(ExpDispyTestSuite)
@@ -33,29 +33,16 @@ class ExpDispyTestSuite
 		this.mon2Height := 1200		
     }
 
-	coordDisplayToVirtualScreen() {
+	primary() {
 		Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
     	mon1 := new Dispy(1, debug)
-		;x := this.obj.monCoordAbsToRel(10,10)
-		;Yunit.assert(x.monID == 1)
-		;Yunit.assert(x.x == 10)
-		;Yunit.assert(x.y == 10)
-    	;x := this.obj.monCoordAbsToRel(1930,10)
-		;Yunit.assert(x.monID == 2)
-		;Yunit.assert(x.x == 10)
-		;Yunit.assert(x.y == 10)
-		pt := mon1.coordDisplayToVirtualScreen(10, 10)
-		Yunit.assert(pt.x == 10)
-		Yunit.assert(pt.y == 10)
-		mon2 := new Dispy(2, debug)
-		pt := mon2.coordDisplayToVirtualScreen(10, 10)
-		Yunit.assert(pt.x == this.mon1Width + 10)
-		Yunit.assert(pt.y == 10)
-		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
-    	return
+    	Yunit.assert(mon1.primary = true)
+    	mon2 := new Dispy(2, debug)
+    	Yunit.assert(mon2.primary = false)
+    	OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
     }
-	
+    
 	End()  {
 ;        this.remove("obj")
 ;		this.obj := 
@@ -129,6 +116,18 @@ class DispyTestSuite
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
     	return
     }
+
+    hmon() {
+		Global debug
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+    	mon1 := new Dispy(1, debug)
+		Yunit.assert(mon1.hmon > 0)
+		mon2 := new Dispy(2, debug)
+		Yunit.assert(mon2.hmon > 0)
+		Yunit.assert(mon2.hmon != mon1.hmon)
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+    	return
+    }
     
 	identify() {
     	Global debug
@@ -137,15 +136,6 @@ class DispyTestSuite
 		mon1.identify(250)
 		mon2 := new Dispy(2, debug)
 		mon2.identify(250)
-		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
-	}
-
-	monitorsCount() {
-    	Global debug
-		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
-    	mon1 := new Dispy(1, debug)
-		cnt := mon1.monitorsCount
-		Yunit.assert(cnt == this.monCount)
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
 	
@@ -187,6 +177,45 @@ class DispyTestSuite
 		
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
+
+	info() {
+		Global debug
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+    	mon1 := new Dispy(1, debug)
+    	info := mon1.info
+    	bound := mon1.boundary
+    	Yunit.assert(info.boundary.x = bound.x)
+    	Yunit.assert(info.boundary.y = bound.y)
+    	Yunit.assert(info.boundary.w = bound.w)
+    	Yunit.assert(info.boundary.h = bound.h)
+    	mon2 := new Dispy(2, debug)
+    	info := mon2.info
+    	bound := mon2.boundary
+    	Yunit.assert(info.boundary.x = bound.x)
+    	Yunit.assert(info.boundary.y = bound.y)
+    	Yunit.assert(info.boundary.w = bound.w)
+    	Yunit.assert(info.boundary.h = bound.h)
+    	OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+    }
+
+	monitorsCount() {
+    	Global debug
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+    	mon1 := new Dispy(1, debug)
+		cnt := mon1.monitorsCount
+		Yunit.assert(cnt == this.monCount)
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+	}
+
+	primary() {
+		Global debug
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+    	mon1 := new Dispy(1, debug)
+    	Yunit.assert(mon1.primary = true)
+    	mon2 := new Dispy(2, debug)
+    	Yunit.assert(mon2.primary = false)
+    	OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+    }
 		
     size() {
     	Global debug

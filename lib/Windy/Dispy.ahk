@@ -18,8 +18,9 @@
 */
 class Dispy {
 	_debug := 0
-	_version := "0.1.13"
+	_version := "0.2.2"
 	_id := 0
+	_hmon := 0
 
     ; ===== Properties ===============================================================
     boundary[] {
@@ -77,12 +78,31 @@ class Dispy {
 			return this._debug                                                         ; _DBG_
 		}                                                                              ; _DBG_
 	}	
+	hmon[] {
+	/* -------------------------------------------------------------------------------
+	Property: hmon [get]
+	Get the handle of the monitor
+
+	Remarks:
+	* There is no setter available, since this is a constant system property
+	*/	
+		get {
+			md := new MultiDispy(this._debug)
+			rect := this.boundary
+			X := rect.x + 1
+			Y := rect.y + 1
+			hmon := DllCall("User32.dll\MonitorFromPoint", "Int64", (X & 0xFFFFFFFF) | (Y << 32), "UInt", 0, "UPtr")
+			this._hmon := hmon
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.id "])] -> (" this._hmon ")" ; _DBG_
+			return this._hmon
+		}
+	}
 	id[] {
 	/* -------------------------------------------------------------------------------
 	Property: id [get/set]
 	ID of the monitor
 	*/
-  
 		get {
 			return this._id
 		}
@@ -150,6 +170,63 @@ class Dispy {
 			return prevMon
 		}
 	}
+	info[] {
+	/* -------------------------------------------------------------------------------
+	Property:	info [get]
+	Gets info about monitor by calling Win32-API GetMonitorInfo() . 
+
+	More infos on GetMonitorInfo see <http://msdn.microsoft.com/de-de/library/windows/desktop/dd144901%28v=vs.85%29.aspx>
+
+	The return value is an object containing 
+	 * Monitor handle
+	 * Monitor name
+	 * Monitor Id 
+	 * Rectangle containing the Monitor Boundaries (relative to Virtual Screen)
+	 * Rectangle containing the Monitor WorkingArea (relative to Virtual Screen)
+	 * Flag to indicate whether monitor is primary monitor or not ...
+	 
+	Remarks:
+	* There is no setter available, since this is a constant system property
+
+	Authors:
+	Original - <just me at http://ahkscript.org/boards/viewtopic.php?f=6&t=4606>
+	*/
+		get {
+			hmon := this.hmon
+			ret := false
+	   		NumPut(VarSetCapacity(MIEX, 40 + (32 << !!A_IsUnicode)), MIEX, 0, "UInt")
+	   		If DllCall("User32.dll\GetMonitorInfo", "Ptr", hmon, "Ptr", &MIEX) {
+	      		MonName := StrGet(&MIEX + 40, 32)    ; CCHDEVICENAME = 32
+	      		MonNum := RegExReplace(MonName, ".*(\d+)$", "$1")
+
+				x := NumGet(MIEX, 4, "Int")
+				y := NumGet(MIEX, 8, "Int")
+				w := NumGet(MIEX, 12, "Int")
+				h := NumGet(MIEX, 16, "Int")
+	      		rectBound := new Recty(x,y,w,h,this.debug)
+
+	      		x := NumGet(MIEX, 20, "Int")
+				y := NumGet(MIEX, 24, "Int")
+				w := NumGet(MIEX, 28, "Int")
+				h := NumGet(MIEX, 32, "Int")
+	      		rectWA := new Recty(x,y,w,h,this.debug)
+	      		
+	      		ret := { hmon:         hmon
+	      			, Name:          MonName
+	            	, Id:            MonNum
+	            	, Boundary:      rectBound    ; display rectangle
+	            	, WorkingAreaVS: rectWA  ; work area
+	            	, Primary:       NumGet(MIEX, 36, "UInt")} ; contains a non-zero value for the primary monitor.
+	       		if (this._debug) ; _DBG_
+					OutputDebug % "|[" A_ThisFunc "([" this.id "])] -> (hmon=" ret.hmon ", Name=" ret.Name ", id=" ret.Id ", Boundary=" ret.Boundary.dump() ", WorkingArea" ret.WorkingArea.dump() ", Primary=" ret.Primary ")" ; _DBG_
+	   		}
+	   		else {
+	   			if (this._debug) ; _DBG_
+					OutputDebug % "|[" A_ThisFunc "([" this.id "])] -> " ret ; _DBG_
+	   		}
+	   		Return ret
+   		}
+	}
 	monitorsCount[] {
 	/* ---------------------------------------------------------------------------------------
 	Property: monitorsCount [get]
@@ -164,6 +241,22 @@ class Dispy {
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.id "]) -> (" mCnt ")]" ; _DBG_		
 			return mCnt
+		}
+	}
+	primary[] {
+	/* ---------------------------------------------------------------------------------------
+	Property: primary [get]
+	Is the monitor the primary monitor? 
+
+	Remarks:
+	* There is no setter available, since this is a constant system property
+	*/
+		get {
+			info := this.info
+			ret := info.primary
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.id "]) -> (" ret ")]" ; _DBG_		
+			return ret
 		}
 	}
 	scale[ monDest := 1 ] {
@@ -420,6 +513,7 @@ class Dispy {
 	_debug - Flag to enable debugging (Optional - Default: 0)
 	*/  
 	__New(_id := 1, _debug := false) {
+		this._debug := _debug ; _DBG_
 		ret := true
 		CoordMode, Mouse, Screen
 		SysGet, mCnt, MonitorCount
