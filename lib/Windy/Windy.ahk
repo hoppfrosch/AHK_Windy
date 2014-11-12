@@ -4,8 +4,8 @@
 
 #include <Windy\Recty>
 #include <Windy\Pointy>
-#include <Windy\MultiDispy>
-#include <Windy\Dispy>
+#include <Windy\MultiMony>
+#include <Windy\Mony>
 #include <Windy\Const_WinUser>
 #include <Windy\_WindowHandlerEvent>
 #include <SerDes>
@@ -23,7 +23,7 @@ class Windy {
 	This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See <WTFPL at http://www.wtfpl.net/> for more details.
 
 */
-	_version := "0.7.1"
+	_version := "0.8.0"
 	_debug := 0
 	_hWnd := 0
 
@@ -482,7 +482,7 @@ class Windy {
 		get {
 			mon := 1
 			c := this.centercoords
-			md := new MultiDispy(this._debug)
+			md := new MultiMony(this._debug)
 			mon := md.idFromCoord(c.x,c.y,mon)
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " mon ; _DBG_		
@@ -490,7 +490,7 @@ class Windy {
 		}
 
 		set {
-			md := new MultiDispy(this._debug)
+			md := new MultiMony(this._debug)
 		
 			realID := value
 			if (realID > md.monitorsCount) {
@@ -500,11 +500,11 @@ class Windy {
 				realID := 1
 			}
 
-			monNew := new Dispy(realID, this._debug)
+			monNew := new Mony(realID, this._debug)
 			newMon := monNew.boundary
 
 			oldID := this.monitorID
-			monOld := new Dispy(oldID, this._debug)
+			monOld := new Mony(oldID, this._debug)
 			oldMon := monOld.boundary
 		
 			oldPos := this.posSize
@@ -1179,7 +1179,7 @@ class Windy {
 		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "([" this.hwnd "], xFactor=" xFactor ", yFactor=" yFactor ", wFactor=" wFactor ", hFactor=" hFactor ")]" ; _DBG_
 
-		mon := new Dispy(this.monitorID, this._debug)
+		mon := new Mony(this.monitorID, this._debug)
 		monWorkArea := mon.workingArea
 		monBound := mon.boundary
 		xrel := monWorkArea.w * xFactor/100

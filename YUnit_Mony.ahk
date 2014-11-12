@@ -3,7 +3,7 @@
 #Include %A_ScriptDir%\Yunit\Yunit.ahk
 #Include %A_ScriptDir%\Yunit\Window.ahk
 #Include %A_ScriptDir%\Yunit\StdOut.ahk
-#include lib\Windy\Dispy.ahk
+#include lib\Windy\Mony.ahk
 #include lib\Windy\Recty.ahk
 
 #Warn All
@@ -11,21 +11,21 @@
 #SingleInstance force
 
 
-ReferenceVersion := "0.2.2"
+ReferenceVersion := "1.0.0"
 debug := 1
 
-;Yunit.Use(YunitStdOut, YunitWindow).Test(ExpDispyTestSuite)
-Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, DispyTestSuite)
+;Yunit.Use(YunitStdOut, YunitWindow).Test(ExpMonyTestSuite)
+Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, MonyTestSuite)
 Return
 
 ExitApp
 
 
-class ExpDispyTestSuite
+class ExpMonyTestSuite
 {
 	Begin() {
 		Global debug
-;		this.obj := new Dispy(1, debug)
+;		this.obj := new Mony(1, debug)
 		this.monCount := 2
 		this.mon1Width := 1920
 		this.mon1Height := 1080
@@ -36,9 +36,9 @@ class ExpDispyTestSuite
 	primary() {
 		Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
-    	mon1 := new Dispy(1, debug)
+    	mon1 := new Mony(1, debug)
     	Yunit.assert(mon1.primary = true)
-    	mon2 := new Dispy(2, debug)
+    	mon2 := new Mony(2, debug)
     	Yunit.assert(mon2.primary = false)
     	OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
     }
@@ -50,11 +50,11 @@ class ExpDispyTestSuite
 
 }
 
-class DispyTestSuite
+class MonyTestSuite
 {
 	Begin() {
 		Global debug
-;		this.obj := new Dispy(1, debug)
+;		this.obj := new Mony(1, debug)
 		this.monCount := 2
 		this.mon1Width := 1920
 		this.mon1Height := 1080
@@ -65,9 +65,9 @@ class DispyTestSuite
 	_constructor() {
 		Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
-    	mon1 := new Dispy(1, debug)
+    	mon1 := new Mony(1, debug)
     	Yunit.assert(mon1 != false)
-    	mon99 := new Dispy(99, debug)
+    	mon99 := new Mony(99, debug)
     	Yunit.assert(mon99 = false)
     	OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
     }
@@ -75,11 +75,11 @@ class DispyTestSuite
     boundary() {
     	Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
-    	mon1 := new Dispy(1, debug)
+    	mon1 := new Mony(1, debug)
 		rect1 := mon1.boundary
 		Yunit.assert(rect1.w == this.mon1Width)
 		Yunit.assert(rect1.h == this.mon1Height)	
-		mon2 := new Dispy(2, debug)
+		mon2 := new Mony(2, debug)
 		rect2 := mon2.boundary(2)
 		Yunit.assert(rect2.x == rect1.w)
 		Yunit.assert(rect2.y == rect2.y)
@@ -91,11 +91,11 @@ class DispyTestSuite
     center() {
     	Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
-    	mon1 := new Dispy(1, debug)
+    	mon1 := new Mony(1, debug)
 		pt1 := mon1.center
 		Yunit.assert(pt1.x == this.mon1Width/2)
 		Yunit.assert(pt1.y == this.mon1Height/2)
-		mon2 := new Dispy(2, debug)
+		mon2 := new Mony(2, debug)
 		pt2 := mon2.center
 		Yunit.assert(pt2.x == (this.mon1Width+(this.mon2Width/2)))
 		Yunit.assert(pt2.y == this.mon2Height/2)
@@ -105,11 +105,11 @@ class DispyTestSuite
 	coordDisplayToVirtualScreen() {
 		Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
-    	mon1 := new Dispy(1, debug)
+    	mon1 := new Mony(1, debug)
 		pt := mon1.coordDisplayToVirtualScreen(10, 10)
 		Yunit.assert(pt.x == 10)
 		Yunit.assert(pt.y == 10)
-		mon2 := new Dispy(2, debug)
+		mon2 := new Mony(2, debug)
 		pt := mon2.coordDisplayToVirtualScreen(10, 10)
 		Yunit.assert(pt.x == this.mon1Width + 10)
 		Yunit.assert(pt.y == 10)
@@ -120,9 +120,9 @@ class DispyTestSuite
     hmon() {
 		Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
-    	mon1 := new Dispy(1, debug)
+    	mon1 := new Mony(1, debug)
 		Yunit.assert(mon1.hmon > 0)
-		mon2 := new Dispy(2, debug)
+		mon2 := new Mony(2, debug)
 		Yunit.assert(mon2.hmon > 0)
 		Yunit.assert(mon2.hmon != mon1.hmon)
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
@@ -132,9 +132,9 @@ class DispyTestSuite
 	identify() {
     	Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
-    	mon1 := new Dispy(1, debug)
+    	mon1 := new Mony(1, debug)
 		mon1.identify(250)
-		mon2 := new Dispy(2, debug)
+		mon2 := new Mony(2, debug)
 		mon2.identify(250)
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
@@ -144,7 +144,7 @@ class DispyTestSuite
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 
 		; Monitor 1
-    	mon1 := new Dispy(1, debug)
+    	mon1 := new Mony(1, debug)
 		monNxt := mon1.idNext
 		Yunit.assert(monNxt == 2)
 		monNxt := mon1.idNext(0)
@@ -160,7 +160,7 @@ class DispyTestSuite
 		Yunit.assert(monPrv == 2)
 
 		; Monitor 2 ....
-		mon2 := new Dispy(2, debug)
+		mon2 := new Mony(2, debug)
 		monNxt := mon2.idNext
 		Yunit.assert(monNxt == 1)
 		monNxt := mon2.idNext(0)
@@ -181,14 +181,14 @@ class DispyTestSuite
 	info() {
 		Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
-    	mon1 := new Dispy(1, debug)
+    	mon1 := new Mony(1, debug)
     	info := mon1.info
     	bound := mon1.boundary
     	Yunit.assert(info.boundary.x = bound.x)
     	Yunit.assert(info.boundary.y = bound.y)
     	Yunit.assert(info.boundary.w = bound.w)
     	Yunit.assert(info.boundary.h = bound.h)
-    	mon2 := new Dispy(2, debug)
+    	mon2 := new Mony(2, debug)
     	info := mon2.info
     	bound := mon2.boundary
     	Yunit.assert(info.boundary.x = bound.x)
@@ -201,7 +201,7 @@ class DispyTestSuite
 	monitorsCount() {
     	Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
-    	mon1 := new Dispy(1, debug)
+    	mon1 := new Mony(1, debug)
 		cnt := mon1.monitorsCount
 		Yunit.assert(cnt == this.monCount)
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
@@ -210,9 +210,9 @@ class DispyTestSuite
 	primary() {
 		Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
-    	mon1 := new Dispy(1, debug)
+    	mon1 := new Mony(1, debug)
     	Yunit.assert(mon1.primary = true)
-    	mon2 := new Dispy(2, debug)
+    	mon2 := new Mony(2, debug)
     	Yunit.assert(mon2.primary = false)
     	OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
     }
@@ -220,7 +220,7 @@ class DispyTestSuite
     size() {
     	Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
-    	mon1 := new Dispy(1, debug)
+    	mon1 := new Mony(1, debug)
 		sx := mon1.scaleX(1)
 		Yunit.assert(sx == 1)
 		sy := mon1.scaleY(1)
@@ -246,7 +246,7 @@ class DispyTestSuite
 	virtualScreenSize() {
 		Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
-		mon1 := new Dispy(1, debug)
+		mon1 := new Mony(1, debug)
 		rect := mon1.virtualScreenSize()
 		Yunit.assert(rect.x == 0)
 		Yunit.assert(rect.y == 0)
@@ -258,7 +258,7 @@ class DispyTestSuite
 	workingArea() {
     	Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
-    	mon1 := new Dispy(1, debug)
+    	mon1 := new Mony(1, debug)
 		rect := mon1.workingArea
 		Yunit.assert(rect.w <= this.mon1Width)
 		Yunit.assert(rect.h <= this.mon1Height)	
@@ -280,9 +280,9 @@ class _BaseTestSuite {
 		Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		Global ReferenceVersion
-		idispy := new Dispy(1, debug)
-		OutputDebug % "Dispy Version <" idispy.version "> <-> Required <" ReferenceVersion ">"
-		Yunit.assert(idispy.version == ReferenceVersion)
+		iMony := new Mony(1, debug)
+		OutputDebug % "Mony Version <" iMony.version "> <-> Required <" ReferenceVersion ">"
+		Yunit.assert(iMony.version == ReferenceVersion)
 		OutputDebug % ">>>>[" A_ThisFunc "]>>>>"
 	}
 

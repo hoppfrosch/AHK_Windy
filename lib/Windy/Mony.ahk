@@ -4,10 +4,10 @@
 
 #include <Windy\Recty>
 #include <Windy\Pointy>
-#include <Windy\MultiDispy>
+#include <Windy\MultiMony>
 
 /* ******************************************************************************************************************************************
-	Class: Dispy
+	Class: Mony
 	Handling a single Monitor, identified via its monitor ID
 
 		Author(s):
@@ -16,9 +16,9 @@
 	About: License
 	This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See <WTFPL at http://www.wtfpl.net/> for more details.
 */
-class Dispy {
+class Mony {
 	_debug := 0
-	_version := "0.2.2"
+	_version := "1.0.0"
 	_id := 0
 	_hmon := 0
 
@@ -87,7 +87,7 @@ class Dispy {
 	* There is no setter available, since this is a constant system property
 	*/	
 		get {
-			md := new MultiDispy(this._debug)
+			md := new MultiMony(this._debug)
 			rect := this.boundary
 			X := rect.x + 1
 			Y := rect.y + 1
@@ -139,7 +139,7 @@ class Dispy {
 	<idPrev [get]>
 	*/
 		get {
-			md := new MultiDispy(this._debug)
+			md := new MultiMony(this._debug)
 			nextMon := md.idNext(this.id, cycle)
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.id "],cycle=" cycle ")] -> " nextMon ; _DBG_
@@ -162,7 +162,7 @@ class Dispy {
 	<idNext [get]>
 	*/
 		get {
-			md := new MultiDispy(this._debug)
+			md := new MultiMony(this._debug)
 			prevMon := md.idPrev(this.id, cycle)
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.id "],cycle=" cycle ")] -> " prevMon ; _DBG_
@@ -236,7 +236,7 @@ class Dispy {
 	* There is no setter available, since this is a constant system property
 	*/
 		get {
-			md := new MultiDispy(this._debug)
+			md := new MultiMony(this._debug)
 			mcnt := md.monitorsCount
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.id "]) -> (" mCnt ")]" ; _DBG_		
@@ -304,7 +304,7 @@ class Dispy {
 	*/
 		get {
 			size1 := this.size
-			md := new Dispy(monDest, this.debug)
+			md := new Mony(monDest, this.debug)
 			size2 := md.size
 			scaleX := size2.w / size1.w
 			if (this._debug) ; _DBG_
@@ -332,7 +332,7 @@ class Dispy {
 	*/
 		get {
 			size1 := this.size
-			md := new Dispy(monDest, this.debug)
+			md := new Mony(monDest, this.debug)
 			size2 := md.size
 			scaleY := size2.h / size1.h
 			if (this._debug) ; _DBG_
@@ -386,7 +386,7 @@ class Dispy {
 	<size [get]>, <boundary [get]>
 	*/
 		get {
-			md := new MultiDispy(this._debug)
+			md := new MultiMony(this._debug)
 			rect := md.virtualScreenSize
 			if (this._debug) ; _DBG_
 				OutputDebug % "<[" A_ThisFunc "([" this.id "])] -> (" rect.dump() ")" ; _DBG_
@@ -429,7 +429,7 @@ class Dispy {
 	<point at http://hoppfrosch.github.io/AHK_Windy/files/Pointy-ahk.html>.
 	*/
 	coordDisplayToVirtualScreen( x := 0, y := 0) {
-		md := new MultiDispy(this._debug)
+		md := new MultiMony(this._debug)
 		pt := md.coordDisplayToVirtualScreen(this.id, x, y)
 		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "()] -> (" pt.dump() ")" ; _DBG_
