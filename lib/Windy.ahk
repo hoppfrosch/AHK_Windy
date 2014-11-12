@@ -1,15 +1,15 @@
 ﻿/*
-	Title: _ Windy, v0.11.1
-	
+	Title: _ Windy, v0.12.0
+		
 	Windy provides a collection of classes, which allow a class based approach of handling windows, monitors, etc.
 		
 	Following classes exist:
-	* <Pointy at http://hoppfrosch.github.io/AHK_Windy/files/Pointy-ahk.html> - Points (geometric 2D-points)
-	* <Recty at http://hoppfrosch.github.io/AHK_Windy/files/Recty-ahk.html> - Rectangles (consisting of two points)
-	* <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html> - Windows
-	* <Dispy at http://hoppfrosch.github.io/AHK_Windy/files/Dispy-ahk.html> - single Displays(Monitors)
-	* <MultiDispy at http://hoppfrosch.github.io/AHK_Windy/files/MultiDispy-ahk.html> - Multi Display Environments
+	* <Mony at http://hoppfrosch.github.io/AHK_Windy/files/Mony-ahk.html> - Single Monitor
 	* <Mousy at http://hoppfrosch.github.io/AHK_Windy/files/Mousy-ahk.html> - Mouse
+	* <MultiMony at http://hoppfrosch.github.io/AHK_Windy/files/MultiMony-ahk.html> - Multi Monitor Environments
+	* <Pointy at http://hoppfrosch.github.io/AHK_Windy/files/Pointy-ahk.html> - Points (geometric 2D-points) - this is mostly a helper class being used within this package, but maybe helpful anyway ...
+	* <Recty at http://hoppfrosch.github.io/AHK_Windy/files/Recty-ahk.html> - Rectangles (consisting of two <points at http://hoppfrosch.github.io/AHK_Windy/files/Pointy-ahk.html>) -  - this is mostly a helper class being used within this package, but maybe helpful anyway ...
+	* <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html> - Windows
 		
 	Author(s):
 	<hoppfrosch at hoppfrosch@gmx.de>		
@@ -20,4 +20,4 @@
 */
 #include lib\Windy
 
-Version := "0.11.1"
+Version := "0.12.0"
