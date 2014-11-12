@@ -46,18 +46,18 @@ Format: 1.52
 # --------------------------------------------------------------------------
 
 
-File: _ Windy, v0.11.1  (Windy_Main.ahk)
-File: Dispy  (Dispy.ahk)
+File: _ Windy, v0.12.0  (Windy_Main.ahk)
+File: Mony  (Mony.ahk)
 File: Mousy  (Mousy.ahk)
-File: MultiDispy  (MultiDispy.ahk)
+File: MultiMony  (MultiMony.ahk)
 File: Pointy  (Pointy.ahk)
 File: Recty  (Recty.ahk)
 File: Windy  (Windy.ahk)
 
 Group: Index  {
 
-   Index: Everything
    Class Index: Classes
+   Index: Everything
    Function Index: Functions
    Property Index: Properties
    }  # Group: Index
