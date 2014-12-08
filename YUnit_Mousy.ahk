@@ -11,10 +11,10 @@
 
 
 debug := 1
-ReferenceVersion := "1.1.0"
+ReferenceVersion := "1.1.1"
 
-Yunit.Use(YunitStdOut, YunitWindow).Test(TempTestSuite)
-;Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, MiscTestSuite)
+;Yunit.Use(YunitStdOut, YunitWindow).Test(TempTestSuite)
+Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, MiscTestSuite)
 Return
 
 class TempTestSuite
@@ -24,9 +24,17 @@ class TempTestSuite
 		this.r := new Mousy(debug)
     }
 
-    run() {
-    	; This UnitTest fails due to failure with YUnit
+    speed() {
     	OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		this.r.speed := 10
+		saveSpeed := this.r.speed
+		Yunit.assert(this.r.speed == 10)
+		this.r.speed := 1
+		Yunit.assert(this.r.speed == 1)
+		this.r.speed := 20
+		Yunit.assert(this.r.speed == 20)
+		this.r.speed := saveSpeed
+		Yunit.assert(this.r.speed == saveSpeed)
     	OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
     }
 		
@@ -62,6 +70,20 @@ class MiscTestSuite
 		Yunit.assert(this.r.monitorID == 2)
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
+
+	speed() {
+    	OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		this.r.speed := 10
+		saveSpeed := this.r.speed
+		Yunit.assert(this.r.speed == 10)
+		this.r.speed := 1
+		Yunit.assert(this.r.speed == 1)
+		this.r.speed := 20
+		Yunit.assert(this.r.speed == 20)
+		this.r.speed := saveSpeed
+		Yunit.assert(this.r.speed == saveSpeed)
+    	OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+    }
 
 	End() {
         this.remove("r")
