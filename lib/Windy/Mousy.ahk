@@ -4,6 +4,7 @@
 #include <Windy\Recty>
 #include <Windy\Mony>
 #include <Windy\MultiMony>
+#include <Windy\Const_WinUser>
 
 /* ******************************************************************************************************************************************
 	Class: Mousy
@@ -17,12 +18,13 @@
 */
 
 class Mousy {
-	_version := "1.1.0"
+	_version := "1.1.1"
 	_debug := 0 ; _DBG_	
 	_showLocatorAfterMove := 1
 
 	_bConfine := false
 	_confineRect := new Recty()
+	_speed := 
 
 	; ===== Properties ===============================================================
 	confine[] {
@@ -49,10 +51,7 @@ class Mousy {
 			if (value== false) {
 				this._bConfine := false
 				OutputDebug % "Haaallllooooo" ; _DBG_
-				ret := DllCall( "ClipCursor" )
-				if ErrorLevel
-					MsgBox % ErrorLevel
-					
+				ret := DllCall( "ClipCursor" )				
 				OutputDebug % ">" ret ; _DBG_
 			}
 			else {
@@ -165,6 +164,28 @@ class Mousy {
 		set {
 			this._showLocatorAfterMove := value
 			return value
+		}
+	}
+	speed[] {
+	/* ---------------------------------------------------------------------------------------
+	Property: speed [get/set]
+	Get or Set the speed of the mouse when moving the mouse
+
+	This has to be a value from range [0..20]
+	*/
+		get {
+			CurrMouseSpeed := 0
+			DllCall("SystemParametersInfo", UInt, SPI.GETMOUSESPEED, UInt, 0, UIntP, CurrMouseSpeed, UInt, 0)
+			return CurrMouseSpeed
+		}
+		set {
+			if (value < 0)
+				value := 0
+			if (value > 20)
+				value := 20
+				
+			DllCall("SystemParametersInfo", UInt, SPI.SETMOUSESPEED, UInt, 0, UInt, value, UInt, 0)
+			return this.speed
 		}
 	}
 	version[] {
