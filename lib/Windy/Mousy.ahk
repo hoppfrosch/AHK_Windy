@@ -1,6 +1,7 @@
 ﻿; ****** HINT: Documentation can be extracted to HTML using NaturalDocs (http://www.naturaldocs.org/) ************** 
 
 #include <Windy\Pointy>
+#include <Windy\Recty>
 #include <Windy\Mony>
 #include <Windy\MultiMony>
 
@@ -16,11 +17,77 @@
 */
 
 class Mousy {
-	_version := "1.0.0"
+	_version := "1.1.0"
 	_debug := 0 ; _DBG_	
 	_showLocatorAfterMove := 1
 
+	_bConfine := false
+	_confineRect := new Recty()
+
 	; ===== Properties ===============================================================
+	confine[] {
+	/* -------------------------------------------------------------------------------
+	Property: confine [get/set]
+	Should the mouse be confined/fenced into a rectangle?
+
+	The rectangle is set via <confineRect at #confineRect>
+
+	Value:
+	flag - *true* or *false*
+
+	Example: 
+	>obj.confineRect := new Recty(100,100,500,500)
+	>obj.confine := true  ; Confining to previously defined rect is enabled
+	>obj.confine := false ; Confining to previously defined rect is disabled
+	>obj.confine := true  ; Confining to previously defined rect is re-enabled
+	*/
+		get {
+			return this._bConfine
+		}
+		set {
+			OutputDebug % ">[" A_ThisFunc "()] -> New:" value " <-> Current:" this._bConfine ; _DBG_
+			if (value== false) {
+				this._bConfine := false
+				OutputDebug % "Haaallllooooo" ; _DBG_
+				ret := DllCall( "ClipCursor" )
+				if ErrorLevel
+					MsgBox % ErrorLevel
+					
+				OutputDebug % ">" ret ; _DBG_
+			}
+			else {
+				rect := this.confineRect
+				VarSetCapacity(R,16,0),NumPut(rect.xul,&R+0),NumPut(rect.yul,&R+4),NumPut(rect.xlr,&R+8),NumPut(rect.ylr,&R+12)
+				this._bConfine := true
+				DllCall("ClipCursor",UInt,&R)
+			}
+			return this._bConfine
+		}
+	}
+	confineRect[] {
+	/* -------------------------------------------------------------------------------
+	Property: confineRect [get/set]
+	Rectangle to be considered with confine (given as <rectangle at http://hoppfrosch.github.io/AHK_Windy/files/Recty-ahk.html>).
+
+	Confining can be enabled/disabled via property <confine at #confine>
+
+	Value:
+	rect - confining rectangle
+
+	See also:
+	<confine at #confine>
+	*/
+		get {
+			return this._confineRect
+		}
+		set {
+			this._confineRect.x := value.x
+			this._confineRect.y := value.y
+			this._confineRect.w := value.w
+			this._confineRect.h := value.h
+			return this._confineRect
+		}
+	}
 	debug[] { ; _DBG_
    	/* -------------------------------------------------------------------------------
 	Property: debug [get/set]

@@ -1,5 +1,5 @@
 ﻿/*
-	Title: _ Windy, v0.12.0
+	Title: _ Windy, v0.12.1
 		
 	Windy provides a collection of classes, which allow a class based approach of handling windows, monitors, etc.
 		
@@ -20,4 +20,4 @@
 */
 #include lib\Windy
 
-Version := "0.12.0"
+Version := "0.12.1"
