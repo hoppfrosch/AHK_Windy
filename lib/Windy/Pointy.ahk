@@ -136,14 +136,13 @@ class Pointy {
 		* 20140908 - [hoppfrosch](hoppfrosch@gmx.de) - Original
 		===============================================================================
 	*/     
-	__New(x=0, y=0, w=0, h=0, debug=false) {
+	__New(x=0, y=0, debug=false) {
 		this._debug := debug ; _DBG_
 		if (this._debug) ; _DBG_
 			OutputDebug % "|[" A_ThisFunc "(x=" x ", y=" y ", _debug=" debug ")] (version: " this._version ")" ; _DBG_
 		this.x := x
 		this.y := y
 	}
-	
 }
 
 /*!

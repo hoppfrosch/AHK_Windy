@@ -18,7 +18,7 @@
 */
 
 class Mousy {
-	_version := "1.1.1"
+	_version := "1.1.2"
 	_debug := 0 ; _DBG_	
 	_showLocatorAfterMove := 1
 
@@ -169,9 +169,11 @@ class Mousy {
 	speed[] {
 	/* ---------------------------------------------------------------------------------------
 	Property: speed [get/set]
-	Get or Set the speed of the mouse when moving the mouse
+	Get or Set the speed of the mouse on (manual) mouse movement.
 
 	This has to be a value from range [0..20]
+
+	This value can also be set/get via System-Settings of Mouse within your windows-OS
 	*/
 		get {
 			CurrMouseSpeed := 0
@@ -186,6 +188,30 @@ class Mousy {
 				
 			DllCall("SystemParametersInfo", UInt, SPI.SETMOUSESPEED, UInt, 0, UInt, value, UInt, 0)
 			return this.speed
+		}
+	}
+	trail[] {
+	/* ---------------------------------------------------------------------------------------
+	Property: trail [get/set]
+	Get or Set the drawing of a trail on (manual) mouse movement
+
+	This has to be a value from range [0 (disabled)..7]
+
+	This value can also be set/get via System-Settings of Mouse within your windows-OS
+	*/
+		get {
+			nTrail := 0
+			DllCall("SystemParametersInfo", UInt, SPI.GETMOUSETRAILS, UInt, 0, UIntP, nTrail, UInt, 0)
+			return nTrail
+		}
+		set {
+			if (value < 0)
+				value := 0
+			if (value > 7)
+				value := 7
+				
+			DllCall("SystemParametersInfo", UInt, SPI.SETMOUSETRAILS, UInt, value, Str, 0, UInt, 0)
+			return this.trail
 		}
 	}
 	version[] {
@@ -321,12 +347,38 @@ class Mousy {
 	Parameters:
 	x,y - Coordinates to move to
 	*/  
-	__move(x,y) {
+	__move(x,y, Speed=25) {
+		T := A_MouseDelay
+   		SetMouseDelay, -1
 		CoordMode, Mouse, Screen
-		MouseMove, x, y, 0
+		MouseMove, x, y, Speed
 		if (this.showLocatorAfterMove == 1)
 			this.locate()
-	
+		SetMouseDelay, % T
+	}
+
+	/* ---------------------------------------------------------------------------------------
+	Method:  __moveRnd
+	Moves the mouse to given coordinates on a random path (*INTERNAL*)
+
+	Parameters:
+	x,y - Coordinates to move to
+
+	Authors:
+	Original - <slanter me at http://slanter-ahk.blogspot.de/2008/12/ahk-random-mouse-path-mousemove.html>
+	*/
+    __moveRnd(x, y, Speed=25) {
+   		T := A_MouseDelay
+   		SetMouseDelay, -1
+   		MouseGetPos, CX, CY
+   		Pts := Round(Sqrt((X - CX)**2 + (Y - CY)**2) / 30,0)
+   		Loop %Pts% {
+      		Random, NX, % CX - ((CX - X) / Pts) * (A_Index - 1), % CX - ((CX - X) / Pts) * A_Index
+      		Random, NY, % CY - ((CY - Y) / Pts) * (A_Index - 1), % CY - ((CY - Y) / Pts) * A_Index
+      		MouseMove, % NX, % NY, % Speed
+		}
+   		MouseMove, % X, % Y, % Speed
+   		SetMouseDelay, % T
 	}
 	
 	/* -------------------------------------------------------------------------------

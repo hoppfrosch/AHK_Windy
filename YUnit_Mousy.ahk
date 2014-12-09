@@ -5,13 +5,14 @@
 #Include %A_ScriptDir%\Yunit\Window.ahk
 #Include %A_ScriptDir%\Yunit\StdOut.ahk
 #include <Windy\Mousy>
+#include <Windy\Pointy>
 
 #Warn All
 #Warn LocalSameAsGlobal, Off
 
 
 debug := 1
-ReferenceVersion := "1.1.1"
+ReferenceVersion := "1.1.2"
 
 ;Yunit.Use(YunitStdOut, YunitWindow).Test(TempTestSuite)
 Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, MiscTestSuite)
@@ -24,18 +25,19 @@ class TempTestSuite
 		this.r := new Mousy(debug)
     }
 
-    speed() {
-    	OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
-		this.r.speed := 10
-		saveSpeed := this.r.speed
-		Yunit.assert(this.r.speed == 10)
-		this.r.speed := 1
-		Yunit.assert(this.r.speed == 1)
-		this.r.speed := 20
-		Yunit.assert(this.r.speed == 20)
-		this.r.speed := saveSpeed
-		Yunit.assert(this.r.speed == saveSpeed)
-    	OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+    trail() {
+		CoordMode,Mouse,Screen
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		MouseMove, 1,1,10
+		savetrail := this.r.trail
+		this.r.trail := 7
+		MouseMove, 1000, 1000,10
+		Yunit.assert(this.r.trail == 7)
+		this.r.trail := 1
+		MouseMove, 1,1,10
+		Yunit.assert(this.r.trail == 1)
+		this.r.trail := savetrail
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
     }
 		
 	
@@ -92,7 +94,7 @@ class MiscTestSuite
 }
 
 ; Does not work within YUnit-TestSuite :-(
-class ConfineTestSuite
+class ProblematicTestSuite
 {
 	Begin()  {
 		Global debug
@@ -113,6 +115,21 @@ class ConfineTestSuite
     	OutputDebug % pos.Dump()
     	this.r.confine := false
     	OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+    }
+
+     trail() {
+		CoordMode,Mouse,Screen
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		MouseMove, 1,1,10
+		savetrail := this.r.trail
+		this.r.trail := 7
+		MouseMove, 1000, 1000,10
+		Yunit.assert(this.r.trail == 7)
+		this.r.trail := 1
+		MouseMove, 1,1,10
+		Yunit.assert(this.r.trail == 1)
+		this.r.trail := savetrail
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
     }
 		
 	
