@@ -12,7 +12,7 @@
 
 
 debug := 1
-ReferenceVersion := "1.1.2"
+ReferenceVersion := "1.1.3"
 
 ;Yunit.Use(YunitStdOut, YunitWindow).Test(TempTestSuite)
 Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, MiscTestSuite)
@@ -25,18 +25,17 @@ class TempTestSuite
 		this.r := new Mousy(debug)
     }
 
-    trail() {
-		CoordMode,Mouse,Screen
+    move() {
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
-		MouseMove, 1,1,10
-		savetrail := this.r.trail
-		this.r.trail := 7
-		MouseMove, 1000, 1000,10
-		Yunit.assert(this.r.trail == 7)
-		this.r.trail := 1
-		MouseMove, 1,1,10
-		Yunit.assert(this.r.trail == 1)
-		this.r.trail := savetrail
+		this.r.x := 100
+		this.r.y := 100
+		this.r.movespeed := 25
+		this.r.movemode := 1
+		this.r.x :=1000
+		this.r.movemode := 3
+		this.r.pos := new Pointy(500,500)
+		this.r.movemode := 2
+		this.r.pos := new Pointy(100,100)
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
     }
 		
@@ -63,7 +62,7 @@ class MiscTestSuite
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
 
-	Pos() {
+	monitorID() {
 		Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		this.r.monitorID := 1
@@ -85,6 +84,20 @@ class MiscTestSuite
 		this.r.speed := saveSpeed
 		Yunit.assert(this.r.speed == saveSpeed)
     	OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+    }
+
+        move() {
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		this.r.x := 100
+		this.r.y := 100
+		this.r.movespeed := 25
+		this.r.movemode := 1
+		this.r.x :=1000
+		this.r.movemode := 3
+		this.r.pos := new Pointy(500,500)
+		this.r.movemode := 2
+		this.r.pos := new Pointy(100,100)
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
     }
 
 	End() {
@@ -132,7 +145,6 @@ class ProblematicTestSuite
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
     }
 		
-	
 	End() {
         this.remove("r")
 		this.r := 
