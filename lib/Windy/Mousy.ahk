@@ -24,7 +24,8 @@ class Mousy {
 
 	_bConfine := false
 	_confineRect := new Recty()
-	_speed := 
+	_movespeed := 50
+	_movemode := 1 
 
 	; ===== Properties ===============================================================
 	confine[] {
@@ -133,6 +134,25 @@ class Mousy {
 				this.__move(x, y)
 			}
 			return this.monitorID
+		}
+	}
+	moveSpeed[] {
+	/* ---------------------------------------------------------------------------------------
+	Property: moveSpeed [get/set]
+	Speed while moving the mouse via <pos at #pos>, <x at #x>, <y at #y>
+
+	This has to be a value from range [0 (instant) ..100 (slow)]
+	*/
+		get {
+			return this._movespeed
+		}
+		set {
+			if (value < 0)
+				value := 0
+			if (value > 100)
+				value := 100
+			this._movespeed := value
+			return value
 		}
 	}
 	pos[] {
@@ -347,11 +367,14 @@ class Mousy {
 	Parameters:
 	x,y - Coordinates to move to
 	*/  
-	__move(x,y, Speed=25) {
+	__move(x,y, speed=-1) {
+		if (speed == -1) {
+			speed := this._movespeed
+		}
 		T := A_MouseDelay
    		SetMouseDelay, -1
 		CoordMode, Mouse, Screen
-		MouseMove, x, y, Speed
+		MouseMove, x, y, speed
 		if (this.showLocatorAfterMove == 1)
 			this.locate()
 		SetMouseDelay, % T
