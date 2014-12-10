@@ -20,4 +20,4 @@
 */
 #include lib\Windy
 
-Version := "0.12.1"
+Version := "0.12.2"
