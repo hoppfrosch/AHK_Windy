@@ -136,7 +136,31 @@ class Mousy {
 			return this.monitorID
 		}
 	}
-	moveSpeed[] {
+	moveMode[] {
+	/* ---------------------------------------------------------------------------------------
+	Property: moveMode [get/set]
+	Movement mode while moving the mouse via <pos at #pos>, <x at #x>, <y at #y>
+
+	This has to be a value out of 
+	 * 0 - mouse jumps immediatialy to the new position
+	 * 1 - mouse moves to new position following a linear track (default)
+	 * 2 - mouse moves to new position following a curved track
+	 * 3 - mouse moves to new position following a random track
+
+	The speed of the movement can be set via <moveSpeed at #moveSpeed>
+	*/
+		get {
+			return this._movemode
+		}
+		set {
+			if (value < 0)
+				value := 0
+			if (value > 3)
+				value := 3
+			this._movemode := value
+			return value
+		}
+	}
 	/* ---------------------------------------------------------------------------------------
 	Property: moveSpeed [get/set]
 	Speed while moving the mouse via <pos at #pos>, <x at #x>, <y at #y>
@@ -367,14 +391,29 @@ class Mousy {
 	Parameters:
 	x,y - Coordinates to move to
 	*/  
-	__move(x,y, speed=-1) {
+	__move(x,y, mode = -1, speed = -1) {
 		if (speed == -1) {
 			speed := this._movespeed
+		}
+		if (mode == -1) {
+			mode := this._movemode
 		}
 		T := A_MouseDelay
    		SetMouseDelay, -1
 		CoordMode, Mouse, Screen
-		MouseMove, x, y, speed
+		if (mode == 0) {
+			MouseMove, x, y, 0
+		}
+		else if (mode == 1) {
+			MouseMove, x, y, speed
+		}
+		else if (mode == 2) {
+		    ; ToDo: Implement curve track
+			MouseMove, x, y, speed
+		}
+		else if (mode == 3) {
+			this.__moveRnd(x, y, speed) {
+		}
 		if (this.showLocatorAfterMove == 1)
 			this.locate()
 		SetMouseDelay, % T
