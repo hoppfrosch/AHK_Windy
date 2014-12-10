@@ -161,6 +161,7 @@ class Mousy {
 			return value
 		}
 	}
+	moveSpeed[] {
 	/* ---------------------------------------------------------------------------------------
 	Property: moveSpeed [get/set]
 	Speed while moving the mouse via <pos at #pos>, <x at #x>, <y at #y>
@@ -398,21 +399,22 @@ class Mousy {
 		if (mode == -1) {
 			mode := this._movemode
 		}
+		OutputDebug % speed
 		T := A_MouseDelay
    		SetMouseDelay, -1
 		CoordMode, Mouse, Screen
 		if (mode == 0) {
-			MouseMove, x, y, 0
+			MouseMove % x, y, 0
 		}
 		else if (mode == 1) {
-			MouseMove, x, y, speed
+			MouseMove % x, y, speed
 		}
 		else if (mode == 2) {
 		    ; ToDo: Implement curve track
-			MouseMove, x, y, speed
+			MouseMove % x, y, speed
 		}
 		else if (mode == 3) {
-			this.__moveRnd(x, y, speed) {
+			this.__moveRnd(x, y, speed)
 		}
 		if (this.showLocatorAfterMove == 1)
 			this.locate()
@@ -429,7 +431,10 @@ class Mousy {
 	Authors:
 	Original - <slanter me at http://slanter-ahk.blogspot.de/2008/12/ahk-random-mouse-path-mousemove.html>
 	*/
-    __moveRnd(x, y, Speed=25) {
+    __moveRnd(x, y, Speed=-1) {
+    	if (speed == -1) {
+			speed := this._movespeed
+		}
    		T := A_MouseDelay
    		SetMouseDelay, -1
    		MouseGetPos, CX, CY
@@ -437,7 +442,8 @@ class Mousy {
    		Loop %Pts% {
       		Random, NX, % CX - ((CX - X) / Pts) * (A_Index - 1), % CX - ((CX - X) / Pts) * A_Index
       		Random, NY, % CY - ((CY - Y) / Pts) * (A_Index - 1), % CY - ((CY - Y) / Pts) * A_Index
-      		MouseMove, % NX, % NY, % Speed
+      		OutputDebug % NX "----" NY
+      		MouseMove, % NX, % NY, % speed
 		}
    		MouseMove, % X, % Y, % Speed
    		SetMouseDelay, % T
