@@ -30,6 +30,8 @@ Documentation is available on [gh_pages](http://hoppfrosch.github.io/AHK_Windy)
  - Function `__isWindow(`) - taken from [AppsKeys](http://www.autohotkey.com/board/topic/25393-appskeys-a-suite-of-simple-utility-hotkeys/)
 - [maul-esel](https://github.com/maul-esel)
  - porting [Forms Framework](https://github.com/maul-esel/FormsFramework) to AHK_L
+- [MasterFocus](https://github.com/MasterFocus)
+ - Function [RandomBezier](https://github.com/MasterFocus/AutoHotkey/tree/master/Functions/RandomBezier) - moving mouse on a random path (bezier curve)
 - [Uberi](http://www.autohotkey.com/board/user/12435-uberi/) 
  - [Yunit-Framework](https://github.com/Uberi/Yunit)
 - **and to everyone I might have forgotten** 
