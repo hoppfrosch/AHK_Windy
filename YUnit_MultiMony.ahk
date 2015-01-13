@@ -11,7 +11,7 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "1.0.0"
+ReferenceVersion := "1.0.1"
 debug := 1
 
 ;Yunit.use(YunitStdOut, YunitWindow).Test(ExpMultiMonyTestSuite)

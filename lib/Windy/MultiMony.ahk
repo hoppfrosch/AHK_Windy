@@ -18,7 +18,7 @@
 */
 class MultiMony {
 	_debug := 0
-	_version := "1.0.0"
+	_version := "1.0.1"
 
 	; ===== Properties ==============================================================	
     debug[] { ; _DBG_
@@ -350,10 +350,11 @@ class MultiMony {
 	Index of the monitor where the mouse is
 	*/
 	idFromMouse(default:=1) {
+		CoordMode, Mouse, Screen
 		MouseGetPos,x,y 
 		mon := this.idFromCoord(x,y,default)
 		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "()] -> " mon ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "()] (" x "," y ")-> " mon ; _DBG_
 		return mon
 	}
 	/* -------------------------------------------------------------------------------
