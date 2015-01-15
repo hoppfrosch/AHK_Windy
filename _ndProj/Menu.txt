@@ -46,7 +46,7 @@ Format: 1.52
 # --------------------------------------------------------------------------
 
 
-File: _ Windy, v0.12.1  (Windy_Main.ahk)
+File: _ Windy, v0.12.3  (Windy_Main.ahk)
 File: Mony  (Mony.ahk)
 File: Mousy  (Mousy.ahk)
 File: MultiMony  (MultiMony.ahk)
