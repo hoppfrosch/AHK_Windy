@@ -10,7 +10,7 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.8.0"
+ReferenceVersion := "0.8.1"
 debug := 1
 
 ;Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, TempTestSuite)
@@ -94,6 +94,23 @@ class TransparencyTestSuite {
  
 	Transparency() {
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		OutputDebug % "**** " A_ThisFunc " 1 ****"
+		t := this.obj.transparency
+		Yunit.assert(t == 255)
+		OutputDebug % "**** " A_ThisFunc " 3 ****"
+		this.obj.transparency(10) := 100
+		t := this.obj.transparency
+		Yunit.assert(t == 100)
+		OutputDebug % "**** " A_ThisFunc " 3 ****"
+		this.obj.transparency(1) := "OFF"
+		t := this.obj.transparency
+		Yunit.assert(t == 255)
+		OutputDebug % ">>>>[" A_ThisFunc "]>>>>"
+	}
+
+	TransparencyNoCaption() {
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		this.obj.caption := false
 		OutputDebug % "**** " A_ThisFunc " 1 ****"
 		t := this.obj.transparency
 		Yunit.assert(t == 255)

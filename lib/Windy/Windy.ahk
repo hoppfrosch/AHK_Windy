@@ -24,7 +24,7 @@ class Windy {
 	This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See <WTFPL at http://www.wtfpl.net/> for more details.
 
 */
-	_version := "0.8.0"
+	_version := "0.8.1"
 	_debug := 0
 	_hWnd := 0
 
@@ -958,7 +958,14 @@ class Windy {
 
 			transStart:= this.transparency
 	    	transStart :=(transStart="")?255:transStart ;prevent trans unset bug
-			WinSet,Transparent,%transStart%,ahk_id %hwnd%
+	    	if (this.caption = true) {
+				WinSet,Transparent,%transStart%,ahk_id %hwnd%
+			}
+			else {
+				winlong := DllCall("GetWindowLong", "Uint", hwnd, "Int", -20) ;// GWL_EXSTYLE := -20
+   				DllCall("SetWindowLong", "UInt", hwnd, "Int", -20, "UInt", winlong|0x00080000) ;// WS_EX_LAYERED := 0x00080000
+   				DllCall("SetLayeredWindowAttributes", "UInt", hwnd, "UInt", 0, "UInt", transStart, "UInt", 0x00000002) ;// LWA_ALPHA := 0x00000002 
+			}
 
 			if (increment != 0) {
 				; do the fading animation
@@ -967,12 +974,23 @@ class Windy {
 	    		while(k:=(increment<0)?(transCurr>transFinal):(transCurr<transFinal)&&this.exist) {
 	        		transCurr:= this.transparency
 	        		transCurr+=increment
-	        		WinSet,Transparent,%transCurr%,ahk_id %hwnd%
+	        		if (this.caption = true) {
+	        			WinSet,Transparent,%transCurr%,ahk_id %hwnd%
+        			}
+        			else {
+						DllCall("SetLayeredWindowAttributes", "UInt", hwnd, "UInt", 0, "UInt", transCurr, "UInt", 0x00000002) ;// LWA_ALPHA := 0x00000002 
+        			}
 	        		sleep %delay%
 	    		}
     		}
     		; Set final transparency
-	    	WinSet,Transparent,%transFinal%,ahk_id %hwnd%
+    		if (this.caption = true) {
+	    		WinSet,Transparent,%transFinal%,ahk_id %hwnd%
+    	    }
+        	else {
+				DllCall("SetLayeredWindowAttributes", "UInt", hwnd, "UInt", 0, "UInt", transFinal, "UInt", 0x00000002) ;// LWA_ALPHA := 0x00000002 
+        	}
+	    		
 			transEnd := this.transparency
 			if (this._debug) ; _DBG_
 				OutputDebug % "<[" A_ThisFunc "([" this.hwnd "], transparency=" transOrig "(" transStart "), increment=" increment ", delay=" delay ")] -> New Value:" transEnd ; _DBG_
