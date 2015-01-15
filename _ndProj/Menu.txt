@@ -52,6 +52,7 @@ File: Mousy  (Mousy.ahk)
 File: MultiMony  (MultiMony.ahk)
 File: Pointy  (Pointy.ahk)
 File: Recty  (Recty.ahk)
+File: WindLy  (WindLy.ahk)
 File: Windy  (Windy.ahk)
 
 Group: Index  {
