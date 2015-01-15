@@ -3,7 +3,13 @@
 (on Branch: **master**, since **2014-10-26**)
 
 -----------------------------------------------------------------
- * **Windy 0.12.0** (via Commit [5044147](https://github.com/hoppfrosch/AHK_Windy/commit/504414789ee6ac236ab79ab79740091a3bd371c5))
+ * **Windy 0.12.2** (via Commit [3fef096](https://github.com/hoppfrosch/AHK_Windy/commit/3fef096750cb4c909c78f47c248d687bc11df680))
+   * [#11](https://github.com/hoppfrosch/AHK_EDE/issues/11) - Mousy - Property speed
+   * [#12](https://github.com/hoppfrosch/AHK_EDE/issues/12) - Mousy - Property trace
+   * [#13](https://github.com/hoppfrosch/AHK_EDE/issues/13) - Mousy - Enhance mouse-movement functionality
+ * **Windy 0.12.1** (via Commit [d2dc603](https://github.com/hoppfrosch/AHK_Windy/commit/d2dc603219982bdda26fbc8835fef1fba54d851f))
+   * [+] [#10](https://github.com/hoppfrosch/AHK_EDE/issues/10) - Confine/Restrict mouse to be fenced in a given Rectangle
+ * **Windy 0.12.0** (via Commit [307b36a](https://github.com/hoppfrosch/AHK_Windy/commit/307b36ab259e09e65d270b49d73a220c14943cee))
    * *[#9](https://github.com/hoppfrosch/AHK_EDE/issues/9) - Reorganization: Rename Dispy.ahk to Mony.ahk and MultiDispy.ahk to MultiMony.ahk (INTERN)*
  * **Windy 0.11.1** (via Commit [a1477b4](https://github.com/hoppfrosch/AHK_Windy/commit/a1477b4b6f73d13aefe3f6f8a1fbc23f749d9f42))
    * [#8](https://github.com/hoppfrosch/AHK_EDE/issues/8) - Dispy/MultiDispy - Incorporate functionality/ideas from MDMF (http://ahkscript.org/boards/viewtopic.php?f=6&t=4606)

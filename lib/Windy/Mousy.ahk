@@ -18,7 +18,7 @@
 */
 
 class Mousy {
-	_version := "1.1.3"
+	_version := "1.1.4"
 	_debug := 0 ; _DBG_	
 	_showLocatorAfterMove := 1
 
@@ -356,15 +356,15 @@ class Mousy {
 			height:=Round(size%A_Index%*1.4)
 			colX:=col%A_Index%
 			boldness:=boldness%A_Index%
-			Gui,%A_Index%:Destroy
-			Gui,%A_Index%:+Owner +AlwaysOnTop -Resize -SysMenu -MinimizeBox -MaximizeBox -Disabled -Caption -Border -ToolWindow 
-			Gui,%A_Index%:Margin,0,0 
-			Gui,%A_Index%:Color,123456
+			Gui,Mousy%A_Index%:New
+			Gui,Mousy%A_Index%:+Owner +AlwaysOnTop -Resize -SysMenu -MinimizeBox -MaximizeBox -Disabled -Caption -Border -ToolWindow 
+			Gui,Mousy%A_Index%:Margin,0,0 
+			Gui,Mousy%A_Index%:Color,123456
 			
-			Gui,%A_Index%:Font,c%colX% S%size% W%boldness%,Wingdings
-			Gui,%A_Index%:Add,Text,,%OutputVar%
+			Gui,Mousy%A_Index%:Font,c%colX% S%size% W%boldness%,Wingdings
+			Gui,Mousy%A_Index%:Add,Text,,%OutputVar%
 			
-			Gui,%A_Index%:Show,X-%width% Y-%height% W%width% H%height% NoActivate,%applicationname%%A_Index%
+			Gui,Mousy%A_Index%:Show,X-%width% Y-%height% W%width% H%height% NoActivate,%applicationname%%A_Index%
 			WinSet,TransColor,123456,%applicationname%%A_Index%
 		}
 		Loop,5
@@ -379,7 +379,7 @@ class Mousy {
 		
 		Loop,5
 		{ 
-			Gui,%A_Index%:Destroy
+			Gui,Mousy%A_Index%:Destroy
 		}
 	}
 	

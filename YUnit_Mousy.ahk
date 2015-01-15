@@ -12,7 +12,7 @@
 
 
 debug := 1
-ReferenceVersion := "1.1.3"
+ReferenceVersion := "1.1.4"
 
 ;Yunit.Use(YunitStdOut, YunitWindow).Test(TempTestSuite)
 Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, MiscTestSuite)
@@ -68,6 +68,12 @@ class MiscTestSuite
 		this.r.monitorID := 1
 		Yunit.assert(this.r.monitorID == 1)
 		this.r.monitorID := 2
+		Yunit.assert(this.r.monitorID == 2)
+
+		this.r.x := 100
+		this.r.y := 100
+		Yunit.assert(this.r.monitorID == 1)
+		this.r.x := 2500
 		Yunit.assert(this.r.monitorID == 2)
 		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
 	}
