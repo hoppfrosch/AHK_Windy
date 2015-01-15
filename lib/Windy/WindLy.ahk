@@ -109,29 +109,3 @@ class WindLy {
 		return this
 	}
 }
-
-
-/*
-WS_VISIBLE := 0x10000000
-delim := "`r`n"
-
-MsgBox % GetWindowsByStyle(WS_VISIBLE,delim)
-
-return
-
-
-GetWindowsByStyle(p_style,p_delim="|")
-{
-  WinGet, l_array, List
-  Loop, %l_array%
-  {
-    WinGet, l_tmp, Style, % "ahk_id " l_array%A_Index%
-    If (l_tmp & p_style)
-    {
-      WinGetTitle, l_tmp, % "ahk_id " l_array%A_Index%
-      l_out .= ( l_out="" ? "" : p_delim ) l_tmp
-    }
-  }
-  Return l_out
-}
-*/
