@@ -23,7 +23,7 @@ class WindLy {
 	list[] {
 	/* ---------------------------------------------------------------------------------------
 	Property: list [get]
-	Set/Unset alwaysontop flag of the current window or get the current state
+	Get the currently stored list (may be determined anytime)
 	*/
 		get {
 			return this._wl
@@ -93,7 +93,7 @@ class WindLy {
 	; ===== Internal Methods =========================================================
 	/* -------------------------------------------------------------------------------
 	method: __all
-	Gets all currently openend windows and returns as a List of Objects
+	Gets all currently openend windows and returns as a List of Objects (*INTERNAL*)
 
 	Returns:
 	List of <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html>-Objects
@@ -159,7 +159,7 @@ class WindLy {
 	}
 	/* -------------------------------------------------------------------------------
 	method: __reset
-	Initializes all the data
+	Initializes all the data (*INTERNAL*)
 	*/
 	__reset() {
 		this._wl := {}

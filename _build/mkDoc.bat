@@ -13,6 +13,7 @@ copy ..\lib\Windy\Recty.ahk %WORK%
 copy ..\lib\Windy\Pointy.ahk %WORK%
 copy ..\lib\Windy\Mousy.ahk %WORK%
 copy ..\lib\Windy\Windy.ahk %WORK%
+copy ..\lib\Windy\WindLy.ahk %WORK%
 
 ::path to the natural doc folder
 SET NDPATH=D:\Portable\PortableApps\AutoHotkey\App\Tools\NaturalDocs\NaturalDocs
