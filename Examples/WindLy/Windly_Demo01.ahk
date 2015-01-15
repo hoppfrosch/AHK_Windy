@@ -1,5 +1,6 @@
-#include <Windy\WindLy>
-#include <Windy\Const_WinUser>
+#include %A_ScriptDir%\..\..\lib\Windy
+#include WindLy.ahk
+#include Const_WinUser.ahk
 
 WinGet, Wins, List
 

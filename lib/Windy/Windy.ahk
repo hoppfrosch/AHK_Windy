@@ -2,13 +2,14 @@
 
 ; ****** HINT: Debug-lines should contain "; _DBG_" at the end of lines - using this, the debug lines could be automatically removed through scripts before releasing the sourcecode
 
-#include <Windy\Recty>
-#include <Windy\Pointy>
-#include <Windy\MultiMony>
-#include <Windy\Mony>
-#include <Windy\Const_WinUser>
-#include <Windy\_WindowHandlerEvent>
-#include <SerDes>
+#include %A_LineFile%\..
+#include Recty.ahk
+#include Pointy.ahk
+#include MultiMony.ahk
+#include Mony.ahk
+#include Const_WinUser.ahk
+#include _WindowHandlerEvent.ahk
+#include ..\SerDes.ahk
 
 class Windy {
 ; ******************************************************************************************************************************************
@@ -17,7 +18,7 @@ class Windy {
 		Perform actions on windows using an unified class based interface
 
 	Author(s):
-	<hoppfrosch at hoppfrosch@gmx.de>		
+	<hoppfrosch at hoppfrosch@gmx.de>
 
 	About: License
 	This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See <WTFPL at http://www.wtfpl.net/> for more details.

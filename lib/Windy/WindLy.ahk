@@ -1,8 +1,10 @@
 ; ****** HINT: Documentation can be extracted to HTML using NaturalDocs (http://www.naturaldocs.org/) ************** 
 
 ; ****** HINT: Debug-lines should contain "; _DBG_" at the end of lines - using this, the debug lines could be automatically removed through scripts before releasing the sourcecode
-#include <Windy\Windy>
-#include <Windy\Const_WinUser>
+#include %A_LineFile%\..
+#include Windy.ahk
+#include Const_WinUser.ahk
+
 
 /* ******************************************************************************************************************************************
 	Class: WindLy

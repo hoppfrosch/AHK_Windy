@@ -1,4 +1,5 @@
-﻿#include <Windy\Mousy>
+﻿#include %A_ScriptDir%\..\..\lib\Windy
+#include Mousy.ahk
 
 obj := new Mousy()
 OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
