@@ -4,9 +4,7 @@
 #Include %A_ScriptDir%\Yunit\Yunit.ahk
 #Include %A_ScriptDir%\Yunit\Window.ahk
 #Include %A_ScriptDir%\Yunit\StdOut.ahk
-#include %A_ScriptDir%
-#include lib\Windy
-#include Windy.ahk
+#include <Windy\Windy>
 
 ; #Warn All
 ;#Warn LocalSameAsGlobal, Off
