@@ -3,6 +3,9 @@
 (on Branch: **master**, since **2014-10-26**)
 
 -----------------------------------------------------------------
+ * **Windy 0.12.3** (via Commit [2f9f578](https://github.com/hoppfrosch/AHK_Windy/commit/2f9f578272bbc99c1a73a5db045c927b2c98f388))
+   * [#15](https://github.com/hoppfrosch/AHK_EDE/issues/15) - MultiMony: idFromMouse-Property does not work correctly
+   * [#14](https://github.com/hoppfrosch/AHK_EDE/issues/14) - Mousy: Method locate() destroys other GUI's
  * **Windy 0.12.2** (via Commit [3fef096](https://github.com/hoppfrosch/AHK_Windy/commit/3fef096750cb4c909c78f47c248d687bc11df680))
    * [#11](https://github.com/hoppfrosch/AHK_EDE/issues/11) - Mousy - Property speed
    * [#12](https://github.com/hoppfrosch/AHK_EDE/issues/12) - Mousy - Property trace
