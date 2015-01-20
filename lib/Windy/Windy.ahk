@@ -24,7 +24,7 @@ class Windy {
 	This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See <WTFPL at http://www.wtfpl.net/> for more details.
 
 */
-	_version := "0.8.2"
+	_version := "0.8.3"
 	_debug := 0
 	_hWnd := 0
 
@@ -492,7 +492,8 @@ class Windy {
 
 		set {
 			md := new MultiMony(this._debug)
-		
+
+			oldID := this.monitorID
 			realID := value
 			if (realID > md.monitorsCount) {
 				realID := md.monitorsCount
@@ -500,18 +501,17 @@ class Windy {
 			if (realID < 1) {
 				realID := 1
 			}
-
-			monNew := new Mony(realID, this._debug)
-			newMon := monNew.boundary
-
-			oldID := this.monitorID
-			monOld := new Mony(oldID, this._debug)
-			oldMon := monOld.boundary
-		
-			oldPos := this.posSize
-			xnew := newMon.x+(oldPos.x - oldMon.x)
-			ynew := newMon.y+(oldPos.y - oldMon.y)
-			this.Move(xnew,ynew)
+			wasMaximized:= false
+			if (this.maximized = true) {
+				wasmaximized := true
+				this.maximized := false
+			}
+			rt := this.scale(realID)
+			this.move(rt.x,rt.y,rt.w, rt.h)
+			if (wasmaximized = true) {
+				this.maximized := true
+			}
+			
 			monID := this.monitorID
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], ID=" value ")] -> New Value:" monID " (from: " oldID ")" ; _DBG_

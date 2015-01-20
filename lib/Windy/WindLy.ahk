@@ -18,7 +18,7 @@
 */
 class WindLy {
 	_debug := 0
-	_version := "0.0.2"
+	_version := "0.0.3"
 	_wl := {}
 
 	; ##################### Properties (AHK >1.1.16.x) #################################################################
@@ -47,7 +47,6 @@ class WindLy {
 		this.__reset()
 		_tmp := this.__all()
 		for hwnd, win in _tmp {
-			MsgBox % hwnd " - " win.monitorID
 			if (win.monitorID = id ) {
 			   this._wl[hwnd] := win
 			}
