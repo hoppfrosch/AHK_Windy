@@ -1,10 +1,11 @@
 ﻿; ****** HINT: Documentation can be extracted to HTML using NaturalDocs (http://www.naturaldocs.org/) ************** 
 
-#include <Windy\Pointy>
-#include <Windy\Recty>
-#include <Windy\Mony>
-#include <Windy\MultiMony>
-#include <Windy\Const_WinUser>
+#include %A_LineFile%\..
+#include Pointy.ahk
+#include Recty.ahk
+#include Mony.ahk
+#include MultiMony.ahk
+#include Const_WinUser.ahk
 
 /* ******************************************************************************************************************************************
 	Class: Mousy

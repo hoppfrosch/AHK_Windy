@@ -36,6 +36,9 @@ Documentation is available on [gh_pages](http://hoppfrosch.github.io/AHK_Windy)
  - [Yunit-Framework](https://github.com/Uberi/Yunit)
 - **and to everyone I might have forgotten** 
 
+### Bugfixes
+ - [WinSet, Transparent fails on AHK GUI -caption ](http://www.autohotkey.com/board/topic/67874-winset-transparent-fails-on-ahk-gui-caption/)
+
 ### More Inspiration taken from ###
 
 - [WindowPad](http://http://www.autohotkey.com/board/topic/19990-windowpad-window-moving-tool)/[WindowPadX](https://github.com/hoppfrosch/WindowPadX) - free - based on AutoHotkey as well

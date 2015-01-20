@@ -3,7 +3,8 @@
 (on Branch: **master**, since **2014-10-26**)
 
 -----------------------------------------------------------------
- * **Merge branch 'release/0.13.0'** (via Commit [e3766c0](https://github.com/hoppfrosch/AHK_Windy/commit/e3766c01fdf01f6a69eea7d9f5764e0e0de3bb44))
+ * **Windy 0.13.0** (via Commit [35795da](https://github.com/hoppfrosch/AHK_Windy/commit/35795da9bda44dda986765df87ed534eadab10bf))
+   * [#16](https://github.com/hoppfrosch/AHK_EDE/issues/16) - WindLy: Iniitial Implementation of class for handling window lists
  * **Windy 0.12.3** (via Commit [2f9f578](https://github.com/hoppfrosch/AHK_Windy/commit/2f9f578272bbc99c1a73a5db045c927b2c98f388))
    * [#15](https://github.com/hoppfrosch/AHK_EDE/issues/15) - MultiMony: idFromMouse-Property does not work correctly
    * [#14](https://github.com/hoppfrosch/AHK_EDE/issues/14) - Mousy: Method locate() destroys other GUI's

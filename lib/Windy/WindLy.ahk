@@ -1,8 +1,10 @@
 ; ****** HINT: Documentation can be extracted to HTML using NaturalDocs (http://www.naturaldocs.org/) ************** 
 
 ; ****** HINT: Debug-lines should contain "; _DBG_" at the end of lines - using this, the debug lines could be automatically removed through scripts before releasing the sourcecode
-#include <Windy\Windy>
-#include <Windy\Const_WinUser>
+#include %A_LineFile%\..
+#include Windy.ahk
+#include Const_WinUser.ahk
+
 
 /* ******************************************************************************************************************************************
 	Class: WindLy
@@ -16,7 +18,7 @@
 */
 class WindLy {
 	_debug := 0
-	_version := "0.0.2"
+	_version := "0.0.3"
 	_wl := {}
 
 	; ##################### Properties (AHK >1.1.16.x) #################################################################
@@ -45,7 +47,6 @@ class WindLy {
 		this.__reset()
 		_tmp := this.__all()
 		for hwnd, win in _tmp {
-			MsgBox % hwnd " - " win.monitorID
 			if (win.monitorID = id ) {
 			   this._wl[hwnd] := win
 			}

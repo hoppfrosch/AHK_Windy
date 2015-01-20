@@ -18,6 +18,16 @@
 	This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See <WTFPL at http://www.wtfpl.net/> for more details.
 
 */
-#include lib\Windy
+#include %A_LineFile%\..\Windy
+#include _WindowHandlerEvent.ahk
+#include Const_WinUser.ahk
+#include Mony.ahk
+#include Mousy.ahk
+#include MultiMony.ahk
+#include Pointy.ahk
+#include Recty.ahk
+#include WindLy.ahk
+#include Windy.ahk
 
-Version := "0.13.0"
+
+Version := "0.14.0"

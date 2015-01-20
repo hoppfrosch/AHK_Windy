@@ -1,6 +1,6 @@
-﻿#include %A_ScriptDir%\..\..\lib
-#include <Windy\Recty>
-#include <Windy\Mousy>
+﻿#include %A_ScriptDir%\..\..\lib\Windy
+#include Recty.ahk
+#include Windy.ahk
 
 obj := new Mousy()
 

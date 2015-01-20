@@ -3,8 +3,8 @@
 #Include %A_ScriptDir%\Yunit\Yunit.ahk
 #Include %A_ScriptDir%\Yunit\Window.ahk
 #Include %A_ScriptDir%\Yunit\StdOut.ahk
-#include lib\Windy\Mony.ahk
-#include lib\Windy\Recty.ahk
+#include <Windy\Mony>
+#include <Windy\Recty>
 
 #Warn All
 ;#Warn LocalSameAsGlobal, Off

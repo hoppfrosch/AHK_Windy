@@ -2,13 +2,14 @@
 
 ; ****** HINT: Debug-lines should contain "; _DBG_" at the end of lines - using this, the debug lines could be automatically removed through scripts before releasing the sourcecode
 
-#include <Windy\Recty>
-#include <Windy\Pointy>
-#include <Windy\MultiMony>
-#include <Windy\Mony>
-#include <Windy\Const_WinUser>
-#include <Windy\_WindowHandlerEvent>
-#include <SerDes>
+#include %A_LineFile%\..
+#include Recty.ahk
+#include Pointy.ahk
+#include MultiMony.ahk
+#include Mony.ahk
+#include Const_WinUser.ahk
+#include _WindowHandlerEvent.ahk
+#include ..\SerDes.ahk
 
 class Windy {
 ; ******************************************************************************************************************************************
@@ -17,13 +18,13 @@ class Windy {
 		Perform actions on windows using an unified class based interface
 
 	Author(s):
-	<hoppfrosch at hoppfrosch@gmx.de>		
+	<hoppfrosch at hoppfrosch@gmx.de>
 
 	About: License
 	This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See <WTFPL at http://www.wtfpl.net/> for more details.
 
 */
-	_version := "0.8.0"
+	_version := "0.8.3"
 	_debug := 0
 	_hWnd := 0
 
@@ -491,7 +492,8 @@ class Windy {
 
 		set {
 			md := new MultiMony(this._debug)
-		
+
+			oldID := this.monitorID
 			realID := value
 			if (realID > md.monitorsCount) {
 				realID := md.monitorsCount
@@ -499,18 +501,17 @@ class Windy {
 			if (realID < 1) {
 				realID := 1
 			}
-
-			monNew := new Mony(realID, this._debug)
-			newMon := monNew.boundary
-
-			oldID := this.monitorID
-			monOld := new Mony(oldID, this._debug)
-			oldMon := monOld.boundary
-		
-			oldPos := this.posSize
-			xnew := newMon.x+(oldPos.x - oldMon.x)
-			ynew := newMon.y+(oldPos.y - oldMon.y)
-			this.Move(xnew,ynew)
+			wasMaximized:= false
+			if (this.maximized = true) {
+				wasmaximized := true
+				this.maximized := false
+			}
+			rt := this.scale(realID)
+			this.move(rt.x,rt.y,rt.w, rt.h)
+			if (wasmaximized = true) {
+				this.maximized := true
+			}
+			
 			monID := this.monitorID
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], ID=" value ")] -> New Value:" monID " (from: " oldID ")" ; _DBG_
@@ -785,6 +786,43 @@ class Windy {
 		}
 
 	}
+	scale[ monIDDest := 1 ] {
+	/* -------------------------------------------------------------------------------
+	Property:  scale [get]
+	Scales the current position and size of the window to another monitor considering current and destination monitor proportions
+			
+	Parameters:
+	monIDDest - Destination Monitor number (*Required*, Default := 1)
+			
+	Returns:
+	Rectangle containing the scaled coordinates og the window in given monitor (see <recty at http://hoppfrosch.github.io/AHK_Windy/files/Recty-ahk.html>.
+
+	Remarks:
+	* There is no setter available, since this is a constant system property
+
+	*/
+		get {
+		    monIdCurr := this.monitorID
+		    monCurr := new Mony(monIDCurr, this._debug)
+			scaleX := monCurr.scaleX(monIDDest)
+			scaleY := monCurr.scaleY(monIDDest)
+
+			monDest := new Mony(monIDDest, this._debug)
+			destMon := monDest.boundary
+			currMon := monCurr.boundary
+		
+			currPos := this.posSize
+			xdest := destMon.x+(currPos.x - currMon.x)
+			ydest := destMon.y+(currPos.y - currMon.y)
+			wdest := currPos.w * scaleX
+			hdest := currPos.h * scaleY
+			
+			rt := new Recty(xdest, ydest, wdest, hdest, this._debug)
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.id "],monDest:= " monIdDest "] (" currPos.dump() ") -> (" rt.dump() ")" ; _DBG_
+			return rt
+		}
+	}
 	size[] {
 	/* ---------------------------------------------------------------------------------------
 	Property: size [get/set]
@@ -957,7 +995,14 @@ class Windy {
 
 			transStart:= this.transparency
 	    	transStart :=(transStart="")?255:transStart ;prevent trans unset bug
-			WinSet,Transparent,%transStart%,ahk_id %hwnd%
+	    	if (this.caption = true) {
+				WinSet,Transparent,%transStart%,ahk_id %hwnd%
+			}
+			else {
+				winlong := DllCall("GetWindowLong", "Uint", hwnd, "Int", -20) ;// GWL_EXSTYLE := -20
+   				DllCall("SetWindowLong", "UInt", hwnd, "Int", -20, "UInt", winlong|0x00080000) ;// WS_EX_LAYERED := 0x00080000
+   				DllCall("SetLayeredWindowAttributes", "UInt", hwnd, "UInt", 0, "UInt", transStart, "UInt", 0x00000002) ;// LWA_ALPHA := 0x00000002 
+			}
 
 			if (increment != 0) {
 				; do the fading animation
@@ -966,12 +1011,23 @@ class Windy {
 	    		while(k:=(increment<0)?(transCurr>transFinal):(transCurr<transFinal)&&this.exist) {
 	        		transCurr:= this.transparency
 	        		transCurr+=increment
-	        		WinSet,Transparent,%transCurr%,ahk_id %hwnd%
+	        		if (this.caption = true) {
+	        			WinSet,Transparent,%transCurr%,ahk_id %hwnd%
+        			}
+        			else {
+						DllCall("SetLayeredWindowAttributes", "UInt", hwnd, "UInt", 0, "UInt", transCurr, "UInt", 0x00000002) ;// LWA_ALPHA := 0x00000002 
+        			}
 	        		sleep %delay%
 	    		}
     		}
     		; Set final transparency
-	    	WinSet,Transparent,%transFinal%,ahk_id %hwnd%
+    		if (this.caption = true) {
+	    		WinSet,Transparent,%transFinal%,ahk_id %hwnd%
+    	    }
+        	else {
+				DllCall("SetLayeredWindowAttributes", "UInt", hwnd, "UInt", 0, "UInt", transFinal, "UInt", 0x00000002) ;// LWA_ALPHA := 0x00000002 
+        	}
+	    		
 			transEnd := this.transparency
 			if (this._debug) ; _DBG_
 				OutputDebug % "<[" A_ThisFunc "([" this.hwnd "], transparency=" transOrig "(" transStart "), increment=" increment ", delay=" delay ")] -> New Value:" transEnd ; _DBG_
