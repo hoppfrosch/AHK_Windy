@@ -24,7 +24,7 @@ class Windy {
 	This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See <WTFPL at http://www.wtfpl.net/> for more details.
 
 */
-	_version := "0.8.1"
+	_version := "0.8.2"
 	_debug := 0
 	_hWnd := 0
 
@@ -785,6 +785,43 @@ class Windy {
 			return ret
 		}
 
+	}
+	scale[ monIDDest := 1 ] {
+	/* -------------------------------------------------------------------------------
+	Property:  scale [get]
+	Scales the current position and size of the window to another monitor considering current and destination monitor proportions
+			
+	Parameters:
+	monIDDest - Destination Monitor number (*Required*, Default := 1)
+			
+	Returns:
+	Rectangle containing the scaled coordinates og the window in given monitor (see <recty at http://hoppfrosch.github.io/AHK_Windy/files/Recty-ahk.html>.
+
+	Remarks:
+	* There is no setter available, since this is a constant system property
+
+	*/
+		get {
+		    monIdCurr := this.monitorID
+		    monCurr := new Mony(monIDCurr, this._debug)
+			scaleX := monCurr.scaleX(monIDDest)
+			scaleY := monCurr.scaleY(monIDDest)
+
+			monDest := new Mony(monIDDest, this._debug)
+			destMon := monDest.boundary
+			currMon := monCurr.boundary
+		
+			currPos := this.posSize
+			xdest := destMon.x+(currPos.x - currMon.x)
+			ydest := destMon.y+(currPos.y - currMon.y)
+			wdest := currPos.w * scaleX
+			hdest := currPos.h * scaleY
+			
+			rt := new Recty(xdest, ydest, wdest, hdest, this._debug)
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.id "],monDest:= " monIdDest "] (" currPos.dump() ") -> (" rt.dump() ")" ; _DBG_
+			return rt
+		}
 	}
 	size[] {
 	/* ---------------------------------------------------------------------------------------
