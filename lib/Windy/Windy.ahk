@@ -204,7 +204,8 @@ class Windy {
 	flag - `true` or `false` (activates/deactivates *hidden*-Property)
 
 	Remarks:		
-	* To toogle current *hidden*-Property, simply use `obj.hidden := !obj.hidden`	
+	* To toogle current *hidden*-Property, simply use 
+	> obj.hidden := !obj.hidden`
 	*/
 		get {
 			prevState := A_DetectHiddenWindows
@@ -291,7 +292,8 @@ class Windy {
 	flag - *true* or *false (activates/deactivates *hscrollable*-Property)
 
 	Remarks:		
-	* To toogle current *hscrollable*-Property, simply use `obj.hscrollable := !obj.hscrollable`
+	* To toogle current *hscrollable*-Property, simply use 
+	> obj.hscrollable := !obj.hscrollable
 	*/
 		get {
 			ret := (this.style & WS.HSCROLL) > 0 ? 1 : 0
@@ -695,7 +697,7 @@ class Windy {
 	Remarks:		
 	* To toogle, simply use 
 	> obj.resizeable := !obj.resizeable
-	* Same as property *sizebox*
+	* Same as property <sizebox at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#sizebox>
 
 	*/
 		get {
@@ -1182,7 +1184,7 @@ class Windy {
 		h - height (absolute) the window has to be resized to - use *99999* to preserve actual value *(Optional)*
 	
 	See also: 
-	<movePercental>
+	<movePercental() at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#movePercental>, <moveLocation() at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#moveLocation>
 	*/
 	move(X,Y,W="99999",H="99999") {
 		if (this._debug) ; _DBG_
@@ -1223,8 +1225,8 @@ class Windy {
 	hFactor - height-size factor (percents of current screen height) the window has to be resized to (Range: 0.0 to 100.0) (*Optional*, Default = 100)
 	
 	See also: 
-		[move()](move)
-		
+	<move() at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#move>, <moveLocation() at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#moveLocation>
+			
 	Author(s):
 	Original - <Lexikos at http://www.autohotkey.com/forum/topic21703.html>
 			
