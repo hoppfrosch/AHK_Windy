@@ -24,7 +24,7 @@ class Windy {
 	This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See <WTFPL at http://www.wtfpl.net/> for more details.
 
 */
-	_version := "0.8.3"
+	_version := "0.8.4"
 	_debug := 0
 	_hWnd := 0
 
@@ -1250,6 +1250,77 @@ class Windy {
 		
 		if (this._debug) ; _DBG_
 			OutputDebug % "<[" A_ThisFunc "([" this.hwnd "], xFactor=" xFactor ", yFactor=" yFactor ", wFactor=" wFactor ", hFactor=" hFactor ")] -> padded to (" this.posSize.Dump() ") on Monitor (" this.monitorID ")" ; _DBG_
+	}    
+	/* ---------------------------------------------------------------------------------------
+	Method: moveLocation
+	move the window on the current screen to a location given by string while keeping the size.
+			
+	Example(s): 
+	 * moves the window to the left border
+	 > obj.moveLocation("l")
+    * moves the window to the left border and centers it vertically
+	 > obj.moveLocation("l vc")
+	* moves the window to the top border and centers it horizontally
+	 > obj.moveLocation("t hc")
+    * moves the window to the top left corner
+	 > obj.moveLocation("t l")
+
+	 	 
+	Parameter(s):
+	location - string describing the location to move to
+	  * "t" - top
+	  * "b" - bottom
+	  * "l" - left
+	  * "r" - right
+	  * "vc" - vertically centered
+	  * "hc" - horizonally centered
+	
+	See also: 
+	<move() at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#move>, <movePercental at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#movePercental>
+		*/	
+	moveLocation(location="") {
+		if (this._debug) ; _DBG_
+			OutputDebug % ">[" A_ThisFunc "([" this.hwnd "], location=""" location """)] -> started from (" this.posSize.Dump() ") on Monitor (" this.monitorID ")" ; _DBG_
+
+		; check whether given location string is valid
+		posValid := false
+		StringLower, location, location
+		location := RegExReplace(location, "S) +", A_Space)
+		location := RegExReplace(location, "^ ", "")
+		location := RegExReplace(location, " $", "")
+		FoundPos := RegExMatch(location, "^(t|b|l|r|vc|hc|l t|t l|l b|b l|l vc|vc l|r t|t r|r b|b r|r vc|vc r|hc t|t hc|hc b|b hc|hc vc|vc hc)$")
+		if (FoundPos > 0) {
+			posValid := true
+		}   
+		
+		if (posValid = true) {
+			currPos := this.posSize
+			mon := new Mony(this.monitorID, this._debug)
+			monWorkArea := mon.workingArea
+			monBound := mon.boundary
+			
+			x:= currPos.x 
+			if (InStr(location,"l")) {
+				x := 0 
+			} else if (InStr(location,"r")) {
+				x:= monWorkArea.w - currPos.w
+			} else if (InStr(location,"hc")) {
+				x:= x:= monWorkArea.w/2 - currPos.w/2
+			}
+		
+			y:= currPos.y
+			if (InStr(location,"t")) {
+				y := 0 
+			} else if (InStr(location,"b")) {
+				y:= monWorkArea.h - currPos.h
+			} else if (InStr(location,"vc")) {
+				y:= monWorkArea.h/2 - currPos.h/2
+     		}
+			this.move(x,y,currPos.w,currPos.h)
+		}
+		
+		if (this._debug) ; _DBG_
+			OutputDebug % ">[" A_ThisFunc "([" this.hwnd "], location=""" location """)] -> moved to (" this.posSize.Dump() ") on Monitor (" this.monitorID ")" ; _DBG_
 	}
 	/* ---------------------------------------------------------------------------------------
  	Method:	redraw
