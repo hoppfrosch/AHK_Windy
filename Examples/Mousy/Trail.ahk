@@ -14,4 +14,5 @@ MouseMove, 1,1,50
 OutputDebug % obj.trail
 obj.trail := 4
 OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+obj.trail := savetrail
 ExitApp
