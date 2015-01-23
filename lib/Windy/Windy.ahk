@@ -1150,6 +1150,78 @@ class Windy {
 	
 	; ######################## Methods to be called directly ########################################################### 
 	/* ---------------------------------------------------------------------------------------
+	Method: border2percent
+	translates a border string to monitor percents.
+
+	When moving the actual window from current position to a certain position on the window border (given by a border string (as for example "l", "hc" or "r vc")), 
+	the border string is transformed to factors which describe the destination size/position of actual window in relation to the monitor the window is own. Using this 
+	factors the window can be moved via 'this.movePercental(factor.x, factor.y, factor.w, factor.h)' to the destination position as specified in border string.
+
+	This method is needed as a helper method in order to allow an easy configuration of window alignment within AHK_EDE '
+
+	 	 
+	Parameter(s):
+	border - string describing the border to move to - for further description see <moveBorder at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#moveBorder>)
+
+	See also: 
+	<moveBorder at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#moveBorder>
+	*/	
+	border2percent(border="") {
+		; check whether given border string is valid
+		posValid := false
+		StringLower, border, border
+		border := RegExReplace(border, "S) +", A_Space)
+		border := RegExReplace(border, "^ ", "")
+		border := RegExReplace(border, " $", "")
+		FoundPos := RegExMatch(border, "^(|t|b|l|r|vc|hc|l t|t l|l b|b l|l vc|vc l|r t|t r|r b|b r|r vc|vc r|hc t|t hc|hc b|b hc|hc vc|vc hc)$")
+		if (FoundPos > 0) {
+			posValid := true
+		}
+
+		if (posValid = true) {
+			currPos := this.posSize
+			mon := new Mony(this.monitorID, this._debug)
+			monWorkArea := mon.workingArea
+			monBound := mon.boundary
+
+			wfactor := (currPos.w/monBound.w)*100
+			hfactor := (currPos.h/monBound.h)*100
+
+			x := currPos.x
+			if (InStr(border,"l")) {
+				x := 0 
+			} else if (InStr(border,"r")) {
+				x:= monBound.w - currPos.w
+				
+			} else if (InStr(border,"hc")) {
+				x:= monBound.w/2 - currPos.w/2
+			}
+			xfactor := (x/monBound.w)*100
+		
+			y:= currPos.y
+			if (InStr(border,"t")) {
+				y := 0 
+			} else if (InStr(border,"b")) {
+				y:= monBound.h - currPos.h
+			} else if (InStr(border,"vc")) {
+				y:= monBound.h/2 - currPos.h/2
+     		}
+     		yfactor := (y/monBound.h)*100
+
+			ret := new Recty(xfactor, yfactor, wfactor, hfactor, this._debug)
+	
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], border=""" border """)] pos (" this.posSize.Dump()") on Mon " this.monitorId " -> percent (" ret.Dump() ")" ; _DBG_
+
+			return ret
+		}
+
+		if (this._debug) ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], border=""" border """)] *** ERROR: Invalid border string <" border ">" ; _DBG_
+		
+		return
+    }
+	/* ---------------------------------------------------------------------------------------
 	Method: kill
 	Kills the Window (Forces the window to close)
 			
@@ -1184,7 +1256,7 @@ class Windy {
 		h - height (absolute) the window has to be resized to - use *99999* to preserve actual value *(Optional)*
 	
 	See also: 
-	<movePercental() at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#movePercental>, <moveLocation() at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#moveLocation>
+	<movePercental() at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#movePercental>, <moveBorder() at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#moveBorder>
 	*/
 	move(X,Y,W="99999",H="99999") {
 		if (this._debug) ; _DBG_
@@ -1225,7 +1297,7 @@ class Windy {
 	hFactor - height-size factor (percents of current screen height) the window has to be resized to (Range: 0.0 to 100.0) (*Optional*, Default = 100)
 	
 	See also: 
-	<move() at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#move>, <moveLocation() at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#moveLocation>
+	<move() at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#move>, <moveBorder() at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#moveBorder>
 			
 	Author(s):
 	Original - <Lexikos at http://www.autohotkey.com/forum/topic21703.html>
@@ -1242,8 +1314,8 @@ class Windy {
 		monBound := mon.boundary
 		xrel := monWorkArea.w * xFactor/100
 		yrel := monWorkArea.h * yFactor/100
-		w := monWorkArea.w * wFactor/100
-		h := monWorkArea.h * hFactor/100
+		w := monBound.w * wFactor/100
+		h := monBound.h * hFactor/100
 		
 		x := monBound.x + xrel
 		y := monBound.y + yrel
@@ -1254,22 +1326,22 @@ class Windy {
 			OutputDebug % "<[" A_ThisFunc "([" this.hwnd "], xFactor=" xFactor ", yFactor=" yFactor ", wFactor=" wFactor ", hFactor=" hFactor ")] -> padded to (" this.posSize.Dump() ") on Monitor (" this.monitorID ")" ; _DBG_
 	}    
 	/* ---------------------------------------------------------------------------------------
-	Method: moveLocation
-	move the window on the current screen to a location given by string while keeping the size.
+	Method: moveBorder
+	move the window on the current screen to a border given by string while keeping the size.
 			
 	Example(s): 
 	 * moves the window to the left border
-	 > obj.moveLocation("l")
+	 > obj.moveBorder("l")
     * moves the window to the left border and centers it vertically
-	 > obj.moveLocation("l vc")
+	 > obj.moveBorder("l vc")
 	* moves the window to the top border and centers it horizontally
-	 > obj.moveLocation("t hc")
+	 > obj.moveBorder("t hc")
     * moves the window to the top left corner
-	 > obj.moveLocation("t l")
+	 > obj.moveBorder("t l")
 
 	 	 
 	Parameter(s):
-	location - string describing the location to move to
+	border - string describing the border to move to
 	  * "t" - top
 	  * "b" - bottom
 	  * "l" - left
@@ -1280,49 +1352,17 @@ class Windy {
 	See also: 
 	<move() at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#move>, <movePercental at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#movePercental>
 		*/	
-	moveLocation(location="") {
+	moveBorder(border="") {
 		if (this._debug) ; _DBG_
-			OutputDebug % ">[" A_ThisFunc "([" this.hwnd "], location=""" location """)] -> started from (" this.posSize.Dump() ") on Monitor (" this.monitorID ")" ; _DBG_
+			OutputDebug % ">[" A_ThisFunc "([" this.hwnd "], border=""" border """)] -> started from (" this.posSize.Dump() ") on Monitor (" this.monitorID ")" ; _DBG_
 
-		; check whether given location string is valid
-		posValid := false
-		StringLower, location, location
-		location := RegExReplace(location, "S) +", A_Space)
-		location := RegExReplace(location, "^ ", "")
-		location := RegExReplace(location, " $", "")
-		FoundPos := RegExMatch(location, "^(t|b|l|r|vc|hc|l t|t l|l b|b l|l vc|vc l|r t|t r|r b|b r|r vc|vc r|hc t|t hc|hc b|b hc|hc vc|vc hc)$")
-		if (FoundPos > 0) {
-			posValid := true
-		}   
-		
-		if (posValid = true) {
-			currPos := this.posSize
-			mon := new Mony(this.monitorID, this._debug)
-			monWorkArea := mon.workingArea
-			monBound := mon.boundary
-			
-			x:= currPos.x 
-			if (InStr(location,"l")) {
-				x := 0 
-			} else if (InStr(location,"r")) {
-				x:= monWorkArea.w - currPos.w
-			} else if (InStr(location,"hc")) {
-				x:= x:= monWorkArea.w/2 - currPos.w/2
-			}
-		
-			y:= currPos.y
-			if (InStr(location,"t")) {
-				y := 0 
-			} else if (InStr(location,"b")) {
-				y:= monWorkArea.h - currPos.h
-			} else if (InStr(location,"vc")) {
-				y:= monWorkArea.h/2 - currPos.h/2
-     		}
-			this.move(x,y,currPos.w,currPos.h)
+		factor := this.border2percent(border)
+		if (factor) {
+			this.movePercental(factor.x, factor.y, factor.w, factor.h)
 		}
 		
 		if (this._debug) ; _DBG_
-			OutputDebug % ">[" A_ThisFunc "([" this.hwnd "], location=""" location """)] -> moved to (" this.posSize.Dump() ") on Monitor (" this.monitorID ")" ; _DBG_
+			OutputDebug % ">[" A_ThisFunc "([" this.hwnd "], border=""" border """)] -> moved to (" this.posSize.Dump() ") on Monitor (" this.monitorID ")" ; _DBG_
 	}
 	/* ---------------------------------------------------------------------------------------
  	Method:	redraw
