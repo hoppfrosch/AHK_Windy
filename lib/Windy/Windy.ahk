@@ -1163,6 +1163,9 @@ class Windy {
 	Parameter(s):
 	border - string describing the border to move to - for further description see <moveBorder at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#moveBorder>)
 
+	Returns;
+	<rectangle at http://hoppfrosch.github.io/AHK_Windy/files/Recty-ahk.html> containing the screen percents
+
 	See also: 
 	<moveBorder at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#moveBorder>
 	*/	
@@ -1203,7 +1206,8 @@ class Windy {
 				y:= monBound.h/2 - currPos.h/2
      		}
 
-			ret := mon.rectToPercent(x, y, currPos.w, currPos.h)
+			destPos := new Recty(x, y, currPos.w, currPos.h)
+			ret := mon.rectToPercent(destPos)
 	
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], border=""" border """)] pos (" this.posSize.Dump()") on Mon " this.monitorId " -> percent (" ret.Dump() ")" ; _DBG_
@@ -1215,7 +1219,7 @@ class Windy {
 			OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], border=""" border """)] *** ERROR: Invalid border string <" border ">" ; _DBG_
 		
 		return
-    }    
+    }        
 	/* ---------------------------------------------------------------------------------------
 	Method: kill
 	Kills the Window (Forces the window to close)
