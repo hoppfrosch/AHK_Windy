@@ -24,7 +24,7 @@ class Windy {
 	This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See <WTFPL at http://www.wtfpl.net/> for more details.
 
 */
-	_version := "0.8.5"
+	_version := "0.8.6"
 	_debug := 0
 	_hWnd := 0
 
@@ -1363,6 +1363,25 @@ class Windy {
 		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "([" this.hwnd "], border=""" border """)] -> moved to (" this.posSize.Dump() ") on Monitor (" this.monitorID ")" ; _DBG_
 	}
+	/* ---------------------------------------------------------------------------------------
+	Method: posSize2percent
+	Calculates screen percents from current size of actual window
+
+	This method is needed as a helper method in order to allow an easy configuration of window alignment within AHK_EDE '
+
+	Returns;
+	<rectangle at http://hoppfrosch.github.io/AHK_Windy/files/Recty-ahk.html> containing the screen percents 	 
+	*/	
+	posSize2percent() {
+		currPos := this.posSize
+		mon := new Mony(this.monitorID, this._debug)
+		ret := mon.rectToPercent(currPos)
+	
+		if (this._debug) ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] pos (" this.posSize.Dump()") on Mon " this.monitorId " -> percent (" ret.Dump() ")" ; _DBG_
+
+		return ret
+    }    
 	/* ---------------------------------------------------------------------------------------
  	Method:	redraw
  	Redraws the window.
