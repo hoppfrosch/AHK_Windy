@@ -24,7 +24,7 @@ class Windy {
 	This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See <WTFPL at http://www.wtfpl.net/> for more details.
 
 */
-	_version := "0.8.4"
+	_version := "0.8.5"
 	_debug := 0
 	_hWnd := 0
 
@@ -1184,9 +1184,6 @@ class Windy {
 			monWorkArea := mon.workingArea
 			monBound := mon.boundary
 
-			wfactor := (currPos.w/monBound.w)*100
-			hfactor := (currPos.h/monBound.h)*100
-
 			x := currPos.x
 			if (InStr(border,"l")) {
 				x := 0 
@@ -1196,7 +1193,6 @@ class Windy {
 			} else if (InStr(border,"hc")) {
 				x:= monBound.w/2 - currPos.w/2
 			}
-			xfactor := (x/monBound.w)*100
 		
 			y:= currPos.y
 			if (InStr(border,"t")) {
@@ -1206,9 +1202,8 @@ class Windy {
 			} else if (InStr(border,"vc")) {
 				y:= monBound.h/2 - currPos.h/2
      		}
-     		yfactor := (y/monBound.h)*100
 
-			ret := new Recty(xfactor, yfactor, wfactor, hfactor, this._debug)
+			ret := mon.rectToPercent(x, y, currPos.w, currPos.h)
 	
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], border=""" border """)] pos (" this.posSize.Dump()") on Mon " this.monitorId " -> percent (" ret.Dump() ")" ; _DBG_
@@ -1220,7 +1215,7 @@ class Windy {
 			OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], border=""" border """)] *** ERROR: Invalid border string <" border ">" ; _DBG_
 		
 		return
-    }
+    }    
 	/* ---------------------------------------------------------------------------------------
 	Method: kill
 	Kills the Window (Forces the window to close)
