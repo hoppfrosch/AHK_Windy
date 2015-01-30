@@ -46,7 +46,7 @@ Format: 1.52
 # --------------------------------------------------------------------------
 
 
-File: _ Windy, v0.13.0  (Windy_Main.ahk)
+File: _ Windy, v0.15.0  (Windy_Main.ahk)
 File: Mony  (Mony.ahk)
 File: Mousy  (Mousy.ahk)
 File: MultiMony  (MultiMony.ahk)
@@ -57,8 +57,8 @@ File: Windy  (Windy.ahk)
 
 Group: Index  {
 
-   Index: Everything
    Class Index: Classes
+   Index: Everything
    Function Index: Functions
    Property Index: Properties
    }  # Group: Index
