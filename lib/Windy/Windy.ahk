@@ -24,7 +24,7 @@ class Windy {
 	This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See <WTFPL at http://www.wtfpl.net/> for more details.
 
 */
-	_version := "0.8.3"
+	_version := "0.8.6"
 	_debug := 0
 	_hWnd := 0
 
@@ -204,7 +204,8 @@ class Windy {
 	flag - `true` or `false` (activates/deactivates *hidden*-Property)
 
 	Remarks:		
-	* To toogle current *hidden*-Property, simply use `obj.hidden := !obj.hidden`	
+	* To toogle current *hidden*-Property, simply use 
+	> obj.hidden := !obj.hidden`
 	*/
 		get {
 			prevState := A_DetectHiddenWindows
@@ -291,7 +292,8 @@ class Windy {
 	flag - *true* or *false (activates/deactivates *hscrollable*-Property)
 
 	Remarks:		
-	* To toogle current *hscrollable*-Property, simply use `obj.hscrollable := !obj.hscrollable`
+	* To toogle current *hscrollable*-Property, simply use 
+	> obj.hscrollable := !obj.hscrollable
 	*/
 		get {
 			ret := (this.style & WS.HSCROLL) > 0 ? 1 : 0
@@ -695,7 +697,7 @@ class Windy {
 	Remarks:		
 	* To toogle, simply use 
 	> obj.resizeable := !obj.resizeable
-	* Same as property *sizebox*
+	* Same as property <sizebox at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#sizebox>
 
 	*/
 		get {
@@ -1148,6 +1150,77 @@ class Windy {
 	
 	; ######################## Methods to be called directly ########################################################### 
 	/* ---------------------------------------------------------------------------------------
+	Method: border2percent
+	translates a border string to monitor percents.
+
+	When moving the actual window from current position to a certain position on the window border (given by a border string (as for example "l", "hc" or "r vc")), 
+	the border string is transformed to factors which describe the destination size/position of actual window in relation to the monitor the window is own. Using this 
+	factors the window can be moved via 'this.movePercental(factor.x, factor.y, factor.w, factor.h)' to the destination position as specified in border string.
+
+	This method is needed as a helper method in order to allow an easy configuration of window alignment within AHK_EDE '
+
+	 	 
+	Parameter(s):
+	border - string describing the border to move to - for further description see <moveBorder at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#moveBorder>)
+
+	Returns;
+	<rectangle at http://hoppfrosch.github.io/AHK_Windy/files/Recty-ahk.html> containing the screen percents
+
+	See also: 
+	<moveBorder at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#moveBorder>
+	*/	
+	border2percent(border="") {
+		; check whether given border string is valid
+		posValid := false
+		StringLower, border, border
+		border := RegExReplace(border, "S) +", A_Space)
+		border := RegExReplace(border, "^ ", "")
+		border := RegExReplace(border, " $", "")
+		FoundPos := RegExMatch(border, "^(|t|b|l|r|vc|hc|l t|t l|l b|b l|l vc|vc l|r t|t r|r b|b r|r vc|vc r|hc t|t hc|hc b|b hc|hc vc|vc hc)$")
+		if (FoundPos > 0) {
+			posValid := true
+		}
+
+		if (posValid = true) {
+			currPos := this.posSize
+			mon := new Mony(this.monitorID, this._debug)
+			monWorkArea := mon.workingArea
+			monBound := mon.boundary
+
+			x := currPos.x
+			if (InStr(border,"l")) {
+				x := 0 
+			} else if (InStr(border,"r")) {
+				x:= monBound.w - currPos.w
+				
+			} else if (InStr(border,"hc")) {
+				x:= monBound.w/2 - currPos.w/2
+			}
+		
+			y:= currPos.y
+			if (InStr(border,"t")) {
+				y := 0 
+			} else if (InStr(border,"b")) {
+				y:= monBound.h - currPos.h
+			} else if (InStr(border,"vc")) {
+				y:= monBound.h/2 - currPos.h/2
+     		}
+
+			destPos := new Recty(x, y, currPos.w, currPos.h)
+			ret := mon.rectToPercent(destPos)
+	
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], border=""" border """)] pos (" this.posSize.Dump()") on Mon " this.monitorId " -> percent (" ret.Dump() ")" ; _DBG_
+
+			return ret
+		}
+
+		if (this._debug) ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], border=""" border """)] *** ERROR: Invalid border string <" border ">" ; _DBG_
+		
+		return
+    }        
+	/* ---------------------------------------------------------------------------------------
 	Method: kill
 	Kills the Window (Forces the window to close)
 			
@@ -1182,7 +1255,7 @@ class Windy {
 		h - height (absolute) the window has to be resized to - use *99999* to preserve actual value *(Optional)*
 	
 	See also: 
-	<movePercental>
+	<movePercental() at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#movePercental>, <moveBorder() at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#moveBorder>
 	*/
 	move(X,Y,W="99999",H="99999") {
 		if (this._debug) ; _DBG_
@@ -1223,8 +1296,8 @@ class Windy {
 	hFactor - height-size factor (percents of current screen height) the window has to be resized to (Range: 0.0 to 100.0) (*Optional*, Default = 100)
 	
 	See also: 
-		[move()](move)
-		
+	<move() at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#move>, <moveBorder() at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#moveBorder>
+			
 	Author(s):
 	Original - <Lexikos at http://www.autohotkey.com/forum/topic21703.html>
 			
@@ -1240,8 +1313,8 @@ class Windy {
 		monBound := mon.boundary
 		xrel := monWorkArea.w * xFactor/100
 		yrel := monWorkArea.h * yFactor/100
-		w := monWorkArea.w * wFactor/100
-		h := monWorkArea.h * hFactor/100
+		w := monBound.w * wFactor/100
+		h := monBound.h * hFactor/100
 		
 		x := monBound.x + xrel
 		y := monBound.y + yrel
@@ -1250,7 +1323,65 @@ class Windy {
 		
 		if (this._debug) ; _DBG_
 			OutputDebug % "<[" A_ThisFunc "([" this.hwnd "], xFactor=" xFactor ", yFactor=" yFactor ", wFactor=" wFactor ", hFactor=" hFactor ")] -> padded to (" this.posSize.Dump() ") on Monitor (" this.monitorID ")" ; _DBG_
+	}    
+	/* ---------------------------------------------------------------------------------------
+	Method: moveBorder
+	move the window on the current screen to a border given by string while keeping the size.
+			
+	Example(s): 
+	 * moves the window to the left border
+	 > obj.moveBorder("l")
+    * moves the window to the left border and centers it vertically
+	 > obj.moveBorder("l vc")
+	* moves the window to the top border and centers it horizontally
+	 > obj.moveBorder("t hc")
+    * moves the window to the top left corner
+	 > obj.moveBorder("t l")
+
+	 	 
+	Parameter(s):
+	border - string describing the border to move to
+	  * "t" - top
+	  * "b" - bottom
+	  * "l" - left
+	  * "r" - right
+	  * "vc" - vertically centered
+	  * "hc" - horizonally centered
+	
+	See also: 
+	<move() at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#move>, <movePercental at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#movePercental>
+		*/	
+	moveBorder(border="") {
+		if (this._debug) ; _DBG_
+			OutputDebug % ">[" A_ThisFunc "([" this.hwnd "], border=""" border """)] -> started from (" this.posSize.Dump() ") on Monitor (" this.monitorID ")" ; _DBG_
+
+		factor := this.border2percent(border)
+		if (factor) {
+			this.movePercental(factor.x, factor.y, factor.w, factor.h)
+		}
+		
+		if (this._debug) ; _DBG_
+			OutputDebug % ">[" A_ThisFunc "([" this.hwnd "], border=""" border """)] -> moved to (" this.posSize.Dump() ") on Monitor (" this.monitorID ")" ; _DBG_
 	}
+	/* ---------------------------------------------------------------------------------------
+	Method: posSize2percent
+	Calculates screen percents from current size of actual window
+
+	This method is needed as a helper method in order to allow an easy configuration of window alignment within AHK_EDE '
+
+	Returns;
+	<rectangle at http://hoppfrosch.github.io/AHK_Windy/files/Recty-ahk.html> containing the screen percents 	 
+	*/	
+	posSize2percent() {
+		currPos := this.posSize
+		mon := new Mony(this.monitorID, this._debug)
+		ret := mon.rectToPercent(currPos)
+	
+		if (this._debug) ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] pos (" this.posSize.Dump()") on Mon " this.monitorId " -> percent (" ret.Dump() ")" ; _DBG_
+
+		return ret
+    }    
 	/* ---------------------------------------------------------------------------------------
  	Method:	redraw
  	Redraws the window.

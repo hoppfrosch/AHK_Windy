@@ -19,7 +19,7 @@
 */
 class Mony {
 	_debug := 0
-	_version := "1.0.0"
+	_version := "1.0.1"
 	_id := 0
 	_hmon := 0
 
@@ -456,7 +456,36 @@ class Mony {
 			OutputDebug % "<[" A_ThisFunc "([" this.id "], disptime := " disptime ", txtcolor := " txtcolor ", txtsize := " txtsize ")]" ; _DBG_
 		return
 	}
+
+	/* ---------------------------------------------------------------------------------------
+	Method: rectToPercent
+	calculates monitor percents from given rectangle.
+
+	The given rectangle-coordinates are transformed into percent of the screen. For example on a 1920x1200 screen the coordinates x=394,y=240,w=960,h=400 are transformed into 
+	(20, 20, 50, 33.33) because 394/1920 = 20%, 240/1200=20%, 960/1920=50%, 400/1200=33.33%
+	 	 
+	Parameter(s):
+	x,y,w,h - position and width/height to be transformed into screen percents
+
+	Returns:
+	<rectangle at http://hoppfrosch.github.io/AHK_Windy/files/Recty-ahk.html> containing screen percents.
+	*/	
+    rectToPercent(rect) {
+		monBound := this.boundary
+
+		wfactor := (rect.w/monBound.w)*100
+		hfactor := (rect.h/monBound.h)*100
+		xfactor := (rect.x/monBound.w)*100
+     	yfactor := (rect.y/monBound.h)*100
+
+		ret := new Recty(xfactor, yfactor, wfactor, hfactor, this._debug)
 	
+		if (this._debug) ; _DBG_
+			OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], rect=(" rect.Dump()")]  -> percent=(" ret.Dump() ")" ; _DBG_
+			
+		return ret
+    }
+    
 	; ===== Internal Methods =========================================================
 	/* -------------------------------------------------------------------------------
 	method: __idHide

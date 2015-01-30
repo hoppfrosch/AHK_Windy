@@ -11,7 +11,7 @@
 #SingleInstance force
 
 
-ReferenceVersion := "1.0.0"
+ReferenceVersion := "1.0.1"
 debug := 1
 
 ;Yunit.Use(YunitStdOut, YunitWindow).Test(ExpMonyTestSuite)
@@ -29,17 +29,20 @@ class ExpMonyTestSuite
 		this.monCount := 2
 		this.mon1Width := 1920
 		this.mon1Height := 1080
-  		this.mon2Width := 1600
+  		this.mon2Width := 1920
 		this.mon2Height := 1200		
     }
 
-	primary() {
+	rectToPercent() {
 		Global debug
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
     	mon1 := new Mony(1, debug)
-    	Yunit.assert(mon1.primary = true)
-    	mon2 := new Mony(2, debug)
-    	Yunit.assert(mon2.primary = false)
+    	rect := new Recty(this.mon1Width/10,this.mon1Height/10,this.mon1Width/5,this.mon1Height/4)
+    	per := mon1.rectToPercent(rect)
+		Yunit.assert(per.x == 100/10)
+		Yunit.assert(per.y == 100/10)
+		Yunit.assert(per.w == 100/5)
+		Yunit.assert(per.h == 100/4)
     	OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
     }
     
@@ -58,7 +61,7 @@ class MonyTestSuite
 		this.monCount := 2
 		this.mon1Width := 1920
 		this.mon1Height := 1080
-  		this.mon2Width := 1600
+  		this.mon2Width := 1920
 		this.mon2Height := 1200		
     }
 
@@ -214,6 +217,19 @@ class MonyTestSuite
     	Yunit.assert(mon1.primary = true)
     	mon2 := new Mony(2, debug)
     	Yunit.assert(mon2.primary = false)
+    	OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+    }
+
+    rectToPercent() {
+		Global debug
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+    	mon1 := new Mony(1, debug)
+    	rect := new Recty(this.mon1Width/10,this.mon1Height/10,this.mon1Width/5,this.mon1Height/4)
+    	per := mon1.rectToPercent(rect)
+		Yunit.assert(per.x == 100/10)
+		Yunit.assert(per.y == 100/10)
+		Yunit.assert(per.w == 100/5)
+		Yunit.assert(per.h == 100/4)
     	OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
     }
 		

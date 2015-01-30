@@ -1,5 +1,5 @@
 ﻿/*
-	Title: _ Windy, v0.13.0
+	Title: _ Windy, v0.15.0
 		
 	Windy provides a collection of classes, which allow a class based approach of handling windows, monitors, etc.
 		
@@ -10,6 +10,7 @@
 	* <Pointy at http://hoppfrosch.github.io/AHK_Windy/files/Pointy-ahk.html> - Points (geometric 2D-points) - this is mostly a helper class being used within this package, but maybe helpful anyway ...
 	* <Recty at http://hoppfrosch.github.io/AHK_Windy/files/Recty-ahk.html> - Rectangles (consisting of two <points at http://hoppfrosch.github.io/AHK_Windy/files/Pointy-ahk.html>) -  - this is mostly a helper class being used within this package, but maybe helpful anyway ...
 	* <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html> - Windows
+	* <WindLy at http://hoppfrosch.github.io/AHK_Windy/files/WindLy-ahk.html> - Collection (List) of Windows
 		
 	Author(s):
 	<hoppfrosch at hoppfrosch@gmx.de>		
@@ -30,4 +31,4 @@
 #include Windy.ahk
 
 
-Version := "0.14.0"
+Version := "0.15.0"
