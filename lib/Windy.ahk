@@ -1,5 +1,5 @@
 ﻿/*
-	Title: _ Windy, v0.14.0
+	Title: _ Windy, v0.15.0
 		
 	Windy provides a collection of classes, which allow a class based approach of handling windows, monitors, etc.
 		
@@ -31,4 +31,4 @@
 #include Windy.ahk
 
 
-Version := "0.14.0"
+Version := "0.15.0"
