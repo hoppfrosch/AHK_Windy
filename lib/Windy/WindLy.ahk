@@ -18,7 +18,7 @@
 */
 class WindLy {
 	_debug := 0
-	_version := "0.0.5"
+	_version := "0.0.6"
 	_wl := {}
 
 	; ##################### Properties (AHK >1.1.16.x) #################################################################
@@ -87,6 +87,18 @@ class WindLy {
 	insert(oWindy) {
 		if (!this._wl[oWindy.hwnd]) {
 			this._wl[oWindy.hwnd] := oWindy
+		}
+	}
+	/* -------------------------------------------------------------------------------
+	Method:	insert
+	Removes a single Windy-object from current instance
+
+	Parameters:
+	oWindy - <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html>-Object to be removed
+	*/
+	remove(oWindy) {
+		if (this._wl[oWindy.hwnd]) {
+			this._wl.Remove(oWindy.hwnd)
 		}
 	}
 	/* -------------------------------------------------------------------------------
