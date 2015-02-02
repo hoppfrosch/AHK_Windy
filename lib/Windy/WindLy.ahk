@@ -18,7 +18,7 @@
 */
 class WindLy {
 	_debug := 0
-	_version := "0.0.6"
+	_version := "0.0.7"
 	_wl := {}
 
 	; ##################### Properties (AHK >1.1.16.x) #################################################################
@@ -78,6 +78,21 @@ class WindLy {
 		return this._wl
 	}
 	/* -------------------------------------------------------------------------------
+	Method:	difference
+	Calculates the DIFFERENCE of the current instance and the given WindLy-Object
+
+	The difference contains only elements from the current instance which are not part of the given WindLy-object
+
+	Parameters:
+	oWindLy - <WindLy at http://hoppfrosch.github.io/AHK_Windy/files/WindLy-ahk.html>-Object to be used for calculating difference
+	*/
+	difference(oWindLy) {
+		for currhwnd, data in oWindLy.list {
+			this.remove(data)
+		}
+		return this.list
+	}
+	/* -------------------------------------------------------------------------------
 	Method:	insert
 	Inserts a single Windy-object into current instance
 
@@ -124,10 +139,7 @@ class WindLy {
 	*/
 	union(oWindLy) {
 		for currhwnd, data in oWindLy.list {
-			if (!_this.list[currhwnd]) {
-				_w := new Windy(currhWnd)
-				 this.insert(data)
-			}
+			this.insert(data)
 		}
 		return this.list
 	}

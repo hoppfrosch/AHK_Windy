@@ -53,6 +53,20 @@ for key, data in ww {
 	OutputDebug % data.hwnd ": " data.title " (" key ")" 
 }
 
+OutputDebug % "############## SET-Operation DIFFERENCE: WindLy.difference() ########################"
+OutputDebug % "******** WindLy To subtract *****************************************"
+ww := y.list
+for key, data in ww {
+	OutputDebug % data.hwnd ": " data.title " (" key ")" 
+}
+; Determine Union between orignal WindLy instance x and newly generated WindLy instance y
+x.difference(y)
+
+OutputDebug % "******** WindLy After difference *****************************************"
+ww := x.list
+for key, data in ww {
+	OutputDebug % data.hwnd ": " data.title " (" key ")" 
+}
 a.kill()
 
 ExitApp
