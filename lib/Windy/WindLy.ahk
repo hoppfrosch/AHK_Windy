@@ -18,7 +18,7 @@
 */
 class WindLy {
 	_debug := 0
-	_version := "0.0.3"
+	_version := "0.0.4"
 	_wl := {}
 
 	; ##################### Properties (AHK >1.1.16.x) #################################################################
@@ -76,6 +76,18 @@ class WindLy {
 		}
 		_tmp := {}
 		return this._wl
+	}
+	/* -------------------------------------------------------------------------------
+	Method:	insert
+	Inserts a single Windy-object into current instance
+
+	Parameters:
+	oWindy - <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html>-Object to be inserted
+	*/
+	insert(oWindy) {
+		if (!this._wl[oWindy.hwnd]) {
+			this._wl[oWindy.hwnd] := oWindy
+		}
 	}
 	/* -------------------------------------------------------------------------------
 	Method:	snapshot
