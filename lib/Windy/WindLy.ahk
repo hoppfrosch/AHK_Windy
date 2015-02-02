@@ -18,7 +18,7 @@
 */
 class WindLy {
 	_debug := 0
-	_version := "0.0.4"
+	_version := "0.0.5"
 	_wl := {}
 
 	; ##################### Properties (AHK >1.1.16.x) #################################################################
@@ -100,6 +100,24 @@ class WindLy {
 		this.__reset()
 		this._wl := this.__all()
 		return this._wl
+	}
+	/* -------------------------------------------------------------------------------
+	Method:	union
+	Calculates the UNION of the given WindLy-Object and the current instance
+
+	The Union contains all elements from the current instance as well as the given WindLy-object
+
+	Parameters:
+	oWindLy - <WindLy at http://hoppfrosch.github.io/AHK_Windy/files/WindLy-ahk.html>-Object to be used for calculating union
+	*/
+	union(oWindLy) {
+		for currhwnd, data in oWindLy.list {
+			if (!_this.list[currhwnd]) {
+				_w := new Windy(currhWnd)
+				 this.insert(data)
+			}
+		}
+		return this.list
 	}
 
 	; ######################## Internal Methods - not to be called directly ############################################
