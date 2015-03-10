@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/hoppfrosch/AHK_Windy.png?label=ready&title=Ready)](https://waffle.io/hoppfrosch/AHK_Windy)
 # AHK-Windy - Tools to operate on windows
 
 Functionality for easier work with mouse and windows on desktop. Multi-Monitor support is also provided ...
