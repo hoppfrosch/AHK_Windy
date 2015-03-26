@@ -3,6 +3,18 @@
 (on Branch: **master**, since **2014-10-26**)
 
 -----------------------------------------------------------------
+ * **Windy 0.15.0** (via Commit [86615ed](https://github.com/hoppfrosch/AHK_Windy/commit/86615edcd350ac7130cf21a1b1015b2b61baa36f))
+   * [#22](https://github.com/hoppfrosch/AHK_EDE/issues/22) - Windy: new method moveBorder()
+   * [#24](https://github.com/hoppfrosch/AHK_EDE/issues/24) - Mony: Transform coordinates into screen percents
+   * [#25](https://github.com/hoppfrosch/AHK_EDE/issues/25) - Windy: Transform current window PosSize into screen percents
+ * **Merge pull request [#23](https://github.com/hoppfrosch/AHK_EDE/issues/23) from hi5/patch-1** (via Commit [e996f2d](https://github.com/hoppfrosch/AHK_Windy/commit/e996f2d3fc30ddbdea8926a2d8d7ddaf68f68551))
+   * Added restore settings line before exit app
+ * **Windy 0.14.0** (via Commit [59848e1](https://github.com/hoppfrosch/AHK_Windy/commit/59848e1713c07e8619f971c2aa332c941f42391d))
+   * [#17](https://github.com/hoppfrosch/AHK_EDE/issues/17) - Make usage of %A_LineFile% to get better include-behaviour
+   * [#18](https://github.com/hoppfrosch/AHK_EDE/issues/18) - Windy: Setting transparency fails on windows without caption
+   * [#19](https://github.com/hoppfrosch/AHK_EDE/issues/19) - Windy: Property scale[] for proportional Resizing when moving monitor
+   * [#20](https://github.com/hoppfrosch/AHK_EDE/issues/20) - Windy: Consider Property scale in Property monitorId
+   * [#21](https://github.com/hoppfrosch/AHK_EDE/issues/21) - WindLy: Remove unneeded output to messagebox
  * **Windy 0.13.0** (via Commit [35795da](https://github.com/hoppfrosch/AHK_Windy/commit/35795da9bda44dda986765df87ed534eadab10bf))
    * [#16](https://github.com/hoppfrosch/AHK_EDE/issues/16) - WindLy: Iniitial Implementation of class for handling window lists
  * **Windy 0.12.3** (via Commit [2f9f578](https://github.com/hoppfrosch/AHK_Windy/commit/2f9f578272bbc99c1a73a5db045c927b2c98f388))
