@@ -31,4 +31,4 @@
 #include Windy.ahk
 
 
-Version := "0.15.0"
+Version := "0.15.1"
