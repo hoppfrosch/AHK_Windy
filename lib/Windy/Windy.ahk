@@ -28,7 +28,7 @@ class Windy {
 	_debug := 0
 	_hWnd := 0
 
-	__useEventHook := 0
+	__useEventHook := 1
 	_hWinEventHook1 := 0
 	_hWinEventHook2 := 0
 	_HookProcAdr := 0
