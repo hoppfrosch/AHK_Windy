@@ -160,6 +160,38 @@ class WindLy {
 		return this._wl
 	}
 	/* -------------------------------------------------------------------------------
+	Method:	symmetricDifference
+	Calculates the SYMMETRICDIFFERENCE of the given WindLy-Object and the current instance
+
+	The result only contains <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html>-Objects which 
+	have been in the current instance as well as in the given WindLy-Object
+	
+	Parameters:
+	oWindy - <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html>-Object to operate with
+	*/
+	symmetricDifference(oWindLy) {
+		result := new WindLy()
+		u := new WindLy()
+		i := new WindLy()
+
+		; The symmetric difference is the union without the intersection:
+		u.list := this.list.Clone()
+		u.union(oWindly)
+		for key, data in u.list {
+			OutputDebug %  "  UNION:" key ": " data.hwnd ": " data.title " (" key ")" 
+		}
+		i.list := this.list.Clone()
+		i.intersection(oWindly)
+		for key, data in i.list {
+			OutputDebug %  "  UNION:" key ": " data.hwnd ": " data.title " (" key ")" 
+		}
+
+		u.difference(i)
+
+		this.list := u.list.Clone()
+		return this.list
+	}
+	/* -------------------------------------------------------------------------------
 	Method:	union
 	Calculates the UNION of the given WindLy-Object and the current instance
 
