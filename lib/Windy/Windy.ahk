@@ -92,7 +92,7 @@ class Windy {
 		; Idea taken from majkinetors Forms Framework (https://github.com/maul-esel/FormsFramework), win.ahk
 			style := "-" this.__hexStr(WS.CAPTION)
 			if (value) {
-					style := "+" this.__hexStr(WS.CAPTION)
+				style := "+" this.__hexStr(WS.CAPTION)
 			}
 		 	prevState := A_DetectHiddenWindows
 			DetectHiddenWindows, on
@@ -100,7 +100,7 @@ class Windy {
 			this.redraw()
 			DetectHiddenWindows, %prevState%
 			if (this._debug) ; _DBG_
-					OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " this.caption ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " this.caption ; _DBG_
 			return value
 		}
 	}
