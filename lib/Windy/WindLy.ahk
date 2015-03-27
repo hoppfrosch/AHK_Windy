@@ -55,7 +55,7 @@ class WindLy {
 		for h_Wnd, win in _tmp {
 			h_WndHex := this.__hexStr(h_Wnd)
 			if (win.monitorID = id ) {
-			   this._wl[h_WndHex] := win
+			   this.Insert(win)
 			}
 		}
 		_tmp := {}
@@ -79,11 +79,25 @@ class WindLy {
 			WinGet, l_tmp, Style, ahk_id %h_Wnd%
 			h_WndHex := this.__hexStr(h_Wnd)
 			if (l_tmp & myStyle) {
-			   this._wl[h_WndHex] := win
+			   this.Insert(win)
 			}
 		}
 		_tmp := {}
 		return this._wl
+	}
+	/* -------------------------------------------------------------------------------
+	Method:	delete
+	deletes a single Windy-object from current instance
+
+	Parameters:
+	oWindy - <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html>-Object to be deleted
+	*/
+	delete(oWindy) {
+		x := this.__decStr(oWindy._hwnd)
+		if (this._wl[this.__decStr(oWindy._hwnd)]) {
+			this._wl.Delete(this.__decStr(oWindy._hwnd))
+		}
+		return this.list
 	}
 	/* -------------------------------------------------------------------------------
 	Method:	difference
@@ -134,20 +148,6 @@ class WindLy {
 		return result.list
 	}
 	/* -------------------------------------------------------------------------------
-	Method:	delete
-	deletes a single Windy-object from current instance
-
-	Parameters:
-	oWindy - <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html>-Object to be deleted
-	*/
-	delete(oWindy) {
-		x := this.__decStr(oWindy._hwnd)
-		if (this._wl[this.__decStr(oWindy._hwnd)]) {
-			this._wl.Delete(this.__decStr(oWindy._hwnd))
-		}
-		return this.list
-	}
-	/* -------------------------------------------------------------------------------
 	Method:	snapshot
 	Initializes the window list from all currently openend windows
 	
@@ -164,7 +164,7 @@ class WindLy {
 	Calculates the SYMMETRICDIFFERENCE of the given WindLy-Object and the current instance
 
 	The result only contains <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html>-Objects which 
-	have been in the current instance as well as in the given WindLy-Object
+	have not been in the current instance as well as not in the given WindLy-Object (Removes items which occur in both lists)
 	
 	Parameters:
 	oWindy - <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html>-Object to operate with
