@@ -7,6 +7,10 @@ for key, data in x.Snapshot() {  ; access the window list directly by function c
 	OutputDebug % data.hwnd ": " data.title "`n" 
 }
 
+OutputDebug % "******** removeNonExisting *********************************************************************"
+MsgBox % "Close any window and watch, if the widiw is removed from the list"
+x.removeNonExisting()
+
 OutputDebug % "******** On Monitor 1 *************************************************************************"
 x.byMonitorId(1)
 for key, data in x.list { ; access the window list via member variable
@@ -19,4 +23,6 @@ for key, data in ww {  ; access the window list via helper variable
 	OutputDebug % data.hwnd ": " data.title "`n" 
 }
 
+
+ 
 ExitApp

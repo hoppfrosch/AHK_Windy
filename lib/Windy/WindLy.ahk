@@ -18,7 +18,7 @@
 */
 class WindLy {
 	_debug := 0
-	_version := "0.0.8"
+	_version := "0.0.9"
 	_wl := {}
 
 	; ##################### Properties (AHK >1.1.16.x) #################################################################
@@ -37,7 +37,6 @@ class WindLy {
 			return this.list
 	    }
 	}
-	
 	; ######################## Methods to be called directly ########################################################### 
 	/* -------------------------------------------------------------------------------
 	Method:	byMonitorId
@@ -146,6 +145,28 @@ class WindLy {
 		}
 		this.list := result.list
 		return result.list
+	}
+	/* -------------------------------------------------------------------------------
+	Method:	removeNonExisting
+	Remove non-existing windows from the list
+	
+	The result only contains <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html>-Objects which 
+	do currently exist. Non existing windows are removed from the list.
+	*/
+	removeNonExisting() {
+		OutputDebug % ">>>>>>>> Windly.removeNonExisting()"
+		u := new WindLy()
+		u.list := this.list.Clone()
+		for key, data in u.list {
+			OutputDebug %  "  CURRENT:" key ": " data.hwnd ": " data.title " (" key ")" 
+			if !data.exist {
+				OutputDebug %  "  REMOVE SINCE NON EXISTANT:" key ": " data.hwnd
+				u.delete(data)
+			}
+		}
+		this.list := u.list.Clone()
+		OutputDebug % "<<<<<<<< Windly.removeNonExisting()"	
+		return this.list
 	}
 	/* -------------------------------------------------------------------------------
 	Method:	snapshot
@@ -308,7 +329,6 @@ class WindLy {
 		
 		return this
 	}
-
 	/* ---------------------------------------------------------------------------------------
     Method:   ____hexStr
 	Converts number to hex representation (*INTERNAL*)
