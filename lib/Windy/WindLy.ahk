@@ -1,6 +1,6 @@
 ; ****** HINT: Documentation can be extracted to HTML using NaturalDocs (http://www.naturaldocs.org/) ************** 
 
-; ****** HINT: Debug-lines should contain "; _DBG_" at the end of lines - using this, the debug lines could be automatically removed through scripts before releasing the sourcecode
+; ****** HINT: Debug-lines should contain "; _DBG_" at the end of lines - using this, the debug lines could be automatically deleted through scripts before releasing the sourcecode
 #include %A_LineFile%\..
 #include Windy.ahk
 #include Const_WinUser.ahk
@@ -18,7 +18,7 @@
 */
 class WindLy {
 	_debug := 0
-	_version := "0.0.3"
+	_version := "0.0.9"
 	_wl := {}
 
 	; ##################### Properties (AHK >1.1.16.x) #################################################################
@@ -30,8 +30,13 @@ class WindLy {
 		get {
 			return this._wl
 		}
+		
+		set {
+			this._wl := {}
+			this._wl := value
+			return this.list
+	    }
 	}
-	
 	; ######################## Methods to be called directly ########################################################### 
 	/* -------------------------------------------------------------------------------
 	Method:	byMonitorId
@@ -46,9 +51,10 @@ class WindLy {
 	byMonitorId(id=1) {
 		this.__reset()
 		_tmp := this.__all()
-		for hwnd, win in _tmp {
+		for h_Wnd, win in _tmp {
+			h_WndHex := this.__hexStr(h_Wnd)
 			if (win.monitorID = id ) {
-			   this._wl[hwnd] := win
+			   this.Insert(win)
 			}
 		}
 		_tmp := {}
@@ -68,14 +74,99 @@ class WindLy {
 		this.__reset()
 		_tmp := this.__all()
 
-		for hwnd, win in _tmp {
-			WinGet, l_tmp, Style, ahk_id %hWnd%
+		for h_Wnd, win in _tmp {
+			WinGet, l_tmp, Style, ahk_id %h_Wnd%
+			h_WndHex := this.__hexStr(h_Wnd)
 			if (l_tmp & myStyle) {
-			   this._wl[hwnd] := win
+			   this.Insert(win)
 			}
 		}
 		_tmp := {}
 		return this._wl
+	}
+	/* -------------------------------------------------------------------------------
+	Method:	delete
+	deletes a single Windy-object from current instance
+
+	Parameters:
+	oWindy - <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html>-Object to be deleted
+	*/
+	delete(oWindy) {
+		x := this.__decStr(oWindy._hwnd)
+		if (this._wl[this.__decStr(oWindy._hwnd)]) {
+			this._wl.Delete(this.__decStr(oWindy._hwnd))
+		}
+		return this.list
+	}
+	/* -------------------------------------------------------------------------------
+	Method:	difference
+	Calculates the DIFFERENCE of the current instance and the given WindLy-Object
+
+	The difference contains only elements from the current instance which are not part of the given WindLy-object
+
+	Parameters:
+	oWindLy - <WindLy at http://hoppfrosch.github.io/AHK_Windy/files/WindLy-ahk.html>-Object to be used for calculating difference
+	*/
+	difference(oWindLy) {
+		for currhwnd, data in oWindLy.list {
+			this.delete(data)
+		}
+		return this.list
+	}
+	/* -------------------------------------------------------------------------------
+	Method:	insert
+	Inserts a single Windy-object into current instance
+
+	Parameters:
+	oWindy - <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html>-Object to be inserted
+	*/
+	insert(oWindy) {
+		if (!this._wl[oWindy._hwnd]) {
+			h_WndHex := this.__hexStr(oWindy._hwnd)
+			this._wl[h_WndHex] := oWindy
+		}
+	}
+	/* -------------------------------------------------------------------------------
+	Method:	intersection
+	Calculates the INTERSECTION of the given WindLy-Object and the current instance
+
+	The result only contains <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html>-Objects which 
+	have been in the current instance as well as in the given WindLy-Object
+	
+	Parameters:
+	oWindy - <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html>-Object to be inserted
+	*/
+	intersection(oWindLy) {
+		result := new WindLy()
+		for _currhwnd, _data in oWindLy.list {
+			if (this._wl[_data.hwnd]) {
+				result.insert(_data)
+			}
+		}
+		this.list := result.list
+		return result.list
+	}
+	/* -------------------------------------------------------------------------------
+	Method:	removeNonExisting
+	Remove non-existing windows from the list
+	
+	The result only contains <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html>-Objects which 
+	do currently exist. Non existing windows are removed from the list.
+	*/
+	removeNonExisting() {
+		OutputDebug % ">>>>>>>> Windly.removeNonExisting()"
+		u := new WindLy()
+		u.list := this.list.Clone()
+		for key, data in u.list {
+			OutputDebug %  "  CURRENT:" key ": " data.hwnd ": " data.title " (" key ")" 
+			if !data.exist {
+				OutputDebug %  "  REMOVE SINCE NON EXISTANT:" key ": " data.hwnd
+				u.delete(data)
+			}
+		}
+		this.list := u.list.Clone()
+		OutputDebug % "<<<<<<<< Windly.removeNonExisting()"	
+		return this.list
 	}
 	/* -------------------------------------------------------------------------------
 	Method:	snapshot
@@ -88,6 +179,53 @@ class WindLy {
 		this.__reset()
 		this._wl := this.__all()
 		return this._wl
+	}
+	/* -------------------------------------------------------------------------------
+	Method:	symmetricDifference
+	Calculates the SYMMETRICDIFFERENCE of the given WindLy-Object and the current instance
+
+	The result only contains <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html>-Objects which 
+	have not been in the current instance as well as not in the given WindLy-Object (Removes items which occur in both lists)
+	
+	Parameters:
+	oWindy - <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html>-Object to operate with
+	*/
+	symmetricDifference(oWindLy) {
+		result := new WindLy()
+		u := new WindLy()
+		i := new WindLy()
+
+		; The symmetric difference is the union without the intersection:
+		u.list := this.list.Clone()
+		u.union(oWindly)
+		for key, data in u.list {
+			OutputDebug %  "  UNION:" key ": " data.hwnd ": " data.title " (" key ")" 
+		}
+		i.list := this.list.Clone()
+		i.intersection(oWindly)
+		for key, data in i.list {
+			OutputDebug %  "  UNION:" key ": " data.hwnd ": " data.title " (" key ")" 
+		}
+
+		u.difference(i)
+
+		this.list := u.list.Clone()
+		return this.list
+	}
+	/* -------------------------------------------------------------------------------
+	Method:	union
+	Calculates the UNION of the given WindLy-Object and the current instance
+
+	The Union contains all elements from the current instance as well as the given WindLy-object
+
+	Parameters:
+	oWindLy - <WindLy at http://hoppfrosch.github.io/AHK_Windy/files/WindLy-ahk.html>-Object to be used for calculating union
+	*/
+	union(oWindLy) {
+		for currhwnd, data in oWindLy.list {
+			this.insert(data)
+		}
+		return this.list
 	}
 
 	; ######################## Internal Methods - not to be called directly ############################################
@@ -104,9 +242,10 @@ class WindLy {
 		ret := {}
 
 		Loop % hwnds.MaxIndex() {
-			hwnd := hwnds[A_Index]
-			_w := new Windy(hWnd)
-			ret[hwnd] := _w
+			h_Wnd := hwnds[A_Index]
+			h_WndHex := this.__hexStr(h_Wnd)
+			_w := new Windy(h_Wnd)
+			ret[h_WndHex] := _w
 		}
 		
 		return ret
@@ -127,13 +266,14 @@ class WindLy {
 
 		Loop %_Wins%
 		{
-			hWnd:=_Wins%A_Index%
+			h_Wnd:=_Wins%A_Index%
+			h_WndHex := this.__hexStr(h_Wnd)
 			bAdd := true
 			if (windowsOnly = true) {
-				bAdd := this.__isRealWindow(hWnd)
+				bAdd := this.__isRealWindow(h_Wnd)
 			}
 			if (bAdd = true) {
-				ret.Insert(hWnd)
+				ret.Insert(h_WndHex)
 			}
 		}
 		return ret
@@ -153,8 +293,8 @@ class WindLy {
 	Author(s):
 		Original - <ManaUser at http://www.autohotkey.com/board/topic/25393-appskeys-a-suite-of-simple-utility-hotkeys/>
 	*/
-	__isRealWindow(hWnd) {
-		WinGet, s, Style, ahk_id %hWnd% 
+	__isRealWindow(h_Wnd) {
+		WinGet, s, Style, ahk_id %h_Wnd% 
 		ret := s & WS.CAPTION ? (s & WS.POPUP ? 0 : 1) : 0
 		return ret
 	}
@@ -175,18 +315,37 @@ class WindLy {
 	__New(_debug=0) {
 		this._debug := _debug
 		if (this._debug) ; _DBG_
-			OutputDebug % ">[" A_ThisFunc "(hWnd=(" _hWnd "))] (version: " this._version ")" ; _DBG_
+			OutputDebug % ">[" A_ThisFunc "()] (version: " this._version ")" ; _DBG_
 
-		if % (A_AhkVersion < "1.1.08.00" || A_AhkVersion >= "2.0") {
-			MsgBox 16, Error, %A_ThisFunc% :`n This class is only tested with AHK_L later than 1.1.08.00 (and before 2.0)`nAborting...
+		if % (A_AhkVersion < "1.1.20.02" || A_AhkVersion >= "2.0") {
+			MsgBox 16, Error, %A_ThisFunc% :`n This class only needs AHK later than 1.1.20.01 (and before 2.0)`nAborting...
 			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "(...) -> ()]: *ERROR* : This class is only tested with AHK_L later than 1.1.08.00 (and before 2.0). Aborting..." ; _DBG_
+				OutputDebug % "<[" A_ThisFunc "(...) -> ()]: *ERROR* : This class needs AHK later than 1.1.20.01 (and before 2.0). Aborting..." ; _DBG_
 			return
 		}
 				
 		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "(hWnd=(" _hWnd "))]" ; _DBG_
+			OutputDebug % "<[" A_ThisFunc "()]" ; _DBG_
 		
 		return this
+	}
+	/* ---------------------------------------------------------------------------------------
+    Method:   ____hexStr
+	Converts number to hex representation (*INTERNAL*)
+	*/
+	__hexStr(i) {
+		OldFormat := A_FormatInteger ; save the current format as a string
+		SetFormat, Integer, Hex
+		i += 0 ;forces number into current fomatinteger
+		SetFormat, Integer, %OldFormat% ;if oldformat was either "hex" or "dec" it will restore it to it's previous setting
+		return i
+	}
+	
+	__decStr(i) {
+		OldFormat := A_FormatInteger ; save the current format as a string
+		SetFormat, Integer, D
+		i += 0 ;forces number into current fomatinteger
+		SetFormat, Integer, %OldFormat% ;if oldformat was either "hex" or "dec" it will restore it to it's previous setting
+		return i
 	}
 }

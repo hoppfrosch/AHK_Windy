@@ -24,7 +24,7 @@ class Windy {
 	This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See <WTFPL at http://www.wtfpl.net/> for more details.
 
 */
-	_version := "0.8.6"
+	_version := "0.9.0"
 	_debug := 0
 	_hWnd := 0
 
@@ -92,7 +92,7 @@ class Windy {
 		; Idea taken from majkinetors Forms Framework (https://github.com/maul-esel/FormsFramework), win.ahk
 			style := "-" this.__hexStr(WS.CAPTION)
 			if (value) {
-					style := "+" this.__hexStr(WS.CAPTION)
+				style := "+" this.__hexStr(WS.CAPTION)
 			}
 		 	prevState := A_DetectHiddenWindows
 			DetectHiddenWindows, on
@@ -100,7 +100,7 @@ class Windy {
 			this.redraw()
 			DetectHiddenWindows, %prevState%
 			if (this._debug) ; _DBG_
-					OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " this.caption ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " this.caption ; _DBG_
 			return value
 		}
 	}
@@ -265,6 +265,7 @@ class Windy {
 	* There is no setter available, since this is a constant window property
 	*/
 		get {
+			this._hwnd := this.__hexStr(this._hwnd)
 			return this._hwnd
 		}
 	}
@@ -1626,6 +1627,7 @@ class Windy {
 			return
 		}
 		
+		_hWnd := this.__hexstr(_hWnd)
 		this._hWnd := _hWnd
 		if (this._debug) ; _DBG_
 			OutputDebug % ">[" A_ThisFunc "(hWnd=(" _hWnd "))] (WinTitle: " this.title ")" ; _DBG_

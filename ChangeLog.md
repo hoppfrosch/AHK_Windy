@@ -3,7 +3,12 @@
 (on Branch: **master**, since **2014-10-26**)
 
 -----------------------------------------------------------------
- * **Windy 0.15.0** (via Commit [86615ed](https://github.com/hoppfrosch/AHK_Windy/commit/86615edcd350ac7130cf21a1b1015b2b61baa36f))
+ * **Windy 0.15.2** (via Commit [674cf2d](https://github.com/hoppfrosch/AHK_Windy/commit/674cf2da99cc84cb88ee6f5c4c2b3d7e68075be6))
+   * [#26](https://github.com/hoppfrosch/AHK_EDE/issues/26): WindLy: Methods for Operations (Set-operations, Insert, Remove ...)
+   * [#33](https://github.com/hoppfrosch/AHK_EDE/issues/33): WindLy: Remove non existing windows from list
+ * **Windy 0.15.1** (via Commit [a257c27](https://github.com/hoppfrosch/AHK_Windy/commit/a257c2700c4b0eb0b3521f0232bb8324fbb3e988))
+   * *INTERNAL: Added Waffle.io Badge to Readme.md*
+ * **Windy 0.15.0** (via Commit [6389c32](https://github.com/hoppfrosch/AHK_Windy/commit/6389c32ae349d26e2860851795b5c7006373fe9b))
    * [#22](https://github.com/hoppfrosch/AHK_EDE/issues/22) - Windy: new method moveBorder()
    * [#24](https://github.com/hoppfrosch/AHK_EDE/issues/24) - Mony: Transform coordinates into screen percents
    * [#25](https://github.com/hoppfrosch/AHK_EDE/issues/25) - Windy: Transform current window PosSize into screen percents
