@@ -687,17 +687,17 @@ class Windy {
 			return ret
 		}
 	}
-	resizeable[] {
+	resizable[] {
 	/* ---------------------------------------------------------------------------------------
-	Property: resizeable [get/set]
+	Property: resizable [get/set]
 	Is window resizing possible?
 
 	Value:
-	flag - *true* or *false* (activates/deactivates *resizeable*-Property)
+	flag - *true* or *false* (activates/deactivates *resizable*-Property)
 
 	Remarks:		
 	* To toogle, simply use 
-	> obj.resizeable := !obj.resizeable
+	> obj.resizable := !obj.resizable
 	* Same as property <sizebox at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#sizebox>
 
 	*/
@@ -861,7 +861,7 @@ class Windy {
 	Remarks:		
 	* To toogle, simply use 
 	> obj.sizebox := !obj.sizebox
-	* Same as property *resizeable*
+	* Same as property *resizable*
 	*/
 		get {
 			ret := (this.style & WS.SIZEBOX) > 0 ? 1 : 0
