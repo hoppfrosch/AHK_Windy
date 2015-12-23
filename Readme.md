@@ -1,5 +1,4 @@
-[![Stories in Ready](https://badge.waffle.io/hoppfrosch/AHK_Windy.png?label=ready&title=Ready)](https://waffle.io/hoppfrosch/AHK_Windy)
-# AHK-Windy - Tools to operate on windows
+# AHK-Windy - Tools to operate on windows [![AutoHotkey](https://img.shields.io/badge/Language-AutoHotkey-yellowgreen.svg)](https://autohotkey.com/) ![](https://img.shields.io/badge/State-Stable-green.svg)
 
 Functionality for easier work with mouse and windows on desktop. Multi-Monitor support is also provided ...
 
@@ -7,6 +6,8 @@ Documentation is available on [gh_pages](http://hoppfrosch.github.io/AHK_Windy)
 
 **Author**: [hoppfrosch@gmx.de](mailto:hoppfrosch@gmx.de)
 
+----------
+**Issues**: [![Stories in Backlog](https://badge.waffle.io/hoppfrosch/AHK_Windy.svg?label=backlog&title=Backlog)](http://waffle.io/hoppfrosch/AHK_Windy) [![Stories in Ready](https://badge.waffle.io/hoppfrosch/AHK_Windy.svg?label=ready&title=Ready)](http://waffle.io/hoppfrosch/AHK_Windy) [![Stories in Progress](https://badge.waffle.io/hoppfrosch/AHK_Windy.svg?label=In%20Progress&title=In%20Progress)](http://waffle.io/hoppfrosch/AHK_Windy) [![Stories in Done](https://badge.waffle.io/hoppfrosch/AHK_Windy.svg?label=done&title=Done)](http://waffle.io/hoppfrosch/AHK_Windy)
 ----------
 ## Credits
 

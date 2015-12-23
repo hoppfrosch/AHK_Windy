@@ -11,8 +11,8 @@
 	Class: Mousy
     Toolset to handle mousecursor within a MultiMonitorEnvironment
 
-	Author(s):
-	<hoppfrosch at hoppfrosch@gmx.de>		
+	Authors:
+	<hoppfrosch at hoppfrosch@gmx.de>: Original
 
 	About: License
 	This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See <WTFPL at http://www.wtfpl.net/> for more details.
@@ -39,11 +39,11 @@ class Mousy {
 	Value:
 	flag - *true* or *false*
 
-	Example: 
-	>obj.confineRect := new Recty(100,100,500,500)
-	>obj.confine := true  ; Confining to previously defined rect is enabled
-	>obj.confine := false ; Confining to previously defined rect is disabled
-	>obj.confine := true  ; Confining to previously defined rect is re-enabled
+	Examples: 
+	> obj.confineRect := new Recty(100,100,500,500)
+	> obj.confine := true  ; Confining to previously defined rect is enabled
+	> obj.confine := false ; Confining to previously defined rect is disabled
+	> obj.confine := true  ; Confining to previously defined rect is re-enabled
 	*/
 		get {
 			return this._bConfine
@@ -74,7 +74,7 @@ class Mousy {
 	Value:
 	rect - confining rectangle
 
-	See also:
+	See Also:
 	<confine at http://hoppfrosch.github.io/AHK_Windy/files/Mousy-ahk.html#confine>
 	*/
 		get {
@@ -142,10 +142,11 @@ class Mousy {
 	Movement mode while moving the mouse via <pos at http://hoppfrosch.github.io/AHK_Windy/files/Mousy-ahk.html#pos>, <x at http://hoppfrosch.github.io/AHK_Windy/files/Mousy-ahk.html#x>, <y at http://hoppfrosch.github.io/AHK_Windy/files/Mousy-ahk.html#y>
 
 	This has to be a value out of 
-	 * 0 - mouse jumps immediatialy to the new position
-	 * 1 - mouse moves to new position following a linear track (default)
-	 * 2 - mouse moves to new position following a random track jittering along a line
-	 * 3 - mouse moves to new position following a random track following a bezier curce
+	
+	 * 0: mouse jumps immediatialy to the new position
+	 * 1: mouse moves to new position following a linear track (default)
+	 * 2: mouse moves to new position following a random track jittering along a line
+	 * 3: mouse moves to new position following a random track following a bezier curce
 
 	The speed of the movement can be set via <moveSpeed at http://hoppfrosch.github.io/AHK_Windy/files/Mousy-ahk.html#moveSpeed>
 	*/
@@ -427,7 +428,7 @@ class Mousy {
 	x,y - Coordinates to move to
 
 	Authors:
-	Original - <masterfocus at https://github.com/MasterFocus/AutoHotkey/tree/master/Functions/RandomBezier>
+	* Original: <masterfocus at https://github.com/MasterFocus/AutoHotkey/tree/master/Functions/RandomBezier>
 	*/
     __moveRandomBezier(x, y, Speed=-1) {
     	if (speed == -1) {
@@ -451,7 +452,7 @@ class Mousy {
 	x,y - Coordinates to move to
 
 	Authors:
-	Original - <slanter me at http://slanter-ahk.blogspot.de/2008/12/ahk-random-mouse-path-mousemove.html>
+	* Original: <slanter me at http://slanter-ahk.blogspot.de/2008/12/ahk-random-mouse-path-mousemove.html>
 	*/
     __moveRandomLinear(x, y, Speed=-1) {
     	if (speed == -1) {
@@ -475,7 +476,7 @@ class Mousy {
 	Constructor (*INTERNAL*)
 		
 	Parameters:
-	debug - Flag to enable debugging (Optional - Default: 0)
+	debug - Flag to enable debugging (Optional; Default: 0)
 	*/  
 	__New( debug := false ) {
 		this._debug := debug ; _DBG_
@@ -502,17 +503,13 @@ along with this script. If not, see <http://www.gnu.org/licenses/>.
 ;========================================================================
 ;
 ; Function: RandomBezier
-; Description: Moves the mouse through a random Bézier path
+; Moves the mouse through a random Bézier path
 ; URL (+info): --------------------
 ;
 ; Last Update: 30/May/2013 03:00h BRT
 ;
-; Created by MasterFocus
-; - https://github.com/MasterFocus
-; - http://masterfocus.ahk4.net
-; - http://autohotkey.com/community/viewtopic.php?f=2&t=88198
-;
-;========================================================================
+; Author:
+; * Created by MasterFocus (https://github.com/MasterFocus, http://masterfocus.ahk4.net, http://autohotkey.com/community/viewtopic.php?f=2&t=88198)
 RandomBezier( X0, Y0, Xf, Yf, O="") {
 	Time := RegExMatch(O,"i)T(\d+)",M)&&(M1>0)? M1: 10
 	RO := InStr(O,"RO",0) , RD := InStr(O,"RD",0)
