@@ -13,7 +13,7 @@ class Recty {
 	This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See <WTFPL at http://www.wtfpl.net/> for more details.
 
 */
-	_version := "0.3.0"
+	_version := "0.3.1"
 	_debug := 0 ; _DBG_	
 	x := 0
 	y := 0
@@ -38,79 +38,108 @@ class Recty {
 			return this._debug
 		}
 	}
-	__Get(aName) {
-		/* ---------------------------------------------------------------------------------------
-		Property: x [get/set]
-		Get or Set x-coordinate of the upper left corner of the rectangle
-				
-		This is identical to property <xul>
-		*/
-		
-		/* ---------------------------------------------------------------------------------------
-		Property: y [get/set]
-		Get or Set y-coordinate of the upper left corner of the rectangle
-				
-		This is identical to property <yul>
-		*/
-		
-		/* ---------------------------------------------------------------------------------------
-		Property: w [get/set]
-		Get or Set the width of the rectangle
-		*/
-		
-		/* ---------------------------------------------------------------------------------------
-		Property: h [get/set]
-		Get or Set the height of the rectangle
-		*/
+	/* ---------------------------------------------------------------------------------------
+	Property: x [get/set]
+	Get or Set x-coordinate of the upper left corner of the rectangle
 
-        if (aName = "xul") ; x - upper left corner
-		/* ---------------------------------------------------------------------------------------
-		Property: xul [get/set]
-		Get or Set x-coordinate of the upper left corner of the rectangle			
-			
-		This is identical to property <x>
-		*/
+	Value:
+	x -  x-coordinate of the upper left corner of the rectangle
+
+	See Also:
+	<xul>
+	*/
+	/* ---------------------------------------------------------------------------------------
+	Property: y [get/set]
+	Get or Set y-coordinate of the upper left corner of the rectangle
+
+	Value:
+	y -  y-coordinate of the upper left corner of the rectangle
+
+	See Also:
+	<yul>
+	*/	
+	/* ---------------------------------------------------------------------------------------
+	Property: w [get/set]
+	Get or Set the width of the rectangle
+
+	Value:
+	w -  width of the rectangle
+	*/
+	/* ---------------------------------------------------------------------------------------
+	Property: h [get/set]
+	Get or Set the height of the rectangle
+
+	Value:
+	h -  height of the rectangle
+	*/
+	xul[] {
+	/* ------------------------------------------------------------------------------- 
+	Property: xul [get/set]
+	Get or Set x-coordinate of the upper left corner of the rectangle			
+		
+	Value:
+	xul -  x-coordinate of the upper left corner of the rectangle
+
+	See Also:
+	<y>
+	*/
+		get {
 			return this.x
-		if (aName = "yul") ; y - upper left corner
-		/* ---------------------------------------------------------------------------------------
-		Property: yul [get/set]
-		Get or Set y-coordinate of the upper left corner of the rectangle			
-				
-		This is identical to property <y>
-		*/
-			return this.y
-		if (aName = "xlr") ; x - lower right corner
-		/* ---------------------------------------------------------------------------------------
-		Property: xlr [get/set]
-		Get or Set x-coordinate of the lower right corner of the rectangle			
-		*/
-			return this.x+this.w
-		if (aName = "ylr") ; y - lower right left corner
-		/* ---------------------------------------------------------------------------------------
-		Property: ylr [get/set]
-		Get or Set y-coordinate of the lower right corner of the rectangle			
-		*/
-			return this.y+this.h
-			
-		return
+		}
+		set {
+			this.x := value
+			return this.x
+		}
 	}
-	__Set(aName, aValue) {
-	/*! ===============================================================================
-	Method: __Set
-	Custom Setter Function (*INTERNAL*)
-	*/    
-        if aName in xul,yul,xlr,ylr
-		{
-            if (aName = "xul")
-				this.x := aValue
-			else if (aName = "yul")
-				this.y := aValue
-			else if (aName = "xlr")
-				this.w := aValue - this.x
-			else if (aName = "ylr")
-				this.h := aValue - this.y
-				
-			return aValue
+	yul[] {
+	/* ------------------------------------------------------------------------------- 
+	Property: yul [get/set]
+	Get or Set y-coordinate of the upper left corner of the rectangle			
+		
+	Value:
+	y -  y-coordinate of the upper left corner of the rectangle
+
+	See Also:
+	<y>
+	*/
+		get {
+			return this.y
+		}
+		set {
+			this.y := value
+			return this.y
+		}
+	}
+	xlr[] {
+	/* ------------------------------------------------------------------------------- 
+	Property: xlr [get/set]
+	Get or Set x-coordinate of the lower right corner of the rectangle		
+			
+	Value:
+	xlr -  x-coordinate of the lower right corner of the rectangle
+	*/
+		get {
+			return this.x+this.w
+		}
+		set {
+			this.w := value - this.x
+			return value
+		}
+	}
+	ylr[] {
+	/* ------------------------------------------------------------------------------- 
+	Property: ylr [get/set]
+	Get or Set y-coordinate of the lower right corner of the rectangle		
+			
+	Value:
+	ylr -  y-coordinate of the lower right corner of the rectangle
+	*/
+		get {
+			return this.y+this.h
+		}
+		set {
+			this.h := value - this.y
+			return value
 		}
 	}
 	; ##################### End of Properties (AHK >1.1.16.x) ##############################################################
