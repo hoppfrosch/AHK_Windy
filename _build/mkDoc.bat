@@ -16,7 +16,7 @@ copy ..\lib\Windy\Windy.ahk %WORK%
 copy ..\lib\Windy\WindLy.ahk %WORK%
 
 ::path to the natural doc folder
-SET NDPATH=D:\Portable\PortableApps\AutoHotkey\App\Tools\NaturalDocs\NaturalDocs
+SET NDPATH=d:\Usr\programme\NaturalDocs\
 
 pushd %WORK%
 
@@ -30,7 +30,7 @@ mkdir "%ROOT%\%DOC%\_ndProj" 2>nul
 pushd "%NDPATH%"
 if exist "%ROOT%\images" SET IMG=-img "%ROOT%\images"
 
-call NaturalDocs.bat -i "%ROOT%" -o HTML "%ROOT%\%DOC%" -p "%ROOT%\%DOC%\_ndProj" %IMG%
+call NaturalDocs.exe -i "%ROOT%" -o HTML "%ROOT%\%DOC%" -p "%ROOT%\%DOC%\_ndProj" %IMG%
 
 popd
 

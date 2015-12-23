@@ -714,16 +714,16 @@ class MiscTestSuite {
 		OutputDebug % "<<<<[" A_ThisFunc "]<<<<<"
 	}
 
-	Resizeable() {
+	Resizable() {
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		OutputDebug % "...[" A_ThisFunc "]> 1"
-		Yunit.assert( this.obj.resizeable == 1)
+		Yunit.assert( this.obj.resizable == 1)
 		OutputDebug % "...[" A_ThisFunc "]> 0"
-		this.obj.resizeable := 0
-		Yunit.assert( this.obj.resizeable == 0)
+		this.obj.resizable := 0
+		Yunit.assert( this.obj.resizable == 0)
 		OutputDebug % "...[" A_ThisFunc "]> toggle"
-		this.obj.resizeable := !this.obj.resizeable
-		Yunit.assert( this.obj.resizeable == 1)
+		this.obj.resizable := !this.obj.resizable
+		Yunit.assert( this.obj.resizable == 1)
 		OutputDebug % "<<<<[" A_ThisFunc "]<<<<<"
 		sleep, 500
 	}

@@ -3,7 +3,12 @@
 (on Branch: **master**, since **2014-10-26**)
 
 -----------------------------------------------------------------
- * **Windy 0.15.2** (via Commit [674cf2d](https://github.com/hoppfrosch/AHK_Windy/commit/674cf2da99cc84cb88ee6f5c4c2b3d7e68075be6))
+ * **Windy 0.15.3** (via Commit [0bee43c](https://github.com/hoppfrosch/AHK_Windy/commit/0bee43c85e119d5fe0b89a3d8418dd899e387b85))
+   * [#37](https://github.com/hoppfrosch/AHK_EDE/issues/37) - Windy: Correct name of property resizeable[] to resizable[]
+   * *[#41](https://github.com/hoppfrosch/AHK_EDE/issues/41) - INTERNAL: Readme.md: Update with several Badges*
+   * *[#42](https://github.com/hoppfrosch/AHK_EDE/issues/42) - INTERNAL: Refactor for NaturalDocs 2.0*
+   * *[#43](https://github.com/hoppfrosch/AHK_EDE/issues/43) - INTERNAL: Recty: Use property feature from AutoHotkey 1.1.16*
+ * **Windy 0.15.2** (via Commit [5806935](https://github.com/hoppfrosch/AHK_Windy/commit/58069359d270c844e83744eab3d84756aff0c7b9))
    * [#26](https://github.com/hoppfrosch/AHK_EDE/issues/26): WindLy: Methods for Operations (Set-operations, Insert, Remove ...)
    * [#33](https://github.com/hoppfrosch/AHK_EDE/issues/33): WindLy: Remove non existing windows from list
  * **Windy 0.15.1** (via Commit [a257c27](https://github.com/hoppfrosch/AHK_Windy/commit/a257c2700c4b0eb0b3521f0232bb8324fbb3e988))

@@ -11,11 +11,12 @@
 	Class: Mony
 	Handling a single Monitor, identified via its monitor ID
 
-		Author(s):
-	<hoppfrosch at hoppfrosch@gmx.de>		
+	Authors:
+	<hoppfrosch at hoppfrosch@gmx.de>: Original
 
 	About: License
 	This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See <WTFPL at http://www.wtfpl.net/> for more details.
+	
 */
 class Mony {
 	_debug := 0
@@ -32,7 +33,7 @@ class Mony {
 	Remarks:
 	* There is no setter available, since this is a constant system property
 
-	See also: 
+	See Also: 
 	<virtualScreenSize [get]>
 	*/
 		get {
@@ -136,7 +137,7 @@ class Mony {
 	Remarks:
 	* There is no setter available, since this is a constant system property
 
-	See also: 
+	See Also: 
 	<idPrev [get]>
 	*/
 		get {
@@ -159,7 +160,7 @@ class Mony {
 	Remarks:
 	* There is no setter available, since this is a constant system property
 
-	See also: 
+	See Also: 
 	<idNext [get]>
 	*/
 		get {
@@ -179,6 +180,7 @@ class Mony {
 	More infos on GetMonitorInfo see <http://msdn.microsoft.com/de-de/library/windows/desktop/dd144901%28v=vs.85%29.aspx>
 
 	The return value is an object containing 
+	
 	 * Monitor handle
 	 * Monitor name
 	 * Monitor Id 
@@ -190,7 +192,7 @@ class Mony {
 	* There is no setter available, since this is a constant system property
 
 	Authors:
-	Original - <just me at http://ahkscript.org/boards/viewtopic.php?f=6&t=4606>
+	* Original: <just me at http://ahkscript.org/boards/viewtopic.php?f=6&t=4606>
 	*/
 		get {
 			hmon := this.hmon
@@ -274,7 +276,7 @@ class Mony {
 	Remarks:
 	* There is no setter available, since this is a constant system property
 
-	See also: 
+	See Also: 
 	<scaleX [get]>, <scaleY [get]>
 	*/
 		get {
@@ -300,7 +302,7 @@ class Mony {
 	Remarks:
 	* There is no setter available, since this is a constant system property
 
-	See also: 
+	See Also: 
 	<scale [get]>, <scaleY [get]>
 	*/
 		get {
@@ -319,7 +321,6 @@ class Mony {
 	Determines the scaling factor in y-direction for coordinates when moving to monDest
 			
 	Parameters:
-	
 	monDest - Destination Monitor number (*Required*, Default := 1)
 			
 	Returns:
@@ -328,7 +329,7 @@ class Mony {
 	Remarks:
 	* There is no setter available, since this is a constant system property
 
-	See also: 
+	See Also: 
 	<scale [get]>, <scaleX [get]>
 	*/
 		get {
@@ -349,7 +350,7 @@ class Mony {
 	Remarks:
 	* There is no setter available, since this is a constant system property
 
-	See also: 
+	See Also: 
 	<virtualScreenSize [get]>, <workingArea [get]>
 	*/
 		get {
@@ -383,7 +384,7 @@ class Mony {
 	Remarks:
 	* There is no setter available, since this is a constant system property
 
-	See also: 
+	See Also: 
 	<size [get]>, <boundary [get]>
 	*/
 		get {
@@ -405,7 +406,7 @@ class Mony {
 	Remarks:
 	* There is no setter available, since this is a constant system property
 
-	See also: 
+	See Also: 
 	<size [get]>
 	*/
 		get {
@@ -464,7 +465,7 @@ class Mony {
 	The given rectangle-coordinates are transformed into percent of the screen. For example on a 1920x1200 screen the coordinates x=394,y=240,w=960,h=400 are transformed into 
 	(20, 20, 50, 33.33) because 394/1920 = 20%, 240/1200=20%, 960/1920=50%, 400/1200=33.33%
 	 	 
-	Parameter(s):
+	Parameters:
 	x,y,w,h - position and width/height to be transformed into screen percents
 
 	Returns:
@@ -487,11 +488,11 @@ class Mony {
     }
     
 	; ===== Internal Methods =========================================================
-	/* -------------------------------------------------------------------------------
+	/*! -------------------------------------------------------------------------------
 	method: __idHide
 	Helper function for <identify>: Hides the Id, shown with <__idShow> (*INTERNAL*)
 		
-    See also: 
+    See Also: 
 	<identify>, <__idShow>
 	*/
 	__idHide() {
@@ -504,7 +505,7 @@ class Mony {
 		
 		return
 	}
-	/* -------------------------------------------------------------------------------
+	/*! -------------------------------------------------------------------------------
 	method: __idShow
 	Helper function for <identify>: Identify monitor by displaying the monitor id, hidden via <__idHide> (*INTERNAL*)
 	
@@ -512,10 +513,10 @@ class Mony {
 	txtcolor - color of the displayed monitor id (*Optional*, Default: "000000")
 	txtsize - size of the displayed monitor id (*Optional*, Default: 300[px])
 	
-	Author(s):
-    Original - <Bkid at http://ahkscript.org/boards/viewtopic.php?f=6&t=3761&p=19836&hilit=Monitor#p19836>
+	Authors:
+    * Original: <Bkid at http://ahkscript.org/boards/viewtopic.php?f=6&t=3761&p=19836&hilit=Monitor#p19836>
 
-    See also: 
+    See Also: 
 	<identify>, <__idHide>
 	*/
 	__idShow( txtcolor := "000000", txtsize := 300 ) {

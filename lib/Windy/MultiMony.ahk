@@ -11,8 +11,8 @@
 	Class: MultiMony
 	Handling Multiple Display-Monitor Environments
 
-	Author(s):
-	<hoppfrosch at hoppfrosch@gmx.de>		
+	Authors:
+	<hoppfrosch at hoppfrosch@gmx.de>: Original	
 
 	About: License
 	This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See <WTFPL at http://www.wtfpl.net/> for more details.
@@ -22,22 +22,21 @@ class MultiMony {
 	_version := "1.0.1"
 
 	; ===== Properties ==============================================================	
-    debug[] { ; _DBG_
-   	/* -------------------------------------------------------------------------------
+    debug[] {
+	/* ------------------------------------------------------------------------------- 
 	Property: debug [get/set]
 	Debug flag for debugging the object
 
 	Value:
 	flag - *true* or *false*
 	*/
-
 		get {
-			return this._debug                                                         ; _DBG_
+			return this._debug
 		}
 		set {
-			mode := value<1?0:1                                                        ; _DBG_
-			this._debug := mode                                                        ; _DBG_
-			return this._debug                                                         ; _DBG_
+			mode := value<1?0:1
+			this._debug := mode
+			return this._debug
 		}
 	}
 	monitorsCount[] {
@@ -66,7 +65,7 @@ class MultiMony {
 	Remarks:
 	* There is no setter available, since this is a constant system property
 
-	See also: 
+	See Also: 
 	<virtualScreenSize [get]>
 	*/
 		get {
@@ -98,7 +97,7 @@ class MultiMony {
 	Remarks:
 	* There is no setter available, since this is a constant system property
 	
-	See also: 
+	See Also: 
 	<size [get]>
 	*/
 		get {
@@ -117,7 +116,7 @@ class MultiMony {
 	
 	/* -------------------------------------------------------------------------------
 	Method: 	coordDisplayToVirtualScreen
-	Transforms coordinates relative to given monitor into absolute (virtual) coordinates. Returns object of type <point at http://hoppfrosch.github.io/AHK_Windy/files/Pointy-ahk.html>.
+	Transforms coordinates relative to given monitor into absolute (virtual) coordinates. Returns object of type <point at http://hoppfrosch.github.io/AHK_Windy/files/Pointy-ahk.html>
 	
 	Parameters:
 	id - id of the monitor 
@@ -171,9 +170,9 @@ class MultiMony {
 	Handle of the monitor at specified coordinates
 
 	Authors:
-	Original - <just me at http://ahkscript.org/boards/viewtopic.php?f=6&t=4606>
+	* Original: <just me at http://ahkscript.org/boards/viewtopic.php?f=6&t=4606>
 
-	See also:
+	See Also:
 	<idFromCoord>
 	*/
 	hmonFromCoord(x := "", y := "") {
@@ -202,9 +201,9 @@ class MultiMony {
 	Handle of the monitor containing the specified window
 
 	Authors:
-	Original - <just me at http://ahkscript.org/boards/viewtopic.php?f=6&t=4606>
+	* Original: <just me at http://ahkscript.org/boards/viewtopic.php?f=6&t=4606>
 
-	See also:
+	See Also:
 	<idFromHwnd>
 	*/
 	hmonFromHwnd(hwnd) {
@@ -223,7 +222,7 @@ class MultiMony {
 	Returns:
 	Monitor Handle
 
-	See also:
+	See Also:
 	<idFromHmon>
 	*/
 	hmonFromid(id := 1) {
@@ -234,7 +233,7 @@ class MultiMony {
    		return hmon
 	}
 	/* -------------------------------------------------------------------------------
-	Method:  hmonFromRect
+	Method: hmonFromRect
 	Get the handle of the monitor that has the largest area of intersection with a specified rectangle.
 	
 	Parameters:
@@ -244,9 +243,9 @@ class MultiMony {
 	Monitor Handle
 
 	Authors:
-	Original - <just me at http://ahkscript.org/boards/viewtopic.php?f=6&t=4606>
+	* Original: <just me at http://ahkscript.org/boards/viewtopic.php?f=6&t=4606>
 
-	See also:
+	See Also:
 	<idFromRect>
 	*/
 	hmonFromRect(x, y, w, h) { 
@@ -261,13 +260,13 @@ class MultiMony {
 		return hmon
 	}
 	/* -------------------------------------------------------------------------------
-	method: 	identify
+	method: identify
 	Identify monitors by displaying the monitor id on each monitor
 	
 	Parameters:
 	disptime - time to display the monitor id (*Optional*, Default: 1500[ms])
-	txtcolor - color of the displayed monitor id(*Optional*, Default: "000000")
-	txtsize - size of the displayed monitor id(*Optional*, Default: 300[px])
+	txtcolor - color of the displayed monitor id (*Optional*, Default: "000000")
+	txtsize - size of the displayed monitor id (*Optional*, Default: 300[px])
 	*/
 	identify(disptime := 1500, txtcolor := "000000", txtsize := 300) {
 
@@ -302,7 +301,7 @@ class MultiMony {
 	Returns:
 	Index of the monitor at specified coordinates
 
-	See also:
+	See Also:
 	<hmonFromCoord>
 	*/
 	idFromCoord(x, y, default := 1) {
@@ -330,7 +329,7 @@ class MultiMony {
 	Returns:
 	ID of the monitor containing the specified window
 
-	See also:
+	See Also:
 	<hmonFromHwnd>
 	*/
 	idFromHwnd(hwnd) {
@@ -368,7 +367,7 @@ class MultiMony {
 	Returns:
 	Index of the monitor
 
-	See also:
+	See Also:
 	<hmonFromId>
 	*/
 	idFromHmon(hmon) {
@@ -390,7 +389,7 @@ class MultiMony {
 	Returns:
 	Monitor Handle
 
-	See also:
+	See Also:
 	<hmonFromRect>
 	*/
 	idFromRect(x, y, w, h) { 
@@ -406,9 +405,9 @@ class MultiMony {
 			
 	Parameters:
 	id - monitor, whose next monitorid has to be determined
-	cycle - == 1 cycle through monitors; == 0 stop at last monitor (*Optional*, Default: 1)
+	cycle - *== 1* cycle through monitors; *== 0* stop at last monitor (*Optional*, Default: 1)
 			
-	See also: 
+	See Also: 
 	<idPrev>
 	*/
 	idNext( currMon := 1, cycle := true ) {
@@ -434,9 +433,9 @@ class MultiMony {
 			
 	Parameters:
 	id - monitor, whose previous monitor id has to be determined
-	cycle - == true cycle through monitors; == false stop at last monitor (*Optional*, Default: true)
+	cycle - *== true* cycle through monitors; *== false* stop at first monitor (*Optional*, Default: true)
 
-	See also: 
+	See Also: 
 	<idNext>
 	*/
 	idPrev( currMon := 1, cycle := true ) {
@@ -457,10 +456,11 @@ class MultiMony {
 		return prevMon
 	}
 	/* -------------------------------------------------------------------------------
-	Method:	Enumerates display monitors and returns an object all monitors (list of <Mony at http://hoppfrosch.github.io/AHK_Windy/files/Mony-ahk.html> -object )
+	Method:	monitors
+	Enumerates display monitors and returns an object all monitors (list of <Mony at http://hoppfrosch.github.io/AHK_Windy/files/Mony-ahk.html> object )
 			
 	Returns: 
-	monitors - associative array with monitor id as key and <Mony at http://hoppfrosch.github.io/AHK_Windy/files/Mony-ahk.html>-objects as values
+	monitors - associative array with monitor id as key and <Mony at http://hoppfrosch.github.io/AHK_Windy/files/Mony-ahk.html> objects as values
 	*/
 	monitors() {
 		Monis := {}

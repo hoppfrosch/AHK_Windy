@@ -1,5 +1,5 @@
 ﻿/*
-	Title: _ Windy, v0.15.0
+	Title: Windy, v0.15.3
 		
 	Windy provides a collection of classes, which allow a class based approach of handling windows, monitors, etc.
 		
@@ -12,8 +12,8 @@
 	* <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html> - Windows
 	* <WindLy at http://hoppfrosch.github.io/AHK_Windy/files/WindLy-ahk.html> - Collection (List) of Windows
 		
-	Author(s):
-	<hoppfrosch at hoppfrosch@gmx.de>		
+	Authors:
+	<hoppfrosch at hoppfrosch@gmx.de>: Original
 
 	About: License
 	This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See <WTFPL at http://www.wtfpl.net/> for more details.
@@ -31,4 +31,4 @@
 #include Windy.ahk
 
 
-Version := "0.15.2"
+Version := "0.15.3"

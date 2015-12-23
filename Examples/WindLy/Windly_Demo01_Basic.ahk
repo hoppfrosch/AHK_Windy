@@ -8,7 +8,7 @@ for key, data in x.Snapshot() {  ; access the window list directly by function c
 }
 
 OutputDebug % "******** removeNonExisting *********************************************************************"
-MsgBox % "Close any window and watch, if the widiw is removed from the list"
+MsgBox % "Close any window and watch, if the window is removed from the list"
 x.removeNonExisting()
 
 OutputDebug % "******** On Monitor 1 *************************************************************************"

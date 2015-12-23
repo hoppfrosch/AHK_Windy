@@ -17,12 +17,11 @@ class Windy {
 	Class: Windy
 		Perform actions on windows using an unified class based interface
 
-	Author(s):
-	<hoppfrosch at hoppfrosch@gmx.de>
+	Authors:
+	<hoppfrosch at hoppfrosch@gmx.de>: Original
 
 	About: License
 	This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See <WTFPL at http://www.wtfpl.net/> for more details.
-
 */
 	_version := "0.9.0"
 	_debug := 0
@@ -156,23 +155,23 @@ class Windy {
 			return __classname
 		}
 	}
-	debug[] { ; _DBG_
-	/* ------------------------------------------------------------------------------- ; _DBG_
-	Property: debug [get/set]                                                          ; _DBG_
-	Debug flag for debugging the object                                                ; _DBG_
-                                                                                       ; _DBG_
-	Value:                                                                             ; _DBG_
-	flag - *true* or *false*                                                           ; _DBG_
-	*/                                                                                 ; _DBG_
-		get {                                                                          ; _DBG_ 
-			return this._debug                                                         ; _DBG_
-		}                                                                              ; _DBG_
-		set {                                                                          ; _DBG_
-			mode := value<1?0:1                                                        ; _DBG_
-			this._debug := mode                                                        ; _DBG_
-			return this._debug                                                         ; _DBG_
-		}                                                                              ; _DBG_
-	}                                                                                  ; _DBG_
+	debug[] {
+	/* ------------------------------------------------------------------------------- 
+	Property: debug [get/set]
+	Debug flag for debugging the object
+
+	Value:
+	flag - *true* or *false*
+	*/
+		get {
+			return this._debug
+		}
+		set {
+			mode := value<1?0:1
+			this._debug := mode
+			return this._debug
+		}
+	}
 	exist[] {
 	/* ---------------------------------------------------------------------------------------
 	Property: exist [get]
@@ -687,17 +686,17 @@ class Windy {
 			return ret
 		}
 	}
-	resizeable[] {
+	resizable[] {
 	/* ---------------------------------------------------------------------------------------
-	Property: resizeable [get/set]
+	Property: resizable [get/set]
 	Is window resizing possible?
 
 	Value:
-	flag - *true* or *false* (activates/deactivates *resizeable*-Property)
+	flag - *true* or *false* (activates/deactivates *resizable*-Property)
 
 	Remarks:		
 	* To toogle, simply use 
-	> obj.resizeable := !obj.resizeable
+	> obj.resizable := !obj.resizable
 	* Same as property <sizebox at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#sizebox>
 
 	*/
@@ -710,9 +709,9 @@ class Windy {
 		}
 	}
 	rolledUp[] {
-	/*! ---------------------------------------------------------------------------------------
+	/* ---------------------------------------------------------------------------------------
 	Property: rolledUp [get/set]
-	Is (window rolled up to its title bar?  Rolls/De-Rolls the current window or get the current state of RollUp
+	Is window rolled up to its title bar?  Rolls/De-Rolls the current window or get the current state of RollUp
 
 	Value:
 	flag - *true* or *false* (activates/deactivates *rolledUp*-Property)
@@ -777,7 +776,7 @@ class Windy {
 	}
 	rolledUpHeight[] {
 	/* ---------------------------------------------------------------------------------------
-	Property:rolledUpHeight [get]
+	Property: rolledUpHeight [get]
 	Height of the caption bar of windows
 		
 	Remarks:
@@ -861,7 +860,7 @@ class Windy {
 	Remarks:		
 	* To toogle, simply use 
 	> obj.sizebox := !obj.sizebox
-	* Same as property *resizeable*
+	* Same as property *resizable*
 	*/
 		get {
 			ret := (this.style & WS.SIZEBOX) > 0 ? 1 : 0
@@ -1161,13 +1160,13 @@ class Windy {
 	This method is needed as a helper method in order to allow an easy configuration of window alignment within AHK_EDE '
 
 	 	 
-	Parameter(s):
+	Parameters:
 	border - string describing the border to move to - for further description see <moveBorder at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#moveBorder>)
 
-	Returns;
+	Returns:
 	<rectangle at http://hoppfrosch.github.io/AHK_Windy/files/Recty-ahk.html> containing the screen percents
 
-	See also: 
+	See Also: 
 	<moveBorder at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#moveBorder>
 	*/	
 	border2percent(border="") {
@@ -1227,8 +1226,8 @@ class Windy {
 			
 	Performs the AHK command <WinKill at (http://ahkscript.org/docs/commands/WinKill.htm>
 
-	See also: 
-	* <close at #close>
+	See Also: 
+	<close at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#close>
 	*/
 	kill() {
 		if (this._debug) ; _DBG_
@@ -1245,7 +1244,7 @@ class Windy {
 			
 	The given coordinates/sizes are absolute coordinates/sizes. If the value of any coordinate is equal *99999* the current value keeps unchanged. 
 
-	Examples 
+	Examples: 
 	* Resize-only can be performed by 
 	> obj.move(99999,99999,width,height)
 	
@@ -1255,7 +1254,7 @@ class Windy {
 		w -  width (absolute) the window has to be resized to - use *99999* to preserve actual value *(Optional)*
 		h - height (absolute) the window has to be resized to - use *99999* to preserve actual value *(Optional)*
 	
-	See also: 
+	See Also: 
 	<movePercental() at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#movePercental>, <moveBorder() at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#moveBorder>
 	*/
 	move(X,Y,W="99999",H="99999") {
@@ -1284,26 +1283,26 @@ class Windy {
 	Method: movePercental
 	move and resize window relative to the size of the current screen.
 			
-	Example(s): 
+	Examples: 
 	 * create a window with origin 0,0 and a *width=100% of screen width* and *height=100% of screen height*
 	 > obj.movePercental(0,0,100,100)
 	 * create a window at *x=25% of screen width*, *y =25% of screen height*, and with *width=50% of screen width*, *height=50% of screen height*. The resulting window is a screen centered window with the described width and height
 	 > obj.movePercental(25,25,50,50)
 	 
-	Parameter(s):
+	Parameters:
 	xFactor - x-position factor (percents of current screen width) the window has to be moved to (Range: 0.0 to 100.0) *(*Optional*, Default = 0)
 	yFactor - y-position factor (percents of current screen height) the window has to be moved to (Range: 0.0 to 100.0) (*Optional*, Default = 0)
 	wFactor - width-size factor (percents of current screen width) the window has to be resized to (Range: 0.0 to 100.0) (*Optional*, Default = 100)
 	hFactor - height-size factor (percents of current screen height) the window has to be resized to (Range: 0.0 to 100.0) (*Optional*, Default = 100)
 	
-	See also: 
+	See Also: 
 	<move() at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#move>, <moveBorder() at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#moveBorder>
 			
-	Author(s):
-	Original - <Lexikos at http://www.autohotkey.com/forum/topic21703.html>
+	Authors:
+	- Original: <Lexikos at http://www.autohotkey.com/forum/topic21703.html>
 			
-	Caveats / Known issues:
-	    * The range of the method parameters is **NOT** checked - so be carefull using any values *<0* or *>100*
+	Caveats:
+	- The range of the method parameters is *NOT* checked, so be carefull using any values *<0* or *>100*
 	*/	
 	movePercental(xFactor=0, yFactor=0, wFactor=100, hFactor=100) {
 		if (this._debug) ; _DBG_
@@ -1340,16 +1339,10 @@ class Windy {
 	 > obj.moveBorder("t l")
 
 	 	 
-	Parameter(s):
-	border - string describing the border to move to
-	  * "t" - top
-	  * "b" - bottom
-	  * "l" - left
-	  * "r" - right
-	  * "vc" - vertically centered
-	  * "hc" - horizonally centered
+	Parameters:
+	border - string describing the border to move to (*t*: top, *b*: bottom, *l*: left, *r*: right, *vc*: vertically centered, *hc*: horizonally centered)
 	
-	See also: 
+	See Also: 
 	<move() at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#move>, <movePercental at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#movePercental>
 		*/	
 	moveBorder(border="") {
@@ -1370,7 +1363,7 @@ class Windy {
 
 	This method is needed as a helper method in order to allow an easy configuration of window alignment within AHK_EDE '
 
-	Returns;
+	Returns:
 	<rectangle at http://hoppfrosch.github.io/AHK_Windy/files/Recty-ahk.html> containing the screen percents 	 
 	*/	
 	posSize2percent() {
@@ -1396,8 +1389,8 @@ class Windy {
 	Hint:
 		This function will update the window for sure, unlike <WinSet at http://ahkscript.org/docs/commands/WinSet.htm> or InvalidateRect.
 
-	Author(s):
-	Original - majkinetor
+	Authors:
+	* Original: majkinetor
  	*/
     redraw(Option="" ) {
 		return
@@ -1659,7 +1652,7 @@ class Windy {
 Function:   ClassWindy_EventHook
 	Callback on System Events. Used as dispatcher to detect window manipulation and calling the appropriate member-function within class <WindowHandler>
 	
-See also:
+See Also:
 	* http://www.autohotkey.com/community/viewtopic.php?t=35659
 	* http://www.autohotkey.com/community/viewtopic.php?f=1&t=88156
 */
