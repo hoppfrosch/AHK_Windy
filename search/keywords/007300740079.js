@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("sty",["Property"],[["style",,[["Windy",,,,0,"File:Windy.ahk:Windy.style","AutoHotKeyClass:Windy:style"]]],["styleEx",,[["Windy",,,,0,"File:Windy.ahk:Windy.styleEx","AutoHotKeyClass:Windy:styleEx"]]]]);

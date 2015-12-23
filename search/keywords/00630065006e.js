@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("cen",["Property"],[["center",,[["Mony",,,,0,"File:Mony.ahk:Mony.center","AutoHotKeyClass:Mony:center"]]],["centercoords",,[["Windy",,,,0,"File:Windy.ahk:Windy.centercoords","AutoHotKeyClass:Windy:centercoords"]]]]);

@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("loc",["Function"],[["locate",,[["Mousy",,,,0,"File:Mousy.ahk:Mousy.locate","AutoHotKeyClass:Mousy:locate"]]]]);

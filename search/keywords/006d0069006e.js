@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("min",["Property"],[["minimizebox",,[["Windy",,,,0,"File:Windy.ahk:Windy.minimizebox","AutoHotKeyClass:Windy:minimizebox"]]],["minimized",,[["Windy",,,,0,"File:Windy.ahk:Windy.minimized","AutoHotKeyClass:Windy:minimized"]]]]);

@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("red",["Function"],[["redraw",,[["Windy",,,,0,"File:Windy.ahk:Windy.redraw","AutoHotKeyClass:Windy:redraw"]]]]);

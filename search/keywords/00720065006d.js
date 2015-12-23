@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("rem",["Function"],[["removeNonExisting",,[["WindLy",,,,0,"File:WindLy.ahk:WindLy.removeNonExisting","AutoHotKeyClass:WindLy:removeNonExisting"]]]]);

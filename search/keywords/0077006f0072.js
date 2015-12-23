@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("wor",["Property"],[["workingArea",,[["Mony",,,,0,"File:Mony.ahk:Mony.workingArea","AutoHotKeyClass:Mony:workingArea"]]]]);

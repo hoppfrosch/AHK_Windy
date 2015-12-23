@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("dif",["Function"],[["difference",,[["WindLy",,,,0,"File:WindLy.ahk:WindLy.difference","AutoHotKeyClass:WindLy:difference"]]]]);

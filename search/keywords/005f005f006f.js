@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("__o",["Function"],[["__onLocationChange",,[["Windy",,,,0,"File:Windy.ahk:Windy.__onLocationChange","AutoHotKeyClass:Windy:__onLocationChange"]]]]);

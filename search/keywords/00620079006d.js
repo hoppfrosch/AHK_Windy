@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("bym",["Function"],[["byMonitorId",,[["WindLy",,,,0,"File:WindLy.ahk:WindLy.byMonitorId","AutoHotKeyClass:WindLy:byMonitorId"]]]]);

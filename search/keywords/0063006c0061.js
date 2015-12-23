@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("cla",["Property","Function"],[["classname",,[["Windy",,,,0,"File:Windy.ahk:Windy.classname","AutoHotKeyClass:Windy:classname"]]],["ClassWindy_EventHook",,[["Windy",,,,1,"File:Windy.ahk:Windy.ClassWindy_EventHook","AutoHotKeyClass:Windy:ClassWindy_EventHook"]]]]);

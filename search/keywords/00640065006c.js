@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("del",["Function"],[["delete",,[["WindLy",,,,0,"File:WindLy.ahk:WindLy.delete","AutoHotKeyClass:WindLy:delete"]]]]);

@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("bor",["Function"],[["border2percent",,[["Windy",,,,0,"File:Windy.ahk:Windy.border2percent","AutoHotKeyClass:Windy:border2percent"]]]]);

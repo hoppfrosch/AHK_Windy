@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("sna",["Function"],[["snapshot",,[["WindLy",,,,0,"File:WindLy.ahk:WindLy.snapshot","AutoHotKeyClass:WindLy:snapshot"]]]]);

@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("cap",["Property"],[["caption",,[["Windy",,,,0,"File:Windy.ahk:Windy.caption","AutoHotKeyClass:Windy:caption"]]]]);

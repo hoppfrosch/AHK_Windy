@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("sym",["Function"],[["symmetricDifference",,[["WindLy",,,,0,"File:WindLy.ahk:WindLy.symmetricDifference","AutoHotKeyClass:WindLy:symmetricDifference"]]]]);

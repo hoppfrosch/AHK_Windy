@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("ins",["Function"],[["insert",,[["WindLy",,,,0,"File:WindLy.ahk:WindLy.insert","AutoHotKeyClass:WindLy:insert"]]]]);

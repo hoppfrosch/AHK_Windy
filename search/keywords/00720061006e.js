@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("ran",["Function"],[["RandomBezier",,[["Mousy",,,,0,"File:Mousy.ahk:Mousy.RandomBezier","AutoHotKeyClass:Mousy:RandomBezier"]]]]);

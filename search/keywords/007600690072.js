@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("vir",["Property"],[["virtualScreenSize",,[["Mony",,,,0,"File:Mony.ahk:Mony.virtualScreenSize","AutoHotKeyClass:Mony:virtualScreenSize"],["MultiMony",,,,0,"File:MultiMony.ahk:MultiMony.virtualScreenSize","AutoHotKeyClass:MultiMony:virtualScreenSize"]]]]);

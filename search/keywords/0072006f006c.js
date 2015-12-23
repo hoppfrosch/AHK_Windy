@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("rol",["Property"],[["rolledUp",,[["Windy",,,,0,"File:Windy.ahk:Windy.rolledUp","AutoHotKeyClass:Windy:rolledUp"]]],["rolledUpHeight",,[["Windy",,,,0,"File:Windy.ahk:Windy.rolledUpHeight","AutoHotKeyClass:Windy:rolledUpHeight"]]]]);

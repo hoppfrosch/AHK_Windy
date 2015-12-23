@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("__p",["Function"],[["__posPush",,[["Windy",,,,0,"File:Windy.ahk:Windy.__posPush","AutoHotKeyClass:Windy:__posPush"]]],["__posRestore",,[["Windy",,,,0,"File:Windy.ahk:Windy.__posRestore","AutoHotKeyClass:Windy:__posRestore"]]],["__posStackDump",,[["Windy",,,,0,"File:Windy.ahk:Windy.__posStackDump","AutoHotKeyClass:Windy:__posStackDump"]]]]);

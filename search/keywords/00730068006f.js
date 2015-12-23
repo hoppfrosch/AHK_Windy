@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("sho",["Property"],[["showLocatorAfterMove",,[["Mousy",,,,0,"File:Mousy.ahk:Mousy.showLocatorAfterMove","AutoHotKeyClass:Mousy:showLocatorAfterMove"]]]]);

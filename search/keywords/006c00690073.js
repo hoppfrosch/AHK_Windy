@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("lis",["Property"],[["list",,[["WindLy",,,,0,"File:WindLy.ahk:WindLy.list","AutoHotKeyClass:WindLy:list"]]]]);

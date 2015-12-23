@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("__i",["Function"],[["__isWindow",,[["Windy",,,,0,"File:Windy.ahk:Windy.__isWindow","AutoHotKeyClass:Windy:__isWindow"]]]]);

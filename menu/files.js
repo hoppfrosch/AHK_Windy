@@ -1,0 +1,1 @@
+NDMenu.OnSectionLoaded("files.js",[[1,"Mony.ahk"],[1,"Mousy.ahk"],[1,"MultiMony.ahk"],[1,"Pointy.ahk"],[1,"Recty.ahk"],[1,"WindLy.ahk"],[1,"Windy.ahk"],[1,"Windy_Main.ahk"]]);

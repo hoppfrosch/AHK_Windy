@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("kil",["Function"],[["kill",,[["Windy",,,,0,"File:Windy.ahk:Windy.kill","AutoHotKeyClass:Windy:kill"]]]]);

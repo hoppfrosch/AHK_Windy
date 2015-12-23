@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("bys",["Function"],[["byStyle",,[["WindLy",,,,0,"File:WindLy.ahk:WindLy.byStyle","AutoHotKeyClass:WindLy:byStyle"]]]]);

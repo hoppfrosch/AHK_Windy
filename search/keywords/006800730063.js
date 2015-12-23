@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("hsc",["Property"],[["hscrollable",,[["Windy",,,,0,"File:Windy.ahk:Windy.hscrollable","AutoHotKeyClass:Windy:hscrollable"]]]]);

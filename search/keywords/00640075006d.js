@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("dum",["Function"],[["Dump",,[["Mousy","dump",,,0,"File:Mousy.ahk:Mousy.dump","AutoHotKeyClass:Mousy:dump"],["Pointy",,,,0,"File:Pointy.ahk:Pointy.Dump","AutoHotKeyClass:Pointy:Dump"],["Recty",,,,0,"File:Recty.ahk:Recty.Dump","AutoHotKeyClass:Recty:Dump"]]]]);

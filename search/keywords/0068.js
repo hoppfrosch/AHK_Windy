@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("h",["Property"],[["h",,[["Recty",,,,0,"File:Recty.ahk:Recty.h","AutoHotKeyClass:Recty:h"]]]]);

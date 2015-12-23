@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("__s",["Function"],[["__SetWinEventHook",,[["Windy",,,,0,"File:Windy.ahk:Windy.__SetWinEventHook","AutoHotKeyClass:Windy:__SetWinEventHook"]]]]);

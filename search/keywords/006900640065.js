@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("ide",["Function"],[["identify",,[["Mony",,,,0,"File:Mony.ahk:Mony.identify","AutoHotKeyClass:Mony:identify"],["MultiMony",,,,0,"File:MultiMony.ahk:MultiMony.identify","AutoHotKeyClass:MultiMony:identify"]]]]);

@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("poi",["Class"],[["Pointy",,[[,,,,0,"File:Pointy.ahk:Pointy","AutoHotKeyClass:Pointy"]]]]);

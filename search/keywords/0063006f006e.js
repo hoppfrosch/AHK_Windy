@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("con",["Property"],[["confine",,[["Mousy",,,,0,"File:Mousy.ahk:Mousy.confine","AutoHotKeyClass:Mousy:confine"]]],["confineRect",,[["Mousy",,,,0,"File:Mousy.ahk:Mousy.confineRect","AutoHotKeyClass:Mousy:confineRect"]]]]);

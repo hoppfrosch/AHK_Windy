@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("int",["Function"],[["intersection",,[["WindLy",,,,0,"File:WindLy.ahk:WindLy.intersection","AutoHotKeyClass:WindLy:intersection"]]]]);

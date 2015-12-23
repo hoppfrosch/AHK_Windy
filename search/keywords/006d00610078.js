@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("max",["Property"],[["maximizebox",,[["Windy",,,,0,"File:Windy.ahk:Windy.maximizebox","AutoHotKeyClass:Windy:maximizebox"]]],["maximized",,[["Windy",,,,0,"File:Windy.ahk:Windy.maximized","AutoHotKeyClass:Windy:maximized"]]]]);

@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("hid",["Property"],[["hidden",,[["Windy",,,,0,"File:Windy.ahk:Windy.hidden","AutoHotKeyClass:Windy:hidden"]]]]);

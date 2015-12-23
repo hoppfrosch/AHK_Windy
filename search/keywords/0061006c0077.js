@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("alw",["Property"],[["alwaysOnTop",,[["Windy",,,,0,"File:Windy.ahk:Windy.alwaysOnTop","AutoHotKeyClass:Windy:alwaysOnTop"]]]]);
