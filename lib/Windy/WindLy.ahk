@@ -8,10 +8,10 @@
 
 /* ******************************************************************************************************************************************
 	Class: WindLy
-	Class holding lists of <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html>-Objects
+	Class holding lists of <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html> Objects
 
-	Author(s):
-	<hoppfrosch at hoppfrosch@gmx.de>		
+	Authors:
+	<hoppfrosch at hoppfrosch@gmx.de>: Original	
 
 	About: License
 	This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See <WTFPL at http://www.wtfpl.net/> for more details.
@@ -46,7 +46,7 @@ class WindLy {
 	id - Monitor-Id
 
 	Returns:
-	List of <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html>-Objects on the given monitor
+	List of <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html> Objects on the given monitor
 	*/
 	byMonitorId(id=1) {
 		this.__reset()
@@ -54,7 +54,7 @@ class WindLy {
 		for h_Wnd, win in _tmp {
 			h_WndHex := this.__hexStr(h_Wnd)
 			if (win.monitorID = id ) {
-			   this.Insert(win)
+			   this._wl[h_WndHex] := win
 			}
 		}
 		_tmp := {}
@@ -68,7 +68,7 @@ class WindLy {
 	myStyle - Windows-Style (<Class WS at http://hoppfrosch.github.io/AHK_Windy/files/Const_WinUser.ahk>)
 
 	Returns:
-	List of <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html>-Objects matching the given style
+	List of <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html> Objects matching the given style
 	*/
 	byStyle(myStyle) {
 		this.__reset()
@@ -89,7 +89,7 @@ class WindLy {
 	deletes a single Windy-object from current instance
 
 	Parameters:
-	oWindy - <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html>-Object to be deleted
+	oWindy - <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html> Object to be deleted
 	*/
 	delete(oWindy) {
 		x := this.__decStr(oWindy._hwnd)
@@ -105,7 +105,7 @@ class WindLy {
 	The difference contains only elements from the current instance which are not part of the given WindLy-object
 
 	Parameters:
-	oWindLy - <WindLy at http://hoppfrosch.github.io/AHK_Windy/files/WindLy-ahk.html>-Object to be used for calculating difference
+	oWindLy - <WindLy at http://hoppfrosch.github.io/AHK_Windy/files/WindLy-ahk.html> Object to be used for calculating difference
 	*/
 	difference(oWindLy) {
 		for currhwnd, data in oWindLy.list {
@@ -118,7 +118,7 @@ class WindLy {
 	Inserts a single Windy-object into current instance
 
 	Parameters:
-	oWindy - <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html>-Object to be inserted
+	oWindy - <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html> Object to be inserted
 	*/
 	insert(oWindy) {
 		if (!this._wl[oWindy._hwnd]) {
@@ -130,11 +130,11 @@ class WindLy {
 	Method:	intersection
 	Calculates the INTERSECTION of the given WindLy-Object and the current instance
 
-	The result only contains <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html>-Objects which 
+	The result only contains <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html> Objects which 
 	have been in the current instance as well as in the given WindLy-Object
 	
 	Parameters:
-	oWindy - <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html>-Object to be inserted
+	oWindy - <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html> Object to be inserted
 	*/
 	intersection(oWindLy) {
 		result := new WindLy()
@@ -150,7 +150,7 @@ class WindLy {
 	Method:	removeNonExisting
 	Remove non-existing windows from the list
 	
-	The result only contains <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html>-Objects which 
+	The result only contains <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html> Objects which 
 	do currently exist. Non existing windows are removed from the list.
 	*/
 	removeNonExisting() {
@@ -173,7 +173,7 @@ class WindLy {
 	Initializes the window list from all currently openend windows
 	
 	Returns:
-	List of <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html>-Objects.
+	List of <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html> Objects.
 	*/
 	snapshot() {
 		this.__reset()
@@ -184,11 +184,11 @@ class WindLy {
 	Method:	symmetricDifference
 	Calculates the SYMMETRICDIFFERENCE of the given WindLy-Object and the current instance
 
-	The result only contains <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html>-Objects which 
+	The result only contains <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html> Objects which 
 	have not been in the current instance as well as not in the given WindLy-Object (Removes items which occur in both lists)
 	
 	Parameters:
-	oWindy - <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html>-Object to operate with
+	oWindy - <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html> Object to operate with
 	*/
 	symmetricDifference(oWindLy) {
 		result := new WindLy()
@@ -219,7 +219,7 @@ class WindLy {
 	The Union contains all elements from the current instance as well as the given WindLy-object
 
 	Parameters:
-	oWindLy - <WindLy at http://hoppfrosch.github.io/AHK_Windy/files/WindLy-ahk.html>-Object to be used for calculating union
+	oWindLy - <WindLy at http://hoppfrosch.github.io/AHK_Windy/files/WindLy-ahk.html> Object to be used for calculating union
 	*/
 	union(oWindLy) {
 		for currhwnd, data in oWindLy.list {
@@ -230,12 +230,12 @@ class WindLy {
 
 	; ######################## Internal Methods - not to be called directly ############################################
 	; ===== Internal Methods =========================================================
-	/* -------------------------------------------------------------------------------
+	/*! -------------------------------------------------------------------------------
 	method: __all
 	Gets all currently openend windows and returns as a List of Objects (*INTERNAL*)
 
 	Returns:
-	List of <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html>-Objects
+	List of <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html> Objects
 	*/
 	__all() {
 		hwnds := this.__hwnds(true)
@@ -250,7 +250,7 @@ class WindLy {
 		
 		return ret
 	}
-	/* ---------------------------------------------------------------------------------------
+	/*! ---------------------------------------------------------------------------------------
 	Method:   __hwnds
 	Determines handles of all current windows(*INTERNAL*)
 
@@ -280,7 +280,7 @@ class WindLy {
 		
 	
 	}
-	/* ---------------------------------------------------------------------------------------
+	/*! ---------------------------------------------------------------------------------------
 	Method:   __isRealWindow
 	Checks whether the given hWnd refers to a TRUE window (As opposed to the desktop or a menu, etc.) (*INTERNAL*)
 
@@ -298,7 +298,7 @@ class WindLy {
 		ret := s & WS.CAPTION ? (s & WS.POPUP ? 0 : 1) : 0
 		return ret
 	}
-	/* -------------------------------------------------------------------------------
+	/*! -------------------------------------------------------------------------------
 	method: __reset
 	Initializes all the data (*INTERNAL*)
 	*/
@@ -329,7 +329,7 @@ class WindLy {
 		
 		return this
 	}
-	/* ---------------------------------------------------------------------------------------
+	/*! ---------------------------------------------------------------------------------------
     Method:   ____hexStr
 	Converts number to hex representation (*INTERNAL*)
 	*/
