@@ -38,8 +38,8 @@ class WindInfy {
 		oWindInfy := new WindInfy()
 		oWindInfy.classname := oWindy.classname
 		oWindInfy.processname := oWindy.processname
-		pid := oWindy.processID
-		oWindInfy.processfullpath := WindInfy._GetModuleFileNameEx(pid)
+		oWindInfy.pid := oWindy.processID
+		oWindInfy.processfullpath := WindInfy._GetModuleFileNameEx(oWindy.processID)
 		oWindInfy.style := oWindy.style
 		oWindInfy.styleEx := oWindy.styleEx
 		oWindInfy.rolledUp := oWindy.rolledUp

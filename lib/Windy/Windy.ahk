@@ -562,7 +562,8 @@ class Windy {
 	bFixStyle - Set to TRUE to fix WS_CHILD & WS_POPUP styles. SetParent does not modify the WS_CHILD or WS_POPUP window styles of the window whose parent is being changed. 	If hwndPar is 0, you should also clear the WS_CHILD bit and set the WS_POPUP style after calling SetParent (and vice-versa).	
 
 	Returns:
-	If the function succeeds, the return value is a handle to the previous parent window. Otherwise, its 0.
+	get(): Handle of parent window
+	set():: If the function succeeds, the return value is a handle to the previous parent window. Otherwise, its 0.
 
  	Remarks:
 	* If the current window identified by the hwnd parameter is visible, the system performs the appropriate redrawing and repainting.

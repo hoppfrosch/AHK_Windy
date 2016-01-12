@@ -9,4 +9,6 @@ o := WindInfy.fromWindy(oWindy)
 
 MsgBox % o.toJson()
 
+oWindy.kill()
+
 ExitApp
