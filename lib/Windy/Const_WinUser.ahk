@@ -2,7 +2,19 @@
 ; Function:         Several Constants from Windows_API (winuser.h)
 ; AHK version:      1.1.05+
 ; Language:         English
-; Version:          1.0.00.00/2014-09-19/hoppfrosch
+; Version:          1.0.01.00/2016-01-13/hoppfrosch
+
+; Window field offsets for GetWindow() === (winuser.h) =============================================================
+class GW {
+	; https://msdn.microsoft.com/en-us/library/ms633515%28VS.85%29.aspx
+	static HWNDFIRST    := 0
+	static HWNDLAST     := 1
+	static HWNDNEXT     := 2
+	static HWNDPREV     := 3
+	static HWNDOWNER    := 4
+	static CHILD        := 5
+	static ENABLEDPOPUP := 6
+}
 
 ; Window field offsets for GetWindowLong() === (winuser.h) =============================================================
 class GWL {

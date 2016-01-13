@@ -23,7 +23,7 @@ class Windy {
 	About: License
 	This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See <WTFPL at http://www.wtfpl.net/> for more details.
 */
-	_version := "0.9.0"
+	_version := "0.9.1"
 	_debug := 0
 	_hWnd := 0
 
@@ -519,6 +519,31 @@ class Windy {
 				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], ID=" value ")] -> New Value:" monID " (from: " oldID ")" ; _DBG_
 	
 			return monID
+		}
+	}
+	next[] {
+	/* ---------------------------------------------------------------------------------------
+	Property: next [get]
+	gets the <windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html> object below the current object in the Z order. 
+
+	Returns: 
+	new <windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html>-object
+	
+	Remarks:
+	* There is no setter available, since this is a constant window property
+	*/
+		get {
+			hwndnext := DllCall("GetWindow", "uint", this.hwnd, "uint", GW.HWNDNEXT)
+			while (!this.__isWindow(hwndnext)) {
+				hwndnext := DllCall("GetWindow", "uint", hwndnext, "uint", GW.HWNDNEXT)
+			}
+			ret := ""
+			if (this.__isWindow(hwndnext)) {
+				ret := new Windy(hwndNext)
+			}
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "]) -> (" hwndnext ")]" ; _DBG_		
+			return ret
 		}
 	}
 	owner[] {

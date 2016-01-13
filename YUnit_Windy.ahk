@@ -10,7 +10,7 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.9.0"
+ReferenceVersion := "0.9.1"
 debug := 1
 
 ;Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, TempTestSuite)
@@ -25,12 +25,14 @@ class TempTestSuite {
 		this.obj := new Windy(0, debug)
 	}    
 
-	scale() {
+	next() {
 		Global debug
 
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
-		this.obj.maximized := true
-		this.obj.scale(2)
+		newObj := new Windy(0, debug)
+		x := newObj.next 
+		Yunit.assert(this.obj.hwnd == x.hwnd)
+		newObj.kill()
 		OutputDebug % "<<<<[" A_ThisFunc "]<<<<<"
 	}
 		
@@ -801,7 +803,19 @@ class MiscTestSuite {
 		own:= this.obj.owner
 		Yunit.assert(own == 0)
 		OutputDebug % "<<<<[" A_ThisFunc "]<<<<<"
-	}	 
+	}
+
+	next() {
+		Global debug
+
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		newObj := new Windy(0, debug)
+		x := newObj.next 
+		Yunit.assert(this.obj.hwnd == x.hwnd)
+		newObj.kill()
+		OutputDebug % "<<<<[" A_ThisFunc "]<<<<<"
+	}
+	
 	
 	End() {
 		this.obj.kill()
