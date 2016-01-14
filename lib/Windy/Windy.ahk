@@ -23,7 +23,7 @@ class Windy {
 	About: License
 	This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See <WTFPL at http://www.wtfpl.net/> for more details.
 */
-	_version := "0.9.0"
+	_version := "0.9.1"
 	_debug := 0
 	_hWnd := 0
 
@@ -37,6 +37,39 @@ class Windy {
 	_posStack := 0
 
 	; ##################### Start of Properties (AHK >1.1.16.x) ############################################################
+	activated[] {
+	/* ---------------------------------------------------------------------------------------
+	Property: activated [get/set]
+	Set/Unset the current window as active window or get the current state
+
+	Value:
+	flag - *true* or *false* (activates/deactivates *activated*-Property)
+	
+	Remarks:		
+	* To toogle, simply use
+	>obj.activated := !obj.activated
+	*/
+		get {
+			hwnd := this.hwnd
+			val := WinActive("ahk_id hwnd")
+			ret := (val) > 0 ? 1 : 0
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret " (" val ")" ; _DBG_
+			return ret
+		}
+		set {
+			hwnd := this.hwnd
+			if (value == true)
+				WinActivate, ahk_id hwnd
+			else if (value == false) 
+				WinActivate, ahk_class Shell_TrayWnd  ; see: https://autohotkey.com/board/topic/29314-windeactivate/
+			
+			if (this._debug) ; _DBG_
+				OutputDebug % "[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> New Value:" this.activated ; _DBG_
+		
+			return this.alwaysOnTop
+		}
+	}
 	alwaysOnTop[] {
 	/* ---------------------------------------------------------------------------------------
 	Property: alwaysOnTop [get/set]
@@ -1148,7 +1181,7 @@ class Windy {
 	}
 	; ##################### End of Properties (AHK >1.1.16.x) ##############################################################
 	
-	; ######################## Methods to be called directly ########################################################### 
+	; ######################## Methods to be called directly ###########################################################     
 	/* ---------------------------------------------------------------------------------------
 	Method: border2percent
 	translates a border string to monitor percents.

@@ -10,11 +10,11 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.9.0"
+ReferenceVersion := "0.9.1"
 debug := 1
 
-;Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, TempTestSuite)
-Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, MiscTestSuite, NotRealWindowTestSuite, HideShowTestSuite, ExistTestSuite, RollupTestSuite, MoveResizeTestSuite, TransparencyTestSuite)
+Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, TempTestSuite)
+;Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, MiscTestSuite, NotRealWindowTestSuite, HideShowTestSuite, ExistTestSuite, RollupTestSuite, MoveResizeTestSuite, TransparencyTestSuite)
 Return
 
 
@@ -25,12 +25,21 @@ class TempTestSuite {
 		this.obj := new Windy(0, debug)
 	}    
 
-	scale() {
+	activated() {
 		Global debug
 
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
-		this.obj.maximized := true
-		this.obj.scale(2)
+		this.obj.activated := true
+		sleep 1000
+		val := (this.obj.activated == true)
+		Yunit.assert(val == true)
+		this.obj.activated := false
+		Yunit.assert(this.obj.activated == false)
+		this.obj.activated := true
+		newObj := new Windy(0, debug)
+		Yunit.assert(this.obj.activated == false)
+		newObj.kill()
+		Yunit.assert(this.obj.activated == true)
 		OutputDebug % "<<<<[" A_ThisFunc "]<<<<<"
 	}
 		
