@@ -51,7 +51,7 @@ class Windy {
 	*/
 		get {
 			hwnd := this.hwnd
-			val := WinActive("ahk_id hwnd")
+			val := WinActive("ahk_id " hwnd)
 			ret := (val) > 0 ? 1 : 0
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret " (" val ")" ; _DBG_
