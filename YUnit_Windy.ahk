@@ -10,7 +10,11 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
+<<<<<<< HEAD
 ReferenceVersion := "0.9.1"
+=======
+ReferenceVersion := "0.10.0"
+>>>>>>> develop
 debug := 1
 
 Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, TempTestSuite)
