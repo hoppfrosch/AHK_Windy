@@ -2,19 +2,7 @@
 ; Function:         Several Constants from Windows_API (winuser.h)
 ; AHK version:      1.1.05+
 ; Language:         English
-; Version:          1.0.01.00/2016-01-13/hoppfrosch
-
-; Window field offsets for GetWindow() === (winuser.h) =============================================================
-class GW {
-	; https://msdn.microsoft.com/en-us/library/ms633515%28VS.85%29.aspx
-	static HWNDFIRST    := 0
-	static HWNDLAST     := 1
-	static HWNDNEXT     := 2
-	static HWNDPREV     := 3
-	static HWNDOWNER    := 4
-	static CHILD        := 5
-	static ENABLEDPOPUP := 6
-}
+; Version:          1.0.01.00/2016-02-08/hoppfrosch
 
 ; Window field offsets for GetWindowLong() === (winuser.h) =============================================================
 class GWL {
@@ -354,6 +342,7 @@ class WS {
 		static TOOLWINDOW          := 0x00000080
 		static TOPMOST             := 0x00000008
 		static TRANSPARENT         := 0x00000020
+		static CLICKTHROUGH        := 0x00000020 ; http://stackoverflow.com/questions/1524035/topmost-form-clicking-through-possible
 		static WINDOWEDGE          := 0x00000100
 		static OVERLAPPEDWINDOW    := 0x00000300 ; WS_EX_WINDOWEDGE|EX_CLIENTEDGE
 		static PALETTEWINDOW       := 0x00000188 ; WS_EX_WINDOWEDGE|EX_TOOLWINDOW|EX_TOPMOST

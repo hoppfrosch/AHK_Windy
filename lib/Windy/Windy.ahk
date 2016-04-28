@@ -23,7 +23,7 @@ class Windy {
 	About: License
 	This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See <WTFPL at http://www.wtfpl.net/> for more details.
 */
-	_version := "0.9.1"
+	_version := "0.10.0"
 	_debug := 0
 	_hWnd := 0
 
@@ -37,6 +37,39 @@ class Windy {
 	_posStack := 0
 
 	; ##################### Start of Properties (AHK >1.1.16.x) ############################################################
+	activated[] {
+	/* ---------------------------------------------------------------------------------------
+	Property: activated [get/set]
+	Set/Unset the current window as active window or get the current state
+
+	Value:
+	flag - *true* or *false* (activates/deactivates *activated*-Property)
+	
+	Remarks:		
+	* To toogle, simply use
+	>obj.activated := !obj.activated
+	*/
+		get {
+			hwnd := this.hwnd
+			val := WinActive("ahk_id " hwnd)
+			ret := (val) > 0 ? 1 : 0
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret " (" val ")" ; _DBG_
+			return ret
+		}
+		set {
+			hwnd := this.hwnd
+			if (value == true)
+				WinActivate, ahk_id hwnd
+			else if (value == false) 
+				WinActivate, ahk_class Shell_TrayWnd  ; see: https://autohotkey.com/board/topic/29314-windeactivate/
+			
+			if (this._debug) ; _DBG_
+				OutputDebug % "[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> New Value:" this.activated ; _DBG_
+		
+			return this.alwaysOnTop
+		}
+	}
 	alwaysOnTop[] {
 	/* ---------------------------------------------------------------------------------------
 	Property: alwaysOnTop [get/set]
@@ -153,6 +186,46 @@ class Windy {
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "]) -> (" __classname ")]" ; _DBG_		
 			return __classname
+		}
+	}
+	clickThrough[transparency := 128, alwaysOnTop := 0] {
+	/* ---------------------------------------------------------------------------------------
+	Property: clickThrough [get/set]
+	Set/Unset clickThrough flag of the current window or get the current state
+
+	When a Window is set to clickthrough, its recommended to set the *alwaysontop*-Property as well
+
+	Parameters:
+	transparency - transparency to be set on clickthrough. If clickthrough is disabled transparency will be switched off
+			
+	Value:
+	flag - *true* or *false* (activates/deactivates *clickThrough*-Property)
+	
+	Remarks:		
+	* To toogle, simply use
+	>obj.clickThrough := !obj.clickThrough
+	*/
+		get {
+			ret := (this.styleEx & WS.EX.CLICKTHROUGH) > 0 ? 1 : 0
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_
+			return ret
+		}
+		set {
+			hwnd := this.hwnd
+			if (value == true) {
+				value := "+" WS.EX.CLICKTHROUGH
+				tp := transparency
+			} else if (value == false) {
+				value := "-" WS.EX.CLICKTHROUGH
+				tp := "OFF"
+			}
+			this.transparency(100) := tp
+			WinSet, ExStyle, %value%, ahk_id %hwnd%
+			if (this._debug) ; _DBG_
+				OutputDebug % "[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> New Value:" this.clickThrough ; _DBG_
+		
+			return this.clickThrough
 		}
 	}
 	debug[] {
@@ -1173,7 +1246,7 @@ class Windy {
 	}
 	; ##################### End of Properties (AHK >1.1.16.x) ##############################################################
 	
-	; ######################## Methods to be called directly ########################################################### 
+	; ######################## Methods to be called directly ###########################################################     
 	/* ---------------------------------------------------------------------------------------
 	Method: border2percent
 	translates a border string to monitor percents.

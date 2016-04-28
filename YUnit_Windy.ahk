@@ -10,7 +10,7 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.9.1"
+ReferenceVersion := "0.10.0"
 debug := 1
 
 ;Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, TempTestSuite)
@@ -25,14 +25,19 @@ class TempTestSuite {
 		this.obj := new Windy(0, debug)
 	}    
 
-	next() {
+	activated() {
 		Global debug
 
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		this.obj.activated := true
+		sleep 1000
+		val := (this.obj.activated == true)
+		Yunit.assert(val == true)
+		this.obj.activated := false
+		Yunit.assert(this.obj.activated == false)
+		this.obj.activated := true
 		newObj := new Windy(0, debug)
-		x := newObj.next 
-		Yunit.assert(this.obj.hwnd == x.hwnd)
-		newObj.kill()
+		Yunit.assert(this.obj.activated == false)
 		OutputDebug % "<<<<[" A_ThisFunc "]<<<<<"
 	}
 		
@@ -603,7 +608,23 @@ class MiscTestSuite {
 		_hWnd := WinExist("ahk_class Notepad")
 		this.obj := new Windy(_hWnd, debug)
 	}
-        
+
+	activated() {
+		Global debug
+
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		this.obj.activated := true
+		sleep 1000
+		val := (this.obj.activated == true)
+		Yunit.assert(val == true)
+		this.obj.activated := false
+		Yunit.assert(this.obj.activated == false)
+		this.obj.activated := true
+		newObj := new Windy(0, debug)
+		Yunit.assert(this.obj.activated == false)
+		OutputDebug % "<<<<[" A_ThisFunc "]<<<<<"
+	}
+
 	Caption() {
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		OutputDebug % "....[" A_ThisFunc "] > 1"
@@ -803,19 +824,7 @@ class MiscTestSuite {
 		own:= this.obj.owner
 		Yunit.assert(own == 0)
 		OutputDebug % "<<<<[" A_ThisFunc "]<<<<<"
-	}
-
-	next() {
-		Global debug
-
-		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
-		newObj := new Windy(0, debug)
-		x := newObj.next 
-		Yunit.assert(this.obj.hwnd == x.hwnd)
-		newObj.kill()
-		OutputDebug % "<<<<[" A_ThisFunc "]<<<<<"
-	}
-	
+	}	 
 	
 	End() {
 		this.obj.kill()

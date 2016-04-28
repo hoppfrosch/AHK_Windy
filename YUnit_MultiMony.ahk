@@ -12,12 +12,12 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "1.0.1"
+ReferenceVersion := "1.0.2"
 debug := 1
 
 ;Yunit.use(YunitStdOut, YunitWindow).Test(ExpMultiMonyTestSuite)
 Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, MultiMonyTestSuite)
-ExitApp
+Return
 
 class ExpMultiMonyTestSuite {
 	Begin() {
@@ -26,7 +26,7 @@ class ExpMultiMonyTestSuite {
 		this.monCount := 2
 		this.mon1Width := 1920
 		this.mon1Height := 1080
-		this.mon2Width := 1600
+		this.mon2Width := 1920
 		this.mon2Height := 1200
 		
 		this.monvirtWidth := this.mon1Width + this.mon2Width
@@ -56,13 +56,24 @@ class MultiMonyTestSuite
 		Global debug
 		this.obj := new MultiMony(debug)
 		this.monCount := 2
-		this.mon1Width := 1920
-		this.mon1Height := 1080
-		this.mon2Width := 1600
-		this.mon2Height := 1200
+		this.mon2Width := 1920
+		this.mon2Height := 1080
+		this.mon1Width := 1900
+		this.mon1Height := 1200
 		
 		this.monvirtWidth := this.mon1Width + this.mon2Width
 		this.monvirtHeight := this.mon2Height
+    }
+
+    idPrimary() {
+    	Global debug
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		prim := this.obj.idPrimary
+		Yunit.assert(prim == 2)
+		tb := this.obj.idTaskbar
+		Yunit.assert(tb == prim)
+		Yunit.assert(tb == 2)
+		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
     }
 
 	coordDisplayToVirtualScreen() {
