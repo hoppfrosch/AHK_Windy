@@ -25,12 +25,19 @@ class TempTestSuite {
 		this.obj := new Windy(0, debug)
 	}    
 
-	scale() {
+	activated() {
 		Global debug
 
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
-		this.obj.maximized := true
-		this.obj.scale(2)
+		this.obj.activated := true
+		sleep 1000
+		val := (this.obj.activated == true)
+		Yunit.assert(val == true)
+		this.obj.activated := false
+		Yunit.assert(this.obj.activated == false)
+		this.obj.activated := true
+		newObj := new Windy(0, debug)
+		Yunit.assert(this.obj.activated == false)
 		OutputDebug % "<<<<[" A_ThisFunc "]<<<<<"
 	}
 		
@@ -601,7 +608,23 @@ class MiscTestSuite {
 		_hWnd := WinExist("ahk_class Notepad")
 		this.obj := new Windy(_hWnd, debug)
 	}
-        
+
+	activated() {
+		Global debug
+
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		this.obj.activated := true
+		sleep 1000
+		val := (this.obj.activated == true)
+		Yunit.assert(val == true)
+		this.obj.activated := false
+		Yunit.assert(this.obj.activated == false)
+		this.obj.activated := true
+		newObj := new Windy(0, debug)
+		Yunit.assert(this.obj.activated == false)
+		OutputDebug % "<<<<[" A_ThisFunc "]<<<<<"
+	}
+
 	Caption() {
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
 		OutputDebug % "....[" A_ThisFunc "] > 1"
