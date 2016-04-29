@@ -13,8 +13,8 @@
 ReferenceVersion := "0.10.0"
 debug := 1
 
-;Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, TempTestSuite)
-Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, MiscTestSuite, NotRealWindowTestSuite, HideShowTestSuite, ExistTestSuite, RollupTestSuite, MoveResizeTestSuite, TransparencyTestSuite)
+Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, TempTestSuite)
+;Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, MiscTestSuite, NotRealWindowTestSuite, HideShowTestSuite, ExistTestSuite, RollupTestSuite, MoveResizeTestSuite, TransparencyTestSuite)
 Return
 
 
@@ -24,20 +24,14 @@ class TempTestSuite {
 		Global debug
 		this.obj := new Windy(0, debug)
 	}    
-
-	activated() {
-		Global debug
-
+	previous() {
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
-		this.obj.activated := true
-		sleep 1000
-		val := (this.obj.activated == true)
-		Yunit.assert(val == true)
-		this.obj.activated := false
-		Yunit.assert(this.obj.activated == false)
-		this.obj.activated := true
-		newObj := new Windy(0, debug)
-		Yunit.assert(this.obj.activated == false)
+		hwndnext := this.obj.next
+		newObj := new Windy(hwndnext, 1)
+		hwndprev := newObj.previous 
+		Yunit.assert(this.obj.hwnd == hwndprev)
+		Yunit.assert(newObj.hwnd == hwndnext)
+		newObj.kill()
 		OutputDebug % "<<<<[" A_ThisFunc "]<<<<<"
 	}
 		
@@ -620,6 +614,7 @@ class MiscTestSuite {
 		this.obj.activated := false
 		Yunit.assert(this.obj.activated == false)
 		this.obj.activated := true
+		val := (this.obj.activated == true)
 		newObj := new Windy(0, debug)
 		Yunit.assert(this.obj.activated == false)
 		OutputDebug % "<<<<[" A_ThisFunc "]<<<<<"

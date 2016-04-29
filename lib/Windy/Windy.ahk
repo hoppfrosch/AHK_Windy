@@ -606,17 +606,21 @@ class Windy {
 	* There is no setter available, since this is a constant window property
 	*/
 		get {
-			hwndnext := DllCall("GetWindow", "uint", this.hwnd, "uint", GW.HWNDNEXT)
-			while (!this.__isWindow(hwndnext)) {
+			; http://autohotkey.com/board/topic/32171-how-to-get-the-id-of-the-next-or-previous-window-in-z-order/?p=205384
+			hwndnext := this.hwnd
+			Loop {
 				hwndnext := DllCall("GetWindow", "uint", hwndnext, "uint", GW.HWNDNEXT)
-			}
-			ret := ""
-			if (this.__isWindow(hwndnext)) {
-				ret := new Windy(hwndNext)
+				; GetWindow() returns a decimal value, so we have to convert it to hex
+				SetFormat,integer,hex
+				hwndnext += 0
+				SetFormat,integer,d
+				; GetWindow() processes even hidden windows, so we move down the z oder until the next visible window is found
+				if (DllCall("IsWindowVisible","uint",hwndnext) = 1)
+					break
 			}
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "]) -> (" hwndnext ")]" ; _DBG_		
-			return ret
+			return hwndnext
 		}
 	}
 	owner[] {
@@ -744,6 +748,35 @@ class Windy {
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], pos=" newPos.Dump()")] -> New Value:" newPos.Dump() ; _DBG_
 			return newPos
+		}
+	}
+	previous[] {
+	/* ---------------------------------------------------------------------------------------
+	Property: previous [get]
+	gets the <windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html> object above the current object in the Z order. 
+
+	Returns: 
+	new <windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html>-object
+	
+	Remarks:
+	* There is no setter available, since this is a constant window property
+	*/
+		get {
+		; http://autohotkey.com/board/topic/32171-how-to-get-the-id-of-the-next-or-previous-window-in-z-order/?p=205384
+			hwndprev := this.hwnd
+			Loop {
+				hwndprev := DllCall("GetWindow", "uint", hwndprev, "uint", GW.HWNDPREV)
+				; GetWindow() returns a decimal value, so we have to convert it to hex
+				SetFormat,integer,hex
+				hwndprev += 0
+				SetFormat,integer,d
+				; GetWindow() processes even hidden windows, so we move down the z oder until the next visible window is found
+				if (DllCall("IsWindowVisible","uint",hwndprev) = 1)
+					break
+			}
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "]) -> (" hwndprev ")]" ; _DBG_		
+			return hwndprev
 		}
 	}
 	processID[] {
