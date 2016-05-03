@@ -23,7 +23,7 @@ class Windy {
 	About: License
 	This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See <WTFPL at http://www.wtfpl.net/> for more details.
 */
-	_version := "0.10.0"
+	_version := "0.10.1"
 	_debug := 0
 	_hWnd := 0
 
@@ -35,6 +35,30 @@ class Windy {
 	_bManualMovement := false
 
 	_posStack := 0
+
+	class geometry {
+; ******************************************************************************************************************************************
+/*
+	Class: Windy.Geometry
+		Geometry of the window
+
+	Authors:
+	<hoppfrosch at hoppfrosch@gmx.de>: Original
+*/
+		captionHeight[] {
+		/* ---------------------------------------------------------------------------------------
+		Property: captionHeight [get]
+		Height of the caption bar 
+
+		Remarks:
+		* There is no setter available, since this is a constant window property
+		*/
+			get {
+				SysGet, val, 4
+				return val
+			}
+		}
+	}
 
 	; ##################### Start of Properties (AHK >1.1.16.x) ############################################################
 	activated[] {

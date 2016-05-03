@@ -10,11 +10,11 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.10.0"
+ReferenceVersion := "0.10.1"
 debug := 1
 
 ;Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, TempTestSuite)
-Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, MiscTestSuite, NotRealWindowTestSuite, HideShowTestSuite, ExistTestSuite, RollupTestSuite, MoveResizeTestSuite, TransparencyTestSuite)
+Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, GeometryTestSuite, MiscTestSuite, NotRealWindowTestSuite, HideShowTestSuite, ExistTestSuite, RollupTestSuite, MoveResizeTestSuite, TransparencyTestSuite)
 Return
 
 
@@ -25,19 +25,12 @@ class TempTestSuite {
 		this.obj := new Windy(0, debug)
 	}    
 
-	activated() {
+	captionheight() {
 		Global debug
 
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
-		this.obj.activated := true
-		sleep 1000
-		val := (this.obj.activated == true)
-		Yunit.assert(val == true)
-		this.obj.activated := false
-		Yunit.assert(this.obj.activated == false)
-		this.obj.activated := true
-		newObj := new Windy(0, debug)
-		Yunit.assert(this.obj.activated == false)
+		x := this.obj.geometry.captionheight
+		Yunit.assert(x == 22)
 		OutputDebug % "<<<<[" A_ThisFunc "]<<<<<"
 	}
 		
@@ -48,6 +41,7 @@ class TempTestSuite {
 	}
 }
 
+; ###################################################################
 class _BaseTestSuite {
     Begin() {
 		Global debug
@@ -68,6 +62,28 @@ class _BaseTestSuite {
 	}
 }
 
+; ###################################################################
+class GeometryTestSuite {
+    Begin() {
+		Global debug
+		this.obj := new Windy(0, debug)
+	}    
+
+	captionheight() {
+		Global debug
+
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		x := this.obj.geometry.captionheight
+		Yunit.assert(x == 22)
+		OutputDebug % "<<<<[" A_ThisFunc "]<<<<<"
+	}
+		
+	End() {
+		this.obj.kill()
+		this.remove("obj")
+		this.obj := 
+	}
+}
 
 ; ###################################################################
 class TileTestSuite {
