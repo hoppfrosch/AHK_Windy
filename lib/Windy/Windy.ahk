@@ -10,6 +10,7 @@
 #include Const_WinUser.ahk
 #include _WindowHandlerEvent.ahk
 #include ..\SerDes.ahk
+#include ..\DbgOut.ahk
 
 class Windy {
 ; ******************************************************************************************************************************************
@@ -53,8 +54,7 @@ class Windy {
 			hwnd := this.hwnd
 			val := WinActive("ahk_id " hwnd)
 			ret := (val) > 0 ? 1 : 0
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret " (" val ")" ; _DBG_
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "])] -> " ret " (" val ")", this.debug)
 			return ret
 		}
 		set {
@@ -63,9 +63,7 @@ class Windy {
 				WinActivate, ahk_id hwnd
 			else if (value == false) 
 				WinActivate, ahk_class Shell_TrayWnd  ; see: https://autohotkey.com/board/topic/29314-windeactivate/
-			
-			if (this._debug) ; _DBG_
-				OutputDebug % "[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> New Value:" this.activated ; _DBG_
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> New Value:" this.activated, this.debug)
 		
 			return this.alwaysOnTop
 		}
@@ -84,8 +82,7 @@ class Windy {
 	*/
 		get {
 			ret := (this.styleEx & WS.EX.TOPMOST) > 0 ? 1 : 0
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "])] -> " ret, this.debug)
 			return ret
 		}
 		set {
@@ -95,9 +92,7 @@ class Windy {
 			else if (value == false) 
 				value := "off"
 			WinSet, AlwaysOnTop, %value%,  ahk_id %hwnd%
-			if (this._debug) ; _DBG_
-				OutputDebug % "[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> New Value:" this.alwaysontop ; _DBG_
-		
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> New Value:" this.alwaysontop, this.debug)
 			return this.alwaysOnTop
 		}
 	}
@@ -115,8 +110,7 @@ class Windy {
 	*/
 		get {
 			ret := (this.style & WS.CAPTION) > 0 ? 1 : 0
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "])] -> " ret, this.debug)
 			return ret
 		}
 
@@ -131,8 +125,7 @@ class Windy {
 			this.style := style
 			this.redraw()
 			DetectHiddenWindows, %prevState%
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " this.caption ; _DBG_
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " this.caption, this.debug)
 			return value
 		}
 	}
@@ -146,6 +139,7 @@ class Windy {
 	*/
 		get {
 			SysGet, val, 4
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "])] -> " val, this.debug)
 			return val
 		}
 	}
@@ -163,8 +157,7 @@ class Windy {
 			x := Round((pos.w)/2 + pos.x)
 			y := Round((pos.h)/2 + pos.y)
 			centerPos := new Pointy(x,y,this._debug)
-			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "(pos="pos.dump() " [" this.hwnd "])] -> " centerPos.dump() ; _DBG_
+			dbgOut("=[" A_ThisFunc "(pos="pos.dump() " [" this.hwnd "])] -> " centerPos.dump(), this.debug)
 			return centerPos
 		}
 
@@ -180,8 +173,7 @@ class Windy {
 		
 			this.move(x,y,99999,99999)
 			centerPos := this.centercoords
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "(pos=" value.dump() " [" this.hwnd "])] -> " centerPos.dump() ; _DBG_
+			dbgOut("=[" A_ThisFunc "(pos=" value.dump() " [" this.hwnd "])] -> " centerPos.dump(), this.debug)
 			return centerPos
 		}
 	}
@@ -196,8 +188,7 @@ class Windy {
 		get {
 			val := this.hwnd
 			WinGetClass, __classname, ahk_id %val%
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "]) -> (" __classname ")]" ; _DBG_		
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "]) -> (" __classname ")]", this.debug)
 			return __classname
 		}
 	}
@@ -220,8 +211,7 @@ class Windy {
 	*/
 		get {
 			ret := (this.styleEx & WS.EX.CLICKTHROUGH) > 0 ? 1 : 0
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "])] -> " ret, this.debug)
 			return ret
 		}
 		set {
@@ -235,9 +225,7 @@ class Windy {
 			}
 			this.transparency(100) := tp
 			WinSet, ExStyle, %value%, ahk_id %hwnd%
-			if (this._debug) ; _DBG_
-				OutputDebug % "[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> New Value:" this.clickThrough ; _DBG_
-		
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> New Value:" this.clickThrough, this.debug)
 			return this.clickThrough
 		}
 	}
@@ -275,8 +263,7 @@ class Windy {
 			ret := true
 			if (_hWnd = 0)
 				ret := false
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_		
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "])] -> " ret, this.debug)
 			return ret
 		}
 	}
@@ -313,16 +300,12 @@ class Windy {
 			}
 			
 			DetectHiddenWindows, %prevState%
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_		
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "])] -> " ret, this.debug)
 			return ret
 		}
 
 		set{
 			mode := value
-			if (this._debug) ; _DBG_
-				OutputDebug % ">[" A_ThisFunc "([" this.hwnd "], mode=" mode ")] -> Current Value:" this.hidden ; _DBG_
-
 			val := this.hwnd
 			ret := 0
 			if (mode == true) {
@@ -335,8 +318,7 @@ class Windy {
 			}
 			
 			isHidden := this.hidden
-			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "([" this.hwnd "], mode=" mode ")] -> New Value:" isHidden ; _DBG_
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "], mode=" mode ")] -> New Value:" isHidden, this.debug)
 			
 			return isHidden
 		}
@@ -364,8 +346,7 @@ class Windy {
 	*/
 		get {
 			ret := DllCall("user32\IsHungAppWindow", "Ptr", this.hwnd)
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_		
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "])] -> " ret, this.debug)		
 			return ret
 		}
 	}
@@ -383,8 +364,7 @@ class Windy {
 	*/
 		get {
 			ret := (this.style & WS.HSCROLL) > 0 ? 1 : 0
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "])] -> " ret, this.debug)
 			return ret
 		}
 
@@ -398,8 +378,7 @@ class Windy {
 			this.style := style
 			this.redraw()
 			DetectHiddenWindows, %prevState%
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " this.hscrollable ; _DBG_
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " this.hscrollable, this.debug)
 			return value
 		}
 	}
@@ -417,8 +396,7 @@ class Windy {
 	*/
 		get {
 			ret := (this.style & WS.MAXIMIZEBOX) > 0 ? 1 : 0
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "])] -> " ret, this.debug)
 			return ret
 		}
 
@@ -432,8 +410,7 @@ class Windy {
 			this.style := style
 			this.redraw()
 			DetectHiddenWindows, %prevState%
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " this.maximizebox ; _DBG_
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " this.maximizebox, this.debug)
 			return value
 		}
 	}
@@ -455,6 +432,7 @@ class Windy {
 			ret := 0
 			if (s == 1)
 				ret := 1	
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "])] -> " ret, this.debug)
 			return ret
 		}
 
@@ -474,8 +452,7 @@ class Windy {
 			DetectHiddenWindows, %prevState%
 			
 			isMax := this.maximized
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], mode=" mode ")] -> New Value:" isMax ; _DBG_
+			dbgOut("=[[" A_ThisFunc "([" this.hwnd "], mode=" mode ")] -> New Value:" isMax, this.debug)
 			
 			return isMax
 		}
@@ -494,8 +471,7 @@ class Windy {
 	*/
 		get {
 			ret := (this.style & WS.MINIMIZEBOX) > 0 ? 1 : 0
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_
+			dbgOut("=[[" A_ThisFunc "([" this.hwnd "])] -> " ret, this.debug)
 			return ret
 		}
 
@@ -509,8 +485,7 @@ class Windy {
 			this.style := style
 			this.redraw()
 			DetectHiddenWindows, %prevState%
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " this.minimizebox ; _DBG_
+			dbgOut("=[[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " this.minimizebox, this.debug)
 			return value
 		}
 	}
@@ -531,7 +506,8 @@ class Windy {
 			WinGet, s, MinMax, ahk_id %val% 
 			ret := 0
 			if (s == -1)
-				ret := 1	
+				ret := 1
+			dbgOut("=[[" A_ThisFunc "([" this.hwnd "])] -> " ret, this.debug)
 			return ret
 		}
 
@@ -551,8 +527,7 @@ class Windy {
 			DetectHiddenWindows, %prevState%
 	
 			isMin := this.minimized
-			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "([" this.hwnd "], mode=" mode ")] -> New Value:" isMin ; _DBG_
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "], mode=" mode ")] -> New Value:" isMin, this.debug)
 
 			return isMin
 			}
@@ -573,8 +548,7 @@ class Windy {
 			c := this.centercoords
 			md := new MultiMony(this._debug)
 			mon := md.idFromCoord(c.x,c.y,mon)
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " mon ; _DBG_		
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "])] -> " mon, this.debug)
 			return mon
 		}
 
@@ -601,8 +575,7 @@ class Windy {
 			}
 			
 			monID := this.monitorID
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], ID=" value ")] -> New Value:" monID " (from: " oldID ")" ; _DBG_
+			dbgOut("=[[" A_ThisFunc "([" this.hwnd "], ID=" value ")] -> New Value:" monID " (from: " oldID ")", this.debug)
 	
 			return monID
 		}
@@ -623,8 +596,7 @@ class Windy {
 	*/
 		get {
 			hwndOwner := DllCall("GetWindowLong", "uint", this.hwnd, "int", GWL.HWNDPARENT, "UInt")
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " hwndOwner ; _DBG_		
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "])] -> " hwndOwner, this.debug)
 			return hwndOwner
 		}
 
@@ -633,8 +605,7 @@ class Windy {
 			ret := DllCall("SetWindowLong", "uint", this.hwnd, "int", GWL.HWNDPARENT, "uint", hwndOwner)
 			if  ret == 0				
 				hwndOwner := 0
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], hwndOwner= " hwndOwner ")] -> hwndOwner:" hwndOwner ")" ; _DBG_
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "], hwndOwner= " hwndOwner ")] -> hwndOwner:" hwndOwner ")", this.debug)
 			return hwndOwner	
 		}
 	}
@@ -657,8 +628,7 @@ class Windy {
 	*/
 		get {
 			hwndPar := DllCall("GetParent", "uint", hwndPar, "UInt")
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " hwndPar ; _DBG_		
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "])] -> " hwndPar, this.debug)
 			return hwndPar
 		}
 
@@ -680,8 +650,7 @@ class Windy {
 			else
 				SendMessage, WM.CHANGEUISTATE, UIS.NITIALIZE,,,ahk_id %hwndPar%	
 			
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], hwndPar= " hwndPar ", bfixStyle=" bFixStyle ")] -> hwnd:" hwndPar ")" ; _DBG_
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "], hwndPar= " hwndPar ", bfixStyle=" bFixStyle ")] -> hwnd:" hwndPar ")", this.debug)
 			return hwndPar
 		}
 	}
@@ -698,6 +667,7 @@ class Windy {
 			pt := new Pointy()
 			pt.x := ps.x
 			pt.y := ps.y
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "])] -> (" pt.dump() ")", this.debug)
 			return pt
 		}
 		set {
@@ -706,6 +676,7 @@ class Windy {
 			ps.x := pt.x
 			ps.y := pt.y
 			this.posSize := ps
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "], pt=" pt.Dump()")] -> New Value:" pt.Dump(), this.debug)
 			return pt
 		}
 	}
@@ -720,8 +691,7 @@ class Windy {
 		get {
 			info := this.windowinfo
 			currPos := new Recty(info.window.xul,info.window.yul,info.window.xlr-info.window.xul,info.window.ylr-info.window.yul,this._debug)
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> (" currPos.dump() ")" ; _DBG_
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "])] -> (" currPos.dump() ")", this.debug)
 			return currPos
 		}
 
@@ -729,8 +699,7 @@ class Windy {
 			rect := value
 			this.move(rect.x, rect.y, rect.w, rect.h)
 			newPos := this.posSize
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], pos=" newPos.Dump()")] -> New Value:" newPos.Dump() ; _DBG_
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "], pos=" newPos.Dump()")] -> New Value:" newPos.Dump(), this.debug)
 			return newPos
 		}
 	}
@@ -748,8 +717,7 @@ class Windy {
 				WinGet, PID, PID, % "ahk_id " this.hwnd
 				ret := PID
 			}
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_		
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "])] -> " ret, this.debug)	
 			return ret
 		}
 	}
@@ -767,8 +735,7 @@ class Windy {
 				WinGet, PName, ProcessName, % "ahk_id " this.hwnd
 				ret := PName
 			}
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_		
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "])] -> " ret, this.debug)
 			return ret
 		}
 	}
@@ -818,8 +785,7 @@ class Windy {
 					ret := 1
 				}
 			}
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_		
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "])] -> " ret, this.debug)
 			return ret
 		}
 
@@ -854,8 +820,7 @@ class Windy {
 			}
 			
 			isRolled := this.rolledUp
-			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "([" this.hwnd "], mode=" mode ")] -> New Value:" isRolled ; _DBG_
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "], mode=" mode ")] -> New Value:" isRolled, this.debug)
 
 			return isRolled
 		}
@@ -870,6 +835,7 @@ class Windy {
 	*/
 		get {
 			SysGet, ret, 29
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "])] -> " ret, this.debug)
 			return ret
 		}
 
@@ -906,8 +872,7 @@ class Windy {
 			hdest := currPos.h * scaleY
 			
 			rt := new Recty(xdest, ydest, wdest, hdest, this._debug)
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.id "],monDest:= " monIdDest "] (" currPos.dump() ") -> (" rt.dump() ")" ; _DBG_
+			dbgOut("=[" A_ThisFunc "([" this.id "],monDest:= " monIdDest "] (" currPos.dump() ") -> (" rt.dump() ")", this.debug)
 			return rt
 		}
 	}
@@ -924,6 +889,7 @@ class Windy {
 			pt := new Pointy()
 			pt.x := ps.w
 			pt.y := ps.h
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "])] -> (" pt.dump() ")", this.debug)
 			return pt
 		}
 		set {
@@ -932,6 +898,7 @@ class Windy {
 			ps.w := pt.x
 			ps.h := pt.y
 			this.posSize := ps
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "], value=" value.Dump()")] -> New Value:" pt.Dump(), this.debug)
 			return pt
 		}
 	}
@@ -950,8 +917,7 @@ class Windy {
 	*/
 		get {
 			ret := (this.style & WS.SIZEBOX) > 0 ? 1 : 0
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "])] -> " ret, this.debug)
 			return ret
 		}
 
@@ -965,8 +931,7 @@ class Windy {
 			this.style := style
 			this.redraw()
 			DetectHiddenWindows, %prevState%
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " this.sizebox ; _DBG_
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " this.sizebox, this.debug)
 			return value
 		}
 	}
@@ -978,8 +943,7 @@ class Windy {
 		get {
 			hWnd := this._hwnd
 			WinGet, currStyle, Style, ahk_id %hwnd%
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this._hwnd "])] -> (" this.__hexStr(currStyle) ")"
+			dbgOut("=[" A_ThisFunc "([" this._hwnd "])] -> (" this.__hexStr(currStyle) ")", this.debug)
 			return currStyle
 		}
 		set {
@@ -987,8 +951,7 @@ class Windy {
 			WinSet, Style, %value%, ahk_id %hwnd%
 			this.redraw()
 			WinGet, currStyle, Style, ahk_id %hwnd%
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], style=" this.__hexStr(value) ")] -> (" this.__hexStr(value) "/" this.__hexStr(currStyle) ")" ; _DBG_		
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "], style=" this.__hexStr(value) ")] -> (" this.__hexStr(value) "/" this.__hexStr(currStyle) ")", this.debug)	
 			return value
 		}		
 	}
@@ -1001,8 +964,7 @@ class Windy {
 		get {
 			hWnd := this._hwnd
 			WinGet, currStyle, ExStyle, ahk_id %hwnd%
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this._hwnd "])] -> (" this.__hexStr(currStyle) ")"
+			dbgOut("=[" A_ThisFunc "([" this._hwnd "])] -> (" this.__hexStr(currStyle) ")", this.debug)
 			return currStyle
 		}
 		set {
@@ -1010,8 +972,7 @@ class Windy {
 			WinSet, ExStyle, %value%, ahk_id %hwnd%
 			this.redraw()
 			WinGet, currStyle, ExStyle, ahk_id %hwnd%
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], styleEx=" this.__hexStr(value) ")] -> (" this.__hexStr(value) "/" this.__hexStr(currStyle) ")" ; _DBG_		
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "], styleEx=" this.__hexStr(value) ")] -> (" this.__hexStr(value) "/" this.__hexStr(currStyle) ")", this.debug)
 			return value
 		}
 	}
@@ -1026,8 +987,7 @@ class Windy {
 		get {
 			val := this.hwnd
 			WinGetTitle, title, ahk_id %val%
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "]) -> (" title ")]" ; _DBG_		
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "]) -> (" title ")]", this.debug)
 			return title
 		}
 
@@ -1039,8 +999,7 @@ class Windy {
 			WinSetTitle, ahk_id %val%,, %title%
 			DetectHiddenWindows, %prevState%
 			newTitle := this.title
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], title=" title ")] -> " newTitle ; _DBG_		
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "], title=" title ")] -> " newTitle, this.debug)
 			return newTitle
 		}
 	}
@@ -1068,8 +1027,7 @@ class Windy {
 			ret := 255
 			if (s != "")
 				ret := s
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "])] -> " ret, this.debug)
 			return ret
 		}
 
@@ -1117,8 +1075,7 @@ class Windy {
         	}
 	    		
 			transEnd := this.transparency
-			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "([" this.hwnd "], transparency=" transOrig "(" transStart "), increment=" increment ", delay=" delay ")] -> New Value:" transEnd ; _DBG_
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "], transparency=" transOrig "(" transStart "), increment=" increment ", delay=" delay ")] -> New Value:" transEnd, this.debug)
 			return transEnd
 		}
 	}
@@ -1136,8 +1093,7 @@ class Windy {
 	*/
 		get {
 			ret := (this.style & WS.VSCROLL) > 0 ? 1 : 0
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> " ret ; _DBG_
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "])] -> " ret, this.debug)
 			return ret
 		}
 
@@ -1151,8 +1107,7 @@ class Windy {
 			this.style := style
 			this.redraw()
 			DetectHiddenWindows, %prevState%
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " this.vscrollable ; _DBG_
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " this.vscrollable, this.debug)
 			return value
 		}
 	}
@@ -1192,14 +1147,14 @@ class Windy {
    			}
    			If !DllCall("User32.dll\IsWindow", "Ptr", this.hwnd) {
       			ErrorLevel := 1
-      			OutputDebug % "|[" A_ThisFunc "([" this.hwnd "]) -> false (is not a window)]" ; _DBG_
+      			dbgOut("=[" A_ThisFunc "([" this.hwnd "]) -> false (is not a window)]", this.debug)
       			Return False
    			}
    			struct_WI := ""
    			NumPut(VarSetCapacity(struct_WI, WI_Size, 0), struct_WI, 0, "UInt")
    			If !(DllCall("User32.dll\GetWindowInfo", "Ptr", this.hwnd, "Ptr", &struct_WI)) {
    		   		ErrorLevel := 2
-   		   		OutputDebug % "|[" A_ThisFunc "([" this.hwnd "]) -> false]" ; _DBG_
+   		   		dbgOut("=[" A_ThisFunc "([" this.hwnd "]) -> false]", this.debug)
       		 	Return False
   			}
    			obj_WI := {}
@@ -1227,9 +1182,8 @@ class Windy {
 	         		obj_WI[Key] := NumGet(struct_WI, Offset, Value[4])
 	      		}
    			}
-			if (this._debug) ; _DBG_
-   				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] => (" SerDes(Obj_WI) ")" ; _DBG_
-   			Return obj_WI
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "])] => (" SerDes(Obj_WI) ")", this.debug)
+			Return obj_WI
 		}	
 	}
 	; ##################### End of Properties (AHK >1.1.16.x) ##############################################################
@@ -1295,17 +1249,15 @@ class Windy {
 			destPos := new Recty(x, y, currPos.w, currPos.h)
 			ret := mon.rectToPercent(destPos)
 	
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], border=""" border """)] pos (" this.posSize.Dump()") on Mon " this.monitorId " -> percent (" ret.Dump() ")" ; _DBG_
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "], border=""" border """)] pos (" this.posSize.Dump()") on Mon " this.monitorId " -> percent (" ret.Dump() ")", this.debug)
 
 			return ret
-		}
+	  }
 
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], border=""" border """)] *** ERROR: Invalid border string <" border ">" ; _DBG_
+	dbgOut("=[" A_ThisFunc "([" this.hwnd "], border=""" border """)] *** ERROR: Invalid border string <" border ">", this.debug)
 		
-		return
-    }        
+	return
+  }        
 	/* ---------------------------------------------------------------------------------------
 	Method: kill
 	Kills the Window (Forces the window to close)
@@ -1316,9 +1268,7 @@ class Windy {
 	<close at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#close>
 	*/
 	kill() {
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])]" ; _DBG_		
-
+		dbgOut("=[" A_ThisFunc "([" this.hwnd "])]", this.debug)
 		prevState := A_DetectHiddenWindows
 		DetectHiddenWindows, On
 		WinKill % "ahk_id" this.hwnd
@@ -1344,8 +1294,7 @@ class Windy {
 	<movePercental() at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#movePercental>, <moveBorder() at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#moveBorder>
 	*/
 	move(X,Y,W="99999",H="99999") {
-		if (this._debug) ; _DBG_
-			OutputDebug % ">[" A_ThisFunc "([" this.hwnd "])(X=" X " ,Y=" Y " ,W=" W " ,H=" H ")]" ; _DBG_		
+		dbgOut(">[" A_ThisFunc "([" this.hwnd "])(X=" X " ,Y=" Y " ,W=" W " ,H=" H ")]")
 		if (X = 99999 || Y = 99999 || W = 99999 || H = 9999)
 			currPos := this.posSize
 		
@@ -1361,8 +1310,7 @@ class Windy {
 		if (H = 99999)
 			H := currPos.H
 		
-		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this.hwnd "])(X=" X " ,Y=" Y " ,W=" W " ,H=" H ")]" ; _DBG_		
+		dbgOut("<[" A_ThisFunc "([" this.hwnd "])(X=" X " ,Y=" Y " ,W=" W " ,H=" H ")]", this.debug)
 		WinMove % "ahk_id" this.hwnd, , X, Y, W, H
 	}
 	/* ---------------------------------------------------------------------------------------
@@ -1391,8 +1339,7 @@ class Windy {
 	- The range of the method parameters is *NOT* checked, so be carefull using any values *<0* or *>100*
 	*/	
 	movePercental(xFactor=0, yFactor=0, wFactor=100, hFactor=100) {
-		if (this._debug) ; _DBG_
-			OutputDebug % ">[" A_ThisFunc "([" this.hwnd "], xFactor=" xFactor ", yFactor=" yFactor ", wFactor=" wFactor ", hFactor=" hFactor ")]" ; _DBG_
+		dbgOut(">[" A_ThisFunc "([" this.hwnd "], xFactor=" xFactor ", yFactor=" yFactor ", wFactor=" wFactor ", hFactor=" hFactor ")]", this.debug)
 
 		mon := new Mony(this.monitorID, this._debug)
 		monWorkArea := mon.workingArea
@@ -1407,8 +1354,7 @@ class Windy {
 		
 		this.move(x,y,w,h)
 		
-		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this.hwnd "], xFactor=" xFactor ", yFactor=" yFactor ", wFactor=" wFactor ", hFactor=" hFactor ")] -> padded to (" this.posSize.Dump() ") on Monitor (" this.monitorID ")" ; _DBG_
+		dbgOut("<[" A_ThisFunc "([" this.hwnd "], xFactor=" xFactor ", yFactor=" yFactor ", wFactor=" wFactor ", hFactor=" hFactor ")] -> padded to (" this.posSize.Dump() ") on Monitor (" this.monitorID ")", this.debug)
 	}    
 	/* ---------------------------------------------------------------------------------------
 	Method: moveBorder
@@ -1432,16 +1378,12 @@ class Windy {
 	<move() at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#move>, <movePercental at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#movePercental>
 		*/	
 	moveBorder(border="") {
-		if (this._debug) ; _DBG_
-			OutputDebug % ">[" A_ThisFunc "([" this.hwnd "], border=""" border """)] -> started from (" this.posSize.Dump() ") on Monitor (" this.monitorID ")" ; _DBG_
-
+		dbgOut(">[" A_ThisFunc "([" this.hwnd "], border=""" border """)] -> started from (" this.posSize.Dump() ") on Monitor (" this.monitorID ")", this.debug)
 		factor := this.border2percent(border)
 		if (factor) {
 			this.movePercental(factor.x, factor.y, factor.w, factor.h)
 		}
-		
-		if (this._debug) ; _DBG_
-			OutputDebug % ">[" A_ThisFunc "([" this.hwnd "], border=""" border """)] -> moved to (" this.posSize.Dump() ") on Monitor (" this.monitorID ")" ; _DBG_
+		dbgOut(">[" A_ThisFunc "([" this.hwnd "], border=""" border """)] -> moved to (" this.posSize.Dump() ") on Monitor (" this.monitorID ")", this.debug)
 	}
 	/* ---------------------------------------------------------------------------------------
 	Method: posSize2percent
@@ -1456,10 +1398,7 @@ class Windy {
 		currPos := this.posSize
 		mon := new Mony(this.monitorID, this._debug)
 		ret := mon.rectToPercent(currPos)
-	
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] pos (" this.posSize.Dump()") on Mon " this.monitorId " -> percent (" ret.Dump() ")" ; _DBG_
-
+		dbgOut("=[" A_ThisFunc "([" this.hwnd "])] pos (" this.posSize.Dump()") on Mon " this.monitorId " -> percent (" ret.Dump() ")", this.debug)
 		return ret
     }    
 	/* ---------------------------------------------------------------------------------------
@@ -1490,8 +1429,7 @@ class Windy {
 			ifEqual, bEnable, 0, return		
 		}
 		ret := DllCall("RedrawWindow", "uint", hwnd, "uint", 0, "uint", 0, "uint" ,RDW.INVALIDATE | RDW.ERASE | RDW.FRAME | RDW.ERASENOW | RDW.UPDATENOW | RDW.ALLCHILDREN)
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], Option=" Option ")] -> ret=" ret ; _DBG_
+		dbgOut("=[" A_ThisFunc "([" this.hwnd "], Option=" Option ")] -> ret=" ret, this.debug)
 		return ret
 	}
 	; ######################## Internal Methods - not to be called directly ############################################
@@ -1510,11 +1448,8 @@ class Windy {
 	*/
 	__isWindow(hWnd) {
 		WinGet, s, Style, ahk_id %hWnd% 
-		ret := s & WS.CAPTION ? (s & WS.POPUP ? 0 : 1) : 0  ;WS_CAPTION AND !WS_POPUP(for tooltips etc) 
-			
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" hWnd "])] -> " ret ; _DBG_		
-	
+		ret := s & WS.CAPTION ? (s & WS.POPUP ? 0 : 1) : 0  ;WS_CAPTION AND !WS_POPUP(for tooltips etc) 	
+		dbgOut("=[" A_ThisFunc "([" hWnd "])] -> " ret, this.debug)
 		return ret
 	}	
 	/* ---------------------------------------------------------------------------------------
@@ -1535,7 +1470,7 @@ class Windy {
 	__posPush() {
 			this._posStack.Insert(1, this.posSize)
 		if (this._debug) { ; _DBG_ 
-			OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])] -> (" this._posStack[1].dump() ")" ; _DBG_
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "])] -> (" this._posStack[1].dump() ")", this.debug)
 			this.__posStackDump() ; _DBG_ 
 		}
 	}
@@ -1545,7 +1480,7 @@ class Windy {
 	*/	
 	__posStackDump() {
 		For key,value in this._posStack	; loops through all elements in Stack
-			OutputDebug % "|[" A_ThisFunc "()] -> (" key "): (" Value.dump() ")" ; _DBG_
+			dbgOut("=[" A_ThisFunc "()] -> (" key "): (" Value.dump() ")", this.debug)
 		return
 	}
 	/* ---------------------------------------------------------------------------------------
@@ -1556,8 +1491,7 @@ class Windy {
 		index - Index of position to restore (*Optional*, Default = 2) (1 is the current position)
 	*/
 	__posRestore(index="2") {
-		if (this._debug) ; _DBG_
-			OutputDebug % ">[" A_ThisFunc "([" this.hwnd "], index=" index ")]" ; _DBG_
+		dbgOut(">[" A_ThisFunc "([" this.hwnd "], index=" index ")]", this.debug)
 		restorePos := this._posStack[index]
 		currPos := this.posSize
 		
@@ -1565,7 +1499,7 @@ class Windy {
 		
 		this.move(restorePos.x, restorePos.y, restorePos.w, restorePos.h)
 		if (this._debug) { ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this.hwnd "])] LastPos: " currPos.Dump() " - RestoredPos: " restorePos.Dump() ; _DBG_
+			dbgOut("<[" A_ThisFunc "([" this.hwnd "])] LastPos: " currPos.Dump() " - RestoredPos: " restorePos.Dump(), this.debug)
 			this.__posStackDump() ; _DBG_ 
 		}
 	}
@@ -1580,9 +1514,7 @@ class Windy {
 		true or false, depending on result of dllcall
 	*/ 
 	__SetWinEventHook(eventMin, eventMax, hmodWinEventProc, lpfnWinEventProc, idProcess, idThread, dwFlags) {
-			if (this._debug) ; _DBG_ 
-			OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])(eventMin=" eventMin ", eventMax=" eventMax ", hmodWinEventProc=" hmodWinEventProc ", lpfnWinEventProc=" lpfnWinEventProc ", idProcess=" idProcess ", idThread=" idThread ", dwFlags=" dwFlags ")"  ; _DBG_
-		
+		dbgOut("[" A_ThisFunc "([" this.hwnd "])(eventMin=" eventMin ", eventMax=" eventMax ", hmodWinEventProc=" hmodWinEventProc ", lpfnWinEventProc=" lpfnWinEventProc ", idProcess=" idProcess ", idThread=" idThread ", dwFlags=" dwFlags ")", this.debug)
 		ret := DllCall("ole32\CoInitialize", Uint, 0)
 		; This is a WinEventProc (siehe <http://msdn.microsoft.com/en-us/library/windows/desktop/dd373885(v=vs.85).aspx>) - this determines parameters which can be handled by "HookProc"
 		ret := DllCall("user32\SetWinEventHook"
@@ -1602,27 +1534,24 @@ class Windy {
 		* Store windows size/pos on each change
 	*/
 	__onLocationChange() {
-			if this.hwnd = 0
+		if this.hwnd = 0
 			return
 		
-		if (this._debug) ; _DBG_
-			OutputDebug % ">[" A_ThisFunc "([" this.hwnd "])" ; _DBG_
+	  dbgOut(">[" A_ThisFunc "([" this.hwnd "])")
 		
 		currPos := this.posSize
 		lastPos := this._posStack[1]
 		
 		; current size/position is identical with previous Size/position
 		if (currPos.equal(lastPos)) {
-			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "([" this.hwnd "])] Position has NOT changed!" ; _DBG_
+			dbgOut("<[" A_ThisFunc "([" this.hwnd "])] Position has NOT changed!)", this.debug)
 			return
 		}
 		
 		; size/position has been changed -> store it!
 		this.__posPush()
 				
-		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this.hwnd "])] LastPos: " lastPos.Dump() " - NewPos: " currPos.Dump() ; _DBG_
+		dbgOut("<[" A_ThisFunc "([" this.hwnd "])] LastPos: " lastPos.Dump() " - NewPos: " currPos.Dump(), this.debug)
 		return
 	}  
 	/* ---------------------------------------------------------------------------------------
@@ -1633,9 +1562,7 @@ class Windy {
 		if (this.hwnd <= 0) {
 			return
 		}
-		
-		if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])"  ; _DBG_
+		dbgOut("=[" A_ThisFunc "([" this.hwnd "])", this.debug)
 			
 		if (this.__useEventHook == 1) {
 			if (this.__hWinEventHook1)
@@ -1645,9 +1572,6 @@ class Windy {
 			if (this._HookProcAdr)
 				DllCall( "kernel32\GlobalFree", UInt,&this._HookProcAdr ) ; free up allocated memory for RegisterCallback
 		}
-		
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this.hwnd "])"  ; _DBG_
 			
 		; Reset all "dangerous" settings (all windows should be left in a user accessable state)
 		if (this.alwaysontop == true) {
@@ -1674,13 +1598,11 @@ class Windy {
 	*/   
 	__New(_hWnd=-1, _debug=0, _test=0) {
 		this._debug := _debug
-		if (this._debug) ; _DBG_
-			OutputDebug % ">[" A_ThisFunc "(hWnd=(" _hWnd "))] (version: " this._version ")" ; _DBG_
+		dbgOut(">[" A_ThisFunc "(hWnd=(" _hWnd "))] (version: " this._version ")", _debug)
 
 		if % (A_AhkVersion < "1.1.08.00" || A_AhkVersion >= "2.0") {
 			MsgBox 16, Error, %A_ThisFunc% :`n This class is only tested with AHK_L later than 1.1.08.00 (and before 2.0)`nAborting...
-			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "(...) -> ()]: *ERROR* : This class is only tested with AHK_L later than 1.1.08.00 (and before 2.0). Aborting..." ; _DBG_
+			dbgOut("<[" A_ThisFunc "(...) -> ()]: *ERROR* : This class is only tested with AHK_L later than 1.1.08.00 (and before 2.0). Aborting...", _debug)
 			return
 		}
 		
@@ -1693,23 +1615,20 @@ class Windy {
 		} else if % (_hWnd = -1) {
 			; hWnd is missing
 			MsgBox  16, Error, %A_ThisFunc% :`n Required parameter is missing`nAborting...
-			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "(...) -> ()] *ERROR*: Required parameter is missing. Aborting..." ; _DBG_
+			dbgOut("<[" A_ThisFunc "(...) -> ()] *ERROR*: Required parameter is missing. Aborting...", _debug)
 			this.hwnd := -1
 			return
 		}
 		
 		if (!this.__isWindow(_hWnd)) {
-			if (this._debug) ; _DBG_
-				OutputDebug % ">[" A_ThisFunc "(hWnd=(" _hWnd "))] is NOT a true window. Aborting..." ; _DBG_
+			dbgOut("<[" A_ThisFunc "(hWnd=(" _hWnd "))] is NOT a true window. Aborting...", _debug)
 			this.hwnd := -1
 			return
 		}
 		
 		_hWnd := this.__hexstr(_hWnd)
 		this._hWnd := _hWnd
-		if (this._debug) ; _DBG_
-			OutputDebug % ">[" A_ThisFunc "(hWnd=(" _hWnd "))] (WinTitle: " this.title ")" ; _DBG_
+    dbgOut("|[" A_ThisFunc "(hWnd=(" _hWnd "))] (WinTitle: " this.title ")", _debug)
 				
 		this._posStack := Object() ; creates initially empty stack
 		
@@ -1725,9 +1644,7 @@ class Windy {
 			this._hWinEventHook2 := this.__SetWinEventHook( CONST_EVENT.OBJECT.SHOW, CONST_EVENT.OBJECT.CONTENTSCROLLED, 0, this._HookProcAdr, 0, 0, 0 )	
 		}
 		
-		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "(hWnd=(" _hWnd "))]" ; _DBG_
-		
+		dbgOut("<[" A_ThisFunc "(hWnd=(" _hWnd "))]", _debug)
 		
 		return this
 	}
@@ -1755,8 +1672,7 @@ ClassWindy_EventHook(hWinEventHook, Event, hWnd, idObject, idChild, dwEventThrea
 		return
 	self := Object(A_EventInfo)
 
-	if (Object(A_EventInfo)._debug) ; _DBG_
-		OutputDebug % "|[" A_ThisFunc "([" Object(A_EventInfo)._hWnd "])(hWinEventHook=" hWinEventHook ", Event=" Event2Str(Event) ", hWnd=" hWnd ", idObject=" idObject ", idChild=" idChild ", dwEventThread=" dwEventThread ", dwmsEventTime=" dwmsEventTime ") -> A_EventInfo: " A_EventInfo ; _DBG_
+	dbgOut("=[" A_ThisFunc "([" Object(A_EventInfo)._hWnd "])(hWinEventHook=" hWinEventHook ", Event=" Event2Str(Event) ", hWnd=" hWnd ", idObject=" idObject ", idChild=" idChild ", dwEventThread=" dwEventThread ", dwmsEventTime=" dwmsEventTime ") -> A_EventInfo: " A_EventInfo, Object(A_EventInfo)._debug)
 	
 	; ########## START: Handling window movement ##################################################
 	; We want to detect when the window movement has finished finally, as onLocationChanged() has only to be called at the END of the movement

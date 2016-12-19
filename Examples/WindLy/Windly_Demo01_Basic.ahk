@@ -1,5 +1,8 @@
 #include %A_ScriptDir%\..\..\lib\Windy\WindLy.ahk
 #include %A_ScriptDir%\..\..\lib\Windy\Const_WinUser.ahk
+#include %A_ScriptDir%\..\..\lib\DbgOut.ahk
+
+OutputDebug DBGVIEWCLEAR
 
 OutputDebug % "******** All Windows **************************************************************************"
 x := new WindLy()
