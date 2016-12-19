@@ -4,6 +4,7 @@
 #include %A_LineFile%\..
 #include Windy.ahk
 #include Const_WinUser.ahk
+#include ..\DbgOut.ahk
 
 
 /* ******************************************************************************************************************************************
@@ -137,7 +138,7 @@ class WindLy {
 	oWindy - <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html> Object to be inserted
 	*/
 	intersection(oWindLy) {
-		result := new WindLy()
+		result := new WindLy(this.debug)
 		for _currhwnd, _data in oWindLy.list {
 			if (this._wl[_data.hwnd]) {
 				result.insert(_data)
@@ -154,18 +155,18 @@ class WindLy {
 	do currently exist. Non existing windows are removed from the list.
 	*/
 	removeNonExisting() {
-		OutputDebug % ">>>>>>>> Windly.removeNonExisting()"
-		u := new WindLy()
+		dbgOut(">[" A_ThisFunc "([" this.hwnd "])]", this.debug)
+		u := new WindLy(this.debug)
 		u.list := this.list.Clone()
 		for key, data in u.list {
 			OutputDebug %  "  CURRENT:" key ": " data.hwnd ": " data.title " (" key ")" 
 			if !data.exist {
-				OutputDebug %  "  REMOVE SINCE NON EXISTANT:" key ": " data.hwnd
+				dbgOut("|[" A_ThisFunc "([" this.hwnd "])] - REMOVE SINCE NON EXISTANT:" key ": " data.hwnd, this.debug)
 				u.delete(data)
 			}
 		}
 		this.list := u.list.Clone()
-		OutputDebug % "<<<<<<<< Windly.removeNonExisting()"	
+		dbgOut("<[" A_ThisFunc "([" this.hwnd "])]", this.debug)
 		return this.list
 	}
 	/* -------------------------------------------------------------------------------
@@ -176,8 +177,10 @@ class WindLy {
 	List of <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html> Objects.
 	*/
 	snapshot() {
+	  dbgOut(">[" A_ThisFunc "()]", this.debug)
 		this.__reset()
 		this._wl := this.__all()
+		dbgOut("<[" A_ThisFunc "()]", this.debug)
 		return this._wl
 	}
 	/* -------------------------------------------------------------------------------
@@ -191,9 +194,9 @@ class WindLy {
 	oWindy - <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html> Object to operate with
 	*/
 	symmetricDifference(oWindLy) {
-		result := new WindLy()
-		u := new WindLy()
-		i := new WindLy()
+		result := new WindLy(this.debug)
+		u := new WindLy(this.debug)
+		i := new WindLy(this.debug)
 
 		; The symmetric difference is the union without the intersection:
 		u.list := this.list.Clone()
@@ -238,16 +241,17 @@ class WindLy {
 	List of <Windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html> Objects
 	*/
 	__all() {
+	  dbgOut(">[" A_ThisFunc "()]", this.debug)
 		hwnds := this.__hwnds(true)
 		ret := {}
 
 		Loop % hwnds.MaxIndex() {
 			h_Wnd := hwnds[A_Index]
 			h_WndHex := this.__hexStr(h_Wnd)
-			_w := new Windy(h_Wnd)
+			_w := new Windy(h_Wnd, this.debug)
 			ret[h_WndHex] := _w
 		}
-		
+		dbgOut("<[" A_ThisFunc "()]", this.debug)
 		return ret
 	}
 	/*! ---------------------------------------------------------------------------------------
@@ -296,6 +300,7 @@ class WindLy {
 	__isRealWindow(h_Wnd) {
 		WinGet, s, Style, ahk_id %h_Wnd% 
 		ret := s & WS.CAPTION ? (s & WS.POPUP ? 0 : 1) : 0
+		dbgOut("=[" A_ThisFunc "([hWnd=" h_wnd "])] -> " ret, this.debug)
 		return ret
 	}
 	/*! -------------------------------------------------------------------------------
@@ -303,6 +308,7 @@ class WindLy {
 	Initializes all the data (*INTERNAL*)
 	*/
 	__reset() {
+	  dbgOut("=[" A_ThisFunc "()]", this.debug)
 		this._wl := {}
 	}
 	/* ---------------------------------------------------------------------------------------
@@ -314,8 +320,7 @@ class WindLy {
 	*/   
 	__New(_debug=0) {
 		this._debug := _debug
-		if (this._debug) ; _DBG_
-			OutputDebug % ">[" A_ThisFunc "()] (version: " this._version ")" ; _DBG_
+		dbgOut(">[" A_ThisFunc "()] (version: " this._version ")", _debug)
 
 		if % (A_AhkVersion < "1.1.20.02" || A_AhkVersion >= "2.0") {
 			MsgBox 16, Error, %A_ThisFunc% :`n This class only needs AHK later than 1.1.20.01 (and before 2.0)`nAborting...
@@ -323,10 +328,7 @@ class WindLy {
 				OutputDebug % "<[" A_ThisFunc "(...) -> ()]: *ERROR* : This class needs AHK later than 1.1.20.01 (and before 2.0). Aborting..." ; _DBG_
 			return
 		}
-				
-		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "()]" ; _DBG_
-		
+		dbgOut("<[" A_ThisFunc "()]", _debug)		
 		return this
 	}
 	/*! ---------------------------------------------------------------------------------------

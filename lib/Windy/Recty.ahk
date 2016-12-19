@@ -1,4 +1,7 @@
-﻿; ****** HINT: Documentation can be extracted to HTML using NaturalDocs (http://www.naturaldocs.org/) ************** 
+﻿#include %A_LineFile%\..
+#include ..\DbgOut.ahk
+
+; ****** HINT: Documentation can be extracted to HTML using NaturalDocs (http://www.naturaldocs.org/) ************** 
 
 class Recty {
 ; ******************************************************************************************************************************************
@@ -219,8 +222,7 @@ class Recty {
 		this.y := y
 		this.w := w
 		this.h := h
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" hwnd "])] -> x,y,w,h: (" x "," y "," w "," h ")" ; _DBG_
+		dbgOut("=[" A_ThisFunc "([" hwnd "])] -> x,y,w,h: (" x "," y "," w "," h ")", this.debug)
 	}
 	/* ---------------------------------------------------------------------------------------
 	Method: fromRectangle(new)
@@ -234,8 +236,7 @@ class Recty {
 		this.y := new.y
 		this.w := new.w
 		this.h := new.h
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "] -> x,y,w,h: " this.Dump() ; _DBG_
+		dbgOut("=[" A_ThisFunc "] -> x,y,w,h: " this.Dump(), this.debug)
 	}
 	/* ---------------------------------------------------------------------------------------
 	Method: __New
@@ -247,8 +248,7 @@ class Recty {
 	*/  
 	__New(x=0, y=0, w=0, h=0, debug=false) {   
 		this._debug := debug ; _DBG_
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "(x=" x ", y=" y ", w=" w ", h=" h ", _debug=" debug ")] (version: " this._version ")" ; _DBG_
+		dbgOut("=[" A_ThisFunc "(x=" x ", y=" y ", w=" w ", h=" h ", _debug=" debug ")] (version: " this._version ")", this._debug)
 		this.x := x
 		this.y := y
 		this.w := w

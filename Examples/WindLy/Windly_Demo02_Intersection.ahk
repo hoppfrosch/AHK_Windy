@@ -1,9 +1,12 @@
 #include %A_ScriptDir%\..\..\lib\Windy
 #include WindLy.ahk
 #include Windy.ahk
+#include ..\DbgOut.ahk
+
+OutputDebug DBGVIEWCLEAR
 
 OutputDebug % "******** Start Situation: All windows of monitor 1 *******************"
-x := new WindLy()
+x := new WindLy(0)
 x.byMonitorId(1)
 for key, data in x.list {
 	OutputDebug % "  " key ": " data.hwnd ": " data.title " (" key ")" 

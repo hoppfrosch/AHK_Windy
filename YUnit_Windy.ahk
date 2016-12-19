@@ -10,11 +10,11 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.10.0"
+ReferenceVersion := "0.10.2"
 debug := 1
 
-Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, TempTestSuite)
-;Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, MiscTestSuite, NotRealWindowTestSuite, HideShowTestSuite, ExistTestSuite, RollupTestSuite, MoveResizeTestSuite, TransparencyTestSuite)
+;Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, TempTestSuite)
+Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, GeometryTestSuite, MiscTestSuite, NotRealWindowTestSuite, HideShowTestSuite, ExistTestSuite, RollupTestSuite, MoveResizeTestSuite, TransparencyTestSuite)
 Return
 
 
@@ -24,14 +24,13 @@ class TempTestSuite {
 		Global debug
 		this.obj := new Windy(0, debug)
 	}    
-	previous() {
+
+	captionheight() {
+		Global debug
+
 		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
-		hwndnext := this.obj.next
-		newObj := new Windy(hwndnext, 1)
-		hwndprev := newObj.previous 
-		Yunit.assert(this.obj.hwnd == hwndprev)
-		Yunit.assert(newObj.hwnd == hwndnext)
-		newObj.kill()
+		x := this.obj.geometry.captionheight
+		Yunit.assert(x == 22)
 		OutputDebug % "<<<<[" A_ThisFunc "]<<<<<"
 	}
 		
@@ -42,6 +41,7 @@ class TempTestSuite {
 	}
 }
 
+; ###################################################################
 class _BaseTestSuite {
     Begin() {
 		Global debug
@@ -62,6 +62,28 @@ class _BaseTestSuite {
 	}
 }
 
+; ###################################################################
+class GeometryTestSuite {
+    Begin() {
+		Global debug
+		this.obj := new Windy(0, debug)
+	}    
+
+	captionheight() {
+		Global debug
+
+		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		x := this.obj.captionheight
+		Yunit.assert(x == 22)
+		OutputDebug % "<<<<[" A_ThisFunc "]<<<<<"
+	}
+		
+	End() {
+		this.obj.kill()
+		this.remove("obj")
+		this.obj := 
+	}
+}
 
 ; ###################################################################
 class TileTestSuite {
@@ -614,7 +636,6 @@ class MiscTestSuite {
 		this.obj.activated := false
 		Yunit.assert(this.obj.activated == false)
 		this.obj.activated := true
-		val := (this.obj.activated == true)
 		newObj := new Windy(0, debug)
 		Yunit.assert(this.obj.activated == false)
 		OutputDebug % "<<<<[" A_ThisFunc "]<<<<<"
@@ -784,7 +805,7 @@ class MiscTestSuite {
 		OutputDebug % "**** " A_ThisFunc " 1 ****"
 		this.obj.Move(2,2,300,300)
 		monID := this.obj.monitorID
-		Yunit.assert(monId == 1)
+		Yunit.assert(monId == 2)
 		OutputDebug % "**** " A_ThisFunc " 2 - via Move ****"
 		obj := new Mony(2, debug)
 		rect2 := obj.boundary
@@ -792,9 +813,9 @@ class MiscTestSuite {
 		monID := this.obj.monitorID
 		Yunit.assert(monId == 2)
 		OutputDebug % "**** " A_ThisFunc " 3 - via MonitorID ****"
-		this.obj.monitorID := 1
+		this.obj.monitorID := 2
 		monID := this.obj.monitorID
-		Yunit.assert(monId == 1)
+		Yunit.assert(monId == 2)
 		OutputDebug % "<<<<[" A_ThisFunc "]<<<<<"
 	}
 	
@@ -853,98 +874,3 @@ class ExistTestSuite {
 		this.obj := 
 	}
 }
-
-
-/*
-; ###################################################################
-class MoveResizeTestSuite
-{
-    Begin()
-    {
-		Global debug
-		this.obj := new Windy(0, debug)
-		sleep 1000
-    }
-    
-    MoveViaWinMove()
-    {
-		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
-		OutputDebug % "Initial Position: " this.obj._lastPos.Dump() " - Restore: " this.obj._restorePos.Dump()
-		hwnd := this.obj.hwnd
-        xold := this.obj._lastPos.x
-		yold := this.obj._lastPos.y
-		xnew := xold+10
-		ynew := yold+10
-		
-		OutputDebug % "BEFORE - Moving from x,y(" xold "," yold ") to (" xnew "," ynew ")"
-		WinMove % "ahk_id" this.obj.hwnd, ,xnew, ynew
-        OutputDebug % "AFTER - Moving from x,y(" xold "," yold ") to (" xnew "," ynew ")"
-        Yunit.assert(this.obj.isMoved()==1)
-        Yunit.assert(this.obj.isResized()==0)
-        OutputDebug % "<<<<[" A_ThisFunc "]<<<<<"
-    }
-        
-    MoveResizeViaWinMove()
-    {
-        OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
-        OutputDebug % "Initial Position: " this.obj._lastPos.Dump() " - Restore: " this.obj._restorePos.Dump()
-        hwnd := this.obj.hwnd
-        xold := this.obj._lastPos.x
-		yold := this.obj._lastPos.y
-        wold := this.obj._lastPos.w
-		hold := this.obj._lastPos.h
-		xnew := xold+10
-		ynew := yold+20
-        wnew := wold+10
-		hnew := hold+20
-        OutputDebug % "BEFORE- Moving/Resizing from x,y,w,h(" xold "," yold "," wold "," hold ") to (" xnew "," ynew "," wnew "," hnew ")"
-        WinMove % "ahk_id" this.obj.hwnd, , xnew, ynew, wnew, hnew
-        OutputDebug % "AFTER - Moving/Resizing from x,y,w,h(" xold "," yold "," wold "," hold ") to (" xnew "," ynew "," wnew "," hnew ")"
-        Yunit.assert(this.obj.isMoved()==1)
-        Yunit.assert(this.obj.isResized()==1)
-        OutputDebug % "<<<<[" A_ThisFunc "]<<<<<"
-    }
-        
-    ResizeViaWinMove()
-    {
-        OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
-        OutputDebug % "Initial Position: " this.obj._lastPos.Dump() " - Restore: " this.obj._restorePos.Dump()
-        hwnd := this.obj.hwnd
-        hwnd := this.obj.hwnd
-        xold := this.obj._lastPos.x
-		yold := this.obj._lastPos.y
-        wold := this.obj._lastPos.w
-		hold := this.obj._lastPos.h
-        wnew := wold+10
-		hnew := hold+20
-        OutputDebug % "BEFORE- Resizing from w,h(" wold "," hold ") to (" wnew "," hnew ")"
-        WinMove % "ahk_id" this.obj.hwnd, , xold, yold, wnew, hnew
-        OutputDebug % "AFTER- Resizing from w,h(" wold "," hold ") to (" wnew "," hnew ")"
-        Yunit.assert(this.obj.isMoved()==0)
-        Yunit.assert(this.obj.isResized()==1)
-        OutputDebug % "<<<<[" A_ThisFunc "]<<<<<"
-    }
-	
-	NoMoveResize() {
-		Global debug
-		success := 1
-		l := new Windy(0, debug)
-		WinMove % "ahk_id" l._hWnd, , l._lastPos.x, l._lastPos.y, l._lastPos.w, l._lastPos.h
-		isMoved := l.isMoved()
-		isResized := l.isResized()
-		success := success && !(isMoved) && !(isResized)
-		l.kill()
-		if !success
-			throw "
-	}		
-    
-	End()
-    {
-		sleep,2000
-		this.obj.kill()
-        this.remove("obj")
-		this.obj := 
-    }
-}
-
-*/
