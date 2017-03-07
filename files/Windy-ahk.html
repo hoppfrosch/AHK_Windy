@@ -8,291 +8,316 @@
 
 <body onload="NDLoader.OnLoad('Content');" class="NDPage NDContentPage">
 
-<a name="Windy"></a><a name="Topic4"></a><div class="CTopic TClass LAutoHotKey first">
+<a name="Windy"></a><a name="Topic121"></a><div class="CTopic TClass LAutoHotKey first">
  <div class="CTitle">Windy</div>
  <div class="CBody"><p>Perform actions on windows using an unified class based interface</p><div class="CHeading">Authors</div><p><a href="#" onclick="javascript:location.href='ma\u0069'+'lto\u003a'+'hoppf'+'rosch'+'\u0040'+'gmx'+'\u002ede';return false;">hoppfrosch</a>: Original</p></div>
 </div>
 
-<a name="Windy.Information"></a><a name="Topic5"></a><div class="CTopic TGroup LAutoHotKey">
+<a name="Windy.Information"></a><a name="Topic122"></a><div class="CTopic TGroup LAutoHotKey">
  <div class="CTitle">Information</div>
 </div>
 
-<a name="Windy.License"></a><a name="Topic6"></a><div class="CTopic TInformation LAutoHotKey">
+<a name="Windy.License"></a><a name="Topic123"></a><div class="CTopic TInformation LAutoHotKey">
  <div class="CTitle">License</div>
  <div class="CBody"><p>This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See <a href="http://www.wtfpl.net/" target="_top">WTFPL</a> for more details.</p></div>
 </div>
 
-<a name="Windy.Properties"></a><a name="Topic7"></a><div class="CTopic TGroup LAutoHotKey">
+<a name="Windy.Properties"></a><a name="Topic124"></a><div class="CTopic TGroup LAutoHotKey">
  <div class="CTitle">Properties</div>
 </div>
 
-<a name="Windy.alwaysOnTop"></a><a name="Topic8"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Windy.activated"></a><a name="Topic125"></a><div class="CTopic TProperty LAutoHotKey">
+ <div class="CTitle">activated [get/set]</div>
+ <div class="CBody"><p>Set/Unset the current window as active window or get the current state</p><div class="CHeading">Value</div><table class="CDefinitionList"><tr><td class="CDLEntry">flag</td><td class="CDLDefinition"><p><b>true</b> or <b>false</b> (activates/deactivates *activated*-Property)</p></td></tr></table><div class="CHeading">Remarks</div><ul><li><p>To toogle, simply use &gt;obj.activated := !obj.activated</p></li></ul></div>
+</div>
+
+<a name="Windy.alwaysOnTop"></a><a name="Topic126"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">alwaysOnTop [get/set]</div>
  <div class="CBody"><p>Set/Unset alwaysontop flag of the current window or get the current state</p><div class="CHeading">Value</div><table class="CDefinitionList"><tr><td class="CDLEntry">flag</td><td class="CDLDefinition"><p><b>true</b> or <b>false</b> (activates/deactivates *alwaysontop*-Property)</p></td></tr></table><div class="CHeading">Remarks</div><ul><li><p>To toogle, simply use &gt;obj.alwaysontop := !obj.alwaysontop</p></li></ul></div>
 </div>
 
-<a name="Windy.caption"></a><a name="Topic9"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Windy.caption"></a><a name="Topic127"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">caption [get/set]</div>
  <div class="CBody"><p>Set/Unset visibility of the window caption</p><div class="CHeading">Value</div><table class="CDefinitionList"><tr><td class="CDLEntry">flag</td><td class="CDLDefinition"><p><b>true</b> or <b>false</b> (activates/deactivates *caption*-Property)</p></td></tr></table><div class="CHeading">Remarks</div><ul><li><p>To toogle, simply use</p></li></ul><pre>obj.caption := !obj.caption</pre></div>
 </div>
 
-<a name="Windy.centercoords"></a><a name="Topic10"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Windy.captionHeight"></a><a name="Topic128"></a><div class="CTopic TProperty LAutoHotKey">
+ <div class="CTitle">captionHeight [get]</div>
+ <div class="CBody"><p>Height of the caption bar</p><div class="CHeading">Remarks</div><ul><li><p>There is no setter available, since this is a constant window property</p></li></ul></div>
+</div>
+
+<a name="Windy.centercoords"></a><a name="Topic129"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">centercoords [get/set]</div>
  <div class="CBody"><p>Coordinates of the center of the window as a <a href="http://hoppfrosch.github.io/AHK_Windy/files/Pointy-ahk.html" target="_top">point</a></p><div class="CHeading">Value</div><table class="CDefinitionList"><tr><td class="CDLEntry">coords</td><td class="CDLDefinition"><p>centercoordinates of the window</p></td></tr></table></div>
 </div>
 
-<a name="Windy.classname"></a><a name="Topic11"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Windy.classname"></a><a name="Topic130"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">classname [get]</div>
  <div class="CBody"><p>name of the window class.</p><div class="CHeading">Remarks</div><ul><li><p>There is no setter available, since this is a constant window property</p></li></ul></div>
 </div>
 
-<a name="Windy.debug"></a><a name="Topic12"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Windy.clickThrough"></a><a name="Topic131"></a><div class="CTopic TProperty LAutoHotKey">
+ <div class="CTitle">clickThrough [get/set]</div>
+ <div class="CBody"><p>Set/Unset clickThrough flag of the current window or get the current state</p><p>When a Window is set to clickthrough, its recommended to set the *alwaysontop*-Property as well</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">transparency</td><td class="CDLDefinition"><p>transparency to be set on clickthrough. If clickthrough is disabled transparency will be switched off</p></td></tr></table><div class="CHeading">Value</div><table class="CDefinitionList"><tr><td class="CDLEntry">flag</td><td class="CDLDefinition"><p><b>true</b> or <b>false</b> (activates/deactivates *clickThrough*-Property)</p></td></tr></table><div class="CHeading">Remarks</div><ul><li><p>To toogle, simply use &gt;obj.clickThrough := !obj.clickThrough</p></li></ul></div>
+</div>
+
+<a name="Windy.debug"></a><a name="Topic132"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">debug [get/set]</div>
  <div class="CBody"><p>Debug flag for debugging the object</p><div class="CHeading">Value</div><table class="CDefinitionList"><tr><td class="CDLEntry">flag</td><td class="CDLDefinition"><p><b>true</b> or <b>false</b></p></td></tr></table></div>
 </div>
 
-<a name="Windy.exist"></a><a name="Topic13"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Windy.exist"></a><a name="Topic133"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">exist [get]</div>
  <div class="CBody"><p>Checks whether the window still exists.</p><div class="CHeading">Value</div><table class="CDefinitionList"><tr><td class="CDLEntry">flag</td><td class="CDLDefinition"><p><b>true</b> or <b>false</b> (activates/deactivates *caption*-Property)</p></td></tr></table><div class="CHeading">Remarks</div><ul><li><p>There is no setter available, since this is a constant window property</p></li></ul></div>
 </div>
 
-<a name="Windy.hidden"></a><a name="Topic14"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Windy.hidden"></a><a name="Topic134"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">hidden [get/set]</div>
  <div class="CBody"><p>Hides/Unhide the current window or get the current state of hiding</p><div class="CHeading">Value</div><table class="CDefinitionList"><tr><td class="CDLEntry">flag</td><td class="CDLDefinition"><p>`true` or `false` (activates/deactivates *hidden*-Property)</p></td></tr></table><div class="CHeading">Remarks</div><ul><li><p>To toogle current *hidden*-Property, simply use</p></li></ul><pre>obj.hidden := !obj.hidden`</pre></div>
 </div>
 
-<a name="Windy.hwnd"></a><a name="Topic15"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Windy.hwnd"></a><a name="Topic135"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">hwnd [get]</div>
  <div class="CBody"><p>Get the window handle of the current window</p><div class="CHeading">Remarks</div><ul><li><p>There is no setter available, since this is a constant window property</p></li></ul></div>
 </div>
 
-<a name="Windy.hangs"></a><a name="Topic16"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Windy.hangs"></a><a name="Topic136"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">hangs [get]</div>
  <div class="CBody"><p>Determines whether the system considers that a specified application is not responding.</p><div class="CHeading">Remarks</div><ul><li><p>There is no setter available, since this is a constant window property</p></li></ul></div>
 </div>
 
-<a name="Windy.hscrollable"></a><a name="Topic17"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Windy.hscrollable"></a><a name="Topic137"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">hscrollable [get/set]</div>
  <div class="CBody"><p>Is horizontal scrollbar available?</p><div class="CHeading">Value</div><table class="CDefinitionList"><tr><td class="CDLEntry">flag</td><td class="CDLDefinition"><p><b>true</b> or *false (activates/deactivates *hscrollable*-Property)</p></td></tr></table><div class="CHeading">Remarks</div><ul><li><p>To toogle current *hscrollable*-Property, simply use</p></li></ul><pre>obj.hscrollable := !obj.hscrollable</pre></div>
 </div>
 
-<a name="Windy.maximizebox"></a><a name="Topic18"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Windy.maximizebox"></a><a name="Topic138"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">maximizebox [get/set]</div>
  <div class="CBody"><p>Get or Set the *maximizebox*-Property (Is maximizebox available?)</p><div class="CHeading">Value</div><table class="CDefinitionList"><tr><td class="CDLEntry">flag</td><td class="CDLDefinition"><p><b>true</b> or <b>false</b> (activates/deactivates *maximizebox*-Property)</p></td></tr></table><div class="CHeading">Remarks</div><ul><li><p>To toogle, simply use</p></li></ul><pre>obj.maximizebox := !obj.maximizebox</pre></div>
 </div>
 
-<a name="Windy.maximized"></a><a name="Topic19"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Windy.maximized"></a><a name="Topic139"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">maximized [get/set]</div>
  <div class="CBody"><p>Maximizes/Demaximizes the current window or get the current state of maximization</p><div class="CHeading">Value</div><table class="CDefinitionList"><tr><td class="CDLEntry">flag</td><td class="CDLDefinition"><p><b>true</b> or <b>false</b> (activates/deactivates *maximized*-Property)</p></td></tr></table><div class="CHeading">Remarks</div><ul><li><p>To toogle, simply use</p></li></ul><pre>obj.maximized := !obj.maximized</pre></div>
 </div>
 
-<a name="Windy.minimizebox"></a><a name="Topic20"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Windy.minimizebox"></a><a name="Topic140"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">minimizebox [get/set]</div>
  <div class="CBody"><p>Get or Set the *minimizebox*-Property (Is minimizebox available?)</p><div class="CHeading">Value</div><table class="CDefinitionList"><tr><td class="CDLEntry">flag</td><td class="CDLDefinition"><p><b>true</b> or <b>false</b> (activates/deactivates *minimizebox*-Property)</p></td></tr></table><div class="CHeading">Remarks</div><ul><li><p>To toogle, simply use</p></li></ul><pre>obj.minimizebox := !obj.minimizebox</pre></div>
 </div>
 
-<a name="Windy.minimized"></a><a name="Topic21"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Windy.minimized"></a><a name="Topic141"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">minimized [get/set]</div>
  <div class="CBody"><p>Minimizes/Deminimizes the current window or get the current state of minimization</p><div class="CHeading">Value</div><table class="CDefinitionList"><tr><td class="CDLEntry">flag</td><td class="CDLDefinition"><p><b>true</b> or <b>false</b> (activates/deactivates *minimized*-Property)</p></td></tr></table><div class="CHeading">Remarks</div><ul><li><p>To toogle, simply use</p></li></ul><pre>obj.minimized := !obj.minimized</pre></div>
 </div>
 
-<a name="Windy.monitorID"></a><a name="Topic22"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Windy.monitorID"></a><a name="Topic142"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">monitorID [get/set]</div>
  <div class="CBody"><p>Get or Set the ID of monitor on which the window is on. Setting the property moves the window to the corresponding monitor, trying to place the window at the same (scaled) position</p><div class="CHeading">Value</div><table class="CDefinitionList"><tr><td class="CDLEntry">ID</td><td class="CDLDefinition"><p>Monitor-ID (if <b>ID &gt; max(ID)</b> then <b>ID = max(ID)</b> will be used)</p></td></tr></table><p>Remarks * Setting the property moves the window to the corresponding monitor, retaining the (relative) position and size of the window</p></div>
 </div>
 
-<a name="Windy.owner"></a><a name="Topic23"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Windy.next"></a><a name="Topic143"></a><div class="CTopic TProperty LAutoHotKey">
+ <div class="CTitle">next [get]</div>
+ <div class="CBody"><p>gets the <a href="http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html" target="_top">windy</a> object below the current object in the Z order.</p><div class="CHeading">Returns</div><p>new &lt;windy at <a href="http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html" target="_top">http://&#8203;hoppfrosch&#8203;.github&#8203;.io&#8203;/AHK_Windy&#8203;/files&#8203;/Windy-ahk&#8203;.html</a>&gt;-object</p><div class="CHeading">Remarks</div><ul><li><p>There is no setter available, since this is a constant window property</p></li></ul></div>
+</div>
+
+<a name="Windy.owner"></a><a name="Topic144"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">owner [get/set]</div>
  <div class="CBody"><p>Get or Set the handle of owner window of the window current.</p><div class="CHeading">Value</div><table class="CDefinitionList"><tr><td class="CDLEntry">hwndOwner</td><td class="CDLDefinition"><p>Handle to the owner window. If this parameter is 0, the desktop window becomes the new owner window.</p></td></tr></table><div class="CHeading">Returns</div><p>If the function succeeds, the return value is a handle to the owner window. Otherwise, its 0.</p><div class="CHeading">Remarks</div><p>See <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms633584%28v=vs.85%29.aspx" target="_top">http://&#8203;msdn&#8203;.microsoft&#8203;.com&#8203;/en-us&#8203;/library&#8203;/windows&#8203;/desktop&#8203;/ms633584%28v=vs&#8203;.85%29&#8203;.aspx</a> for more information.</p></div>
 </div>
 
-<a name="Windy.parent"></a><a name="Topic24"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Windy.parent"></a><a name="Topic145"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">parent [get/set]</div>
  <div class="CBody"><p>Get or Set the parent of the window.</p><div class="CHeading">Value</div><table class="CDefinitionList"><tr><td class="CDLEntry">hwndPar</td><td class="CDLDefinition"><p>Handle to the parent window. If this parameter is 0, the desktop window becomes the new parent window.</p></td></tr><tr><td class="CDLEntry">bFixStyle</td><td class="CDLDefinition"><p>Set to TRUE to fix WS_CHILD &amp; WS_POPUP styles. SetParent does not modify the WS_CHILD or WS_POPUP window styles of the window whose parent is being changed. 	If hwndPar is 0, you should also clear the WS_CHILD bit and set the WS_POPUP style after calling SetParent (and vice-versa).</p></td></tr></table><div class="CHeading">Returns</div><p>If the function succeeds, the return value is a handle to the previous parent window. Otherwise, its 0.</p><div class="CHeading">Remarks</div><ul><li><p>If the current window identified by the hwnd parameter is visible, the system performs the appropriate redrawing and repainting.&nbsp; The function sends WM_CHANGEUISTATE to the parent after succesifull operation uncoditionally.</p></li><li><p>See <a href="http://msdn.microsoft.com/en-us/library/ms633541(VS.85).aspx" target="_top">http://&#8203;msdn&#8203;.microsoft&#8203;.com&#8203;/en-us&#8203;/library&#8203;/ms633541(VS&#8203;.85)&#8203;.aspx</a> for more information.</p></li></ul></div>
 </div>
 
-<a name="Windy.pos"></a><a name="Topic25"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Windy.pos"></a><a name="Topic146"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">pos [get/set]</div>
  <div class="CBody"><p>Position of the window as <a href="http://hoppfrosch.github.io/AHK_Windy/files/Pointy-ahk.html" target="_top">point</a></p><div class="CHeading">Value</div><table class="CDefinitionList"><tr><td class="CDLEntry">pos</td><td class="CDLDefinition"><p>position of the window</p></td></tr></table></div>
 </div>
 
-<a name="Windy.posSize"></a><a name="Topic26"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Windy.posSize"></a><a name="Topic147"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">posSize [get/set]</div>
  <div class="CBody"><p>Get or Set the position and size of the window (To set the position use class <a href="http://hoppfrosch.github.io/AHK_Windy/files/Recty-ahk.html" target="_top">rectangle</a>.)</p><div class="CHeading">Value</div><table class="CDefinitionList"><tr><td class="CDLEntry">ps</td><td class="CDLDefinition"><p>position and size of the window</p></td></tr></table></div>
 </div>
 
-<a name="Windy.processID"></a><a name="Topic27"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Windy.previous"></a><a name="Topic148"></a><div class="CTopic TProperty LAutoHotKey">
+ <div class="CTitle">previous [get]</div>
+ <div class="CBody"><p>gets the <a href="http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html" target="_top">windy</a> object above the current object in the Z order.</p><div class="CHeading">Returns</div><p>new &lt;windy at <a href="http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html" target="_top">http://&#8203;hoppfrosch&#8203;.github&#8203;.io&#8203;/AHK_Windy&#8203;/files&#8203;/Windy-ahk&#8203;.html</a>&gt;-object</p><div class="CHeading">Remarks</div><ul><li><p>There is no setter available, since this is a constant window property</p></li></ul></div>
+</div>
+
+<a name="Windy.processID"></a><a name="Topic149"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">processID [get]</div>
  <div class="CBody"><p>Get the ID of the process the window belongs to</p><div class="CHeading">Remarks</div><ul><li><p>There is no setter available, since this cannot be modified</p></li></ul></div>
 </div>
 
-<a name="Windy.processname"></a><a name="Topic28"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Windy.processname"></a><a name="Topic150"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">processname [get]</div>
  <div class="CBody"><p>Get the Name of the process the window belongs to</p><div class="CHeading">Remarks</div><ul><li><p>There is no setter available, since this cannot be modified</p></li></ul></div>
 </div>
 
-<a name="Windy.resizable"></a><a name="Topic29"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Windy.resizable"></a><a name="Topic151"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">resizable [get/set]</div>
  <div class="CBody"><p>Is window resizing possible?</p><div class="CHeading">Value</div><table class="CDefinitionList"><tr><td class="CDLEntry">flag</td><td class="CDLDefinition"><p><b>true</b> or <b>false</b> (activates/deactivates *resizable*-Property)</p></td></tr></table><div class="CHeading">Remarks</div><ul><li><p>To toogle, simply use</p></li></ul><pre>obj.resizable := !obj.resizable</pre><p>* Same as property <a href="http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#sizebox" target="_top">sizebox</a></p></div>
 </div>
 
-<a name="Windy.rolledUp"></a><a name="Topic30"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Windy.rolledUp"></a><a name="Topic152"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">rolledUp [get/set]</div>
  <div class="CBody"><p>Is window rolled up to its title bar?&nbsp; Rolls/De-Rolls the current window or get the current state of RollUp</p><div class="CHeading">Value</div><table class="CDefinitionList"><tr><td class="CDLEntry">flag</td><td class="CDLDefinition"><p><b>true</b> or <b>false</b> (activates/deactivates *rolledUp*-Property)</p></td></tr></table><div class="CHeading">Remarks</div><ul><li><p>To toogle, simply use</p></li></ul><pre>obj.rolledUp := !obj.rolledUp</pre></div>
 </div>
 
-<a name="Windy.rolledUpHeight"></a><a name="Topic31"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Windy.rolledUpHeight"></a><a name="Topic153"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">rolledUpHeight [get]</div>
  <div class="CBody"><p>Height of the caption bar of windows</p><div class="CHeading">Remarks</div><ul><li><p>There is no setter available, since this is a constant window property</p></li></ul></div>
 </div>
 
-<a name="Windy.scale"></a><a name="Topic32"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Windy.scale"></a><a name="Topic154"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">scale [get]</div>
  <div class="CBody"><p>Scales the current position and size of the window to another monitor considering current and destination monitor proportions</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">monIDDest</td><td class="CDLDefinition"><p>Destination Monitor number (<b>Required</b>, Default := 1)</p></td></tr></table><div class="CHeading">Returns</div><p>Rectangle containing the scaled coordinates og the window in given monitor (see <a href="http://hoppfrosch.github.io/AHK_Windy/files/Recty-ahk.html" target="_top">recty</a>.</p><div class="CHeading">Remarks</div><ul><li><p>There is no setter available, since this is a constant system property</p></li></ul></div>
 </div>
 
-<a name="Windy.size"></a><a name="Topic33"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Windy.size"></a><a name="Topic155"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">size [get/set]</div>
  <div class="CBody"><p>Dimensions (Width/Height) of the window as <a href="http://hoppfrosch.github.io/AHK_Windy/files/Pointy-ahk.html" target="_top">point</a></p><div class="CHeading">Value</div><table class="CDefinitionList"><tr><td class="CDLEntry">size</td><td class="CDLDefinition"><p>size of the window</p></td></tr></table></div>
 </div>
 
-<a name="Windy.sizebox"></a><a name="Topic34"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Windy.sizebox"></a><a name="Topic156"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">sizebox [get/set]</div>
  <div class="CBody"><p>Is window resizing possible?</p><div class="CHeading">Value</div><table class="CDefinitionList"><tr><td class="CDLEntry">flag</td><td class="CDLDefinition"><p><b>true</b> or <b>false</b> (activates/deactivates *sizebox*-Property)</p></td></tr></table><div class="CHeading">Remarks</div><ul><li><p>To toogle, simply use</p></li></ul><pre>obj.sizebox := !obj.sizebox</pre><p>* Same as property <b>resizable</b></p></div>
 </div>
 
-<a name="Windy.style"></a><a name="Topic35"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Windy.style"></a><a name="Topic157"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">style [get/set]</div>
  <div class="CBody"><p>Current window style</p></div>
 </div>
 
-<a name="Windy.styleEx"></a><a name="Topic36"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Windy.styleEx"></a><a name="Topic158"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">styleEx [get/set]</div>
  <div class="CBody"><p>Current window extended style</p></div>
 </div>
 
-<a name="Windy.title"></a><a name="Topic37"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Windy.title"></a><a name="Topic159"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">title [get/set]</div>
  <div class="CBody"><p>Current window title.</p><div class="CHeading">Remarks</div><p>A change to a window's title might be merely temporary if the application that owns the window frequently changes the title.</p></div>
 </div>
 
-<a name="Windy.transparency"></a><a name="Topic38"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Windy.transparency"></a><a name="Topic160"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">transparency [get/set]</div>
  <div class="CBody"><p>Current window transparency.</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">transparency</td><td class="CDLDefinition"><p>transparency to be set</p></td></tr><tr><td class="CDLEntry">increment</td><td class="CDLDefinition"><p>transparency-incrementation while fading</p></td></tr><tr><td class="CDLEntry">delay</td><td class="CDLDefinition"><p>delay between each increment (Unit: ms)</p></td></tr></table><div class="CHeading">Remarks</div><ul><li><p>if : transparency &gt; current, increases current transparency [increment+]</p></li><li><p>if : transparency &lt; current, decreases current transparency [increment-]</p></li><li><p>if : increment = 0, transparency isset immediately without any fading</p></li></ul><p>Author(s) Original - <a href="http://ahkscript.org/boards/viewtopic.php?f=6&amp;t=512" target="_top">joedf</a></p></div>
 </div>
 
-<a name="Windy.vscrollable"></a><a name="Topic39"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Windy.vscrollable"></a><a name="Topic161"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">vscrollable [get/set]</div>
  <div class="CBody"><p>Is vertical scrollbar available?</p><div class="CHeading">Value</div><table class="CDefinitionList"><tr><td class="CDLEntry">flag</td><td class="CDLDefinition"><p><b>true</b> or <b>false</b> (activates/deactivates *vscrollable*-Property)</p></td></tr></table><div class="CHeading">Remarks</div><ul><li><p>To toogle, simply use</p></li></ul><pre>obj.vscrollable := !obj.vscrollable</pre></div>
 </div>
 
-<a name="Windy.windowinfo"></a><a name="Topic40"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Windy.windowinfo"></a><a name="Topic162"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">windowinfo [get]</div>
  <div class="CBody"><p>Info about current window</p><p>Return values: * On success&nbsp; - Object containing structure's values (see Remarks) * On failure&nbsp; - False, ErrorLevel = 1 -&gt; Invalid HWN, ErrorLevel = 2 -&gt; DllCall(&quot;GetWindowInfo&quot;) caused an error</p><div class="CHeading">Remarks</div><ul><li><p>The returned object contains all keys defined in WINDOWINFO except &quot;Size&quot;.</p></li><li><p>The keys &quot;Window&quot; and &quot;Client&quot; contain objects with keynames defined in [5]</p></li><li><p>For more details see <a href="http://msdn.microsoft.com/en-us/library/ms633516%28VS.85%29.aspx" target="_top">http://&#8203;msdn&#8203;.microsoft&#8203;.com&#8203;/en-us&#8203;/library&#8203;/ms633516%28VS&#8203;.85%29&#8203;.aspx</a> and <a href="http://msdn.microsoft.com/en-us/library/ms632610%28VS.85%29.aspx" target="_top">http://&#8203;msdn&#8203;.microsoft&#8203;.com&#8203;/en-us&#8203;/library&#8203;/ms632610%28VS&#8203;.85%29&#8203;.aspx</a></p></li></ul><p>Author(s) Original - <a href="http://www.autohotkey.com/board/topic/69254-func-api-getwindowinfo-ahk-l/" target="_top">just me</a></p></div>
 </div>
 
-<a name="Windy.Functions"></a><a name="Topic41"></a><div class="CTopic TGroup LAutoHotKey">
+<a name="Windy.Functions"></a><a name="Topic163"></a><div class="CTopic TGroup LAutoHotKey">
  <div class="CTitle">Functions</div>
 </div>
 
-<a name="Windy.border2percent"></a><a name="Topic42"></a><div class="CTopic TFunction LAutoHotKey">
+<a name="Windy.border2percent"></a><a name="Topic164"></a><div class="CTopic TFunction LAutoHotKey">
  <div class="CTitle">border2percent</div>
- <div id="NDPrototype42" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters">border2percent(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PName first">border</td><td class="PDefaultValueSeparator">=&nbsp;</td><td class="PDefaultValue last"><span class="SHString">&quot;&quot;</span></td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div id="NDPrototype164" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters">border2percent(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PName first">border</td><td class="PDefaultValueSeparator">=&nbsp;</td><td class="PDefaultValue last"><span class="SHString">&quot;&quot;</span></td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
  <div class="CBody"><p>translates a border string to monitor percents.</p><p>When moving the actual window from current position to a certain position on the window border (given by a border string (as for example &quot;l&quot;, &quot;hc&quot; or &quot;r vc&quot;)), the border string is transformed to factors which describe the destination size/position of actual window in relation to the monitor the window is own. Using this factors the window can be moved via 'this.movePercental(factor.x, factor.y, factor.w, factor.h)' to the destination position as specified in border string.</p><p>This method is needed as a helper method in order to allow an easy configuration of window alignment within AHK_EDE '</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">border</td><td class="CDLDefinition"><p>string describing the border to move to - for further description see <a href="http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#moveBorder" target="_top">moveBorder</a>)</p></td></tr></table><div class="CHeading">Returns</div><p><a href="http://hoppfrosch.github.io/AHK_Windy/files/Recty-ahk.html" target="_top">rectangle</a> containing the screen percents</p><div class="CHeading">See Also</div><p><a href="http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#moveBorder" target="_top">moveBorder</a></p></div>
 </div>
 
-<a name="Windy.kill"></a><a name="Topic43"></a><div class="CTopic TFunction LAutoHotKey">
+<a name="Windy.kill"></a><a name="Topic165"></a><div class="CTopic TFunction LAutoHotKey">
  <div class="CTitle">kill</div>
- <div id="NDPrototype43" class="NDPrototype NoParameterForm">kill()</div>
+ <div id="NDPrototype165" class="NDPrototype NoParameterForm">kill()</div>
  <div class="CBody"><p>Kills the Window (Forces the window to close)</p><p>Performs the AHK command &lt;WinKill at (http://ahkscript.org/docs/commands/WinKill.htm&gt;</p><div class="CHeading">See Also</div><p><a href="http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#close" target="_top">close</a></p></div>
 </div>
 
-<a name="Windy.move"></a><a name="Topic44"></a><div class="CTopic TFunction LAutoHotKey">
+<a name="Windy.move"></a><a name="Topic166"></a><div class="CTopic TFunction LAutoHotKey">
  <div class="CTitle">move</div>
- <div id="NDPrototype44" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters">move(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PName first">X,</td><td></td><td class="last"></td></tr><tr><td class="PName first">Y,</td><td></td><td class="last"></td></tr><tr><td class="PName first">W</td><td class="PDefaultValueSeparator">=&nbsp;</td><td class="PDefaultValue last"><span class="SHString">&quot;99999&quot;</span>,</td></tr><tr><td class="PName first">H</td><td class="PDefaultValueSeparator">=&nbsp;</td><td class="PDefaultValue last"><span class="SHString">&quot;99999&quot;</span></td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div id="NDPrototype166" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters">move(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PName first">X,</td><td></td><td class="last"></td></tr><tr><td class="PName first">Y,</td><td></td><td class="last"></td></tr><tr><td class="PName first">W</td><td class="PDefaultValueSeparator">=&nbsp;</td><td class="PDefaultValue last"><span class="SHString">&quot;99999&quot;</span>,</td></tr><tr><td class="PName first">H</td><td class="PDefaultValueSeparator">=&nbsp;</td><td class="PDefaultValue last"><span class="SHString">&quot;99999&quot;</span></td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
  <div class="CBody"><p>Moves and/or resizes the window</p><p>The given coordinates/sizes are absolute coordinates/sizes. If the value of any coordinate is equal <b>99999</b> the current value keeps unchanged.</p><div class="CHeading">Examples</div><ul><li><p>Resize-only can be performed by</p></li></ul><pre>obj.move(99999,99999,width,height)</pre><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">x</td><td class="CDLDefinition"><p>x-Coordinate (absolute) the window has to be moved to - use <b>99999</b> to preserve actual value</p></td></tr><tr><td class="CDLEntry">y</td><td class="CDLDefinition"><p>y-Coordinate (absolute) the window has to be moved to - use <b>99999</b> to preserve actual value</p></td></tr><tr><td class="CDLEntry">w</td><td class="CDLDefinition"><p>width (absolute) the window has to be resized to - use <b>99999</b> to preserve actual value <b>(Optional)</b></p></td></tr><tr><td class="CDLEntry">h</td><td class="CDLDefinition"><p>height (absolute) the window has to be resized to - use <b>99999</b> to preserve actual value <b>(Optional)</b></p></td></tr></table><div class="CHeading">See Also</div><p><a href="http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#movePercental" target="_top">movePercental()</a>, <a href="http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#moveBorder" target="_top">moveBorder()</a></p></div>
 </div>
 
-<a name="Windy.movePercental"></a><a name="Topic45"></a><div class="CTopic TFunction LAutoHotKey">
+<a name="Windy.movePercental"></a><a name="Topic167"></a><div class="CTopic TFunction LAutoHotKey">
  <div class="CTitle">movePercental</div>
- <div id="NDPrototype45" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters">movePercental(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PName first">xFactor</td><td class="PDefaultValueSeparator">=&nbsp;</td><td class="PDefaultValue last"><span class="SHNumber">0</span>,</td></tr><tr><td class="PName first">yFactor</td><td class="PDefaultValueSeparator">=&nbsp;</td><td class="PDefaultValue last"><span class="SHNumber">0</span>,</td></tr><tr><td class="PName first">wFactor</td><td class="PDefaultValueSeparator">=&nbsp;</td><td class="PDefaultValue last"><span class="SHNumber">100</span>,</td></tr><tr><td class="PName first">hFactor</td><td class="PDefaultValueSeparator">=&nbsp;</td><td class="PDefaultValue last"><span class="SHNumber">100</span></td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div id="NDPrototype167" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters">movePercental(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PName first">xFactor</td><td class="PDefaultValueSeparator">=&nbsp;</td><td class="PDefaultValue last"><span class="SHNumber">0</span>,</td></tr><tr><td class="PName first">yFactor</td><td class="PDefaultValueSeparator">=&nbsp;</td><td class="PDefaultValue last"><span class="SHNumber">0</span>,</td></tr><tr><td class="PName first">wFactor</td><td class="PDefaultValueSeparator">=&nbsp;</td><td class="PDefaultValue last"><span class="SHNumber">100</span>,</td></tr><tr><td class="PName first">hFactor</td><td class="PDefaultValueSeparator">=&nbsp;</td><td class="PDefaultValue last"><span class="SHNumber">100</span></td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
  <div class="CBody"><p>move and resize window relative to the size of the current screen.</p><div class="CHeading">Examples</div><ul><li><p>create a window with origin 0,0 and a <b>width=100% of screen width</b> and <b>height=100% of screen height</b></p></li></ul><pre>obj.movePercental(0,0,100,100)</pre><p>* create a window at <b>x=25% of screen width</b>, <b>y =25% of screen height</b>, and with <b>width=50% of screen width</b>, <b>height=50% of screen height</b>. The resulting window is a screen centered window with the described width and height</p><pre>obj.movePercental(25,25,50,50)</pre><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">xFactor</td><td class="CDLDefinition"><p>x-position factor (percents of current screen width) the window has to be moved to (Range: 0.0 to 100.0) *(<b>Optional</b>, Default = 0)</p></td></tr><tr><td class="CDLEntry">yFactor</td><td class="CDLDefinition"><p>y-position factor (percents of current screen height) the window has to be moved to (Range: 0.0 to 100.0) (<b>Optional</b>, Default = 0)</p></td></tr><tr><td class="CDLEntry">wFactor</td><td class="CDLDefinition"><p>width-size factor (percents of current screen width) the window has to be resized to (Range: 0.0 to 100.0) (<b>Optional</b>, Default = 100)</p></td></tr><tr><td class="CDLEntry">hFactor</td><td class="CDLDefinition"><p>height-size factor (percents of current screen height) the window has to be resized to (Range: 0.0 to 100.0) (<b>Optional</b>, Default = 100)</p></td></tr></table><div class="CHeading">See Also</div><p><a href="http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#move" target="_top">move()</a>, <a href="http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#moveBorder" target="_top">moveBorder()</a></p><div class="CHeading">Authors</div><ul><li><p>Original: <a href="http://www.autohotkey.com/forum/topic21703.html" target="_top">Lexikos</a></p></li></ul><div class="CHeading">Caveats</div><ul><li><p>The range of the method parameters is <b>NOT</b> checked, so be carefull using any values <b>&lt;0</b> or <b>&gt;100</b></p></li></ul></div>
 </div>
 
-<a name="Windy.moveBorder"></a><a name="Topic46"></a><div class="CTopic TFunction LAutoHotKey">
+<a name="Windy.moveBorder"></a><a name="Topic168"></a><div class="CTopic TFunction LAutoHotKey">
  <div class="CTitle">moveBorder</div>
- <div id="NDPrototype46" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters">moveBorder(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PName first">border</td><td class="PDefaultValueSeparator">=&nbsp;</td><td class="PDefaultValue last"><span class="SHString">&quot;&quot;</span></td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div id="NDPrototype168" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters">moveBorder(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PName first">border</td><td class="PDefaultValueSeparator">=&nbsp;</td><td class="PDefaultValue last"><span class="SHString">&quot;&quot;</span></td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
  <div class="CBody"><p>move the window on the current screen to a border given by string while keeping the size.</p><p>Example(s): * moves the window to the left border</p><pre>obj.moveBorder(&quot;l&quot;)</pre><p>* moves the window to the left border and centers it vertically</p><pre>obj.moveBorder(&quot;l vc&quot;)</pre><p>* moves the window to the top border and centers it horizontally</p><pre>obj.moveBorder(&quot;t hc&quot;)</pre><p>* moves the window to the top left corner</p><pre>obj.moveBorder(&quot;t l&quot;)</pre><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">border</td><td class="CDLDefinition"><p>string describing the border to move to (<b>t</b>: top, <b>b</b>: bottom, <b>l</b>: left, <b>r</b>: right, <b>vc</b>: vertically centered, <b>hc</b>: horizonally centered)</p></td></tr></table><div class="CHeading">See Also</div><p><a href="http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#move" target="_top">move()</a>, <a href="http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html#movePercental" target="_top">movePercental</a></p></div>
 </div>
 
-<a name="Windy.posSize2percent"></a><a name="Topic47"></a><div class="CTopic TFunction LAutoHotKey">
+<a name="Windy.posSize2percent"></a><a name="Topic169"></a><div class="CTopic TFunction LAutoHotKey">
  <div class="CTitle">posSize2percent</div>
- <div id="NDPrototype47" class="NDPrototype NoParameterForm">posSize2percent()</div>
+ <div id="NDPrototype169" class="NDPrototype NoParameterForm">posSize2percent()</div>
  <div class="CBody"><p>Calculates screen percents from current size of actual window</p><p>This method is needed as a helper method in order to allow an easy configuration of window alignment within AHK_EDE '</p><div class="CHeading">Returns</div><p><a href="http://hoppfrosch.github.io/AHK_Windy/files/Recty-ahk.html" target="_top">rectangle</a> containing the screen percents</p></div>
 </div>
 
-<a name="Windy.redraw"></a><a name="Topic48"></a><div class="CTopic TFunction LAutoHotKey">
+<a name="Windy.redraw"></a><a name="Topic170"></a><div class="CTopic TFunction LAutoHotKey">
  <div class="CTitle">redraw</div>
- <div id="NDPrototype48" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters">redraw(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PName first">Option</td><td class="PDefaultValueSeparator">=&nbsp;</td><td class="PDefaultValue last"><span class="SHString">&quot;&quot;</span></td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div id="NDPrototype170" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters">redraw(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PName first">Option</td><td class="PDefaultValueSeparator">=&nbsp;</td><td class="PDefaultValue last"><span class="SHString">&quot;&quot;</span></td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
  <div class="CBody"><p>Redraws the window.</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">Option</td><td class="CDLDefinition"><p>Enable or disable redrawing (<b>Optional</b>, Default = &quot;&quot; (empty)). Use <b>&quot;-&quot;</b> to disable redrawing for the window, <b>&quot;+&quot;</b> to enable it and redraw it.</p></td></tr></table><div class="CHeading">Returns</div><p>A nonzero value indicates success. Zero indicates failure.</p><div class="CHeading">Hint</div><p>This function will update the window for sure, unlike <a href="http://ahkscript.org/docs/commands/WinSet.htm" target="_top">WinSet</a> or InvalidateRect.</p><div class="CHeading">Authors</div><ul><li><p>Original: majkinetor</p></li></ul></div>
 </div>
 
-<a name="Windy.__isWindow"></a><a name="Topic49"></a><div class="CTopic TFunction LAutoHotKey">
+<a name="Windy.__isWindow"></a><a name="Topic171"></a><div class="CTopic TFunction LAutoHotKey">
  <div class="CTitle">__isWindow</div>
- <div id="NDPrototype49" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters">__isWindow(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PName first last">hWnd</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div id="NDPrototype171" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters">__isWindow(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PName first last">hWnd</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
  <div class="CBody"><p>Checks whether the given hWnd refers to a TRUE window (As opposed to the desktop or a menu, etc.) (<b>INTERNAL</b>)</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">hwnd</td><td class="CDLDefinition"><p>Handle of window to check (<b>Obligatory</b>)</p></td></tr></table><div class="CHeading">Returns</div><p>true (window is a true window), false (window is not a true window)</p><p>Author(s): Original - <a href="http://www.autohotkey.com/board/topic/25393-appskeys-a-suite-of-simple-utility-hotkeys/" target="_top">ManaUser</a></p></div>
 </div>
 
-<a name="Windy.____hexStr"></a><a name="Topic50"></a><div class="CTopic TFunction LAutoHotKey">
+<a name="Windy.____hexStr"></a><a name="Topic172"></a><div class="CTopic TFunction LAutoHotKey">
  <div class="CTitle">____hexStr</div>
  <div class="CBody"><p>Converts number to hex representation (<b>INTERNAL</b>)</p></div>
 </div>
 
-<a name="Windy.__posPush"></a><a name="Topic51"></a><div class="CTopic TFunction LAutoHotKey">
+<a name="Windy.__posPush"></a><a name="Topic173"></a><div class="CTopic TFunction LAutoHotKey">
  <div class="CTitle">__posPush</div>
- <div id="NDPrototype51" class="NDPrototype NoParameterForm">__posPush()</div>
+ <div id="NDPrototype173" class="NDPrototype NoParameterForm">__posPush()</div>
  <div class="CBody"><p>Pushes current position of the window on position stack (<b>INTERNAL</b>)</p></div>
 </div>
 
-<a name="Windy.__posStackDump"></a><a name="Topic52"></a><div class="CTopic TFunction LAutoHotKey">
+<a name="Windy.__posStackDump"></a><a name="Topic174"></a><div class="CTopic TFunction LAutoHotKey">
  <div class="CTitle">__posStackDump</div>
- <div id="NDPrototype52" class="NDPrototype NoParameterForm">__posStackDump()</div>
+ <div id="NDPrototype174" class="NDPrototype NoParameterForm">__posStackDump()</div>
  <div class="CBody"><p>Dumps the current position stack via OutputDebug (<b>INTERNAL</b>)</p></div>
 </div>
 
-<a name="Windy.__posRestore"></a><a name="Topic53"></a><div class="CTopic TFunction LAutoHotKey">
+<a name="Windy.__posRestore"></a><a name="Topic175"></a><div class="CTopic TFunction LAutoHotKey">
  <div class="CTitle">__posRestore</div>
- <div id="NDPrototype53" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters">__posRestore(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PName first">index</td><td class="PDefaultValueSeparator">=&nbsp;</td><td class="PDefaultValue last"><span class="SHString">&quot;2&quot;</span></td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div id="NDPrototype175" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters">__posRestore(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PName first">index</td><td class="PDefaultValueSeparator">=&nbsp;</td><td class="PDefaultValue last"><span class="SHString">&quot;2&quot;</span></td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
  <div class="CBody"><p>Restores position of the window&nbsp; from Stack(*INTERNAL*)</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">index</td><td class="CDLDefinition"><p>Index of position to restore (<b>Optional</b>, Default = 2) (1 is the current position)</p></td></tr></table></div>
 </div>
 
-<a name="Windy.__SetWinEventHook"></a><a name="Topic54"></a><div class="CTopic TFunction LAutoHotKey">
+<a name="Windy.__SetWinEventHook"></a><a name="Topic176"></a><div class="CTopic TFunction LAutoHotKey">
  <div class="CTitle">__SetWinEventHook</div>
- <div id="NDPrototype54" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters">__SetWinEventHook(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PName first last">eventMin,</td></tr><tr><td class="PName first last">eventMax,</td></tr><tr><td class="PName first last">hmodWinEventProc,</td></tr><tr><td class="PName first last">lpfnWinEventProc,</td></tr><tr><td class="PName first last">idProcess,</td></tr><tr><td class="PName first last">idThread,</td></tr><tr><td class="PName first last">dwFlags</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div id="NDPrototype176" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters">__SetWinEventHook(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PName first last">eventMin,</td></tr><tr><td class="PName first last">eventMax,</td></tr><tr><td class="PName first last">hmodWinEventProc,</td></tr><tr><td class="PName first last">lpfnWinEventProc,</td></tr><tr><td class="PName first last">idProcess,</td></tr><tr><td class="PName first last">idThread,</td></tr><tr><td class="PName first last">dwFlags</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
  <div class="CBody"><p>Set the hook for certain win-events (<b>INTERNAL</b>)</p><div class="CHeading">Parameters</div><p>see <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd373885(v=vs.85).aspx" target="_top">http://&#8203;msdn&#8203;.microsoft&#8203;.com&#8203;/en-us&#8203;/library&#8203;/windows&#8203;/desktop&#8203;/dd373885(v=vs&#8203;.85)&#8203;.aspx</a></p><div class="CHeading">Returns</div><p>true or false, depending on result of dllcall</p></div>
 </div>
 
-<a name="Windy.__onLocationChange"></a><a name="Topic55"></a><div class="CTopic TFunction LAutoHotKey">
+<a name="Windy.__onLocationChange"></a><a name="Topic177"></a><div class="CTopic TFunction LAutoHotKey">
  <div class="CTitle">__onLocationChange</div>
- <div id="NDPrototype55" class="NDPrototype NoParameterForm">__onLocationChange()</div>
+ <div id="NDPrototype177" class="NDPrototype NoParameterForm">__onLocationChange()</div>
  <div class="CBody"><p>Callback on Object-Event <b>CONST_EVENT.OBJECT.LOCATIONCHANGE</b> or on <b>CONST_EVENT.SYSTEM.MOVESIZEEND</b> (<b>INTERNAL</b>)</p><ul><li><p>Store windows size/pos on each change</p></li></ul></div>
 </div>
 
-<a name="Windy.__Delete"></a><a name="Topic56"></a><div class="CTopic TFunction LAutoHotKey">
+<a name="Windy.__Delete"></a><a name="Topic178"></a><div class="CTopic TFunction LAutoHotKey">
  <div class="CTitle">__Delete</div>
- <div id="NDPrototype56" class="NDPrototype NoParameterForm">__Delete()</div>
+ <div id="NDPrototype178" class="NDPrototype NoParameterForm">__Delete()</div>
  <div class="CBody"><p>Destructor (<b>INTERNAL</b>)</p></div>
 </div>
 
-<a name="Windy.__New"></a><a name="Topic57"></a><div class="CTopic TFunction LAutoHotKey">
+<a name="Windy.__New"></a><a name="Topic179"></a><div class="CTopic TFunction LAutoHotKey">
  <div class="CTitle">__New</div>
- <div id="NDPrototype57" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters">__New(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PName first">_hWnd</td><td class="PDefaultValueSeparator">=&nbsp;</td><td class="PDefaultValue last"><span class="SHNumber">-1</span>,</td></tr><tr><td class="PName first">_debug</td><td class="PDefaultValueSeparator">=&nbsp;</td><td class="PDefaultValue last"><span class="SHNumber">0</span>,</td></tr><tr><td class="PName first">_test</td><td class="PDefaultValueSeparator">=&nbsp;</td><td class="PDefaultValue last"><span class="SHNumber">0</span></td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div id="NDPrototype179" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters">__New(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PName first">_hWnd</td><td class="PDefaultValueSeparator">=&nbsp;</td><td class="PDefaultValue last"><span class="SHNumber">-1</span>,</td></tr><tr><td class="PName first">_debug</td><td class="PDefaultValueSeparator">=&nbsp;</td><td class="PDefaultValue last"><span class="SHNumber">0</span>,</td></tr><tr><td class="PName first">_test</td><td class="PDefaultValueSeparator">=&nbsp;</td><td class="PDefaultValue last"><span class="SHNumber">0</span></td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
  <div class="CBody"><p>Constructor (<b>INTERNAL</b>)</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">hWnd</td><td class="CDLDefinition"><p>Window handle (<b>Obligatory</b>). If hWnd=0 a test window is created ...</p></td></tr><tr><td class="CDLEntry">_debug</td><td class="CDLDefinition"><p>Flag to enable debugging (Optional - Default: 0)</p></td></tr></table><div class="CHeading">Returns</div><p>true or false, depending on current value</p></div>
 </div>
 
-<a name="Windy.ClassWindy_EventHook"></a><a name="Topic58"></a><div class="CTopic TFunction LAutoHotKey last">
+<a name="Windy.ClassWindy_EventHook"></a><a name="Topic180"></a><div class="CTopic TFunction LAutoHotKey last">
  <div class="CTitle">ClassWindy_EventHook</div>
- <div id="NDPrototype58" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters">ClassWindy_EventHook(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PName first last">hWinEventHook,</td></tr><tr><td class="PName first last">Event,</td></tr><tr><td class="PName first last">hWnd,</td></tr><tr><td class="PName first last">idObject,</td></tr><tr><td class="PName first last">idChild,</td></tr><tr><td class="PName first last">dwEventThread,</td></tr><tr><td class="PName first last">dwmsEventTime&nbsp;</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div id="NDPrototype180" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters">ClassWindy_EventHook(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PName first last">hWinEventHook,</td></tr><tr><td class="PName first last">Event,</td></tr><tr><td class="PName first last">hWnd,</td></tr><tr><td class="PName first last">idObject,</td></tr><tr><td class="PName first last">idChild,</td></tr><tr><td class="PName first last">dwEventThread,</td></tr><tr><td class="PName first last">dwmsEventTime&nbsp;</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
  <div class="CBody"><p>Callback on System Events. Used as dispatcher to detect window manipulation and calling the appropriate member-function within class &lt;WindowHandler&gt;</p><div class="CHeading">See Also</div><ul><li><p><a href="http://www.autohotkey.com/community/viewtopic.php?t=35659" target="_top">http://&#8203;www&#8203;.autohotkey&#8203;.com&#8203;/community&#8203;/viewtopic&#8203;.php&#8203;?t=35659</a></p></li><li><p><a href="http://www.autohotkey.com/community/viewtopic.php?f=1&amp;t=88156" target="_top">http://&#8203;www&#8203;.autohotkey&#8203;.com&#8203;/community&#8203;/viewtopic&#8203;.php&#8203;?f=1&#8203;&amp;t=88156</a></p></li></ul></div>
 </div>
 

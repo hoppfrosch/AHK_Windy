@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("cli",["Property"],[["clickThrough",,[["Windy",,,,0,"File:Windy.ahk:Windy.clickThrough","AutoHotKeyClass:Windy:clickThrough"]]]]);

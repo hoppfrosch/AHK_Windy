@@ -8,132 +8,132 @@
 
 <body onload="NDLoader.OnLoad('Content');" class="NDPage NDContentPage">
 
-<a name="Mousy"></a><a name="Topic59"></a><div class="CTopic TClass LAutoHotKey first">
+<a name="Mousy"></a><a name="Topic4"></a><div class="CTopic TClass LAutoHotKey first">
  <div class="CTitle">Mousy</div>
  <div class="CBody"><p>Toolset to handle mousecursor within a MultiMonitorEnvironment</p><div class="CHeading">Authors</div><p><a href="#" onclick="javascript:location.href='ma\u0069'+'lto\u003a'+'hoppf'+'rosch'+'\u0040'+'gmx'+'\u002ede';return false;">hoppfrosch</a>: Original</p></div>
 </div>
 
-<a name="Mousy.Information"></a><a name="Topic60"></a><div class="CTopic TGroup LAutoHotKey">
+<a name="Mousy.Information"></a><a name="Topic5"></a><div class="CTopic TGroup LAutoHotKey">
  <div class="CTitle">Information</div>
 </div>
 
-<a name="Mousy.License"></a><a name="Topic61"></a><div class="CTopic TInformation LAutoHotKey">
+<a name="Mousy.License"></a><a name="Topic6"></a><div class="CTopic TInformation LAutoHotKey">
  <div class="CTitle">License</div>
  <div class="CBody"><p>This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See <a href="http://www.wtfpl.net/" target="_top">WTFPL</a> for more details.</p></div>
 </div>
 
-<a name="Mousy.Properties"></a><a name="Topic62"></a><div class="CTopic TGroup LAutoHotKey">
+<a name="Mousy.Properties"></a><a name="Topic7"></a><div class="CTopic TGroup LAutoHotKey">
  <div class="CTitle">Properties</div>
 </div>
 
-<a name="Mousy.confine"></a><a name="Topic63"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Mousy.confine"></a><a name="Topic8"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">confine [get/set]</div>
  <div class="CBody"><p>Should the mouse be confined/fenced into a rectangle?</p><p>The rectangle is set via <a href="http://hoppfrosch.github.io/AHK_Windy/files/Mousy-ahk.html#confineRect" target="_top">confineRect</a></p><div class="CHeading">Value</div><table class="CDefinitionList"><tr><td class="CDLEntry">flag</td><td class="CDLDefinition"><p><b>true</b> or <b>false</b></p></td></tr></table><div class="CHeading">Examples</div><pre>obj.confineRect := new Recty(100,100,500,500)<br />obj.confine := true  ; Confining to previously defined rect is enabled<br />obj.confine := false ; Confining to previously defined rect is disabled<br />obj.confine := true  ; Confining to previously defined rect is re-enabled</pre></div>
 </div>
 
-<a name="Mousy.confineRect"></a><a name="Topic64"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Mousy.confineRect"></a><a name="Topic9"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">confineRect [get/set]</div>
  <div class="CBody"><p>Rectangle to be considered with confine (given as <a href="http://hoppfrosch.github.io/AHK_Windy/files/Recty-ahk.html" target="_top">rectangle</a>).</p><p>Confining can be enabled/disabled via property <a href="http://hoppfrosch.github.io/AHK_Windy/files/Mousy-ahk.html#confine" target="_top">confine</a></p><div class="CHeading">Value</div><table class="CDefinitionList"><tr><td class="CDLEntry">rect</td><td class="CDLDefinition"><p>confining rectangle</p></td></tr></table><div class="CHeading">See Also</div><p><a href="http://hoppfrosch.github.io/AHK_Windy/files/Mousy-ahk.html#confine" target="_top">confine</a></p></div>
 </div>
 
-<a name="Mousy.debug"></a><a name="Topic65"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Mousy.debug"></a><a name="Topic10"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">debug [get/set]</div>
  <div class="CBody"><p>Debug flag for debugging the object</p><div class="CHeading">Value</div><table class="CDefinitionList"><tr><td class="CDLEntry">flag</td><td class="CDLDefinition"><p><b>true</b> or <b>false</b></p></td></tr></table></div>
 </div>
 
-<a name="Mousy.monitorID"></a><a name="Topic66"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Mousy.monitorID"></a><a name="Topic11"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">monitorID [get/set]</div>
  <div class="CBody"><p>Get or Set the monitor the mouse is currently on</p></div>
 </div>
 
-<a name="Mousy.moveMode"></a><a name="Topic67"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Mousy.moveMode"></a><a name="Topic12"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">moveMode [get/set]</div>
  <div class="CBody"><p>Movement mode while moving the mouse via <a href="http://hoppfrosch.github.io/AHK_Windy/files/Mousy-ahk.html#pos" target="_top">pos</a>, <a href="http://hoppfrosch.github.io/AHK_Windy/files/Mousy-ahk.html#x" target="_top">x</a>, <a href="http://hoppfrosch.github.io/AHK_Windy/files/Mousy-ahk.html#y" target="_top">y</a></p><p>This has to be a value out of</p><ul><li><p>0: mouse jumps immediatialy to the new position</p></li><li><p>1: mouse moves to new position following a linear track (default)</p></li><li><p>2: mouse moves to new position following a random track jittering along a line</p></li><li><p>3: mouse moves to new position following a random track following a bezier curce</p></li></ul><p>The speed of the movement can be set via <a href="http://hoppfrosch.github.io/AHK_Windy/files/Mousy-ahk.html#moveSpeed" target="_top">moveSpeed</a></p></div>
 </div>
 
-<a name="Mousy.moveSpeed"></a><a name="Topic68"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Mousy.moveSpeed"></a><a name="Topic13"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">moveSpeed [get/set]</div>
  <div class="CBody"><p>Speed while moving the mouse via <a href="http://hoppfrosch.github.io/AHK_Windy/files/Mousy-ahk.html#pos" target="_top">pos</a>, <a href="http://hoppfrosch.github.io/AHK_Windy/files/Mousy-ahk.html#x" target="_top">x</a>, <a href="http://hoppfrosch.github.io/AHK_Windy/files/Mousy-ahk.html#y" target="_top">y</a></p><p>This has to be a value from range [0 (instant) ..100 (slow)]</p></div>
 </div>
 
-<a name="Mousy.pos"></a><a name="Topic69"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Mousy.pos"></a><a name="Topic14"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">pos [get/set]</div>
- <div class="CBody"><p>Get or Set position of mouse as a <a href="http://hoppfrosch.github.io/AHK_Windy/files/Pointy-ahk.html" target="_top">point</a></p><p>See also: <a href="../index.html#File:Mousy.ahk:Mousy.x" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,74);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >x  [get/set]</a>, <a href="../index.html#File:Mousy.ahk:Mousy.y" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,75);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >y  [get/set]</a></p></div>
+ <div class="CBody"><p>Get or Set position of mouse as a <a href="http://hoppfrosch.github.io/AHK_Windy/files/Pointy-ahk.html" target="_top">point</a></p><p>See also: <a href="../index.html#File:Mousy.ahk:Mousy.x" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,19);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >x  [get/set]</a>, <a href="../index.html#File:Mousy.ahk:Mousy.y" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,20);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >y  [get/set]</a></p></div>
 </div>
 
-<a name="Mousy.showLocatorAfterMove"></a><a name="Topic70"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Mousy.showLocatorAfterMove"></a><a name="Topic15"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">showLocatorAfterMove [get/set]</div>
  <div class="CBody"><p>Get or Set the flag to show the Mouse-Locator after moving the mouse</p></div>
 </div>
 
-<a name="Mousy.speed"></a><a name="Topic71"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Mousy.speed"></a><a name="Topic16"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">speed [get/set]</div>
  <div class="CBody"><p>Get or Set the speed of the mouse on (manual) mouse movement.</p><p>This has to be a value from range [0..20]</p><p>This value can also be set/get via System-Settings of Mouse within your windows-OS</p></div>
 </div>
 
-<a name="Mousy.trail"></a><a name="Topic72"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Mousy.trail"></a><a name="Topic17"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">trail [get/set]</div>
  <div class="CBody"><p>Get or Set the drawing of a trail on (manual) mouse movement</p><p>This has to be a value from range [0 (disabled)..7]</p><p>This value can also be set/get via System-Settings of Mouse within your windows-OS</p></div>
 </div>
 
-<a name="Mousy.version"></a><a name="Topic73"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Mousy.version"></a><a name="Topic18"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">version [get]</div>
  <div class="CBody"><p>Version of the class</p><div class="CHeading">Remarks</div><ul><li><p>There is no setter available, since this is a constant system property</p></li></ul></div>
 </div>
 
-<a name="Mousy.x"></a><a name="Topic74"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Mousy.x"></a><a name="Topic19"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">x [get/set]</div>
- <div class="CBody"><p>Get or Set x-coordinate of mouse</p><p>See also: <a href="../index.html#File:Mousy.ahk:Mousy.pos" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,69);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >pos  [get/set]</a>, <a href="../index.html#File:Mousy.ahk:Mousy.y" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,75);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >y  [get/set]</a></p></div>
+ <div class="CBody"><p>Get or Set x-coordinate of mouse</p><p>See also: <a href="../index.html#File:Mousy.ahk:Mousy.pos" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,14);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >pos  [get/set]</a>, <a href="../index.html#File:Mousy.ahk:Mousy.y" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,20);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >y  [get/set]</a></p></div>
 </div>
 
-<a name="Mousy.y"></a><a name="Topic75"></a><div class="CTopic TProperty LAutoHotKey">
+<a name="Mousy.y"></a><a name="Topic20"></a><div class="CTopic TProperty LAutoHotKey">
  <div class="CTitle">y [get/set]</div>
- <div class="CBody"><p>Get or Set y-coordinate of mouse</p><p>See also: <a href="../index.html#File:Mousy.ahk:Mousy.pos" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,69);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >pos  [get/set]</a>, <a href="../index.html#File:Mousy.ahk:Mousy.x" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,74);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >x  [get/set]</a></p></div>
+ <div class="CBody"><p>Get or Set y-coordinate of mouse</p><p>See also: <a href="../index.html#File:Mousy.ahk:Mousy.pos" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,14);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >pos  [get/set]</a>, <a href="../index.html#File:Mousy.ahk:Mousy.x" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,19);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >x  [get/set]</a></p></div>
 </div>
 
-<a name="Mousy.Functions"></a><a name="Topic76"></a><div class="CTopic TGroup LAutoHotKey">
+<a name="Mousy.Functions"></a><a name="Topic21"></a><div class="CTopic TGroup LAutoHotKey">
  <div class="CTitle">Functions</div>
 </div>
 
-<a name="Mousy.dump"></a><a name="Topic77"></a><div class="CTopic TFunction LAutoHotKey">
+<a name="Mousy.dump"></a><a name="Topic22"></a><div class="CTopic TFunction LAutoHotKey">
  <div class="CTitle">dump</div>
- <div id="NDPrototype77" class="NDPrototype NoParameterForm">dump()</div>
+ <div id="NDPrototype22" class="NDPrototype NoParameterForm">dump()</div>
  <div class="CBody"><p>Dumps coordinates to a string</p><div class="CHeading">Returns</div><p>printable string containing coordinates</p></div>
 </div>
 
-<a name="Mousy.locate"></a><a name="Topic78"></a><div class="CTopic TFunction LAutoHotKey">
+<a name="Mousy.locate"></a><a name="Topic23"></a><div class="CTopic TFunction LAutoHotKey">
  <div class="CTitle">locate</div>
- <div id="NDPrototype78" class="NDPrototype NoParameterForm">locate()</div>
+ <div id="NDPrototype23" class="NDPrototype NoParameterForm">locate()</div>
  <div class="CBody"><p>Easy find the mouse</p></div>
 </div>
 
-<a name="Mousy.__move"></a><a name="Topic79"></a><div class="CTopic TFunction LAutoHotKey">
+<a name="Mousy.__move"></a><a name="Topic24"></a><div class="CTopic TFunction LAutoHotKey">
  <div class="CTitle">__move</div>
- <div id="NDPrototype79" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters">__move(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PName first">x,</td><td></td><td class="last"></td></tr><tr><td class="PName first">y,</td><td></td><td class="last"></td></tr><tr><td class="PName first">mode&nbsp;</td><td class="PDefaultValueSeparator">=&nbsp;</td><td class="PDefaultValue last"><span class="SHNumber">-1</span>,</td></tr><tr><td class="PName first">speed&nbsp;</td><td class="PDefaultValueSeparator">=&nbsp;</td><td class="PDefaultValue last"><span class="SHNumber">-1</span></td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div id="NDPrototype24" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters">__move(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PName first">x,</td><td></td><td class="last"></td></tr><tr><td class="PName first">y,</td><td></td><td class="last"></td></tr><tr><td class="PName first">mode&nbsp;</td><td class="PDefaultValueSeparator">=&nbsp;</td><td class="PDefaultValue last"><span class="SHNumber">-1</span>,</td></tr><tr><td class="PName first">speed&nbsp;</td><td class="PDefaultValueSeparator">=&nbsp;</td><td class="PDefaultValue last"><span class="SHNumber">-1</span></td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
  <div class="CBody"><p>Moves the mouse to given coordinates (<b>INTERNAL</b>)</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">x,y</td><td class="CDLDefinition"><p>Coordinates to move to</p></td></tr></table></div>
 </div>
 
-<a name="Mousy.__moveRandomBezier"></a><a name="Topic80"></a><div class="CTopic TFunction LAutoHotKey">
+<a name="Mousy.__moveRandomBezier"></a><a name="Topic25"></a><div class="CTopic TFunction LAutoHotKey">
  <div class="CTitle">__moveRandomBezier</div>
- <div id="NDPrototype80" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters">__moveRandomBezier(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PName first">x,</td><td></td><td class="last"></td></tr><tr><td class="PName first">y,</td><td></td><td class="last"></td></tr><tr><td class="PName first">Speed</td><td class="PDefaultValueSeparator">=&nbsp;</td><td class="PDefaultValue last"><span class="SHNumber">-1</span></td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div id="NDPrototype25" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters">__moveRandomBezier(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PName first">x,</td><td></td><td class="last"></td></tr><tr><td class="PName first">y,</td><td></td><td class="last"></td></tr><tr><td class="PName first">Speed</td><td class="PDefaultValueSeparator">=&nbsp;</td><td class="PDefaultValue last"><span class="SHNumber">-1</span></td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
  <div class="CBody"><p>Moves the mouse to given coordinates on a random path, following a bezier curve&nbsp; (<b>INTERNAL</b>)</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">x,y</td><td class="CDLDefinition"><p>Coordinates to move to</p></td></tr></table><div class="CHeading">Authors</div><ul><li><p>Original: <a href="https://github.com/MasterFocus/AutoHotkey/tree/master/Functions/RandomBezier" target="_top">masterfocus</a></p></li></ul></div>
 </div>
 
-<a name="Mousy.__moveRandomLinear"></a><a name="Topic81"></a><div class="CTopic TFunction LAutoHotKey">
+<a name="Mousy.__moveRandomLinear"></a><a name="Topic26"></a><div class="CTopic TFunction LAutoHotKey">
  <div class="CTitle">__moveRandomLinear</div>
- <div id="NDPrototype81" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters">__moveRandomLinear(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PName first">x,</td><td></td><td class="last"></td></tr><tr><td class="PName first">y,</td><td></td><td class="last"></td></tr><tr><td class="PName first">Speed</td><td class="PDefaultValueSeparator">=&nbsp;</td><td class="PDefaultValue last"><span class="SHNumber">-1</span></td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div id="NDPrototype26" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters">__moveRandomLinear(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PName first">x,</td><td></td><td class="last"></td></tr><tr><td class="PName first">y,</td><td></td><td class="last"></td></tr><tr><td class="PName first">Speed</td><td class="PDefaultValueSeparator">=&nbsp;</td><td class="PDefaultValue last"><span class="SHNumber">-1</span></td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
  <div class="CBody"><p>Moves the mouse to given coordinates on a random path, jittering along a line (<b>INTERNAL</b>)</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">x,y</td><td class="CDLDefinition"><p>Coordinates to move to</p></td></tr></table><div class="CHeading">Authors</div><ul><li><p>Original: <a href="http://slanter-ahk.blogspot.de/2008/12/ahk-random-mouse-path-mousemove.html" target="_top">slanter me</a></p></li></ul></div>
 </div>
 
-<a name="Mousy.__New"></a><a name="Topic82"></a><div class="CTopic TFunction LAutoHotKey">
+<a name="Mousy.__New"></a><a name="Topic27"></a><div class="CTopic TFunction LAutoHotKey">
  <div class="CTitle">__New</div>
- <div id="NDPrototype82" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters">__New(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PName first">debug&nbsp;</td><td class="PDefaultValueSeparator">:=&nbsp;</td><td class="PDefaultValue last"><span class="SHKeyword">false</span></td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div id="NDPrototype27" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters">__New(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PName first">debug&nbsp;</td><td class="PDefaultValueSeparator">:=&nbsp;</td><td class="PDefaultValue last"><span class="SHKeyword">false</span></td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
  <div class="CBody"><p>Constructor (<b>INTERNAL</b>)</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">debug</td><td class="CDLDefinition"><p>Flag to enable debugging (Optional; Default: 0)</p></td></tr></table></div>
 </div>
 
-<a name="Mousy.RandomBezier"></a><a name="Topic83"></a><div class="CTopic TFunction LAutoHotKey last">
+<a name="Mousy.RandomBezier"></a><a name="Topic28"></a><div class="CTopic TFunction LAutoHotKey last">
  <div class="CTitle">RandomBezier</div>
- <div id="NDPrototype83" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters">RandomBezier(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PName first">X0,</td><td></td><td class="last"></td></tr><tr><td class="PName first">Y0,</td><td></td><td class="last"></td></tr><tr><td class="PName first">Xf,</td><td></td><td class="last"></td></tr><tr><td class="PName first">Yf,</td><td></td><td class="last"></td></tr><tr><td class="PName first">O</td><td class="PDefaultValueSeparator">=&nbsp;</td><td class="PDefaultValue last"><span class="SHString">&quot;&quot;</span></td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div id="NDPrototype28" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters">RandomBezier(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PName first">X0,</td><td></td><td class="last"></td></tr><tr><td class="PName first">Y0,</td><td></td><td class="last"></td></tr><tr><td class="PName first">Xf,</td><td></td><td class="last"></td></tr><tr><td class="PName first">Yf,</td><td></td><td class="last"></td></tr><tr><td class="PName first">O</td><td class="PDefaultValueSeparator">=&nbsp;</td><td class="PDefaultValue last"><span class="SHString">&quot;&quot;</span></td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
  <div class="CBody"><p>Moves the mouse through a random Bézier path URL (+info): --------------------</p><p>Last Update: 30/May/2013 03:00h BRT</p><div class="CHeading">Author</div><ul><li><p>Created by MasterFocus (<a href="https://github.com/MasterFocus" target="_top">https://&#8203;github&#8203;.com&#8203;/MasterFocus</a>, <a href="http://masterfocus.ahk4.net" target="_top">http://&#8203;masterfocus&#8203;.ahk4&#8203;.net</a>, <a href="http://autohotkey.com/community/viewtopic.php?f=2&amp;t=88198" target="_top">http://&#8203;autohotkey&#8203;.com&#8203;/community&#8203;/viewtopic&#8203;.php&#8203;?f=2&#8203;&amp;t=88198</a>)</p></li></ul></div>
 </div>
 

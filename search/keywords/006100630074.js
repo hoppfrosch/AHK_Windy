@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("act",["Property"],[["activated",,[["Windy",,,,0,"File:Windy.ahk:Windy.activated","AutoHotKeyClass:Windy:activated"]]]]);

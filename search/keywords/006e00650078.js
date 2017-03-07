@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("nex",["Property"],[["next",,[["Windy",,,,0,"File:Windy.ahk:Windy.next","AutoHotKeyClass:Windy:next"]]]]);

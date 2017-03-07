@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("v0",["Section"],[["v0",,[[,"Windy, v0.15.3",,"windy,v0.15.3",0,"File:Windy_Main.ahk:Windy,v0.15.3"]]]]);
+NDSearch.OnPrefixDataLoaded("v0",["Section"],[["v0",,[[,"Windy, v0.15.4",,"windy,v0.15.4",0,"File:Windy_Main.ahk:Windy,v0.15.4"]]]]);
