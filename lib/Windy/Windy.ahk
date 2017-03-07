@@ -24,7 +24,7 @@ class Windy {
 	About: License
 	This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See <WTFPL at http://www.wtfpl.net/> for more details.
 */
-	_version := "0.10.2"
+	_version := "0.10.3"
 	_debug := 0
 	_hWnd := 0
 
@@ -65,7 +65,7 @@ class Windy {
 				WinActivate, ahk_class Shell_TrayWnd  ; see: https://autohotkey.com/board/topic/29314-windeactivate/
 			dbgOut("=[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> New Value:" this.activated, this.debug)
 		
-			return this.alwaysOnTop
+			return this.activated
 		}
 	}
 	alwaysOnTop[] {
@@ -600,9 +600,13 @@ class Windy {
 				SetFormat,integer,hex
 				hwndnext += 0
 				SetFormat,integer,d
-				; GetWindow() processes even hidden windows, so we move down the z oder until the next visible window is found
-				if (DllCall("IsWindowVisible","uint",hwndnext) = 1)
-					break
+				if (hwndnext = 0)
+				  break
+				if (this.__isWindow(hwndnext)) {
+				  ; GetWindow() processes even hidden windows, so we move down the z oder until the next visible window is found
+				  if (DllCall("IsWindowVisible","uint",hwndnext) = 1)
+					  break
+			  }
 			}
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "]) -> (" hwndnext ")]" ; _DBG_		
@@ -752,9 +756,13 @@ class Windy {
 				SetFormat,integer,hex
 				hwndprev += 0
 				SetFormat,integer,d
-				; GetWindow() processes even hidden windows, so we move down the z oder until the next visible window is found
-				if (DllCall("IsWindowVisible","uint",hwndprev) = 1)
-					break
+				if (hwndprev =0)
+				  break
+				if (this.__isWindow(hwndprev)) {
+				  ; GetWindow() processes even hidden windows, so we move down the z oder until the next visible window is found
+				  if (DllCall("IsWindowVisible","uint",hwndprev) = 1)
+					  break
+			  }
 			}
 			if (this._debug) ; _DBG_
 				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "]) -> (" hwndprev ")]" ; _DBG_		
