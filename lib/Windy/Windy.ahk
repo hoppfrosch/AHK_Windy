@@ -24,7 +24,7 @@ class Windy {
 	About: License
 	This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See <WTFPL at http://www.wtfpl.net/> for more details.
 */
-	_version := "0.10.2"
+	_version := "0.10.3"
 	_debug := 0
 	_hWnd := 0
 
@@ -65,7 +65,7 @@ class Windy {
 				WinActivate, ahk_class Shell_TrayWnd  ; see: https://autohotkey.com/board/topic/29314-windeactivate/
 			dbgOut("=[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> New Value:" this.activated, this.debug)
 		
-			return this.alwaysOnTop
+			return this.activated
 		}
 	}
 	alwaysOnTop[] {
@@ -580,6 +580,39 @@ class Windy {
 			return monID
 		}
 	}
+	next[] {
+	/* ---------------------------------------------------------------------------------------
+	Property: next [get]
+	gets the <windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html> object below the current object in the Z order. 
+
+	Returns: 
+	new <windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html>-object
+	
+	Remarks:
+	* There is no setter available, since this is a constant window property
+	*/
+		get {
+			; http://autohotkey.com/board/topic/32171-how-to-get-the-id-of-the-next-or-previous-window-in-z-order/?p=205384
+			hwndnext := this.hwnd
+			Loop {
+				hwndnext := DllCall("GetWindow", "uint", hwndnext, "uint", GW.HWNDNEXT)
+				; GetWindow() returns a decimal value, so we have to convert it to hex
+				SetFormat,integer,hex
+				hwndnext += 0
+				SetFormat,integer,d
+				if (hwndnext = 0)
+				  break
+				if (this.__isWindow(hwndnext)) {
+				  ; GetWindow() processes even hidden windows, so we move down the z oder until the next visible window is found
+				  if (DllCall("IsWindowVisible","uint",hwndnext) = 1)
+					  break
+			  }
+			}
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "]) -> (" hwndnext ")]" ; _DBG_		
+			return hwndnext
+		}
+	}
 	owner[] {
 	/* ---------------------------------------------------------------------------------------
 	Property: owner [get/set]
@@ -701,6 +734,39 @@ class Windy {
 			newPos := this.posSize
 			dbgOut("=[" A_ThisFunc "([" this.hwnd "], pos=" newPos.Dump()")] -> New Value:" newPos.Dump(), this.debug)
 			return newPos
+		}
+	}
+	previous[] {
+	/* ---------------------------------------------------------------------------------------
+	Property: previous [get]
+	gets the <windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html> object above the current object in the Z order. 
+
+	Returns: 
+	new <windy at http://hoppfrosch.github.io/AHK_Windy/files/Windy-ahk.html>-object
+	
+	Remarks:
+	* There is no setter available, since this is a constant window property
+	*/
+		get {
+		; http://autohotkey.com/board/topic/32171-how-to-get-the-id-of-the-next-or-previous-window-in-z-order/?p=205384
+			hwndprev := this.hwnd
+			Loop {
+				hwndprev := DllCall("GetWindow", "uint", hwndprev, "uint", GW.HWNDPREV)
+				; GetWindow() returns a decimal value, so we have to convert it to hex
+				SetFormat,integer,hex
+				hwndprev += 0
+				SetFormat,integer,d
+				if (hwndprev =0)
+				  break
+				if (this.__isWindow(hwndprev)) {
+				  ; GetWindow() processes even hidden windows, so we move down the z oder until the next visible window is found
+				  if (DllCall("IsWindowVisible","uint",hwndprev) = 1)
+					  break
+			  }
+			}
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.hwnd "]) -> (" hwndprev ")]" ; _DBG_		
+			return hwndprev
 		}
 	}
 	processID[] {
