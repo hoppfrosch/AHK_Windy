@@ -19,7 +19,7 @@
 */
 class MultiMony {
 	_debug := 0
-	_version := "1.0.1"
+	_version := "1.0.2"
 
 	; ===== Properties ==============================================================	
     debug[] {
@@ -37,6 +37,33 @@ class MultiMony {
 			mode := value<1?0:1
 			this._debug := mode
 			return this._debug
+		}
+	}
+	idPrimary[] {
+	/* ---------------------------------------------------------------------------------------
+	Property: idPrimary [get]
+	Get the ID of the primary monitor
+
+	Remarks:
+	* There is no setter available, since this is a constant system property
+	*/
+		get {
+			SysGet, ret, MonitorPrimary 
+			if (this._debug) ; _DBG_
+				OutputDebug % "|[" A_ThisFunc "([" this.id "]) -> (" ret ")]" ; _DBG_		
+			return ret
+		}
+	}
+	idTaskbar[] {
+	/* ---------------------------------------------------------------------------------------
+	Property: idTaskbar [get]
+	Get the ID of the monitor where the taskbar is on (aka. primary monitor)
+
+	Remarks:
+	* There is no setter available, since this is a constant system property
+	*/
+		get {
+			return this.idPrimary
 		}
 	}
 	monitorsCount[] {
