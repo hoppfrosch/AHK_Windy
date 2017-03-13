@@ -24,7 +24,7 @@ class Windy {
 	About: License
 	This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See <WTFPL at http://www.wtfpl.net/> for more details.
 */
-	_version := "0.10.3"
+	_version := "0.10.4"
 	_debug := 0
 	_hWnd := 0
 
@@ -94,6 +94,38 @@ class Windy {
 			WinSet, AlwaysOnTop, %value%,  ahk_id %hwnd%
 			dbgOut("=[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> New Value:" this.alwaysontop, this.debug)
 			return this.alwaysOnTop
+		}
+	}
+	border[] {
+	/* ---------------------------------------------------------------------------------------
+	Property: border [get/set]
+	Set/Unset visibility of the windows border (caption, sizebox)
+			
+	Value:
+	flag - *true* or *false* (activates/deactivates *border*-Property)
+	
+	Remarks:		
+	* To toogle, simply use 
+	> obj.border := !obj.border
+	*/
+		get {
+			ret := (this.style & WS.BORDERLESS) > 0 ? 1 : 0
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "])] -> " ret, this.debug)
+			return ret
+		}
+
+		set {
+			style := "-" this.__hexStr(WS.BORDERLESS)
+			if (value) {
+				style := "+" this.__hexStr(WS.BORDERLESS)
+			}
+		 	prevState := A_DetectHiddenWindows
+			DetectHiddenWindows, on
+			this.style := style
+			this.redraw()
+			DetectHiddenWindows, %prevState%
+			dbgOut("=[" A_ThisFunc "([" this.hwnd "], value=" value ")] -> " this.caption, this.debug)
+			return value
 		}
 	}
 	caption[] {

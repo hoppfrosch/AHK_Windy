@@ -11,7 +11,7 @@
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "0.10.3"
+ReferenceVersion := "0.10.4"
 debug := 1
 
 OutputDebug DBGVIEWCLEAR
@@ -28,21 +28,19 @@ class TempTestSuite {
 		this.obj := new Windy(0, debug)
 	}    
 
-	nextprevious() {
+	border() {
     Global debug
 
     dbgOut(">[" A_ThisFunc "]")
-    hwndNext := this.obj.next
-    nextObj := new Windy(hwndNext, 0)
-    OutputDebug % "[IMPORTANT] NEXT OF [" this.obj.hwnd "-<" this.obj.title ">]: [" hwndNext "-<" nextObj.title ">]"
-    hwndPrev := this.obj.previous
-    prevObj := new Windy(hwndPrev, 0)
-    OutputDebug % "[IMPORTANT] PREVIOUS OF [" this.obj.hwnd "-<" this.obj.title ">]: [" hwndPrev "-" prevObj.title "]"   
-    
-    Yunit.assert(this.obj.hwnd == prevObj.next)
-    Yunit.assert(this.obj.hwnd == nextObj.previous)
-
-    dbgOut("<[" A_ThisFunc "]")
+		OutputDebug % "[IMPORTANT]....[" A_ThisFunc "] > 1"
+		Yunit.assert(this.obj.border == 1)
+		OutputDebug % "[IMPORTANT]....[" A_ThisFunc "] > 0"
+		this.obj.border := 0
+		Yunit.assert(this.obj.border == 0)
+		OutputDebug % "[IMPORTANT]....[" A_ThisFunc "] > 1"
+		this.obj.border := 1
+		Yunit.assert(this.obj.border == 1)
+		dbgOut("<[" A_ThisFunc "]")
   }
 
 	End() {
@@ -652,6 +650,22 @@ class MiscTestSuite {
 		dbgOut("<[" A_ThisFunc "]")
 	}
 
+	border() {
+    Global debug
+
+    dbgOut(">[" A_ThisFunc "]")
+		OutputDebug % "[IMPORTANT]....[" A_ThisFunc "] > 1"
+		Yunit.assert(this.obj.border == 1)
+		OutputDebug % "[IMPORTANT]....[" A_ThisFunc "] > 0"
+		this.obj.border := 0
+		Yunit.assert(this.obj.border == 0)
+		OutputDebug % "[IMPORTANT]....[" A_ThisFunc "] > 1"
+		this.obj.border := 1
+		Yunit.assert(this.obj.border == 1)
+		dbgOut("<[" A_ThisFunc "]")
+  }
+
+
 	Caption() {
 		dbgOut(">[" A_ThisFunc "]")
 		OutputDebug % "[IMPORTANT]....[" A_ThisFunc "] > 1"
@@ -693,7 +707,7 @@ class MiscTestSuite {
 		dbgOut("<[" A_ThisFunc "]")
 	}
 
-    hscrollable() {
+  hscrollable() {
 		dbgOut(">[" A_ThisFunc "]")
 		OutputDebug % "[IMPORTANT]....[" A_ThisFunc "] > Initial"
 		Yunit.assert(this.obj.hscrollable == 0)

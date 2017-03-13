@@ -329,6 +329,7 @@ class WS {
 	static OVERLAPPEDWINDOW       := 0x00CF0000 ; WS_OVERLAPPED|CAPTION|SYSMENU|THICKFRAME|MINIMIZEBOX|MAXIMIZEBOX
 	static POPUPWINDOW            := 0x80880000 ; WS_POPUP|BORDER|SYSMENU
 	static TILEDWINDOW            := 0x00CF0000 ; WS_OVERLAPPEDWINDOW
+	static BORDER                 := 0x00C40000 ; WS_BORDER|WS_DLGFRAME|WS_SIZEBOX
 
 	class EX {
 	; ExStyles =============================================================================================================
