@@ -41,6 +41,7 @@ class WindInfy {
 		oWindInfy.processname := oWindy.processname
 		oWindInfy.pid := oWindy.processID
 		oWindInfy.processfullpath := WindInfy._GetModuleFileNameEx(oWindy.processID)
+		oWindInfy.timestamp := A_Now
 		oWindInfy.style := oWindy.style
 		oWindInfy.styleEx := oWindy.styleEx
 		oWindInfy.rolledUp := oWindy.rolledUp
