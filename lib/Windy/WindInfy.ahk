@@ -5,7 +5,7 @@
 #include Windy.ahk
 #include Const_WinUser.ahk
 #include JSON.ahk
-
+#include ..\DbgOut.ahk
 
 /* ******************************************************************************************************************************************
 	Class: WindLy
@@ -35,6 +35,7 @@ class WindInfy {
 	new instance of this class
 	*/
 	fromWindy(oWindy) {
+  	dbgOut(">[" A_ThisFunc "(" oWindy.hwnd ")]")
 		oWindInfy := new WindInfy()
 		oWindInfy.classname := oWindy.classname
 		oWindInfy.processname := oWindy.processname
@@ -47,9 +48,36 @@ class WindInfy {
 		oWindInfy.y := oWindy.posSize.y
 		oWindInfy.width := oWindy.posSize.w
 		oWindInfy.height := oWindy.posSize.h
-		
+    dbgOut("<[" A_ThisFunc "(" oWindy.hwnd ")] -> ...")
 		return oWindInfy
 	}
+  /* -------------------------------------------------------------------------------
+	Method:	fromJSON
+	Constructor - extracts info from a JSON string into a new instance
+	
+	Parameters:
+	stry - JSON-string
+
+	Returns:
+	new instance of this class
+	*/
+	fromJSON(str) {
+  	dbgOut("=[" A_ThisFunc "(str=" str ")]")
+    obj := JSON.Load(str)
+  	oWindInfy := new WindInfy()
+  	for key, value in obj {
+    	if (SubStr(key, 1, 1) == "_") { ; Klasseninterne Variable werden ja automatisch gesetzt - und nicht von extern!
+      	if (key == "_version") { ; Hier koennen evtl. Versionunterschiede angepasst werden
+      	  continue
+    	  }
+    	  else
+      	  continue
+    	}
+    	oWindInfy[key] := value
+  	}
+  	return oWindInfy
+	}
+	
 
 	/* -------------------------------------------------------------------------------
 	Method:	toJSON
@@ -62,7 +90,9 @@ class WindInfy {
 	JSON-String
 	*/
 	toJSON(indent=0) {
+  	dbgOut(">[" A_ThisFunc "(indent: " indent ")]")
 		str := JSON.Dump(this,indent)
+		dbgOut("<[" A_ThisFunc "()] -> " str)
 		return str
 	}
 	
@@ -77,18 +107,16 @@ class WindInfy {
 	*/   
 	__New(_debug=0) {
 		this._debug := _debug
-		if (this._debug) ; _DBG_
-			OutputDebug % ">[" A_ThisFunc "()] (version: " this._version ")" ; _DBG_
+	  dbgOut(">[" A_ThisFunc "()] (version: " this._version ")")
 
 		if % (A_AhkVersion < "1.1.21.0" || A_AhkVersion >= "2.0") {
 			MsgBox 16, Error, %A_ThisFunc% :`n This class only needs AHK later than 1.1.20.01 (and before 2.0)`nAborting...
 			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "(...) -> ()]: *ERROR* : This class needs AHK later than 1.1.21 (and before 2.0). Aborting..." ; _DBG_
+				dbgOut("<[" A_ThisFunc "(...) -> ()]: *ERROR* : This class needs AHK later than 1.1.21 (and before 2.0). Aborting...")
 			return
 		}
 				
-		if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "()]" ; _DBG_
+		dbgOut("<[" A_ThisFunc "()]")
 		
 		return this
 	}
