@@ -2,12 +2,12 @@
 ; Function:         Several Constants from Windows_API (winuser.h)
 ; AHK version:      1.1.05+
 ; Language:         English
-; Version:          1.0.01.00/2016-02-08/hoppfrosch
+; Version:          1.0.02.00/2017-03-24/hoppfrosch
 
 
 ; GetWindow() constants ====================== (winuser.h) =============================================================
 class GW {
-	; hhttps://msdn.microsoft.com/de-de/library/windows/desktop/ms633515%28v=vs.85%29.aspx
+	; https://msdn.microsoft.com/de-de/library/windows/desktop/ms633515%28v=vs.85%29.aspx
 	static HWNDFIRST               := 0
 	static HWNDLAST                := 1
 	static HWNDNEXT                := 2
@@ -568,6 +568,26 @@ class SPI {
     static SETMOUSECLICKLOCKTIME           := 0x2009
     static GETFONTSMOOTHINGTYPE            := 0x200A
     static SETFONTSMOOTHINGTYPE            := 0x200B
+}
+
+; Window Class Styles constants ====================== (winuser.h) =====================================================
+class CS {
+	; https://msdn.microsoft.com/en-us/library/windows/desktop/ff729176(v=vs.85).aspx
+	static BYTEALIGNCLIENT  := 0x00001000
+	static BYTEALIGNWINDOW  := 0x00002000
+	static CLASSDC          := 0x00000040
+	static DBLCLKS          := 0x00000008
+	static DROPSHADOW       := 0x00020000
+	static GLOBALCLASS      := 0x00004000
+	static HREDRAW          := 0x00000002
+	static NOCLOSE          := 0x00000200
+	static OWNDC            := 0x00000020
+	static PARENTDC         := 0x00000080
+	static SAVEBITS         := 0x00000800
+	static VREDRAW          := 0x00000001
+	static KEYCVTWINDOW     := 0x00000004    ; undocumented
+	static NOKEYCVT         := 0x00000100    ; undocumented
+	static IME              := 0x00010000    ; undocumented
 }
 
 ; ======================================================================================================================
