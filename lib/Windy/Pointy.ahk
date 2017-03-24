@@ -2,6 +2,9 @@
 
 ; ****** HINT: Debug-lines should contain "; _DBG_" at the end of lines - using this, the debug lines could be automatically removed through scripts before releasing the sourcecode
 
+#include %A_LineFile%\..
+#include ..\DbgOut.ahk
+
 class Pointy {
 ; ******************************************************************************************************************************************
 /*
@@ -15,7 +18,7 @@ class Pointy {
 	This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See <WTFPL at http://www.wtfpl.net/> for more details.
 */
 	
-	_version := "0.2.0"
+	_version := "0.2.1"
 	_debug := 0 ; _DBG_	
 	x := 0
 	y := 0
@@ -75,13 +78,11 @@ class Pointy {
 		WinGetPos, x, y, w, h, ahk_id %hwnd%
 		this.x := x
 		this.y := y
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" hwnd "])] -> x,y: (" x "," y ")" ; _DBG_
-		
+		dbgOut("=[" A_ThisFunc "([" hwnd "])] -> x,y: (" x "," y ")", this.debug)
 		return this
 	}
 	/* --------------------------------------------------------------------------------------
-	Method: fromMouse(hwnd)
+	Method: fromMouse()
 	Fills values from current mouseposition
 	*/
 	fromMouse() {
@@ -89,9 +90,7 @@ class Pointy {
 		MouseGetPos, x, y
 		this.x := x
 		this.y := y
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" hwnd "])] -> x,y: (" x "," y ")" ; _DBG_
-		
+		dbgOut("=[" A_ThisFunc "()] -> x,y: (" x "," y ")", this.debug)
 		return this
 	}
 	/* --------------------------------------------------------------------------------------
@@ -104,9 +103,7 @@ class Pointy {
 	fromPoint(new) {
 		this.x := new.x 
 		this.y := new.y
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "] -> x,y: " this.Dump() ; _DBG_
-		
+		dbgOut("=[" A_ThisFunc "] -> x,y: " this.Dump(), this.debug)
 		return this
 	}
 	/* ---------------------------------------------------------------------------------------
@@ -119,8 +116,7 @@ class Pointy {
 	*/
 	__New(x=0, y=0, debug=false) {
 		this._debug := debug ; _DBG_
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "(x=" x ", y=" y ", _debug=" debug ")] (version: " this._version ")" ; _DBG_
+		dbgOut("=[" A_ThisFunc "(x=" x ", y=" y ", _debug=" debug ")] (version: " this._version ")", this.debug)
 		this.x := x
 		this.y := y
 	}

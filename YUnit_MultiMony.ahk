@@ -7,12 +7,15 @@
 #include <Windy\Mony>
 #include <Windy\Recty>
 #include <Windy\Windy>
+#include <DbgOut>
 
 #Warn All
 ;#Warn LocalSameAsGlobal, Off
 #SingleInstance force
 
-ReferenceVersion := "1.0.2"
+OutputDebug DBGVIEWCLEAR
+
+ReferenceVersion := "1.0.3"
 debug := 1
 
 ;Yunit.use(YunitStdOut, YunitWindow).Test(ExpMultiMonyTestSuite)
@@ -25,23 +28,22 @@ class ExpMultiMonyTestSuite {
 		this.obj := new MultiMony(debug)
 		this.monCount := 2
 		this.mon1Width := 1920
-		this.mon1Height := 1080
+		this.mon1Height := 1200
 		this.mon2Width := 1920
-		this.mon2Height := 1200
-		
+		this.mon2Height := 1080
+	
 		this.monvirtWidth := this.mon1Width + this.mon2Width
-		this.monvirtHeight := this.mon2Height
+		this.monvirtHeight := this.mon1Height
     }
-
+	
 	monitors() {
 		Global debug
-		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		dbgOut(">[" A_ThisFunc "]", debug)
 		mcRef := this.obj.monitorsCount
-		; HINT: Test is valid - but makes YUnit to terminate. Therefore it's disabled
 		mons := this.obj.monitors()
 		mc := mons.MaxIndex()
 		Yunit.assert( mcRef == mc)
-		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+		dbgOut("<[" A_ThisFunc "]", debug)
 	}
 	
    	End()  {
@@ -56,159 +58,159 @@ class MultiMonyTestSuite
 		Global debug
 		this.obj := new MultiMony(debug)
 		this.monCount := 2
+		this.mon1Width := 1920
+		this.mon1Height := 1200
 		this.mon2Width := 1920
 		this.mon2Height := 1080
-		this.mon1Width := 1900
-		this.mon1Height := 1200
-		
+	
 		this.monvirtWidth := this.mon1Width + this.mon2Width
-		this.monvirtHeight := this.mon2Height
+		this.monvirtHeight := this.mon1Height
     }
 
     idPrimary() {
     	Global debug
-		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		dbgOut(">[" A_ThisFunc "]", debug)
 		prim := this.obj.idPrimary
 		Yunit.assert(prim == 2)
 		tb := this.obj.idTaskbar
 		Yunit.assert(tb == prim)
 		Yunit.assert(tb == 2)
-		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+		dbgOut("<[" A_ThisFunc "]", debug)
     }
 
 	coordDisplayToVirtualScreen() {
 		Global debug
-		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
-		pt := this.obj.coordDisplayToVirtualScreen(1, 10, 10)
+		dbgOut(">[" A_ThisFunc "]", debug)
+		pt := this.obj.coordDisplayToVirtualScreen(2, 10, 10)
 		Yunit.assert(pt.x == 10)
 		Yunit.assert(pt.y == 10)
-		pt := this.obj.coordDisplayToVirtualScreen(2, 10, 10)
-		Yunit.assert(pt.x == this.mon1Width + 10)
+		pt := this.obj.coordDisplayToVirtualScreen(1, 10, 10)
+		Yunit.assert(pt.x == this.mon2Width + 10)
 		Yunit.assert(pt.y == 10)
-		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+		dbgOut("<[" A_ThisFunc "]", debug)
 	}
     coordVirtualScreenToDisplay() {
     	Global debug
-		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		dbgOut(">[" A_ThisFunc "]", debug)
 		x := this.obj.coordVirtualScreenToDisplay(10,10)
-		Yunit.assert(x.monID == 1)
-		Yunit.assert(x.pt.x == 10)
-		Yunit.assert(x.pt.y == 10)
-    	x := this.obj.coordVirtualScreenToDisplay(1930,10)
 		Yunit.assert(x.monID == 2)
 		Yunit.assert(x.pt.x == 10)
 		Yunit.assert(x.pt.y == 10)
-		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+    	x := this.obj.coordVirtualScreenToDisplay(1930,10)
+		Yunit.assert(x.monID == 1)
+		Yunit.assert(x.pt.x == 10)
+		Yunit.assert(x.pt.y == 10)
+		dbgOut("<[" A_ThisFunc "]", debug)
     }
 	hmonFromCoord() {
 		Global debug
-		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		dbgOut(">[" A_ThisFunc "]", debug)
 		monId := this.obj.idFromCoord(10,10)
 		hmonRef := this.obj.hmonFromId(monId)
 		hmon := this.obj.hmonFromCoord(10,10)
 		Yunit.assert(hmon == hmonRef)
-		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+		dbgOut("<[" A_ThisFunc "]", debug)
 	}
 	hmonFromId() {
 		Global debug
-		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		dbgOut(">[" A_ThisFunc "]", debug)
 		hmonRef := this.obj.hmonFromCoord(10,10)
 		monId := this.obj.idFromCoord(10,10)
 		hmon := this.obj.hmonFromId(monId)
 		Yunit.assert(hmon == hmonRef)
-		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+		dbgOut("<[" A_ThisFunc "]", debug)
 	}
 	hmonFromRect() {
 		Global debug
-		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
-		hmonRef := this.obj.hmonFromId(1)
+		dbgOut(">[" A_ThisFunc "]", debug)
+		hmonRef := this.obj.hmonFromId(2)
 		win := new Windy(0, debug)
 		win.move(10,10)
 		rect := win.possize
 		hmon := this.obj.hmonFromRect(rect.x, rect.y, rect.w, rect.h)
 		Yunit.assert(hmon == hmonRef)
 		win.kill()
-		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+		dbgOut("<[" A_ThisFunc "]", debug)
 	}
 	hmonFromHwnd() {
 		Global debug
-		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
-		hmonRef := this.obj.hmonFromId(1)
+		dbgOut(">[" A_ThisFunc "]", debug)
+		hmonRef := this.obj.hmonFromId(2)
 		win := new Windy(0, debug)
 		win.move(10,10)
 		hwnd := win.hwnd
 		hmon := this.obj.hmonFromHwnd(hwnd)
 		Yunit.assert(hmon == hmonRef)
 		win.kill()
-		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+		dbgOut("<[" A_ThisFunc "]", debug)
 	}	
 	identify() {
-    	Global debug
-		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
-    	this.obj.identify(250, "00FF00")
-		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+		Global debug
+		dbgOut(">[" A_ThisFunc "]", debug)
+		this.obj.identify(250, "00FF00")
+		dbgOut("<[" A_ThisFunc "]", debug)
 	}
 	idFromCoord() {
 		Global debug
-		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		dbgOut(">[" A_ThisFunc "]", debug)
 		mon := this.obj.idFromCoord(10,10)
-		Yunit.assert(mon == 1)
-		mon1 := new Mony(1, debug)
-		rect := mon1.size
-		mon := this.obj.idFromCoord(rect.w+10,10)
 		Yunit.assert(mon == 2)
-		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+		mon2 := new Mony(2, debug)
+		rect := mon2.size
+		mon := this.obj.idFromCoord(rect.w+10,10)
+		Yunit.assert(mon == 1)
+		dbgOut("<[" A_ThisFunc "]", debug)
 	}
 	idFromHmon() {
 		Global debug
-		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		dbgOut(">[" A_ThisFunc "]", debug)
 		monId := this.obj.idFromCoord(10,10)
 		monH := this.obj.hmonFromCoord(10,10)
 		monID2 := this.obj.idFromHmon(monH)
 		Yunit.assert(monId == monId2)
-		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+		dbgOut("<[" A_ThisFunc "]", debug)
 	}
 	idFromRect() {
 		Global debug
-		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		dbgOut(">[" A_ThisFunc "]", debug)
 		win := new Windy(0, debug)
-		idRef := 1
+		idRef := 2
 		win.move(10,10)
 		rect := win.possize
 		id := this.obj.idFromRect(rect.x, rect.y, rect.w, rect.h)
 		Yunit.assert(id == idRef)
 		win.kill()
-		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+		dbgOut("<[" A_ThisFunc "]", debug)
 	}
 	idFromHwnd() {
 		Global debug
-		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		dbgOut(">[" A_ThisFunc "]", debug)
 		win := new Windy(0, debug)
 		win.move(10,10)
 		hwnd := win.hwnd
 		id := this.obj.idFromHwnd(hwnd)
-		Yunit.assert(id == 1)
+		Yunit.assert(id == 2)
 		win.kill()
-		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+		dbgOut("<[" A_ThisFunc "]", debug)
 	}
 	idFromMouse() {	
 		Global debug
-		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		dbgOut(">[" A_ThisFunc "]", debug)
 		MouseGetPos,x_back,y_back 
 		MouseMove,10,10
 		mon := this.obj.idFromMouse()
-		Yunit.assert(mon == 1)
-		mon1 := new Mony(1, debug)
-		rect := mon1.size
+		Yunit.assert(mon == 2)
+		mon2 := new Mony(2, debug)
+		rect := mon2.size
 		MouseMove,rect.w+10,10
 		mon := this.obj.idFromMouse()
-		Yunit.assert(mon == 2)
+		Yunit.assert(mon == 1)
 		MouseMove,x_back, y_back
-		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+		dbgOut("<[" A_ThisFunc "]", debug)
 	}
 	idNextPrev() {
 		Global debug
-		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		dbgOut(">[" A_ThisFunc "]", debug)
 
 		; Monitor 1
 		monNxt := this.obj.idNext(1)
@@ -240,43 +242,43 @@ class MultiMonyTestSuite
 		monPrv := this.obj.idPrev(2,1)
 		Yunit.assert(monPrv == 1)
 		
-		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+		dbgOut("<[" A_ThisFunc "]", debug)
 	}
 	monitors() {
 		Global debug
-		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		dbgOut(">[" A_ThisFunc "]", debug)
 		mcRef := this.obj.monitorsCount
 		mons := this.obj.monitors()
 		mc := mons.MaxIndex()
 		Yunit.assert( mcRef == mc)
-		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+		dbgOut("<[" A_ThisFunc "]", debug)
 	}
    	monitorsCount() {
     	Global debug
-		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		dbgOut(">[" A_ThisFunc "]", debug)
 		cnt := this.obj.monitorsCount
 		Yunit.assert(cnt == this.monCount)
-		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+		dbgOut("<[" A_ThisFunc "]", debug)
 	}
 	size() {
 		Global debug
-		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		dbgOut(">[" A_ThisFunc "]", debug)
 		rect :=  this.obj.virtualScreenSize
 		Yunit.assert(rect.x == 0)
 		Yunit.assert(rect.y == 0)
 		Yunit.assert(rect.w == this.monvirtWidth)
 		Yunit.assert(rect.h == this.monvirtHeight)
-		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+		dbgOut("<[" A_ThisFunc "]", debug)
 	}
 	virtualScreenSize() {
 		Global debug
-		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		dbgOut(">[" A_ThisFunc "]", debug)
 		rect :=  this.obj.size
 		Yunit.assert(rect.x == 0)
 		Yunit.assert(rect.y == 0)
 		Yunit.assert(rect.w == this.monvirtWidth)
 		Yunit.assert(rect.h == this.monvirtHeight)
-		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+		dbgOut("<[" A_ThisFunc "]", debug)
 	}
 
 	End()  {
@@ -291,12 +293,12 @@ class _BaseTestSuite {
 	
 	Version() {
 		Global debug
-		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		dbgOut(">[" A_ThisFunc "]", debug)
 		Global ReferenceVersion
 		md := new MultiMony(debug)
 		Yunit.assert(md.version == ReferenceVersion)
-		OutputDebug % A_ThisFunc " <" md.version "> <-> Required <" ReferenceVersion ">"
-		OutputDebug % ">>>>[" A_ThisFunc "]>>>>"
+		dbgOut("= " A_ThisFunc " <" md.version "> <-> Required <" ReferenceVersion ">", debug)
+		dbgOut("<[" A_ThisFunc "]", debug)
 	}
 
 	End() {

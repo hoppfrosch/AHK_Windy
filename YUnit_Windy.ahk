@@ -23,15 +23,14 @@ Return
 
 ; ###################################################################
 class TempTestSuite {
-    Begin() {
+	Begin() {
 		Global debug
 		this.obj := new Windy(0, debug)
 	}    
 
 	border() {
-    Global debug
-
-    dbgOut(">[" A_ThisFunc "]")
+		Global debug
+		dbgOut(">[" A_ThisFunc "]", this.debug)
 		OutputDebug % "[IMPORTANT]....[" A_ThisFunc "] > 1"
 		Yunit.assert(this.obj.border == 1)
 		OutputDebug % "[IMPORTANT]....[" A_ThisFunc "] > 0"
@@ -41,7 +40,7 @@ class TempTestSuite {
 		this.obj.border := 1
 		Yunit.assert(this.obj.border == 1)
 		dbgOut("<[" A_ThisFunc "]")
-  }
+	}
 
 	End() {
 		this.obj.kill()
@@ -52,7 +51,7 @@ class TempTestSuite {
 
 ; ###################################################################
 class _BaseTestSuite {
-    Begin() {
+	Begin() {
 		Global debug
 		this.obj := new Windy(0, debug)
 	}
@@ -73,14 +72,13 @@ class _BaseTestSuite {
 
 ; ###################################################################
 class GeometryTestSuite {
-    Begin() {
+	Begin() {
 		Global debug
 		this.obj := new Windy(0, debug)
 	}    
 
 	captionheight() {
 		Global debug
-
 		dbgOut(">[" A_ThisFunc "]")
 		x := this.obj.captionheight
 		Yunit.assert(x == 22)
@@ -480,12 +478,12 @@ class MoveResizeTestSuite {
 
 	NoMoveResizeViaWinMove() {
 		dbgOut(">[" A_ThisFunc "]")
-        oldPos := this.obj.posSize
+		oldPos := this.obj.posSize
 		OutputDebug % "[IMPORTANT]Initial Position: " oldPos.Dump()
 		WinMove % "ahk_id" this.obj.hwnd, , oldPos.x, oldPos.y, oldPos.w, oldPos.h
 		newPos := this.obj.posSize
-        OutputDebug % "[IMPORTANT]AFTER - Moving from " oldPos.Dump() " to " newPos.Dump()
-        Yunit.assert(newPos.x == oldPos.x)
+		OutputDebug % "[IMPORTANT]AFTER - Moving from " oldPos.Dump() " to " newPos.Dump()
+		Yunit.assert(newPos.x == oldPos.x)
 		Yunit.assert(newPos.y == oldPos.y)
 		Yunit.assert(newPos.w == oldPos.w)
 		Yunit.assert(newPos.h == oldPos.h)		
@@ -553,7 +551,7 @@ class MoveResizeTestSuite {
 	
 	End() {
 		this.obj.kill()
-        this.remove("obj")
+		this.remove("obj")
 		this.obj := 
 	}
 }
@@ -585,27 +583,27 @@ class HideShowTestSuite {
         
 	HiddenFalse() {
 		dbgOut(">[" A_ThisFunc "]")
-        Yunit.assert(this.obj.hidden==false)
+		Yunit.assert(this.obj.hidden==false)
 		dbgOut("<[" A_ThisFunc "]")
 	}
       
 	HiddenTrue() {
 		dbgOut(">[" A_ThisFunc "]")
-        this.obj.hidden := true
-        Yunit.assert(this.obj.hidden == true)
+		this.obj.hidden := true
+		Yunit.assert(this.obj.hidden == true)
 		dbgOut("<[" A_ThisFunc "]")
 	}
 
 	HiddenDoesNotExist() {
 		dbgOut(">[" A_ThisFunc "]")
-        this.obj.kill()
-        Yunit.assert(this.obj.hidden==-1)
+		this.obj.kill()
+		Yunit.assert(this.obj.hidden==-1)
 		dbgOut("<[" A_ThisFunc "]")
 	}
      
 	End() {
 		this.obj.kill()
-        this.remove("obj")
+		this.remove("obj")
 		this.obj := 
 	}
 }
@@ -636,7 +634,6 @@ class MiscTestSuite {
 
 	activated() {
 		Global debug
-
 		dbgOut(">[" A_ThisFunc "]")
 		this.obj.activated := true
 		sleep 1000
@@ -651,9 +648,8 @@ class MiscTestSuite {
 	}
 
 	border() {
-    Global debug
-
-    dbgOut(">[" A_ThisFunc "]")
+		Global debug
+		dbgOut(">[" A_ThisFunc "]")
 		OutputDebug % "[IMPORTANT]....[" A_ThisFunc "] > 1"
 		Yunit.assert(this.obj.border == 1)
 		OutputDebug % "[IMPORTANT]....[" A_ThisFunc "] > 0"
@@ -663,8 +659,7 @@ class MiscTestSuite {
 		this.obj.border := 1
 		Yunit.assert(this.obj.border == 1)
 		dbgOut("<[" A_ThisFunc "]")
-  }
-
+	}
 
 	Caption() {
 		dbgOut(">[" A_ThisFunc "]")
@@ -678,10 +673,9 @@ class MiscTestSuite {
 		Yunit.assert(this.obj.caption == 1)
 		dbgOut("<[" A_ThisFunc "]")
 	}
-	
+
 	Center() {
 		Global debug
-		
 		dbgOut(">[" A_ThisFunc "]")
 		hwnd := this.obj.hwnd
 		WinGetPos  x, y, w, h, ahk_id %hwnd%
@@ -700,14 +694,14 @@ class MiscTestSuite {
 		Yunit.assert(center.y == 205)
 		dbgOut("<[" A_ThisFunc "]")
 	}
-	
+
 	Classname() {
 		dbgOut(">[" A_ThisFunc "]")
-        Yunit.assert(this.obj.classname =="Notepad")
+		Yunit.assert(this.obj.classname =="Notepad")
 		dbgOut("<[" A_ThisFunc "]")
 	}
 
-  hscrollable() {
+	hscrollable() {
 		dbgOut(">[" A_ThisFunc "]")
 		OutputDebug % "[IMPORTANT]....[" A_ThisFunc "] > Initial"
 		Yunit.assert(this.obj.hscrollable == 0)
@@ -722,7 +716,7 @@ class MiscTestSuite {
 		Yunit.assert(this.obj.hscrollable == 1)
 		dbgOut("<[" A_ThisFunc "]")
 	}
-	
+
 	maximizebox() {
 		dbgOut(">[" A_ThisFunc "]")
 		OutputDebug % "[IMPORTANT]....[" A_ThisFunc "] > Initial"
@@ -751,22 +745,20 @@ class MiscTestSuite {
 	}
 
 	nextprevious() {
-    Global debug
+		Global debug
 
-    dbgOut(">[" A_ThisFunc "]")
-    hwndNext := this.obj.next
-    nextObj := new Windy(hwndNext, 0)
-    OutputDebug % "[IMPORTANT] NEXT OF [" this.obj.hwnd "-<" this.obj.title ">]: [" hwndNext "-<" nextObj.title ">]"
-    hwndPrev := this.obj.previous
-    prevObj := new Windy(hwndPrev, 0)
-    OutputDebug % "[IMPORTANT] PREVIOUS OF [" this.obj.hwnd "-<" this.obj.title ">]: [" hwndPrev "-" prevObj.title "]"   
-    
-    Yunit.assert(this.obj.hwnd == prevObj.next)
-    Yunit.assert(this.obj.hwnd == nextObj.previous)
+		dbgOut(">[" A_ThisFunc "]")
+		hwndNext := this.obj.next
+		nextObj := new Windy(hwndNext, 0)
+		OutputDebug % "[IMPORTANT] NEXT OF [" this.obj.hwnd "-<" this.obj.title ">]: [" hwndNext "-<" nextObj.title ">]"
+		hwndPrev := this.obj.previous
+		prevObj := new Windy(hwndPrev, 0)
+		OutputDebug % "[IMPORTANT] PREVIOUS OF [" this.obj.hwnd "-<" this.obj.title ">]: [" hwndPrev "-" prevObj.title "]"   
+		Yunit.assert(this.obj.hwnd == prevObj.next)
+		Yunit.assert(this.obj.hwnd == nextObj.previous)
+		dbgOut("<[" A_ThisFunc "]")
+	}
 
-    dbgOut("<[" A_ThisFunc "]")
-  }
-	
 	Title() {
 		dbgOut(">[" A_ThisFunc "]")
 		Yunit.assert(this.obj.title =="Unbenannt - Editor")
@@ -781,7 +773,7 @@ class MiscTestSuite {
 		Yunit.assert(parent == )	
 		dbgOut("<[" A_ThisFunc "]")
 	}
-	
+
 	Processname() {
 		dbgOut(">[" A_ThisFunc "]")
 		val := this.obj.processname
@@ -790,7 +782,7 @@ class MiscTestSuite {
 	}
 
 	ProcessID() {
-			dbgOut(">[" A_ThisFunc "]")
+		dbgOut(">[" A_ThisFunc "]")
 		val := this.obj.processID
 		Yunit.assert( val > 0)
 		dbgOut("<[" A_ThisFunc "]")
@@ -825,7 +817,7 @@ class MiscTestSuite {
 		Yunit.assert(this.obj.vscrollable == 1)
 		dbgOut("<[" A_ThisFunc "]")
 	}
-	
+
 	AlwaysOnTop() {
 		dbgOut(">[" A_ThisFunc "]")
 		Yunit.assert(this.obj.alwaysontop == false)
@@ -841,7 +833,7 @@ class MiscTestSuite {
 		Yunit.assert(this.obj.alwaysontop == false)
 		dbgOut("<[" A_ThisFunc "]")
 	}
-	
+
 	MonitorID() {
 		Global debug
 		dbgOut(">[" A_ThisFunc "]")
@@ -861,7 +853,7 @@ class MiscTestSuite {
 		Yunit.assert(monId == 2)
 		dbgOut("<[" A_ThisFunc "]")
 	}
-	
+
 	Hangs() {
 		dbgOut(">[" A_ThisFunc "]")
 		val := this.obj.hangs
@@ -884,13 +876,12 @@ class MiscTestSuite {
 		Yunit.assert(own == 0)
 		dbgOut("<[" A_ThisFunc "]")
 	}	 
-	
+
 	End() {
 		this.obj.kill()
-        this.remove("obj")
+		this.remove("obj")
 		this.obj := 
 	}
-	
 }
 
 ; ###################################################################
@@ -899,21 +890,21 @@ class ExistTestSuite {
 		Global debug
 		this.obj := new Windy(0, debug)
 	}
-        
+
 	ExistNonExistingWindow() {
-        this.obj.kill()
-        Yunit.assert(this.obj.exist == false)
+		this.obj.kill()
+		Yunit.assert(this.obj.exist == false)
 	}
-        
+
 	ExistExistingWindow() {
-        dbgOut(">[" A_ThisFunc "]")
-        Yunit.assert(this.obj.exist ==true)
-        dbgOut("<[" A_ThisFunc "]")
+		dbgOut(">[" A_ThisFunc "]")
+		Yunit.assert(this.obj.exist ==true)
+		dbgOut("<[" A_ThisFunc "]")
 	}
-    
+
 	End() {
 		this.obj.kill()
-        this.remove("obj")
+		this.remove("obj")
 		this.obj := 
 	}
 }

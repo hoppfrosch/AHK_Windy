@@ -155,7 +155,7 @@ class Recty {
 		printable string containing coordinates
 	*/
 	Dump() {
-		return "(" this.x "," this.y "," this.w "," this.h ")"
+		return "{""x"":=" this.x ",""y"":" this.y ",""w"":" this.w ",""h"":" this.h "}"
 	}
 	/* ---------------------------------------------------------------------------------------
 	Method: equal

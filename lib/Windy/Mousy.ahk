@@ -11,8 +11,7 @@
 	Class: Mousy
     Toolset to handle mousecursor within a MultiMonitorEnvironment
 
-	Authors:
-	<hoppfrosch at hoppfrosch@gmx.de>: Original
+	Authors:	<hoppfrosch at hoppfrosch@gmx.de>: Original
 
 	About: License
 	This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See <WTFPL at http://www.wtfpl.net/> for more details.
@@ -45,24 +44,24 @@ class Mousy {
 	> obj.confine := false ; Confining to previously defined rect is disabled
 	> obj.confine := true  ; Confining to previously defined rect is re-enabled
 	*/
-		get {
-			return this._bConfine
+	get {
+		return this._bConfine
+	}
+	set {
+		dbgOut("=[" A_ThisFunc "]()] -> New:" value " <-> Current:" this._bConfine, this.debug)
+		if (value== false) {
+			this._bConfine := false
+			ret := DllCall( "ClipCursor" )				
+			OutputDebug % ">" ret ; _DBG_
 		}
-		set {
-			OutputDebug % ">[" A_ThisFunc "()] -> New:" value " <-> Current:" this._bConfine ; _DBG_
-			if (value== false) {
-				this._bConfine := false
-				ret := DllCall( "ClipCursor" )				
-				OutputDebug % ">" ret ; _DBG_
-			}
-			else {
-				rect := this.confineRect
-				VarSetCapacity(R,16,0),NumPut(rect.xul,&R+0),NumPut(rect.yul,&R+4),NumPut(rect.xlr,&R+8),NumPut(rect.ylr,&R+12)
-				this._bConfine := true
-				DllCall("ClipCursor",UInt,&R)
-			}
-			return this._bConfine
+		else {
+			rect := this.confineRect
+			VarSetCapacity(R,16,0),NumPut(rect.xul,&R+0),NumPut(rect.yul,&R+4),NumPut(rect.xlr,&R+8),NumPut(rect.ylr,&R+12)
+			this._bConfine := true
+			DllCall("ClipCursor",UInt,&R)
 		}
+		return this._bConfine
+	}
 	}
 	confineRect[] {
 	/* -------------------------------------------------------------------------------
@@ -116,7 +115,7 @@ class Mousy {
 		}
 		set {
 			currMon := this.monitorID
-			OutputDebug % "<[" A_ThisFunc "()] - >New:" value "<-> Current:" CurrMon ; _DBG_
+			dbgOut("=[" A_ThisFunc "()] - >New:" value "<-> Current:" CurrMon, this.debug)
 			if (value != currMon) {
 				md := new MultiMony(this._debug)
 				; Determine relative Coordinates relative to current monitor
@@ -401,7 +400,7 @@ class Mousy {
 			mode := this._movemode
 		}
 		T := A_MouseDelay
-   		SetMouseDelay, -1
+		SetMouseDelay, -1
 		CoordMode, Mouse, Screen
 		if (mode == 0) {
 			MouseMove % x, y, 0
@@ -430,18 +429,16 @@ class Mousy {
 	Authors:
 	* Original: <masterfocus at https://github.com/MasterFocus/AutoHotkey/tree/master/Functions/RandomBezier>
 	*/
-    __moveRandomBezier(x, y, Speed=-1) {
-    	if (speed == -1) {
+	__moveRandomBezier(x, y, Speed=-1) {
+		if (speed == -1) {
 			speed := this._movespeed
 		}
-
 		time := 5000/100 * speed
-
 		T := A_MouseDelay
-   		SetMouseDelay, -1
-   		MouseGetPos, CX, CY
-   		RandomBezier(CX, CY, x, y, "T" time)
-   		SetMouseDelay, % T
+		SetMouseDelay, -1
+		MouseGetPos, CX, CY
+		RandomBezier(CX, CY, x, y, "T" time)
+		SetMouseDelay, % T
 	}
 
 	/* ---------------------------------------------------------------------------------------
@@ -454,21 +451,21 @@ class Mousy {
 	Authors:
 	* Original: <slanter me at http://slanter-ahk.blogspot.de/2008/12/ahk-random-mouse-path-mousemove.html>
 	*/
-    __moveRandomLinear(x, y, Speed=-1) {
-    	if (speed == -1) {
+	__moveRandomLinear(x, y, Speed=-1) {
+		if (speed == -1) {
 			speed := this._movespeed
 		}
-   		T := A_MouseDelay
-   		SetMouseDelay, -1
-   		MouseGetPos, CX, CY
-   		Pts := Round(Sqrt((X - CX)**2 + (Y - CY)**2) / 30,0)
-   		Loop %Pts% {
-      		Random, NX, % CX - ((CX - X) / Pts) * (A_Index - 1), % CX - ((CX - X) / Pts) * A_Index
-      		Random, NY, % CY - ((CY - Y) / Pts) * (A_Index - 1), % CY - ((CY - Y) / Pts) * A_Index
-      		MouseMove, % NX, % NY, % speed
+		T := A_MouseDelay
+		SetMouseDelay, -1
+		MouseGetPos, CX, CY
+		Pts := Round(Sqrt((X - CX)**2 + (Y - CY)**2) / 30,0)
+		Loop %Pts% {
+			Random, NX, % CX - ((CX - X) / Pts) * (A_Index - 1), % CX - ((CX - X) / Pts) * A_Index
+			Random, NY, % CY - ((CY - Y) / Pts) * (A_Index - 1), % CY - ((CY - Y) / Pts) * A_Index
+			MouseMove, % NX, % NY, % speed
 		}
-   		MouseMove, % X, % Y, % Speed
-   		SetMouseDelay, % T
+		MouseMove, % X, % Y, % Speed
+		SetMouseDelay, % T
 	}
 	
 	/* -------------------------------------------------------------------------------
@@ -480,8 +477,7 @@ class Mousy {
 	*/  
 	__New( debug := false ) {
 		this._debug := debug ; _DBG_
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc ")] (version: " this._version ")" ; _DBG_
+		dbgOut("=[" A_ThisFunc ")] (version: " this._version ")", this.debug)
 	}
 }
 

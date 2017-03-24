@@ -6,27 +6,30 @@
 #Include %A_ScriptDir%\Yunit\StdOut.ahk
 #include <Windy\Mousy>
 #include <Windy\Pointy>
+#include <DbgOut>
 
 #Warn All
 #Warn LocalSameAsGlobal, Off
 
+OutputDebug DBGVIEWCLEAR
 
 debug := 1
 ReferenceVersion := "1.1.4"
 
-;Yunit.Use(YunitStdOut, YunitWindow).Test(TempTestSuite)
+;Yunit.Use(YunitStdOut, YunitWindow).Test(ProblematicTestSuite)
 Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, MiscTestSuite)
 Return
 
 class TempTestSuite
 {
-	Begin()  {
+	Begin()	{
 		Global debug
 		this.r := new Mousy(debug)
-    }
+	}
 
-    move() {
-		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+	move() {
+		Global debug
+		dbgOut(">[" A_ThisFunc "]", debug)
 		this.r.x := 100
 		this.r.y := 100
 		this.r.movespeed := 25
@@ -36,35 +39,33 @@ class TempTestSuite
 		this.r.pos := new Pointy(500,500)
 		this.r.movemode := 2
 		this.r.pos := new Pointy(100,100)
-		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
-    }
-		
-	
-	End() {
-        this.remove("r")
-		this.r := 
-    }
+		dbgOut("<[" A_ThisFunc "]", debug)
+	}
 
+	End() {
+		this.remove("r")
+		this.r := 
+	}
 }
 
 
 class MiscTestSuite
 {
-	Begin()  {
+	Begin()	{
 		Global debug
 		this.r := new Mousy(debug)
-    }
-		
+		}
+
 	Locate() {
 		Global debug
-		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		dbgOut(">[" A_ThisFunc "]", debug)
 		this.r.locate()
-		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+		dbgOut("<[" A_ThisFunc "]", debug)
 	}
 
 	monitorID() {
 		Global debug
-		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		dbgOut(">[" A_ThisFunc "]", debug)
 		this.r.monitorID := 1
 		Yunit.assert(this.r.monitorID == 1)
 		this.r.monitorID := 2
@@ -72,14 +73,15 @@ class MiscTestSuite
 
 		this.r.x := 100
 		this.r.y := 100
-		Yunit.assert(this.r.monitorID == 1)
-		this.r.x := 2500
 		Yunit.assert(this.r.monitorID == 2)
-		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
+		this.r.x := 2500
+		Yunit.assert(this.r.monitorID == 1)
+		dbgOut("<[" A_ThisFunc "]", debug)
 	}
 
 	speed() {
-    	OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		Global debug
+		dbgOut(">[" A_ThisFunc "]", debug)
 		this.r.speed := 10
 		saveSpeed := this.r.speed
 		Yunit.assert(this.r.speed == 10)
@@ -89,11 +91,12 @@ class MiscTestSuite
 		Yunit.assert(this.r.speed == 20)
 		this.r.speed := saveSpeed
 		Yunit.assert(this.r.speed == saveSpeed)
-    	OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
-    }
+		dbgOut("<[" A_ThisFunc "]", debug)
+	}
 
-        move() {
-		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+	move() {
+		Global debug
+		dbgOut(">[" A_ThisFunc "]", debug)
 		this.r.x := 100
 		this.r.y := 100
 		this.r.movespeed := 25
@@ -103,42 +106,43 @@ class MiscTestSuite
 		this.r.pos := new Pointy(500,500)
 		this.r.movemode := 2
 		this.r.pos := new Pointy(100,100)
-		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
-    }
+		dbgOut("<[" A_ThisFunc "]", debug)
+	}
 
 	End() {
-        this.remove("r")
+		this.remove("r")
 		this.r := 
-    }
+	}
 }
 
 ; Does not work within YUnit-TestSuite :-(
 class ProblematicTestSuite
 {
-	Begin()  {
+	Begin()	{
+	Global debug
+	this.r := new Mousy(debug)
+	}
+
+	confine() {
 		Global debug
-		this.r := new Mousy(debug)
-    }
+		; This UnitTest fails due to failure with YUnit
+		dbgOut(">[" A_ThisFunc "]", debug)
+		this.r.confine := false
+		this.r.pos(1,1)
+		pos := this.r.pos 
+		this.r.confineRect := new Recty(100,100,100,100)
+		this.r.confine := true
+		this.r.pos(1,1)
+		pos := this.r.pos 
+		OutputDebug % pos.Dump()
+		this.r.confine := false
+		dbgOut("<[" A_ThisFunc "]", debug)
+	}
 
-    confine() {
-    	; This UnitTest fails due to failure with YUnit
-    	OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
-    	this.r.confine := false
-    	this.r.pos(1,1)
-    	pos := this.r.pos 
-    	OutputDebug % pos.Dump()
-        this.r.confineRect := new Recty(100,100,100,100)
-    	this.r.confine := true
-    	this.r.pos(1,1)
-    	pos := this.r.pos 
-    	OutputDebug % pos.Dump()
-    	this.r.confine := false
-    	OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
-    }
-
-     trail() {
+	 trail() {
+		Global debug
 		CoordMode,Mouse,Screen
-		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		dbgOut(">[" A_ThisFunc "]", debug)
 		MouseMove, 1,1,10
 		savetrail := this.r.trail
 		this.r.trail := 7
@@ -148,29 +152,30 @@ class ProblematicTestSuite
 		MouseMove, 1,1,10
 		Yunit.assert(this.r.trail == 1)
 		this.r.trail := savetrail
-		OutputDebug % "<<<<<[" A_ThisFunc "]<<<<<"
-    }
-		
+		dbgOut("<[" A_ThisFunc "]", debug)
+	}
+
 	End() {
-        this.remove("r")
+		this.remove("r")
 		this.r := 
-    }
+	}
 
 }
 
 
 class _BaseTestSuite {
-    Begin() {
+	Begin() {
+		Global debug
 	}
 	
 	Version() {
 		Global debug
-		OutputDebug % ">>>>>[" A_ThisFunc "]>>>>>"
+		dbgOut(">[" A_ThisFunc "]", debug)
 		Global ReferenceVersion
 		obj := new Mousy(debug)
 		OutputDebug % "Mousy Version <" obj.version "> <-> Required <" ReferenceVersion ">"
 		Yunit.assert(obj.version == ReferenceVersion)
-		OutputDebug % ">>>>[" A_ThisFunc "]>>>>"
+		dbgOut("<[" A_ThisFunc "]", debug)
 	}
 
 	End() {

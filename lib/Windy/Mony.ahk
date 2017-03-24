@@ -6,6 +6,7 @@
 #include Recty.ahk
 #include Pointy.ahk
 #include MultiMony.ahk
+#include ..\DbgOut.ahk
 
 /* ******************************************************************************************************************************************
 	Class: Mony
@@ -20,13 +21,13 @@
 */
 class Mony {
 	_debug := 0
-	_version := "1.0.1"
+	_version := "1.0.2"
 	_id := 0
 	_hmon := 0
 
-    ; ===== Properties ===============================================================
-    boundary[] {
-    /* -------------------------------------------------------------------------------
+	; ===== Properties ===============================================================
+	boundary[] {
+	/* -------------------------------------------------------------------------------
 	Property: boundary [get]
 	Get the boundaries of a monitor in Pixel (related to Virtual Screen) as a <rectangle at http://hoppfrosch.github.io/AHK_Windy/files/Recty-ahk.html>.
 
@@ -37,11 +38,11 @@ class Mony {
 	<virtualScreenSize [get]>
 	*/
 		get {
+			dbgOut(">[" A_ThisFunc "([" this.id "])]", this.debug)
 			mon := this.id
 			SysGet, size, Monitor, %mon%
 			rect := new Recty(sizeLeft, sizeTop, sizeRight, sizeBottom, this._debug)
-			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "([" this.id "])] -> (" rect.dump() ")" ; _DBG_
+			dbgOut("<[" A_ThisFunc "([" this.id "])] -> (" rect.dump() ")" , this.debug)
 			return rect
 		}
 	}
@@ -58,13 +59,12 @@ class Mony {
 			xcenter := floor(boundary.x+(boundary.w-boundary.x)/2)
 			ycenter := floor(boundary.y+(boundary.h-boundary.y)/2)
 			pt := new Pointy(xcenter, ycenter, this._debug)
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.id "])] -> (" pt.dump() ")" ; _DBG_
+			dbgOut("=[" A_ThisFunc "([" this.id "])] -> (" pt.dump() ")" , this.debug)
 			return pt
 		}
 	}
-    debug[] { ; _DBG_
-   	/* -------------------------------------------------------------------------------
+	debug[] { ; _DBG_
+	/* -------------------------------------------------------------------------------
 	Property: debug [get/set]
 	Debug flag for debugging the object
 
@@ -95,8 +95,7 @@ class Mony {
 			Y := rect.y + 1
 			hmon := DllCall("User32.dll\MonitorFromPoint", "Int64", (X & 0xFFFFFFFF) | (Y << 32), "UInt", 0, "UPtr")
 			this._hmon := hmon
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.id "])] -> (" this._hmon ")" ; _DBG_
+			dbgOut("=[" A_ThisFunc "([" this.id "])] -> (" this._hmon ")" , this.debug)
 			return this._hmon
 		}
 	}
@@ -109,8 +108,6 @@ class Mony {
 			return this._id
 		}
 		set {
-			if (this._debug) ; _DBG_
-				OutputDebug % ">[" A_ThisFunc "([" this.id "],value:=" value ")]" ; _DBG_
 			ret := 0
 			; Existiert der Monitor mit der uebergebenen ID?
 			CoordMode, Mouse, Screen
@@ -121,8 +118,7 @@ class Mony {
 					ret := value
 				}
 			}
-			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "([" this.id "],value:=" value ")] -> (" ret ")" ; _DBG_
+			dbgOut("=[" A_ThisFunc "([" this.id "],value:=" value ")] -> (" ret ")" , this.debug)
 			return ret
 		}
 	}
@@ -143,8 +139,7 @@ class Mony {
 		get {
 			md := new MultiMony(this._debug)
 			nextMon := md.idNext(this.id, cycle)
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.id "],cycle=" cycle ")] -> " nextMon ; _DBG_
+			dbgOut("=[" A_ThisFunc "([" this.id "],cycle=" cycle ")] -> " nextMon , this.debug)
 			
 			return nextMon
 		}
@@ -166,8 +161,7 @@ class Mony {
 		get {
 			md := new MultiMony(this._debug)
 			prevMon := md.idPrev(this.id, cycle)
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.id "],cycle=" cycle ")] -> " prevMon ; _DBG_
+			dbgOut("=[" A_ThisFunc "([" this.id "],cycle=" cycle ")] -> " prevMon , this.debug)
 			
 			return prevMon
 		}
@@ -197,38 +191,35 @@ class Mony {
 		get {
 			hmon := this.hmon
 			ret := false
-	   		NumPut(VarSetCapacity(MIEX, 40 + (32 << !!A_IsUnicode)), MIEX, 0, "UInt")
-	   		If DllCall("User32.dll\GetMonitorInfo", "Ptr", hmon, "Ptr", &MIEX) {
-	      		MonName := StrGet(&MIEX + 40, 32)    ; CCHDEVICENAME = 32
-	      		MonNum := RegExReplace(MonName, ".*(\d+)$", "$1")
+			NumPut(VarSetCapacity(MIEX, 40 + (32 << !!A_IsUnicode)), MIEX, 0, "UInt")
+	 		If DllCall("User32.dll\GetMonitorInfo", "Ptr", hmon, "Ptr", &MIEX) {
+				MonName := StrGet(&MIEX + 40, 32)    ; CCHDEVICENAME = 32
+				MonNum := RegExReplace(MonName, ".*(\d+)$", "$1")
 
 				x := NumGet(MIEX, 4, "Int")
 				y := NumGet(MIEX, 8, "Int")
 				w := NumGet(MIEX, 12, "Int")
 				h := NumGet(MIEX, 16, "Int")
-	      		rectBound := new Recty(x,y,w,h,this.debug)
-
-	      		x := NumGet(MIEX, 20, "Int")
+				rectBound := new Recty(x,y,w,h,this.debug)
+				x := NumGet(MIEX, 20, "Int")
 				y := NumGet(MIEX, 24, "Int")
 				w := NumGet(MIEX, 28, "Int")
 				h := NumGet(MIEX, 32, "Int")
-	      		rectWA := new Recty(x,y,w,h,this.debug)
-	      		
-	      		ret := { hmon:         hmon
-	      			, Name:          MonName
-	            	, Id:            MonNum
-	            	, Boundary:      rectBound    ; display rectangle
-	            	, WorkingAreaVS: rectWA  ; work area
-	            	, Primary:       NumGet(MIEX, 36, "UInt")} ; contains a non-zero value for the primary monitor.
-	       		if (this._debug) ; _DBG_
-					OutputDebug % "|[" A_ThisFunc "([" this.id "])] -> (hmon=" ret.hmon ", Name=" ret.Name ", id=" ret.Id ", Boundary=" ret.Boundary.dump() ", WorkingArea" ret.WorkingArea.dump() ", Primary=" ret.Primary ")" ; _DBG_
-	   		}
-	   		else {
-	   			if (this._debug) ; _DBG_
-					OutputDebug % "|[" A_ThisFunc "([" this.id "])] -> " ret ; _DBG_
-	   		}
-	   		Return ret
-   		}
+				rectWA := new Recty(x,y,w,h,this.debug)
+
+				ret := { hmon:         hmon
+								, Name:          MonName
+								, Id:            MonNum
+								, Boundary:      rectBound    ; display rectangle
+								, WorkingAreaVS: rectWA  ; work area
+								, Primary:       NumGet(MIEX, 36, "UInt")} ; contains a non-zero value for the primary monitor.
+				dbgOut("=[" A_ThisFunc "([" this.id "])] -> (hmon=" ret.hmon ", Name=" ret.Name ", id=" ret.Id ", Boundary=" ret.Boundary.dump() ", WorkingArea" ret.WorkingArea.dump() ", Primary=" ret.Primary ")" , this.debug)
+			}
+			else {
+				dbgOut("=[" A_ThisFunc "([" this.id "])] -> " ret , this.debug)
+	   	}
+	 		Return ret
+		}
 	}
 	monitorsCount[] {
 	/* ---------------------------------------------------------------------------------------
@@ -241,8 +232,7 @@ class Mony {
 		get {
 			md := new MultiMony(this._debug)
 			mcnt := md.monitorsCount
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.id "]) -> (" mCnt ")]" ; _DBG_		
+			dbgOut("=[" A_ThisFunc "([" this.id "]) -> (" mCnt ")]" , this.debug)		
 			return mCnt
 		}
 	}
@@ -257,8 +247,7 @@ class Mony {
 		get {
 			info := this.info
 			ret := info.primary
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.id "]) -> (" ret ")]" ; _DBG_		
+			dbgOut("[" A_ThisFunc "([" this.id "]) -> (" ret ")]" , this.debug)		
 			return ret
 		}
 	}
@@ -283,8 +272,7 @@ class Mony {
 			scaleX := this.scaleX(monDest)
 			scaleY := this.scaleY(monDest)
 			pt := new Pointy(scaleX,scaleY,this._debug)
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.id "],monDest:= " monDest "] -> (" pt.dump() ")" ; _DBG_
+			dbgOut("=[" A_ThisFunc "([" this.id "],monDest:= " monDest "] -> (" pt.dump() ")" , this.debug)
 			return pt
 		}
 	}
@@ -310,8 +298,7 @@ class Mony {
 			md := new Mony(monDest, this.debug)
 			size2 := md.size
 			scaleX := size2.w / size1.w
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.id "],monDest:=" monDest ") -> (" scaleX ")]" ; _DBG_		
+			dbgOut("=[" A_ThisFunc "([" this.id "],monDest:=" monDest ") -> (" scaleX ")]" , this.debug)		
 			return scaleX
 		}
 	}
@@ -337,8 +324,7 @@ class Mony {
 			md := new Mony(monDest, this.debug)
 			size2 := md.size
 			scaleY := size2.h / size1.h
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.id "],monDest:=" monDest ") -> (" scaleY ")]" ; _DBG_		
+			dbgOut("=[" A_ThisFunc "([" this.id "],monDest:=" monDest ") -> (" scaleY ")]" , this.debug)		
 			return scaleY
 		}
 	}
@@ -357,8 +343,7 @@ class Mony {
 			mon := this.id
 			SysGet, size, Monitor, %mon%
 			rect := new Recty(0,0, sizeRight-sizeLeft, sizeBottom-sizeTop, this.debug)
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.id "])] -> (" rect.dump() ")" ; _DBG_
+			dbgOut("=[" A_ThisFunc "([" this.id "])] -> (" rect.dump() ")" , this.debug)
 			return rect
 		}
 	}	
@@ -390,8 +375,7 @@ class Mony {
 		get {
 			md := new MultiMony(this._debug)
 			rect := md.virtualScreenSize
-			if (this._debug) ; _DBG_
-				OutputDebug % "<[" A_ThisFunc "([" this.id "])] -> (" rect.dump() ")" ; _DBG_
+			dbgOut("=[" A_ThisFunc "([" this.id "])] -> (" rect.dump() ")" , this.debug)
 			return rect
 		}
 	}
@@ -413,8 +397,7 @@ class Mony {
 			mon := this.id
 			SysGet, size, MonitorWorkArea , %mon%
 			rect := new Recty(0,0, sizeRight-sizeLeft, sizeBottom-sizeTop, this._debug)
-			if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.id "])] -> (" rect.dump() ")" ; _DBG_
+			dbgOut("=[" A_ThisFunc "([" this.id "])] -> (" rect.dump() ")" , this.debug)
 			return rect
 		}
 	}
@@ -433,8 +416,7 @@ class Mony {
 	coordDisplayToVirtualScreen( x := 0, y := 0) {
 		md := new MultiMony(this._debug)
 		pt := md.coordDisplayToVirtualScreen(this.id, x, y)
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "()] -> (" pt.dump() ")" ; _DBG_
+		dbgOut("=[" A_ThisFunc "()] -> (" pt.dump() ")" , this.debug)
 		return pt
 	}
 	
@@ -448,13 +430,11 @@ class Mony {
 	txtsize - size of the displayed monitor id (*Optional*, Default: 300[px])
 	*/
 	identify( disptime := 1500, txtcolor := "000000", txtsize := 300 ) {
-		if (this._debug) ; _DBG_
-			OutputDebug % ">[" A_ThisFunc "([" this.id "], disptime := " disptime ", txtcolor := " txtcolor ", txtsize := " txtsize ")]" ; _DBG_
+		dbgOut(">[" A_ThisFunc "([" this.id "], disptime := " disptime ", txtcolor := " txtcolor ", txtsize := " txtsize ")]" , this.debug)
 		this.__idShow(txtcolor, txtsize)
-    	Sleep, %disptime%
-    	this.__idHide()
-    	if (this._debug) ; _DBG_
-			OutputDebug % "<[" A_ThisFunc "([" this.id "], disptime := " disptime ", txtcolor := " txtcolor ", txtsize := " txtsize ")]" ; _DBG_
+		Sleep, %disptime%
+		this.__idHide()
+		dbgOut("<[" A_ThisFunc "([" this.id "], disptime := " disptime ", txtcolor := " txtcolor ", txtsize := " txtsize ")]" , this.debug)
 		return
 	}
 
@@ -477,13 +457,9 @@ class Mony {
 		wfactor := (rect.w/monBound.w)*100
 		hfactor := (rect.h/monBound.h)*100
 		xfactor := (rect.x/monBound.w)*100
-     	yfactor := (rect.y/monBound.h)*100
-
+		yfactor := (rect.y/monBound.h)*100
 		ret := new Recty(xfactor, yfactor, wfactor, hfactor, this._debug)
-	
-		if (this._debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "([" this.hwnd "], rect=(" rect.Dump()")]  -> percent=(" ret.Dump() ")" ; _DBG_
-			
+		dbgOut("[" A_ThisFunc "([" this.hwnd "], rect=(" rect.Dump()")]  -> percent=(" ret.Dump() ")" , this.debug)
 		return ret
     }
     
@@ -498,11 +474,8 @@ class Mony {
 	__idHide() {
 		mon := this.id
 		GuiNum := 80 + mon
-    	Gui, %GuiNum%:Destroy
-
-    	if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.id "])]" ; _DBG_
-		
+		Gui, %GuiNum%:Destroy
+		dbgOut("=[" A_ThisFunc "([" this.id "])]" , this.debug)
 		return
 	}
 	/*! -------------------------------------------------------------------------------
@@ -523,16 +496,15 @@ class Mony {
 		mon := this.id
 		TPColor = AABBCC
 		GuiNum := 80 + mon
-   		SysGet, out, Monitor, %mon%
-    	x := outLeft
-    	Gui, %GuiNum%:+LastFound +AlwaysOnTop -Caption +ToolWindow
-    	Gui, %GuiNum%:Color, %TPColor%
-    	WinSet, TransColor, %TPColor%
-    	Gui, %GuiNum%:Font, s%txtsize% w700
-    	Gui, %GuiNum%:Add, Text, x0 y0 c%txtcolor%, %mon%
-    	Gui, %GuiNum%:Show, x%x% y0 NoActivate
-    	if (this._debug) ; _DBG_
-				OutputDebug % "|[" A_ThisFunc "([" this.id "], txtcolor := " txtcolor ", txtsize := " txtsize ")]" ; _DBG_
+		SysGet, out, Monitor, %mon%
+		x := outLeft
+		Gui, %GuiNum%:+LastFound +AlwaysOnTop -Caption +ToolWindow
+		Gui, %GuiNum%:Color, %TPColor%
+		WinSet, TransColor, %TPColor%
+		Gui, %GuiNum%:Font, s%txtsize% w700
+		Gui, %GuiNum%:Add, Text, x0 y0 c%txtcolor%, %mon%
+		Gui, %GuiNum%:Show, x%x% y0 NoActivate
+		dbgOut("=[" A_ThisFunc "([" this.id "], txtcolor := " txtcolor ", txtsize := " txtsize ")]" , this.debug)
 		return
 	}
 	/* -------------------------------------------------------------------------------
@@ -544,7 +516,7 @@ class Mony {
 	_debug - Flag to enable debugging (Optional - Default: 0)
 	*/  
 	__New(_id := 1, _debug := false) {
-		this._debug := _debug ; _DBG_
+		this._debug := _debug
 		ret := true
 		CoordMode, Mouse, Screen
 		SysGet, mCnt, MonitorCount
@@ -553,20 +525,15 @@ class Mony {
 				this.id := _id
 			}
 			else {
-				if (this.debug) ; _DBG_
-					OutputDebug % "|[" A_ThisFunc "(_id:=" _id ", _debug:=" _debug ")] (version: " this.version ") -> " false ; _DBG_
+				dbgOut("=[" A_ThisFunc "(_id:=" _id ", _debug:=" _debug ")] (version: " this.version ") -> " false , this.debug)
 				return false
 			}
 		}
 		else {
-			if (this.debug) ; _DBG_
-					OutputDebug % "|[" A_ThisFunc "(_id:=" _id ", _debug:=" _debug ")] (version: " this.version ") -> " false ; _DBG_
+			dbgOut("=[" A_ThisFunc "(_id:=" _id ", _debug:=" _debug ")] (version: " this.version ") -> " false , this.debug)
 			return false
 		}
-		this.debug := _debug ; _DBG_
-		if (this.debug) ; _DBG_
-			OutputDebug % "|[" A_ThisFunc "(_id:=" _id ", _debug:=" _debug ")] (version: " this.version ") -> " this.id ; _DBG_
-
+		dbgOut("=[" A_ThisFunc "(_id:=" _id ", _debug:=" _debug ")] (version: " this.version ") -> " this.id , this.debug)
 		return this
 	}
 }

@@ -1371,6 +1371,7 @@ class Windy {
 		prevState := A_DetectHiddenWindows
 		DetectHiddenWindows, On
 		WinKill % "ahk_id" this.hwnd
+		WinWaitClose % "ahk_id" this.hwnd
 		DetectHiddenWindows, %prevState%
 	}	
 	/* ---------------------------------------------------------------------------------------
@@ -1482,7 +1483,7 @@ class Windy {
 		if (factor) {
 			this.movePercental(factor.x, factor.y, factor.w, factor.h)
 		}
-		dbgOut(">[" A_ThisFunc "([" this.hwnd "], border=""" border """)] -> moved to (" this.posSize.Dump() ") on Monitor (" this.monitorID ")", this.debug)
+		dbgOut("<[" A_ThisFunc "([" this.hwnd "], border=""" border """)] -> moved to (" this.posSize.Dump() ") on Monitor (" this.monitorID ")", this.debug)
 	}
 	/* ---------------------------------------------------------------------------------------
 	Method: posSize2percent
