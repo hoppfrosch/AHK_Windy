@@ -18,7 +18,7 @@
 */
 
 class Mousy {
-	_version := "1.1.4"
+	_version := "1.1.5"
 	_debug := 0 ; _DBG_	
 	_showLocatorAfterMove := 1
 
@@ -26,6 +26,7 @@ class Mousy {
 	_confineRect := new Recty()
 	_movespeed := 50
 	_movemode := 1 
+	_bIsMoveable := true
 
 	; ===== Properties ===============================================================
 	confine[] {
@@ -133,6 +134,26 @@ class Mousy {
 				this.__move(x, y)
 			}
 			return this.monitorID
+		}
+	}
+	moveable[] {
+	/* ---------------------------------------------------------------------------------------
+	Property: movable [get/set]
+	Get or Sets the posibility to move the mouse via user's physical movement
+
+	Value:
+	flag - True or False
+	*/
+		get {
+			return this._bIsMoveable
+		}
+		set {
+			this._bIsMoveable := value
+			if (value == true)
+				BlockInput, MouseMoveOff
+			else 
+				BlockInput, MouseMove
+			return value
 		}
 	}
 	moveMode[] {
@@ -478,6 +499,16 @@ class Mousy {
 	__New( debug := false ) {
 		this._debug := debug ; _DBG_
 		dbgOut("=[" A_ThisFunc ")] (version: " this._version ")", this.debug)
+	}
+	/* ---------------------------------------------------------------------------------------
+	Method: __Delete
+	Destructor (*INTERNAL*)
+	*/ 
+	__Delete() {
+		dbgOut(">" A_ThisFunc "([" this.hwnd "])", this.debug)
+		this.moveable := 1
+	  dbgOut("|" A_ThisFunc "([" this.hwnd "]): Mouse moveable? " this.moveable, this.debug)	
+		dbgOut("<" A_ThisFunc "([" this.hwnd "])", this.debug)
 	}
 }
 

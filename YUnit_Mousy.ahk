@@ -14,7 +14,7 @@
 OutputDebug DBGVIEWCLEAR
 
 debug := 1
-ReferenceVersion := "1.1.4"
+ReferenceVersion := "1.1.5"
 
 ;Yunit.Use(YunitStdOut, YunitWindow).Test(ProblematicTestSuite)
 Yunit.Use(YunitStdOut, YunitWindow).Test(_BaseTestSuite, MiscTestSuite)
@@ -54,6 +54,8 @@ class MiscTestSuite
 	Begin()	{
 		Global debug
 		this.r := new Mousy(debug)
+		dbgOut("=[" A_ThisFunc "]: moveable=" this.r.moveable, debug)
+		this.r.moveable := 0
 		}
 
 	Locate() {
@@ -110,6 +112,7 @@ class MiscTestSuite
 	}
 
 	End() {
+		this.r.moveable := 1
 		this.remove("r")
 		this.r := 
 	}
@@ -120,6 +123,7 @@ class ProblematicTestSuite
 {
 	Begin()	{
 	Global debug
+	this.r.moveable := 0
 	this.r := new Mousy(debug)
 	}
 
@@ -156,6 +160,7 @@ class ProblematicTestSuite
 	}
 
 	End() {
+		this.r.moveable := 1
 		this.remove("r")
 		this.r := 
 	}
